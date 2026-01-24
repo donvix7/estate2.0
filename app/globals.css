@@ -24,3 +24,65 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes slideInFromTop {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.blockright {
+  animation: slideInFromLeft linear;
+  animation-timeline: view();
+  animation-range: entry 0% cover 40%;
+}
+.blockleft {
+  animation: slideInFromRight linear;
+  animation-timeline: view();
+  animation-range: entry 0% cover 40%;
+}
+.blocktop {
+  animation: slideInFromTop linear;
+  animation-timeline: view();
+  animation-range: entry 0% cover 40%;
+}
+.blockbottom {
+  animation: slideInFromBottom linear;
+  animation-timeline: view();
+  animation-range: entry 0% cover 40%;
+}
