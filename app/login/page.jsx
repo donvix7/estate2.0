@@ -185,14 +185,14 @@ export default function LoginPage() {
             <div className="w-16 h-16 bg-gray-900 text-white flex items-center justify-center mb-4 mx-auto">
               <span className="font-bold text-xl">ES</span>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">EstateSecure</h1>
-            <p className="text-gray-600">Secure Estate Management System</p>
+            <h1 className="text-2xl font-bold text-gray-100 mb-2">EstateSecure</h1>
+            <p className="text-gray-400">Secure Estate Management System</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
             {/* User Type Selection */}
             <div>
-              <label className="block text-gray-700 font-medium mb-3 flex items-center gap-2">
+              <label className="block text-gray-200 font-medium mb-3 flex items-center gap-2">
                 <Users className="w-4 h-4" />
                 Select Your Role
               </label>
@@ -232,7 +232,7 @@ export default function LoginPage() {
 
             {/* Email Input */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2 flex items-center gap-2">
+              <label className="block text-gray-200 font-medium mb-2 flex items-center gap-2">
                 <User className="w-4 h-4" />
                 Email Address
               </label>
@@ -248,7 +248,7 @@ export default function LoginPage() {
 
             {/* Password Input */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2 flex items-center gap-2">
+              <label className="block text-gray-200 font-medium mb-2 flex items-center gap-2">
                 <KeyRound className="w-4 h-4" />
                 Password
               </label>
@@ -266,7 +266,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-gray-900 text-white font-medium hover:bg-gray-800 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-gray-200 text-white font-medium hover:bg-gray-800 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
@@ -325,9 +325,9 @@ export default function LoginPage() {
 
             {/* Footer */}
             <div className="pt-4 border-t border-gray-200 text-center">
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-300 text-sm">
                 Need help? Contact support at{' '}
-                <a href="mailto:support@estatesecure.com" className="text-gray-900 hover:underline font-medium">
+                <a href="mailto:support@estatesecure.com" className="text-green-600 hover:underline font-medium">
                   support@estatesecure.com
                 </a>
               </p>
