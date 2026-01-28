@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, memo, useCallback } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/Footer'
 import {
@@ -711,7 +711,6 @@ PaystackIntegration.displayName = 'PaystackIntegration'
 
 export default function PaymentPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
   
   // State
   const [selectedMethod, setSelectedMethod] = useState('card')
@@ -720,9 +719,23 @@ export default function PaymentPage() {
   const [usePaystack, setUsePaystack] = useState(false)
   const [isClient, setIsClient] = useState(false)
   
-  // Get plan from URL or use default
-  const planId = searchParams?.get?.('plan') || 'professional'
-  const billingPeriod = searchParams?.get?.('billing') || 'annual'
+  // Get plan from URL or use default - using useState and useEffect
+  const [planId, setPlanId] = useState('professional')
+  const [billingPeriod, setBillingPeriod] = useState('annual')
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    setIsClient(true)
+    
+    // Get URL parameters from window.location
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      setPlanId(params.get('plan') || 'professional')
+      setBillingPeriod(params.get('billing') || 'annual')
+      setIsLoading(false)
+    }
+  }, [])
+
   const plan = SUBSCRIPTION_PLANS[planId] || SUBSCRIPTION_PLANS.professional
 
   // Mock addons (in real app, these would come from user selection)
@@ -730,10 +743,6 @@ export default function PaymentPage() {
     { name: '24/7 Monitoring', price: 1500 },
     { name: 'Advanced Analytics', price: 800 },
   ]
-
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
 
   const handlePaymentSubmit = async (e) => {
     e.preventDefault()
@@ -799,7 +808,7 @@ export default function PaymentPage() {
     }
   }
 
-  if (!isClient) {
+  if (!isClient || isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
