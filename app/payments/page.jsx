@@ -269,6 +269,7 @@ const UPIPayment = memo(() => {
   const [selectedApp, setSelectedApp] = useState('gpay')
   const [upiId, setUpiId] = useState('')
   const [generatedQR, setGeneratedQR] = useState('UPI-CODE-123456')
+  const [copied, setCopied] = useState(false)
 
   const upiApps = [
     { id: 'gpay', name: 'Google Pay', icon: 'GPay' },
@@ -277,9 +278,14 @@ const UPIPayment = memo(() => {
     { id: 'bhim', name: 'BHIM UPI', icon: 'BHIM' },
   ]
 
-  const handleCopyQR = () => {
-    navigator.clipboard.writeText(generatedQR)
-    // Show success message
+  const handleCopyQR = async () => {
+    try {
+      await navigator.clipboard.writeText(generatedQR)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy:', err)
+    }
   }
 
   return (
@@ -290,6 +296,7 @@ const UPIPayment = memo(() => {
           {upiApps.map((app) => (
             <button
               key={app.id}
+              type="button"
               onClick={() => setSelectedApp(app.id)}
               className={`p-4 border text-center transition-all ${
                 selectedApp === app.id
@@ -334,13 +341,17 @@ const UPIPayment = memo(() => {
           
           <div className="flex gap-3 justify-center">
             <button
+              type="button"
               onClick={handleCopyQR}
               className="px-4 py-2 border border-gray-900 text-gray-900 text-sm font-medium hover:bg-gray-900 hover:text-white transition-colors flex items-center gap-2"
             >
-              <Copy className="w-4 h-4" />
-              Copy UPI ID
+              {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              {copied ? 'Copied!' : 'Copy UPI ID'}
             </button>
-            <button className="px-4 py-2 bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors">
+            <button 
+              type="button"
+              className="px-4 py-2 bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+            >
               Send Payment Link
             </button>
           </div>
@@ -372,6 +383,7 @@ const NetBanking = memo(() => {
           {banks.map((bank) => (
             <button
               key={bank.id}
+              type="button"
               onClick={() => setSelectedBank(bank.id)}
               className={`w-full p-4 border text-left transition-all flex items-center justify-between ${
                 selectedBank === bank.id
@@ -548,6 +560,7 @@ const PaymentStatusModal = memo(({ status, onClose }) => {
           <div className="flex gap-3">
             {status === 'processing' && (
               <button
+                type="button"
                 onClick={onClose}
                 className="flex-1 py-3 border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50"
               >
@@ -558,12 +571,14 @@ const PaymentStatusModal = memo(({ status, onClose }) => {
             {status === 'success' && (
               <>
                 <button
+                  type="button"
                   onClick={() => window.location.href = '/dashboard'}
                   className="flex-1 py-3 bg-gray-900 text-white font-semibold hover:bg-gray-800"
                 >
                   Go to Dashboard
                 </button>
                 <button
+                  type="button"
                   onClick={() => window.print()}
                   className="flex-1 py-3 border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 flex items-center justify-center gap-2"
                 >
@@ -576,12 +591,14 @@ const PaymentStatusModal = memo(({ status, onClose }) => {
             {status === 'failed' && (
               <>
                 <button
+                  type="button"
                   onClick={onClose}
                   className="flex-1 py-3 border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50"
                 >
                   Try Again
                 </button>
                 <button
+                  type="button"
                   onClick={() => window.location.href = '/support'}
                   className="flex-1 py-3 bg-gray-900 text-white font-semibold hover:bg-gray-800"
                 >
@@ -664,6 +681,7 @@ const PaystackIntegration = memo(({ amount, email, onSuccess, onClose }) => {
         </div>
 
         <button
+          type="button"
           onClick={handlePaystackPayment}
           disabled={isProcessing}
           className="w-full py-4 bg-purple-600 text-white font-semibold hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
@@ -700,10 +718,11 @@ export default function PaymentPage() {
   const [paymentStatus, setPaymentStatus] = useState(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [usePaystack, setUsePaystack] = useState(false)
+  const [isClient, setIsClient] = useState(false)
   
   // Get plan from URL or use default
-  const planId = searchParams.get('plan') || 'professional'
-  const billingPeriod = searchParams.get('billing') || 'annual'
+  const planId = searchParams?.get?.('plan') || 'professional'
+  const billingPeriod = searchParams?.get?.('billing') || 'annual'
   const plan = SUBSCRIPTION_PLANS[planId] || SUBSCRIPTION_PLANS.professional
 
   // Mock addons (in real app, these would come from user selection)
@@ -711,6 +730,10 @@ export default function PaymentPage() {
     { name: '24/7 Monitoring', price: 1500 },
     { name: 'Advanced Analytics', price: 800 },
   ]
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const handlePaymentSubmit = async (e) => {
     e.preventDefault()
@@ -776,6 +799,14 @@ export default function PaymentPage() {
     }
   }
 
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       <Navigation />
@@ -792,6 +823,7 @@ export default function PaymentPage() {
           <div className="mb-8">
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <button
+                type="button"
                 onClick={() => router.push('/pricing')}
                 className="hover:text-gray-900"
               >
@@ -838,6 +870,7 @@ export default function PaymentPage() {
                       International Payment
                     </h3>
                     <button
+                      type="button"
                       onClick={() => setUsePaystack(true)}
                       className={`w-full p-4 border transition-all text-left ${
                         usePaystack
@@ -868,7 +901,7 @@ export default function PaymentPage() {
                 </div>
 
                 {/* Payment Form */}
-                <div className="p-6">
+                <form onSubmit={handlePaymentSubmit} className="p-6">
                   {renderPaymentMethod()}
 
                   {/* Security Notice */}
@@ -899,7 +932,7 @@ export default function PaymentPage() {
                   {/* Submit Button */}
                   {!usePaystack && (
                     <button
-                      onClick={handlePaymentSubmit}
+                      type="submit"
                       disabled={isProcessing}
                       className="w-full mt-6 py-4 bg-gray-900 text-white font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
@@ -916,7 +949,7 @@ export default function PaymentPage() {
                       )}
                     </button>
                   )}
-                </div>
+                </form>
               </div>
 
               {/* Payment Processors */}
