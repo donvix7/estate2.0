@@ -1,10 +1,9 @@
-'use client'
+"use client";
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { PanicButton } from '@/components/panic-button'
 import { VisitorPassGenerator } from '@/components/visitor-pass-generator'
-import { PaymentSystem } from '@/components/payment-system'
 import {
   Home,
   Users,
@@ -12,56 +11,30 @@ import {
   Bell,
   User,
   LogOut,
-  Settings,
-  Phone,
-  Mail,
-  Shield,
-  AlertCircle,
-  CheckCircle,
-  Calendar,
-  Car,
-  Users as UsersIcon,
   Building,
+  Settings2,
+  ShieldAlert,
+  FileText,
+  Calendar,
+  Clock,
+  Package,
+  Mail,
+  Phone,
   Edit,
   Save,
   X,
-  ChevronRight,
-  Download,
-  Eye,
-  Clock,
-  Package,
-  MessageSquare,
-  Activity,
-  BarChart3,
-  FileText,
-  HelpCircle,
-  ShieldAlert,
-  ShieldClose,
-  Settings2
+  CheckCircle,
+  AlertCircle,
+  Users as UsersIcon,
+  Activity
 } from 'lucide-react'
+import PaystackPayment from '@/components/payment'
 
 // Hardcoded database simulation
 const HARDCODED_DATA = {
-  announcements: [
-    /*{ id: 1, title: 'Water Supply Maintenance', content: 'Water supply will be interrupted on Jan 20, 10 AM - 4 PM', date: '2024-01-18', type: 'maintenance', read: false },
-   */],
-  visitors: [
-    /*{ id: 1, name: 'John Delivery', purpose: 'Delivery', time: 'Today, 10:30 AM', status: 'Active' },
-    */],
-  residents: [
-   /* {
-      id: 1,
-      name: 'John Resident',
-      email: 'resident@demo.com',
-      unitNumber: 'A-101',
-      building: 'Tower A',
-      phone: '+91 9876543210',
-      joinDate: '2023-01-15',
-      emergencyContact: '+91 9876543211',
-      familyMembers: 3,
-      vehicleNumber: 'MH01AB1234'
-    }*/
-  ]
+  announcements: [],
+  visitors: [],
+  residents: []
 }
 
 // Mock API functions
@@ -70,7 +43,7 @@ const mockAPI = {
   async getAnnouncements() {
     try {
       // Try to fetch from placeholder API
-      const response = await fetch('https://');
+      const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=3');
       const data = await response.json();
       
       return data.map((post, index) => ({
@@ -78,7 +51,7 @@ const mockAPI = {
         title: post.title.substring(0, 30) + '...',
         content: post.body.substring(0, 100) + '...',
         date: `2024-01-${18 - index}`,
-        type: ['maintenance', 'security', 'event'][index],
+        type: ['maintenance', 'security', 'event'][index % 3],
         read: index > 0
       }));
     } catch (error) {
@@ -91,7 +64,19 @@ const mockAPI = {
   async getResidentData(userId = 1) {
     const resident = HARDCODED_DATA.residents.find(r => r.id === userId);
     if (!resident) {
-      return HARDCODED_DATA.residents[0];
+      // Return default resident data
+      return {
+        id: 1,
+        name: 'John Resident',
+        email: 'resident@demo.com',
+        unitNumber: 'A-101',
+        building: 'Tower A',
+        phone: '+91 9876543210',
+        joinDate: '2023-01-15',
+        emergencyContact: '+91 9876543211',
+        familyMembers: 3,
+        vehicleNumber: 'MH01AB1234'
+      };
     }
     return resident;
   },
@@ -105,9 +90,9 @@ const mockAPI = {
       return data.map((user, index) => ({
         id: user.id,
         name: user.name,
-        purpose: ['Delivery', 'Service', 'Personal', 'Delivery'][index],
-        time: ['Today, 10:30 AM', 'Today, 2:00 PM', 'Yesterday, 7:00 PM', 'Jan 15, 11:30 AM'][index],
-        status: ['Active', 'Pending', 'Completed', 'Completed'][index]
+        purpose: ['Delivery', 'Service', 'Personal', 'Delivery'][index % 4],
+        time: ['Today, 10:30 AM', 'Today, 2:00 PM', 'Yesterday, 7:00 PM', 'Jan 15, 11:30 AM'][index % 4],
+        status: ['Active', 'Pending', 'Completed', 'Completed'][index % 4]
       }));
     } catch (error) {
       console.log('Using hardcoded visitors data');
@@ -140,7 +125,10 @@ const mockAPI = {
       };
       return { success: true, data: HARDCODED_DATA.residents[residentIndex] };
     }
-    return { success: false };
+    
+    // Add new resident if not found
+    HARDCODED_DATA.residents.push({ id: userId, ...updatedData });
+    return { success: true, data: { id: userId, ...updatedData } };
   }
 };
 
@@ -173,10 +161,11 @@ export default function ResidentDashboard() {
       } catch (error) {
         console.error('Error loading data:', error);
         // Fallback to hardcoded data
-        setAnnouncements(HARDCODED_DATA.announcements);
-        setVisitors(HARDCODED_DATA.visitors);
-        setResidentData(HARDCODED_DATA.residents[0]);
-        setEditForm(HARDCODED_DATA.residents[0]);
+        const resident = await mockAPI.getResidentData();
+        setAnnouncements([]);
+        setVisitors([]);
+        setResidentData(resident);
+        setEditForm(resident);
       } finally {
         setIsLoading(false);
       }
@@ -268,10 +257,6 @@ export default function ResidentDashboard() {
     return announcements.filter(ann => !ann.read).length;
   }
 
-  const getActiveVisitors = () => {
-    return visitors.filter(v => v.status === 'Active').length;
-  }
-
   const getVisitorStatistics = () => {
     const activeVisitors = visitors.filter(v => v.status === 'Active').length;
     const pendingVisitors = visitors.filter(v => v.status === 'Pending').length;
@@ -290,7 +275,7 @@ export default function ResidentDashboard() {
 
   const handleCancelEdit = () => {
     setIsEditing(false);
-    setEditForm(residentData);
+    setEditForm(residentData || {});
     setSaveStatus('');
   }
 
@@ -305,7 +290,7 @@ export default function ResidentDashboard() {
   const handleSaveProfile = async () => {
     try {
       setSaveStatus('saving');
-      const result = await mockAPI.updateResidentProfile(residentData.id, editForm);
+      const result = await mockAPI.updateResidentProfile(residentData?.id || 1, editForm);
       
       if (result.success) {
         setResidentData(result.data);
@@ -618,17 +603,13 @@ export default function ResidentDashboard() {
       </tbody>
     </table>
   </div>
-
-  
-
-
 </div>
           </div>
         )}
 
         {/* Payments Tab */}
         {activeTab === 'payments' && (
-          <PaymentSystem />
+          <PaystackPayment />
         )}
 
         {/* Announcements Tab */}
@@ -975,8 +956,6 @@ export default function ResidentDashboard() {
                     </div>
                   </div>
                 </div>
-
-               
               </div>
             )}
           </div>
