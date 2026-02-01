@@ -35,6 +35,7 @@ import {
   Handshake,
   Target as TargetIcon
 } from 'lucide-react'
+import FAQ from '@/components/faq'
 
 // Team Data
 const TEAM_MEMBERS = [
@@ -950,6 +951,7 @@ export default function AboutPage() {
           </motion.p>
         </div>
       </motion.section>
+      <FAQ/>
 
       <Footer />
     </motion.div>

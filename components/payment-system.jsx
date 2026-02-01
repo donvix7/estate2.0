@@ -45,23 +45,23 @@ export function PaymentSystem() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-blue-50 p-4 rounded-lg">
           <h4 className="text-sm text-gray-600">Current Due</h4>
-          <p className="text-2xl font-bold">₹{paymentAmount.toLocaleString()}</p>
+          <p className="text-2xl font-bold"> ${paymentAmount.toLocaleString()}</p>
           <p className="text-sm text-gray-500">Due: 15th of each month</p>
         </div>
         
         <div className="bg-green-50 p-4 rounded-lg">
           <h4 className="text-sm text-gray-600">Total Paid</h4>
-          <p className="text-2xl font-bold text-green-600">₹{totalPaid.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-green-600"> ${totalPaid.toLocaleString()}</p>
         </div>
         
         <div className="bg-red-50 p-4 rounded-lg">
           <h4 className="text-sm text-gray-600">Pending</h4>
-          <p className="text-2xl font-bold text-red-600">₹{pendingAmount.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-red-600"> ${pendingAmount.toLocaleString()}</p>
         </div>
       </div>
       
       <div className="mb-6">
-        <label className="block text-sm font-medium mb-2">Payment Amount (₹)</label>
+        <label className="block text-sm font-medium mb-2">Payment Amount ( $)</label>
         <input
           type="number"
           value={paymentAmount}
@@ -76,7 +76,7 @@ export function PaymentSystem() {
         disabled={isProcessing || paymentAmount <= 0}
         className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 mb-6"
       >
-        {isProcessing ? 'Processing Payment...' : `Pay ₹${paymentAmount.toLocaleString()}`}
+        {isProcessing ? 'Processing Payment...' : `Pay  $${paymentAmount.toLocaleString()}`}
       </button>
       
       <div className="border-t pt-6">
@@ -90,7 +90,7 @@ export function PaymentSystem() {
               </div>
               <div className="text-right">
                 <p className={`font-bold ${txn.status === 'Paid' ? 'text-green-600' : 'text-red-600'}`}>
-                  ₹{txn.amount.toLocaleString()}
+                   ${txn.amount.toLocaleString()}
                 </p>
                 <span className={`text-sm px-2 py-1 rounded ${txn.status === 'Paid' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                   {txn.status}
@@ -105,7 +105,7 @@ export function PaymentSystem() {
         <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
           <h4 className="font-semibold text-green-700 mb-2">📄 Digital Receipt Generated</h4>
           <p className="text-sm text-green-600">
-            Receipt for ₹{paymentAmount.toLocaleString()} has been saved to your account.
+            Receipt for  ${paymentAmount.toLocaleString()} has been saved to your account.
             You can download it from Transaction History.
           </p>
         </div>

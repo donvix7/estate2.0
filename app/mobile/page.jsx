@@ -35,6 +35,7 @@ import {
   Play,
   Pause
 } from 'lucide-react'
+import FAQ from '@/components/faq'
 
 // App Capabilities
 const APP_CAPABILITIES = [
@@ -178,25 +179,25 @@ const USER_PERSONAS = [
     role: 'Resident',
     needs: ['Easy visitor approval', 'Quick payments', 'Emergency access', 'Community updates'],
     icon: <Users className="w-6 h-6" />,
-    color: 'blue'
+    color: 'gray'
   },
   {
     role: 'Security Staff',
     needs: ['Real-time monitoring', 'Visitor verification', 'Incident reporting', 'Emergency response'],
     icon: <Shield className="w-6 h-6" />,
-    color: 'green'
+    color: 'gray'
   },
   {
     role: 'Community Admin',
     needs: ['Financial management', 'User management', 'Announcements', 'Reports & Analytics'],
     icon: <Settings className="w-6 h-6" />,
-    color: 'purple'
+    color: 'gray'
   },
   {
     role: 'Visitor',
     needs: ['Easy check-in', 'Digital passes', 'Navigation help', 'Emergency contacts'],
     icon: <UserCheck className="w-6 h-6" />,
-    color: 'orange'
+    color: 'gray'
   }
 ]
 
@@ -1308,6 +1309,7 @@ export default function MobileAppFeaturesPage() {
           </motion.p>
         </div>
       </motion.section>
+      <FAQ/>
 
       <Footer />
     </motion.div>

@@ -33,6 +33,7 @@ import {
   Cpu,
   FileText
 } from 'lucide-react'
+import FAQ from '@/components/faq'
 
 // Pricing Plans Data
 const PRICING_PLANS = [
@@ -200,21 +201,21 @@ const ADDON_SERVICES = [
   {
     name: '24/7 Monitoring',
     description: 'Round-the-clock security monitoring by certified professionals',
-    price: '₹15,000/month',
+    price: ' $15,000/month',
     features: ['Dedicated Monitoring Team', 'Instant Alert Response', 'Monthly Security Reports', 'Emergency Coordination'],
     icon: <Headphones className="w-5 h-5" />
   },
   {
     name: 'Advanced Analytics',
     description: 'Deep insights and predictive analytics for security optimization',
-    price: '₹8,000/month',
+    price: ' $8,000/month',
     features: ['Predictive Threat Analysis', 'Behavioral Analytics', 'Custom Dashboards', 'Quarterly Reviews'],
     icon: <BarChart3 className="w-5 h-5" />
   },
   {
     name: 'Compliance Package',
     description: 'Ensure regulatory compliance and audit readiness',
-    price: '₹12,000/month',
+    price: ' $12,000/month',
     features: ['GDPR Compliance', 'Security Audits', 'Compliance Reports', 'Legal Consultation'],
     icon: <BadgeCheck className="w-5 h-5" />
   },
@@ -322,7 +323,7 @@ const PricingCard = memo(({ plan, billingPeriod, isAnnual, index }) => {
               transition={{ type: "spring", stiffness: 200 }}
               className="text-4xl font-bold text-gray-900"
             >
-              ₹{price}
+               ${price}
             </motion.span>
             <span className="text-gray-600 ml-2">
               /{isAnnual ? 'year' : 'month'}
@@ -336,7 +337,7 @@ const PricingCard = memo(({ plan, billingPeriod, isAnnual, index }) => {
               className="flex items-center gap-2"
             >
               <span className="text-sm text-gray-600">
-                ₹{monthlyEquivalent}/month equivalent
+                 ${monthlyEquivalent}/month equivalent
               </span>
               <motion.span
                 animate={pulseAnimation}
@@ -897,64 +898,7 @@ export default function PricingPage() {
         </div>
       </motion.section>
 
-      {/* FAQ Section */}
-      <motion.section 
-        initial="initial"
-        whileInView="animate"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={staggerContainer}
-        className="py-16 px-4 bg-gray-50"
-      >
-        <div className="container mx-auto max-w-4xl">
-          <motion.div variants={fadeInUp} className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
-            <p className="text-gray-600">
-              Everything you need to know about pricing and billing
-            </p>
-          </motion.div>
-
-          <motion.div variants={staggerContainer} className="space-y-4">
-            {PRICING_FAQ.map((item, index) => (
-              <FAQItem
-                key={index}
-                item={item}
-                isOpen={openFAQ === index}
-                onClick={() => toggleFAQ(index)}
-                index={index}
-              />
-            ))}
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-12 text-center"
-          >
-            <p className="text-gray-600 mb-6">
-              Still have questions? We're here to help.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => router.push('/contact')}
-                className="px-6 py-3 border border-gray-900 text-gray-900 font-semibold hover:bg-gray-900 hover:text-white transition-all duration-300"
-              >
-                Contact Support
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => router.push('/demo')}
-                className="px-6 py-3 bg-gray-900 text-white font-semibold hover:bg-gray-800 transition-all duration-300"
-              >
-                Schedule Demo
-              </motion.button>
-            </div>
-          </motion.div>
-        </div>
-      </motion.section>
+     <FAQ/>
 
       {/* CTA Section */}
       <motion.section 

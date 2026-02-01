@@ -22,7 +22,8 @@ import {
   BarChart3,
   Lock,
   Award,
-  TrendingUp
+  TrendingUp,
+  StepForward
 } from 'lucide-react'
 
 const Navigation = () => {
@@ -77,17 +78,17 @@ const Navigation = () => {
         },
         { 
             name: 'Resources', 
-            path: '/resources',
+            path: '/#setup',
             type: 'dropdown',
             icon: <FileText size={18} />,
             items: [
                 { 
                     name: 'Documentation', 
-                    path: '/docs',
+                    path: '/#setup',
                     icon: <FileText size={16} />,
                     subItems: [
                         { name: 'API Documentation', path: '/docs/api' },
-                        { name: 'Setup Guide', path: '/docs/setup' },
+                        { name: 'Setup Guide', path: '/#setup' },
                         { name: 'Integration Guide', path: '/docs/integration' },
                         { name: 'Security Features', path: '/docs/security' },
                         { name: 'Mobile App Guide', path: '/docs/mobile' },
@@ -106,31 +107,23 @@ const Navigation = () => {
                 },
                 { 
                     name: 'Support', 
-                    path: '/support',
+                    path: '/#faq',
                     icon: <Users size={16} />,
                     subItems: [
                         { name: 'Help Center', path: '/help' },
                         { name: 'Contact Support', path: '/contact' },
                         { name: 'Service Status', path: '/status' },
-                        { name: 'FAQ', path: '/faq' },
+                        { name: 'FAQ', path: '/#faq' },
                     ]
                 }
             ]
         },
     ]
 
-    const docItems = [
-        { name: 'API Documentation', path: '/docs/api', icon: <Globe size={16} /> },
-        { name: 'Setup Guide', path: '/docs/setup', icon: <Target size={16} /> },
-        { name: 'Integration Guide', path: '/docs/integration', icon: <Zap size={16} /> },
-        { name: 'Security Features', path: '/docs/security', icon: <Lock size={16} /> },
-        { name: 'Mobile App Guide', path: '/docs/mobile', icon: <Smartphone size={16} /> },
-        { name: 'FAQ', path: '/#faq', icon: <FileText size={16} /> },
-    ]
-
     const handleNavClick = (item) => {
         if (item.path.startsWith('/#')) {
             const element = document.querySelector(item.path.substring(1))
+
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth' })
             } else {

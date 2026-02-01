@@ -59,7 +59,7 @@ const PAYMENT_METHODS = [
     description: 'All major Indian banks',
     icon: <Banknote className="w-6 h-6" />,
     processingTime: '2-3 hours',
-    fees: '₹5 + GST',
+    fees: ' $5 + GST',
     supported: true
   },
   {
@@ -443,7 +443,7 @@ const OrderSummary = memo(({ plan, billingPeriod, addons = [] }) => {
               <p className="text-sm text-gray-600">{plan.units}</p>
             </div>
             <div className="text-right">
-              <div className="font-medium text-gray-900">₹{planPrice}</div>
+              <div className="font-medium text-gray-900"> ${planPrice}</div>
               <div className="text-xs text-gray-500">
                 {isAnnual ? 'per year' : 'per month'}
               </div>
@@ -457,7 +457,7 @@ const OrderSummary = memo(({ plan, billingPeriod, addons = [] }) => {
                   Monthly equivalent
                 </span>
                 <span className="font-medium text-green-800">
-                  ₹{monthlyEquivalent}/month
+                   ${monthlyEquivalent}/month
                 </span>
               </div>
             </div>
@@ -471,7 +471,7 @@ const OrderSummary = memo(({ plan, billingPeriod, addons = [] }) => {
             {addons.map((addon, index) => (
               <div key={index} className="flex justify-between items-center py-1">
                 <span className="text-sm text-gray-600">{addon.name}</span>
-                <span className="text-sm font-medium text-gray-900">₹{addon.price}</span>
+                <span className="text-sm font-medium text-gray-900"> ${addon.price}</span>
               </div>
             ))}
           </div>
@@ -481,16 +481,16 @@ const OrderSummary = memo(({ plan, billingPeriod, addons = [] }) => {
         <div className="border-t border-gray-200 pt-4 space-y-2">
           <div className="flex justify-between">
             <span className="text-gray-600">Subtotal</span>
-            <span className="font-medium text-gray-900">₹{subtotal}</span>
+            <span className="font-medium text-gray-900"> ${subtotal}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">GST (18%)</span>
-            <span className="font-medium text-gray-900">₹{tax}</span>
+            <span className="font-medium text-gray-900"> ${tax}</span>
           </div>
           <div className="flex justify-between pt-2 border-t border-gray-200">
             <span className="text-lg font-semibold text-gray-900">Total Amount</span>
             <div className="text-right">
-              <div className="text-2xl font-bold text-gray-900">₹{total}</div>
+              <div className="text-2xl font-bold text-gray-900"> ${total}</div>
               <div className="text-sm text-gray-500">
                 {isAnnual ? 'billed annually' : 'billed monthly'}
               </div>
@@ -503,7 +503,7 @@ const OrderSummary = memo(({ plan, billingPeriod, addons = [] }) => {
           <div className="p-3 bg-blue-50 border border-blue-200">
             <div className="flex items-center justify-between">
               <span className="text-sm text-blue-800">
-                💰 You save ₹{plan.price * 2} with annual billing
+                💰 You save  ${plan.price * 2} with annual billing
               </span>
             </div>
           </div>
@@ -672,7 +672,7 @@ const PaystackIntegration = memo(({ amount, email, onSuccess, onClose }) => {
         <div className="flex justify-between items-center mb-4">
           <div>
             <p className="text-sm text-gray-600">Amount to pay</p>
-            <p className="text-2xl font-bold text-gray-900">₹{amount}</p>
+            <p className="text-2xl font-bold text-gray-900"> ${amount}</p>
           </div>
           <div className="text-right">
             <div className="text-sm text-gray-600">Payment Processor</div>

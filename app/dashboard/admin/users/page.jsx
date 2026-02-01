@@ -29,7 +29,7 @@ const MOCK_DATA = {
       role: 'Maintenance Supervisor',
       department: 'Maintenance',
       joinDate: '2021-05-15',
-      salary: '₹35,000',
+      salary: ' $35,000',
       status: 'active',
       type: 'staff',
       profileImage: '👨‍🔧'
