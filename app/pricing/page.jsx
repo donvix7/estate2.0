@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, memo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/Footer'
 import { 
@@ -271,44 +270,44 @@ const PricingCard = memo(({ plan, billingPeriod, isAnnual, index }) => {
   }, [plan.id, billingPeriod, router])
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      whileHover={hoverScale}
-      className={`relative border transition-all duration-300 ${
+    <div
+      
+      
+      
+      
+      
+      className={`relative   transition-all duration-300 ${
         plan.highlighted
-          ? 'border-blue-600 shadow-xl scale-[1.02]'
-          : 'border-gray-200 hover:border-gray-300 hover:shadow-lg'
+          ? ' border-blue-600 shadow-xl scale-[1.02]'
+          : ' border-gray-200 hover:border-gray-300 hover:shadow-lg'
       } bg-white`}
     >
       {plan.popular && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+        <div
+          
+          
+          
           className="absolute -top-3 left-1/2 transform -translate-x-1/2"
         >
           <div className="bg-blue-600 text-white px-4 py-1 text-sm font-semibold">
             MOST POPULAR
           </div>
-        </motion.div>
+        </div>
       )}
       
       <div className="p-8">
         {/* Plan Header */}
         <div className="mb-6">
-          <motion.div 
-            whileHover={{ rotate: 5 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          <div 
+            
+            
             className={`p-3 w-fit mb-4 ${
               plan.color === 'blue' ? 'bg-blue-50' : 
               plan.color === 'purple' ? 'bg-purple-50' : 'bg-gray-50'
             }`}
           >
             {plan.icon}
-          </motion.div>
+          </div>
           <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
           <p className="text-gray-600">{plan.description}</p>
         </div>
@@ -316,36 +315,36 @@ const PricingCard = memo(({ plan, billingPeriod, isAnnual, index }) => {
         {/* Pricing */}
         <div className="mb-6">
           <div className="flex items-baseline mb-2">
-            <motion.span 
+            <span 
               key={`${price}-${isAnnual}`}
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 200 }}
+              
+              
+              
               className="text-4xl font-bold text-gray-900"
             >
                ${price}
-            </motion.span>
+            </span>
             <span className="text-gray-600 ml-2">
               /{isAnnual ? 'year' : 'month'}
             </span>
           </div>
           {isAnnual && (
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+            <div 
+              
+              
+              
               className="flex items-center gap-2"
             >
               <span className="text-sm text-gray-600">
                  ${monthlyEquivalent}/month equivalent
               </span>
-              <motion.span
-                animate={pulseAnimation}
+              <span
+                
                 className="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold"
               >
                 Save 16%
-              </motion.span>
-            </motion.div>
+              </span>
+            </div>
           )}
           {!isAnnual && plan.id !== 'starter' && (
             <div className="text-sm text-gray-500">
@@ -355,9 +354,9 @@ const PricingCard = memo(({ plan, billingPeriod, isAnnual, index }) => {
         </div>
 
         {/* CTA Button */}
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+        <button
+          
+          
           onClick={handleCtaClick}
           className={`w-full py-3 font-semibold mb-6 transition-all duration-300 ${
             plan.highlighted
@@ -366,17 +365,17 @@ const PricingCard = memo(({ plan, billingPeriod, isAnnual, index }) => {
           }`}
         >
           {plan.cta}
-        </motion.button>
+        </button>
 
         {/* Features List */}
         <div className="space-y-3">
           {plan.features.map((feature, featureIndex) => (
-            <motion.div 
+            <div 
               key={featureIndex} 
               className="flex items-start gap-3"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: featureIndex * 0.05 }}
+              
+              
+              
             >
               <div className={`p-1 mt-0.5 ${
                 feature.included 
@@ -384,46 +383,46 @@ const PricingCard = memo(({ plan, billingPeriod, isAnnual, index }) => {
                     plan.color === 'purple' ? 'text-purple-600' : 'text-gray-600'
                   : 'text-gray-300'
               }`}>
-                <motion.div
-                  whileHover={{ scale: 1.2 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                <div
+                  
+                  
                 >
                   {feature.included ? (
                     <Check className="w-4 h-4" />
                   ) : (
                     <X className="w-4 h-4" />
                   )}
-                </motion.div>
+                </div>
               </div>
               <span className={`text-sm ${
                 feature.included ? 'text-gray-700' : 'text-gray-400'
               }`}>
                 {feature.text}
               </span>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 })
 
 PricingCard.displayName = 'PricingCard'
 
 const FeatureComparisonRow = memo(({ feature, index }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 10 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, amount: 0.2 }}
-    transition={{ delay: index * 0.05 }}
+  <div
+    
+    
+    
+    
     className={`grid grid-cols-4 gap-4 p-4 ${
       index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
     }`}
   >
     <div className="font-medium text-gray-900">{feature.name}</div>
     <div className="text-center">
-      <motion.span 
-        whileHover={{ scale: 1.05 }}
+      <span 
+        
         className={`px-3 py-1 text-sm font-medium ${
           feature.starter === 'No' 
             ? 'bg-red-100 text-red-800' 
@@ -433,11 +432,11 @@ const FeatureComparisonRow = memo(({ feature, index }) => (
         }`}
       >
         {feature.starter}
-      </motion.span>
+      </span>
     </div>
     <div className="text-center">
-      <motion.span 
-        whileHover={{ scale: 1.05 }}
+      <span 
+        
         className={`px-3 py-1 text-sm font-medium ${
           feature.professional === 'No' 
             ? 'bg-red-100 text-red-800' 
@@ -447,11 +446,11 @@ const FeatureComparisonRow = memo(({ feature, index }) => (
         }`}
       >
         {feature.professional}
-      </motion.span>
+      </span>
     </div>
     <div className="text-center">
-      <motion.span 
-        whileHover={{ scale: 1.05 }}
+      <span 
+        
         className={`px-3 py-1 text-sm font-medium ${
           feature.enterprise === 'Unlimited' || feature.enterprise === 'Full' || feature.enterprise === 'AI-Powered'
             ? 'bg-purple-100 text-purple-800'
@@ -461,83 +460,81 @@ const FeatureComparisonRow = memo(({ feature, index }) => (
         }`}
       >
         {feature.enterprise}
-      </motion.span>
+      </span>
     </div>
-  </motion.div>
+  </div>
 ))
 
 FeatureComparisonRow.displayName = 'FeatureComparisonRow'
 
 const FAQItem = memo(({ item, isOpen, onClick, index }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, amount: 0.2 }}
-    transition={{ delay: index * 0.1 }}
-    className="border border-gray-200"
+  <div
+    
+    
+    
+    
+    className=" border-gray-200"
   >
-    <motion.button
-      whileHover={{ backgroundColor: 'rgba(249, 250, 251, 0.5)' }}
+    <button
+      
       onClick={onClick}
       className="w-full p-6 text-left flex justify-between items-center transition-colors"
     >
       <div className="flex items-center gap-4">
-        <motion.div 
-          whileHover={{ rotate: 5 }}
+        <div 
+          
           className="p-2 bg-gray-100 text-gray-700"
         >
           {item.icon}
-        </motion.div>
+        </div>
         <h3 className="font-semibold text-gray-900">{item.question}</h3>
       </div>
-      <motion.div
-        animate={{ rotate: isOpen ? 180 : 0 }}
-        transition={{ duration: 0.3 }}
+      <div
+        
+        
       >
         {isOpen ? (
           <ChevronUp className="w-5 h-5 text-gray-500" />
         ) : (
           <ChevronDown className="w-5 h-5 text-gray-500" />
         )}
-      </motion.div>
-    </motion.button>
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.3 }}
+      </div>
+    </button>
+          {isOpen && (
+        <div
+          
+          
+          
+          
           className="overflow-hidden"
         >
           <div className="p-6 pt-0">
             <p className="text-gray-600">{item.answer}</p>
           </div>
-        </motion.div>
+        </div>
       )}
-    </AnimatePresence>
-  </motion.div>
+      </div>
 ))
 
 FAQItem.displayName = 'FAQItem'
 
 const AddonCard = memo(({ service, index }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, amount: 0.2 }}
-    transition={{ delay: index * 0.1 }}
-    whileHover={{ y: -5 }}
-    className="border border-gray-200 p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-300"
+  <div
+    
+    
+    
+    
+    
+    className=" border-gray-200 p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-300"
   >
     <div className="flex items-start justify-between mb-4">
       <div>
-        <motion.div 
-          whileHover={{ rotate: 5, scale: 1.1 }}
+        <div 
+          
           className="p-2 bg-gray-100 text-gray-700 w-fit mb-3"
         >
           {service.icon}
-        </motion.div>
+        </div>
         <h3 className="text-lg font-semibold text-gray-900 mb-1">
           {service.name}
         </h3>
@@ -551,33 +548,33 @@ const AddonCard = memo(({ service, index }) => (
     
     <div className="space-y-2 mb-6">
       {service.features.map((feature, idx) => (
-        <motion.div 
+        <div 
           key={idx}
-          initial={{ opacity: 0, x: -10 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: idx * 0.05 }}
+          
+          
+          
+          
           className="flex items-center gap-2"
         >
-          <motion.div
-            whileHover={{ rotate: 360 }}
-            transition={{ duration: 0.5 }}
+          <div
+            
+            
           >
             <Check className="w-4 h-4 text-gray-500" />
-          </motion.div>
+          </div>
           <span className="text-sm text-gray-700">{feature}</span>
-        </motion.div>
+        </div>
       ))}
     </div>
     
-    <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className="w-full py-2 border border-gray-900 text-gray-900 font-semibold hover:bg-gray-900 hover:text-white transition-all duration-300"
+    <button
+      
+      
+      className="w-full py-2 border-gray-900 text-gray-900 font-semibold hover:bg-gray-900 hover:text-white transition-all duration-300"
     >
       Add to Plan
-    </motion.button>
-  </motion.div>
+    </button>
+  </div>
 ))
 
 AddonCard.displayName = 'AddonCard'
@@ -611,98 +608,98 @@ export default function PricingPage() {
   ]
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+    <div 
+      
+      
+      
       className="min-h-screen bg-white text-gray-900"
     >
       <Navigation />
 
       {/* Hero Section */}
-      <motion.section 
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="pt-28 pb-16 px-4 bg-gradient-to-b from-white to-gray-50"
+      <section 
+        
+        
+        
+        className="pt-28 pb-16 px-4 bg-linear-to-b from-white to-gray-50"
       >
         <div className="container mx-auto text-center">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 bg-white mb-6"
+          <div 
+            
+            
+            
+            className="inline-flex items-center gap-2 px-4 py-2 border-gray-300 bg-white mb-6"
           >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            <div
+              
+              
             >
               <Sparkles className="w-4 h-4 text-gray-700" />
-            </motion.div>
+            </div>
             <span className="text-sm font-medium text-gray-700">TRANSPARENT PRICING</span>
-          </motion.div>
+          </div>
           
-          <motion.h1 
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
+          <h1 
+            
+            
+            
             className="text-4xl md:text-5xl font-bold mb-6"
           >
-            <motion.span variants={fadeInUp} className="block text-gray-900">
+            <span  className="block text-gray-900">
               Simple, Predictable
-            </motion.span>
-            <motion.span variants={fadeInUp} className="block text-gray-900">
+            </span>
+            <span  className="block text-gray-900">
               Pricing
-            </motion.span>
-          </motion.h1>
+            </span>
+          </h1>
           
-          <motion.p 
-            variants={fadeInUp}
+          <p 
+            
             className="text-lg text-gray-600 max-w-2xl mx-auto mb-8"
           >
             Choose the perfect plan for your community. All plans include a 30-day free trial.
             No hidden fees, no surprises.
-          </motion.p>
+          </p>
 
           {/* Stats */}
-          <motion.div 
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
+          <div 
+            
+            
+            
             className="flex flex-wrap justify-center gap-8 mb-12"
           >
             {stats.map((stat, index) => (
-              <motion.div 
+              <div 
                 key={index} 
-                variants={fadeInScale}
+                
                 className="text-center"
               >
-                <motion.div
-                  animate={pulseAnimation}
+                <div
+                  
                   className="text-2xl md:text-3xl font-bold text-gray-900"
                 >
                   {stat.value}
-                </motion.div>
+                </div>
                 <div className="text-sm text-gray-600">{stat.label}</div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Pricing Toggle */}
-      <motion.section 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+      <section 
+        
+        
+        
         className="py-8 bg-gray-50"
       >
         <div className="container mx-auto px-4">
           <div className="max-w-md mx-auto">
-            <div className="bg-white border border-gray-200 p-1 rounded-lg inline-flex">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+            <div className="bg-white border-gray-200 p-1 rounded-lg inline-flex">
+              <button
+                
+                
                 onClick={() => setBillingPeriod('monthly')}
                 className={`px-6 py-3 font-semibold transition-all relative ${
                   billingPeriod === 'monthly'
@@ -711,10 +708,10 @@ export default function PricingPage() {
                 }`}
               >
                 Monthly Billing
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              </button>
+              <button
+                
+                
                 onClick={() => setBillingPeriod('annual')}
                 className={`px-6 py-3 font-semibold transition-all relative ${
                   billingPeriod === 'annual'
@@ -723,38 +720,38 @@ export default function PricingPage() {
                 }`}
               >
                 Annual Billing
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 200 }}
+                <span
+                  
+                  
+                  
                   className="absolute -top-2 -right-2 px-2 py-1 bg-green-600 text-white text-xs font-bold rounded"
                 >
                   Save 16%
-                </motion.span>
-              </motion.button>
+                </span>
+              </button>
             </div>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
+            <p
+              
+              
+              
               className="text-center text-gray-600 text-sm mt-3"
             >
               Annual billing includes 2 months free and priority support
-            </motion.p>
+            </p>
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Pricing Plans */}
-      <motion.section 
-        initial="initial"
-        whileInView="animate"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={staggerContainer}
+      <section 
+        
+        
+        
+        
         className="py-16 px-4"
       >
         <div className="container mx-auto">
-          <motion.div variants={staggerContainer} className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div  className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {PRICING_PLANS.map((plan, index) => (
               <PricingCard
                 key={plan.id}
@@ -764,18 +761,17 @@ export default function PricingPage() {
                 index={index}
               />
             ))}
-          </motion.div>
+          </div>
 
           {/* Annual Savings Note */}
-          <AnimatePresence>
-            {isAnnual && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                      {isAnnual && (
+              <div
+                
+                
+                
                 className="max-w-3xl mx-auto mt-12"
               >
-                <div className="border border-green-200 bg-green-50 p-6">
+                <div className=" border-green-200 bg-green-50 p-6">
                   <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                     <div>
                       <h3 className="font-semibold text-green-900 mb-1">
@@ -786,58 +782,57 @@ export default function PricingPage() {
                       </p>
                     </div>
                     <div className="text-right">
-                      <motion.div
-                        animate={{ scale: [1, 1.05, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
+                      <div
+                        
+                        
                         className="text-2xl font-bold text-green-900"
                       >
                         2 Months Free
-                      </motion.div>
+                      </div>
                       <div className="text-sm text-green-700">Compared to monthly billing</div>
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             )}
-          </AnimatePresence>
-        </div>
-      </motion.section>
+                  </div>
+      </section>
 
       {/* Feature Comparison */}
-      <motion.section 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
+      <section 
+        
+        
+        
+        
         className="py-16 px-4 bg-gray-50"
       >
         <div className="container mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <div 
+            
+            
+            
             className="text-center mb-12"
           >
             <h2 className="text-3xl font-bold mb-4">Plan Comparison</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Detailed breakdown of features across all plans
             </p>
-          </motion.div>
+          </div>
 
           <div className="overflow-x-auto">
             <div className="min-w-[800px]">
               {/* Header */}
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+              <div
+                
+                
+                
                 className="grid grid-cols-4 gap-4 bg-gray-900 text-white p-4"
               >
                 <div className="font-semibold">Features</div>
                 <div className="text-center font-semibold">Starter</div>
                 <div className="text-center font-semibold">Professional</div>
                 <div className="text-center font-semibold">Enterprise</div>
-              </motion.div>
+              </div>
 
               {/* Rows */}
               {FEATURE_COMPARISON.slice(0, showAllFeatures ? FEATURE_COMPARISON.length : 8).map((feature, index) => (
@@ -846,49 +841,47 @@ export default function PricingPage() {
             </div>
           </div>
 
-          <AnimatePresence>
-            {!showAllFeatures && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                      {!showAllFeatures && (
+              <div
+                
+                
+                
                 className="text-center mt-8"
               >
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <button
+                  
+                  
                   onClick={() => setShowAllFeatures(true)}
-                  className="px-6 py-3 border border-gray-900 text-gray-900 font-semibold hover:bg-gray-900 hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto"
+                  className="px-6 py-3 border-gray-900 text-gray-900 font-semibold hover:bg-gray-900 hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto"
                 >
                   Show All Features
-                  <motion.span
-                    animate={{ y: [0, 3, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
+                  <span
+                    
+                    
                   >
                     <ChevronDown className="w-4 h-4" />
-                  </motion.span>
-                </motion.button>
-              </motion.div>
+                  </span>
+                </button>
+              </div>
             )}
-          </AnimatePresence>
-        </div>
-      </motion.section>
+                  </div>
+      </section>
 
       {/* Add-on Services */}
-      <motion.section 
-        initial="initial"
-        whileInView="animate"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={staggerContainer}
+      <section 
+        
+        
+        
+        
         className="py-16 px-4"
       >
         <div className="container mx-auto">
-          <motion.div variants={fadeInUp} className="text-center mb-12">
+          <div  className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Add-on Services</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Enhance your security setup with our additional services
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {ADDON_SERVICES.map((service, index) => (
@@ -896,102 +889,102 @@ export default function PricingPage() {
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
      <FAQ/>
 
       {/* CTA Section */}
-      <motion.section 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
+      <section 
+        
+        
+        
+        
         className="py-16 px-4 bg-gray-900 text-white"
       >
         <div className="container mx-auto text-center max-w-3xl">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-gray-700 bg-gray-800 mb-6"
+          <div 
+            
+            
+            
+            className="inline-flex items-center gap-2 px-4 py-2 border-gray-700 bg-gray-800 mb-6"
           >
-            <motion.div
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
+            <div
+              
+              
             >
               <Star className="w-4 h-4 text-gray-300" />
-            </motion.div>
+            </div>
             <span className="text-sm font-medium text-gray-300">READY TO GET STARTED?</span>
-          </motion.div>
+          </div>
           
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
+          <h2 
+            
+            
+            
+            
             className="text-3xl md:text-4xl font-bold mb-6"
           >
             <span className="block">Secure Your Community</span>
             <span className="block">Today</span>
-          </motion.h2>
+          </h2>
           
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
+          <p 
+            
+            
+            
+            
             className="text-lg text-gray-300 mb-8"
           >
             Join thousands of communities that trust EstateSecure for their security needs.
             Start your 30-day free trial today.
-          </motion.p>
+          </p>
           
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
+          <div 
+            
+            
+            
+            
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button
+              
+              
               onClick={handleGetStarted}
               className="px-8 py-3 bg-white text-gray-900 font-semibold hover:bg-gray-100 transition-all duration-300 flex items-center gap-2"
             >
               Start Free Trial
-              <motion.span
-                animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
+              <span
+                
+                
               >
                 <ArrowRight className="w-4 h-4" />
-              </motion.span>
-            </motion.button>
+              </span>
+            </button>
             
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button
+              
+              
               onClick={handleContactSales}
-              className="px-8 py-3 border border-gray-600 text-gray-300 font-semibold hover:bg-gray-800 transition-all duration-300 flex items-center gap-2"
+              className="px-8 py-3 border-gray-600 text-gray-300 font-semibold hover:bg-gray-800 transition-all duration-300 flex items-center gap-2"
             >
               Talk to Sales
               <HelpCircle className="w-4 h-4" />
-            </motion.button>
-          </motion.div>
+            </button>
+          </div>
           
-          <motion.p 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.6 }}
+          <p 
+            
+            
+            
+            
             className="text-gray-400 text-sm mt-6"
           >
             No credit card required • 30-day free trial • Cancel anytime
-          </motion.p>
+          </p>
         </div>
-      </motion.section>
+      </section>
 
       <Footer />
-    </motion.div>
+    </div>
   )
 }

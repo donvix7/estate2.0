@@ -14,6 +14,11 @@ export const api = {
 
   getState: () => STATE,
 
+  logout: async () => {
+    await delay(300);
+    return { success: true };
+  },
+
   // --- ANNOUNCEMENTS & ALERTS ---
   async getAnnouncements() {
     await delay(300);

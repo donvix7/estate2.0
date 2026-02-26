@@ -13,11 +13,11 @@ const StaffNav = ({ staffData, onLogout }) => {
   return (
     <div>
       {/* Header */}
-      <header className="bg-gradient-to-r from-gray-800 via-gray-800/95 to-gray-800 border-b border-gray-700/50 backdrop-blur-sm">
+      <header className="bg-linear-to-r from-gray-800 via-gray-800/95 to-gray-800 border-b border-gray-700/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+              <div className="w-12 h-12 bg-linear-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
                 <Briefcase className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -31,7 +31,7 @@ const StaffNav = ({ staffData, onLogout }) => {
                   <span>Welcome, {safeStaffData.name}</span>
                 </div>
                 <div className="flex items-center gap-3 mt-1 text-xs">
-                  <span className="text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded border border-cyan-400/20">
+                  <span className="text- blue-400 bg- blue-400/10 px-2 py-0.5 rounded    - blue-400/20">
                     {safeStaffData.department}
                   </span>
                   <span className="text-gray-500 flex items-center gap-1">
@@ -43,7 +43,7 @@ const StaffNav = ({ staffData, onLogout }) => {
             
             <button 
               onClick={onLogout}
-              className="px-6 py-3 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white rounded-xl font-medium transition-all duration-300 border border-gray-700 hover:border-gray-600 flex items-center gap-2"
+              className="px-6 py-3 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white rounded-xl font-medium transition-all duration-300 border-gray-700 hover:border-gray-600 flex items-center gap-2"
             >
               <LogOut className="w-5 h-5" />
               <span className="hidden sm:inline">Logout</span>

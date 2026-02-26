@@ -2,22 +2,40 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Navigation from '@/components/navigation'
-import Footer from '@/components/Footer'
+import Link from 'next/link'
 import { 
   Building, 
   User, 
   MapPin, 
-  Mail, 
-  Phone, 
-  Lock, 
   Shield, 
-  CheckCircle,
+  CheckCircle2,
   AlertTriangle,
   ArrowRight,
   ArrowLeft,
-  Loader2
+  Loader2,
+  Building2,
+  Lock,
+  Flag
 } from 'lucide-react'
+
+const CAROUSEL_IMAGES = [
+  { 
+    url: "https://images.unsplash.com/photo-1592595896551-12b371d546d5?q=80&w=2600&auto=format&fit=crop",
+    alt: "Community: Gated Community Street"
+  },
+  { 
+    url: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2600&auto=format&fit=crop",
+    alt: "Security: Concierge & Security"
+  },
+  { 
+    url: "https://images.unsplash.com/photo-1581578731117-e08f542e9466?q=80&w=2600&auto=format&fit=crop",
+    alt: "Service: Engineering & Maintenance"
+  },
+  { 
+    url: "https://images.unsplash.com/photo-1540497077202-7c8a3999166f?q=80&w=2600&auto=format&fit=crop",
+    alt: "Amenities: Premium Fitness Center"
+  }
+]
 
 export default function EstateRegistrationPage() {
   const [step, setStep] = useState(1)
@@ -48,6 +66,7 @@ export default function EstateRegistrationPage() {
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const router = useRouter()
   
   const estateTypes = [
@@ -142,9 +161,7 @@ export default function EstateRegistrationPage() {
       try {
         const response = await fetch('/api/register', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData),
         })
 
@@ -165,86 +182,93 @@ export default function EstateRegistrationPage() {
   }
 
   const progressSteps = [
-    { number: 1, label: 'Basic Info' },
-    { number: 2, label: 'Management' },
-    { number: 3, label: 'Configuration' },
-    { number: 4, label: 'Account' }
+    { number: 1, label: 'Estate Details', icon: <Building2 className="w-4 h-4" /> },
+    { number: 2, label: 'Management', icon: <User className="w-4 h-4" /> },
+    { number: 3, label: 'Configuration', icon: <Shield className="w-4 h-4" /> },
+    { number: 4, label: 'Account', icon: <Lock className="w-4 h-4" /> }
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
-      <Navigation />
+    <div className="min-h-screen w-full flex bg-gray-50 overflow-hidden">
+      
+      {/* Right Side - Registration Form */}
+      <div className="w-full lg:w-1/2 flex flex-col justify-center p-8 md:p-12 lg:p-16 relative bg-white overflow-y-auto">
+        <div className="absolute top-8 left-8 lg:hidden">
+            <Link href="/" className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors">
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Home</span>
+            </Link> 
+        </div>
 
-      <main className="pt-24 pb-12 px-4">
-        <div className="container mx-auto max-w-4xl">
-          
-          <div className="text-center mb-10">
-            <h1 className="text-3xl md:text-4xl font-bold mb-3 text-gray-900">
-              Estate Registration
-            </h1>
-            <p className="text-gray-600">Complete this form to register your estate for our security management system</p>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="mb-8">
-            <div className="flex justify-between items-center relative mb-4">
-              <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1 bg-gray-200 -z-10"></div>
-              <div 
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 h-1 bg-gray-900 -z-10 transition-all duration-300"
-                style={{ width: `${((step - 1) / 3) * 100}%` }}
-              ></div>
-
-              {progressSteps.map((item) => (
-                <div key={item.number} className="flex flex-col items-center gap-2">
-                  <div 
-                    className={`w-10 h-10 flex items-center justify-center font-medium border-2 transition-all ${
-                      step >= item.number
-                      ? 'bg-gray-900 border-gray-900 text-white' 
-                      : 'bg-white border-gray-300 text-gray-500'
-                    }`}
-                  >
-                    {step > item.number ? <CheckCircle className="w-5 h-5" /> : item.number}
-                  </div>
-                  <span className={`text-xs font-medium ${step >= item.number ? 'text-gray-900' : 'text-gray-500'}`}>
-                    {item.label}
-                  </span>
-                </div>
-              ))}
+        <div className="max-w-xl w-full mx-auto mt-10 space-y-8">
+            
+            {/* Progress Bar (Compact for Right Side) */}
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-2">
+                {progressSteps.map((item) => (
+                   <div key={item.number} className="flex flex-col items-center gap-1 flex-1 relative">
+                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold z-10 ${
+                            step > item.number ? 'bg-gray-900 text-white' : 
+                            step === item.number ? 'bg-gray-900 text-white ring-4 ring-gray-100' : 
+                            'bg-gray-100 text-gray-400'
+                       }`}>
+                           {step > item.number ? <CheckCircle2 className="w-4 h-4" /> : item.number}
+                       </div>
+                       <div className={`text-[10px] font-semibold tracking-wider uppercase hidden sm:block ${step >= item.number ? 'text-gray-900' : 'text-gray-400'}`}>
+                           {item.label}
+                       </div>
+                       {item.number < 4 && (
+                           <div className={`absolute top-4 left-1/2 w-full h-[2px] z-0 ${step > item.number ? 'bg-gray-900' : 'bg-gray-100'}`} />
+                       )}
+                   </div>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Form Container */}
-          <div className="bg-white border border-gray-200 shadow-sm p-6 md:p-8">
+            <div className="text-center lg:text-left mb-8">
+                <h1 className="text-3xl lg:text-4xl font-bold text-gray-700 mb-3 tracking-tight">
+                    {step === 1 && 'Tell us about your estate'}
+                    {step === 2 && 'Who will manage this account?'}
+                    {step === 3 && 'Configure your security'}
+                    {step === 4 && 'Create your admin account'}
+                </h1>
+                <p className="text-gray-500 mt-2 text-lg">
+                    {step === 1 && 'We need some basic details to get you set up.'}
+                    {step === 2 && 'Provide contact details for the primary administrator.'}
+                    {step === 3 && 'Help us tailor the experience to your needs.'}
+                    {step === 4 && 'Secure your account with a strong password.'}
+                </p>
+            </div>
+
             {submitError && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <div className="mb-6 p-4 bg-red-50 border-red-200 text-red-700 flex items-start gap-3 rounded-sm">
+                <AlertTriangle className="w-5 h-5 text-red-600 shrink-0" />
                 <span className="text-sm">{submitError}</span>
               </div>
             )}
 
-            <form onSubmit={handleSubmit}>
+            <form 
+              onSubmit={handleSubmit} 
+              className="space-y-6 bg-gray-100 p-6 rounded-lg"
+            >
               
               {/* STEP 1: BASIC INFO */}
               {step === 1 && (
                 <div className="space-y-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                    <Building className="text-gray-600 w-5 h-5" /> Estate Details
-                  </h2>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Estate Name *</label>
+                      <label className="text-sm font-medium text-gray-700">Estate Name <span className="text-red-500">*</span></label>
                       <input
                         type="text"
                         name="estateName"
                         value={formData.estateName}
                         onChange={handleChange}
-                        className={`w-full p-3 bg-white border focus:outline-none focus:ring-1 transition-all ${
-                          errors.estateName ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
+                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                          errors.estateName ? ' border-red-500' : ' border-gray-200'
                         }`}
                         placeholder="e.g. Royal Gardens"
                       />
-                      {errors.estateName && <p className="text-red-600 text-xs mt-1">{errors.estateName}</p>}
+                      {errors.estateName && <p className="text-red-600 text-xs">{errors.estateName}</p>}
                     </div>
 
                     <div className="space-y-2">
@@ -253,7 +277,7 @@ export default function EstateRegistrationPage() {
                         name="estateType"
                         value={formData.estateType}
                         onChange={handleChange}
-                        className="w-full p-3 bg-white border border-gray-300 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 text-gray-900"
+                        className="w-full p-3.5 bg-white border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all text-gray-800"
                       >
                         {estateTypes.map(type => (
                           <option key={type.value} value={type.value}>{type.label}</option>
@@ -262,43 +286,46 @@ export default function EstateRegistrationPage() {
                     </div>
 
                     <div className="md:col-span-2 space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Address *</label>
+                      <label className="text-sm font-medium text-gray-700">Address <span className="text-red-500">*</span></label>
                       <textarea
                         name="address"
                         value={formData.address}
                         onChange={handleChange}
                         rows="3"
-                        className={`w-full p-3 bg-white border focus:outline-none focus:ring-1 transition-all resize-none ${
-                          errors.address ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
+                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all resize-none placeholder:text-gray-400 text-gray-800 ${
+                          errors.address ? ' border-red-500' : ' border-gray-200'
                         }`}
                         placeholder="Full street address"
                       />
-                      {errors.address && <p className="text-red-600 text-xs mt-1">{errors.address}</p>}
+                      {errors.address && <p className="text-red-600 text-xs">{errors.address}</p>}
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">City *</label>
-                      <input
-                        type="text"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleChange}
-                        className={`w-full p-3 bg-white border focus:outline-none focus:ring-1 transition-all ${
-                          errors.city ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
-                        }`}
-                        placeholder="City"
-                      />
-                      {errors.city && <p className="text-red-600 text-xs mt-1">{errors.city}</p>}
+                        <label className="text-sm font-medium text-gray-700">City <span className="text-red-500">*</span></label>
+                        <div className="relative">
+                            <MapPin className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+                            <input
+                                type="text"
+                                name="city"
+                                value={formData.city}
+                                onChange={handleChange}
+                                className={`w-full pl-10 pr-4 py-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                                errors.city ? ' border-red-500' : ' border-gray-200'
+                                }`}
+                                placeholder="City"
+                            />
+                        </div>
+                        {errors.city && <p className="text-red-600 text-xs">{errors.city}</p>}
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">State</label>
+                      <label className="text-sm font-medium text-gray-700">State/Province</label>
                       <input
                         type="text"
                         name="state"
                         value={formData.state}
                         onChange={handleChange}
-                        className="w-full p-3 bg-white border border-gray-300 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+                        className="w-full p-3.5 bg-white border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all text-gray-800"
                         placeholder="State"
                       />
                     </div>
@@ -309,24 +336,20 @@ export default function EstateRegistrationPage() {
               {/* STEP 2: MANAGEMENT */}
               {step === 2 && (
                 <div className="space-y-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                    <User className="text-gray-600 w-5 h-5" /> Management Details
-                  </h2>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Admin Name *</label>
+                      <label className="text-sm font-medium text-gray-700">Administrator Name <span className="text-red-500">*</span></label>
                       <input
                         type="text"
                         name="adminName"
                         value={formData.adminName}
                         onChange={handleChange}
-                        className={`w-full p-3 bg-white border focus:outline-none focus:ring-1 transition-all ${
-                          errors.adminName ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
+                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                          errors.adminName ? ' border-red-500' : ' border-gray-200'
                         }`}
                         placeholder="Full Name"
                       />
-                      {errors.adminName && <p className="text-red-600 text-xs mt-1">{errors.adminName}</p>}
+                      {errors.adminName && <p className="text-red-600 text-xs">{errors.adminName}</p>}
                     </div>
 
                     <div className="space-y-2">
@@ -335,7 +358,7 @@ export default function EstateRegistrationPage() {
                         name="managementType"
                         value={formData.managementType}
                         onChange={handleChange}
-                        className="w-full p-3 bg-white border border-gray-300 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 text-gray-900"
+                        className="w-full p-3.5 bg-white border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all text-gray-800"
                       >
                         {managementTypes.map(type => (
                           <option key={type.value} value={type.value}>{type.label}</option>
@@ -344,45 +367,45 @@ export default function EstateRegistrationPage() {
                     </div>
 
                     <div className="md:col-span-2 space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Admin Email *</label>
+                      <label className="text-sm font-medium text-gray-700">Official Email <span className="text-red-500">*</span></label>
                       <input
                         type="email"
                         name="adminEmail"
                         value={formData.adminEmail}
                         onChange={handleChange}
-                        className={`w-full p-3 bg-white border focus:outline-none focus:ring-1 transition-all ${
-                          errors.adminEmail ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
+                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                          errors.adminEmail ? ' border-red-500' : ' border-gray-200'
                         }`}
                         placeholder="admin@estate.com"
                       />
-                      {errors.adminEmail && <p className="text-red-600 text-xs mt-1">{errors.adminEmail}</p>}
+                      {errors.adminEmail && <p className="text-red-600 text-xs">{errors.adminEmail}</p>}
                     </div>
 
                     <div className="md:col-span-2 space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Admin Phone *</label>
+                      <label className="text-sm font-medium text-gray-700">Phone Number <span className="text-red-500">*</span></label>
                       <div className="flex">
                         <select
                           name="countryCode"
                           value={formData.countryCode}
                           onChange={handleChange}
-                          className="bg-white border border-gray-300 border-r-0 px-3 focus:outline-none text-gray-900"
+                          className="bg-white border-gray-200 border-r-0 rounded-l-xl px-3 focus:outline-none text-gray-800 text-sm font-medium shadow-sm focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all"
                         >
-                          <option value="+234">+234</option>
-                          <option value="+1">+1</option>
-                          <option value="+91">+91</option>
+                          <option value="+234">NG (+234)</option>
+                          <option value="+1">US (+1)</option>
+                          <option value="+91">IN (+91)</option>
                         </select>
                         <input
                           type="tel"
                           name="adminPhone"
                           value={formData.adminPhone}
                           onChange={handleChange}
-                          className={`flex-1 p-3 bg-white border focus:outline-none focus:ring-1 transition-all ${
-                            errors.adminPhone ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
+                          className={`flex-1 p-3.5 bg-white   rounded-r-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                            errors.adminPhone ? ' border-red-500' : ' border-gray-200'
                           }`}
-                          placeholder="Phone Number"
+                          placeholder="801 234 5678"
                         />
                       </div>
-                      {errors.adminPhone && <p className="text-red-600 text-xs mt-1">{errors.adminPhone}</p>}
+                      {errors.adminPhone && <p className="text-red-600 text-xs">{errors.adminPhone}</p>}
                     </div>
                   </div>
                 </div>
@@ -391,40 +414,36 @@ export default function EstateRegistrationPage() {
               {/* STEP 3: CONFIGURATION */}
               {step === 3 && (
                 <div className="space-y-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                    <Shield className="text-gray-600 w-5 h-5" /> Estate Configuration
-                  </h2>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Total Units *</label>
+                      <label className="text-sm font-medium text-gray-700">Total Units/Homes <span className="text-red-500">*</span></label>
                       <input
                         type="number"
                         name="totalUnits"
                         value={formData.totalUnits}
                         onChange={handleChange}
                         min="1"
-                        className={`w-full p-3 bg-white border focus:outline-none focus:ring-1 transition-all ${
-                          errors.totalUnits ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
+                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                          errors.totalUnits ? ' border-red-500' : ' border-gray-200'
                         }`}
-                        placeholder="Number of houses/flats"
+                        placeholder="e.g. 120"
                       />
-                      {errors.totalUnits && <p className="text-red-600 text-xs mt-1">{errors.totalUnits}</p>}
+                      {errors.totalUnits && <p className="text-red-600 text-xs">{errors.totalUnits}</p>}
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Security Desk Phone *</label>
+                      <label className="text-sm font-medium text-gray-700">Security Desk Phone <span className="text-red-500">*</span></label>
                       <input
                         type="tel"
                         name="securityContacts"
                         value={formData.securityContacts}
                         onChange={handleChange}
-                        className={`w-full p-3 bg-white border focus:outline-none focus:ring-1 transition-all ${
-                          errors.securityContacts ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
+                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                          errors.securityContacts ? ' border-red-500' : ' border-gray-200'
                         }`}
                         placeholder="Emergency contact"
                       />
-                      {errors.securityContacts && <p className="text-red-600 text-xs mt-1">{errors.securityContacts}</p>}
+                      {errors.securityContacts && <p className="text-red-600 text-xs">{errors.securityContacts}</p>}
                     </div>
                   </div>
 
@@ -436,10 +455,10 @@ export default function EstateRegistrationPage() {
                           key={amenity}
                           type="button"
                           onClick={() => handleAmenityChange(amenity)}
-                          className={`p-3 border text-sm font-medium transition-all ${
+                          className={`p-3 text-sm font-medium transition-all rounded-xl   shadow-sm ${
                             formData.amenities.includes(amenity)
-                            ? 'bg-gray-100 border-gray-900 text-gray-900'
-                            : 'bg-white border-gray-300 text-gray-700 hover:border-gray-400'
+                            ? 'bg-gray-900 border-gray-900 text-white'
+                            : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50/50'
                           }`}
                         >
                           {amenity}
@@ -453,69 +472,65 @@ export default function EstateRegistrationPage() {
               {/* STEP 4: ACCOUNT */}
               {step === 4 && (
                 <div className="space-y-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                    <Lock className="text-gray-600 w-5 h-5" /> Account Setup
-                  </h2>
-
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Username *</label>
+                      <label className="text-sm font-medium text-gray-700">Username <span className="text-red-500">*</span></label>
                       <input
                         type="text"
                         name="username"
                         value={formData.username}
                         onChange={handleChange}
-                        className={`w-full p-3 bg-white border focus:outline-none focus:ring-1 transition-all ${
-                          errors.username ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
+                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                          errors.username ? ' border-red-500' : ' border-gray-200'
                         }`}
                         placeholder="Choose a unique username"
                       />
-                      {errors.username && <p className="text-red-600 text-xs mt-1">{errors.username}</p>}
+                      {errors.username && <p className="text-red-600 text-xs">{errors.username}</p>}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">Password *</label>
+                        <label className="text-sm font-medium text-gray-700">Password <span className="text-red-500">*</span></label>
                         <input
                           type="password"
                           name="password"
                           value={formData.password}
                           onChange={handleChange}
-                          className={`w-full p-3 bg-white border focus:outline-none focus:ring-1 transition-all ${
-                            errors.password ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
+                          className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                            errors.password ? ' border-red-500' : ' border-gray-200'
                           }`}
                           placeholder="••••••••"
                         />
-                        {errors.password && <p className="text-red-600 text-xs mt-1">{errors.password}</p>}
+                        {errors.password && <p className="text-red-600 text-xs">{errors.password}</p>}
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">Confirm Password *</label>
+                        <label className="text-sm font-medium text-gray-700">Confirm Password <span className="text-red-500">*</span></label>
                         <input
                           type="password"
                           name="confirmPassword"
                           value={formData.confirmPassword}
                           onChange={handleChange}
-                          className={`w-full p-3 bg-white border focus:outline-none focus:ring-1 transition-all ${
-                            errors.confirmPassword ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
+                          className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                            errors.confirmPassword ? ' border-red-500' : ' border-gray-200'
                           }`}
                           placeholder="••••••••"
                         />
-                        {errors.confirmPassword && <p className="text-red-600 text-xs mt-1">{errors.confirmPassword}</p>}
+                        {errors.confirmPassword && <p className="text-red-600 text-xs">{errors.confirmPassword}</p>}
                       </div>
                     </div>
 
                     <div className="pt-4">
-                      <label className="flex items-start gap-3 p-4 bg-gray-50 border border-gray-300 cursor-pointer">
+                      <label className="flex items-start gap-3 p-4 bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:border-gray-300 hover:bg-gray-50/50 transition-all">
                         <input
                           type="checkbox"
                           name="termsAccepted"
                           checked={formData.termsAccepted}
                           onChange={handleChange}
-                          className="mt-1 w-5 h-5 bg-white border-gray-300 text-gray-900 focus:ring-gray-900"
+                          className="mt-1 w-5 h-5 bg-white border-gray-300 text-gray-900 focus:ring-gray-900 rounded-md shadow-sm transition-all"
                         />
-                        <span className="text-sm text-gray-700">
-                          I agree to the <a href="#" className="text-gray-900 hover:underline font-medium">Terms of Service</a> and <a href="#" className="text-gray-900 hover:underline font-medium">Privacy Policy</a>. I confirm I am an authorized representative of this estate.
+                        <span className="text-sm text-gray-600">
+                          I agree to the <a href="#" className="text-blue-600 hover:underline font-medium">Terms of Service</a> and <a href="#" className="text-blue-600 hover:underline font-medium">Privacy Policy</a>. I confirm I am an authorized representative of this estate.
                         </span>
                       </label>
                       {errors.termsAccepted && <p className="text-red-600 text-xs mt-2 ml-1">{errors.termsAccepted}</p>}
@@ -525,15 +540,15 @@ export default function EstateRegistrationPage() {
               )}
 
               {/* Navigation Buttons */}
-              <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
+              <div className="flex justify-between mt-10 pt-6">
                 <button
                   type="button"
                   onClick={prevStep}
                   disabled={step === 1}
-                  className={`flex items-center gap-2 px-6 py-3 font-medium transition-all ${
+                  className={`flex items-center gap-2 px-6 py-3 font-medium transition-all rounded-lg ${
                     step === 1 
                     ? 'opacity-0 cursor-default' 
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
                   <ArrowLeft className="w-4 h-4" /> Back
@@ -541,29 +556,104 @@ export default function EstateRegistrationPage() {
 
                 {step < 4 ? (
                   <button
+                    
+                    
                     type="button"
                     onClick={nextStep}
-                    className="flex items-center gap-2 px-8 py-3 bg-gray-900 text-white font-medium hover:bg-gray-800 transition-all"
+                    className="flex items-center gap-2 px-8 py-3 text-gray-600 font-medium hover:text-gray-900 transition-all rounded-lg"
                   >
                     Continue <ArrowRight className="w-4 h-4" />
                   </button>
                 ) : (
                   <button
+                    
+                    
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex items-center gap-2 px-8 py-3 bg-gray-900 text-white font-medium hover:bg-gray-800 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-8 py-3 bg-gray-900 text-white font-medium hover:bg-gray-800 transition-all rounded-lg disabled:opacity-70 disabled:cursor-not-allowed shadow-lg hover:shadow-gray-900/25"
                   >
-                    {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
+                    {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-5 h-5" />}
                     {isSubmitting ? 'Processing...' : 'Complete Registration'}
                   </button>
                 )}
               </div>
             </form>
+
+            <p className="text-center text-sm text-gray-500 mt-8">
+                Already have an account? <Link href="/login" className="text-blue-600 font-bold hover:underline transition-all">Sign in here</Link>
+            </p>
+          </div>
+      </div>
+      {/* Left Side - Image & Branding (Matching Login) */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gray-900">
+        <div
+          key={currentImageIndex}
+          className="absolute inset-0 z-0"
+        >
+          <img 
+              src={CAROUSEL_IMAGES[currentImageIndex].url}
+              alt={CAROUSEL_IMAGES[currentImageIndex].alt}
+              className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 bg-linear-to-b from-transparent to-gray-900/90 z-10" />
+      
+        <div className="relative z-20 flex flex-col justify-between h-full p-12 text-white">
+          <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/10 backdrop-blur-md flex items-center justify-center rounded-sm border-white/20 shadow-lg">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <span className="font-bold text-xl tracking-tight">EstateSecure</span>
+          </div>
+
+          <div className="space-y-8">
+            <div className="max-w-md bg-white/5 backdrop-blur-sm p-8 rounded-lg border-white/10 shadow-2xl">
+              <h2 className="text-4xl font-bold mb-6 leading-tight">
+                Secure Living,<br />
+                Simplified Management.
+              </h2>
+              <p className="text-lg text-white/80 leading-relaxed mb-8 font-light">
+                Experience the next generation of community living. 
+                Advanced security, seamless payments, and instant communication 
+                all in one professional dashboard.
+              </p>
+              
+              <div className="flex items-center gap-6 text-sm text-white/70">
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-emerald-500/20 rounded-full">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  </div>
+                  <span>Enterprise Security</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-emerald-500/20 rounded-full">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  </div>
+                  <span>24/7 Monitoring</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Carousel Indicators */}
+            <div className="flex gap-2">
+              {CAROUSEL_IMAGES.map((_, idx) => (
+                <div 
+                  key={idx} 
+                  onClick={() => setCurrentImageIndex(idx)}
+                  className={`h-1 cursor-pointer transition-all duration-500 rounded-full ${
+                    idx === currentImageIndex ? 'w-8 bg-white' : 'w-2 bg-white/30 hover:bg-white/50'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="text-sm text-white/40 font-medium">
+            © {new Date().getFullYear()} EstateSecure Inc. All rights reserved.
           </div>
         </div>
-      </main>
+      </div>
 
-      <Footer />
     </div>
   )
 }

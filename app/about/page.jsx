@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, memo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/Footer'
 import { 
@@ -192,70 +191,60 @@ const TeamMemberCard = memo(({ member }) => {
   const [isHovered, setIsHovered] = useState(false)
 
   return (
-    <motion.div
-      initial="initial"
-      whileInView="animate"
-      whileHover="hover"
-      viewport={{ once: true, amount: 0.2 }}
-      variants={{
-        initial: { opacity: 0, y: 20 },
-        animate: { 
-          opacity: 1, 
-          y: 0,
-          transition: { duration: 0.5 }
-        },
-        hover: hoverScale
-      }}
-      className="border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 bg-white"
+    <div
+      
+      
+      
+      
+      
+      className=" border-gray-200 p-6 hover:shadow-lg transition-all duration-300 bg-white"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex flex-col items-center text-center">
-        <motion.div 
+        <div 
           className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center text-4xl mb-4"
-          whileHover={{ scale: 1.1 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          
+          
         >
           {member.image}
-        </motion.div>
+        </div>
         
         <h3 className="text-xl font-bold text-gray-900 mb-1">{member.name}</h3>
         <div className="flex items-center gap-2 mb-3">
           <span className="text-gray-600">{member.role}</span>
-          <AnimatePresence>
-            {isHovered && (
-              <motion.a
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: 'auto' }}
-                exit={{ opacity: 0, width: 0 }}
+                      {isHovered && (
+              <a
+                
+                
+                
                 href={member.linkedin}
                 className="text-blue-600 hover:text-blue-800 overflow-hidden"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                 </svg>
-              </motion.a>
+              </a>
             )}
-          </AnimatePresence>
-        </div>
+                  </div>
         
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">{member.bio}</p>
         
         <div className="flex flex-wrap gap-2 justify-center">
           {member.expertise.map((skill, index) => (
-            <motion.span
+            <span
               key={index}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1 }}
+              
+              
+              
               className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium"
             >
               {skill}
-            </motion.span>
+            </span>
           ))}
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 })
 
@@ -263,57 +252,49 @@ TeamMemberCard.displayName = 'TeamMemberCard'
 
 const ValueCard = memo(({ value, index }) => {
   return (
-    <motion.div
-      initial="initial"
-      whileInView="animate"
-      whileHover="hover"
-      viewport={{ once: true, amount: 0.2 }}
-      variants={{
-        initial: { opacity: 0, y: 20 },
-        animate: { 
-          opacity: 1, 
-          y: 0,
-          transition: { delay: index * 0.1, duration: 0.5 }
-        },
-        hover: { y: -5, transition: { duration: 0.2 } }
-      }}
+    <div
+      
+      
+      
+      
+      
       className="relative"
     >
-      <motion.div 
+      <div 
         className="absolute -left-2 top-1/2 transform -translate-y-1/2"
-        animate={{ rotate: [0, 10, 0] }}
-        transition={{ duration: 0.5, delay: index * 0.2 }}
+        
+        
       >
         <div className="w-8 h-8 bg-gray-900 text-white rounded-full flex items-center justify-center font-bold">
           {index + 1}
         </div>
-      </motion.div>
+      </div>
       
-      <div className={`ml-4 p-6 border bg-gray-50 text-gray-700 border-gray-200 h-full`}>
+      <div className={`ml-4 p-6   bg-gray-50 text-gray-700 border-gray-200 h-full`}>
         <div className="mb-4">
-          <motion.div 
-            className="p-3 bg-white border w-fit mb-3"
-            whileHover={{ rotate: 5 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          <div 
+            className="p-3 bg-white   w-fit mb-3"
+            
+            
           >
             {value.icon}
-          </motion.div>
+          </div>
           <h3 className="text-xl font-bold mb-2">{value.title}</h3>
         </div>
         <p className="text-sm">{value.description}</p>
       </div>
-    </motion.div>
+    </div>
   )
 })
 
 ValueCard.displayName = 'ValueCard'
 
 const MilestoneItem = memo(({ milestone, isLast }) => (
-  <motion.div
-    initial={{ opacity: 0, x: -20 }}
-    whileInView={{ opacity: 1, x: 0 }}
-    viewport={{ once: true, amount: 0.5 }}
-    transition={{ duration: 0.6 }}
+  <div
+    
+    
+    
+    
     className="relative flex items-start"
   >
     {/* Timeline line */}
@@ -322,78 +303,70 @@ const MilestoneItem = memo(({ milestone, isLast }) => (
     )}
     
     {/* Year marker */}
-    <motion.div 
-      className="relative z-10 flex-shrink-0 w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center mr-6"
-      whileHover={{ scale: 1.1 }}
-      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+    <div 
+      className="relative z-10 shrink-0 w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center mr-6"
+      
+      
     >
       <span className="text-white font-bold text-sm">{milestone.year}</span>
-    </motion.div>
+    </div>
     
     {/* Content */}
-    <motion.div 
+    <div 
       className="pb-8 pt-2"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.2 }}
+      
+      
+      
     >
       <p className="text-gray-700">{milestone.event}</p>
-    </motion.div>
-  </motion.div>
+    </div>
+  </div>
 ))
 
 MilestoneItem.displayName = 'MilestoneItem'
 
 const StatCard = memo(({ stat, index }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20, scale: 0.95 }}
-    animate={{ opacity: 1, y: 0, scale: 1 }}
-    transition={{ delay: index * 0.1, duration: 0.5 }}
-    whileHover="hover"
-    variants={{
-      hover: { 
-        scale: 1.05,
-        transition: { duration: 0.2 }
-      }
-    }}
-    className="border border-gray-200 p-6 text-center hover:border-gray-300 transition-colors bg-white"
+  <div
+    
+    
+    
+    
+    
+    className=" border-gray-200 p-6 text-center hover:border-gray-300 transition-colors bg-white"
   >
     <div className="flex justify-center mb-4">
-      <motion.div
-        animate={pulseAnimation}
+      <div
+        
       >
         {stat.icon}
-      </motion.div>
+      </div>
     </div>
-    <motion.div 
+    <div 
       className="text-3xl font-bold text-gray-900 mb-2"
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      transition={{ delay: index * 0.1 + 0.2, type: "spring", stiffness: 200 }}
+      
+      
+      
     >
       {stat.value}
-    </motion.div>
+    </div>
     <div className="text-gray-600">{stat.label}</div>
-  </motion.div>
+  </div>
 ))
 
 StatCard.displayName = 'StatCard'
 
 const AwardCard = memo(({ award, index }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, amount: 0.2 }}
-    transition={{ delay: index * 0.1, duration: 0.5 }}
-    whileHover={{ 
-      y: -5,
-      boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)"
-    }}
-    className="border border-gray-200 p-6 hover:shadow-sm transition-shadow bg-white"
+  <div
+    
+    
+    
+    
+    
+    className=" border-gray-200 p-6 hover:shadow-sm transition-shadow bg-white"
   >
     <h4 className="font-semibold text-gray-900 mb-1">{award.title}</h4>
     <p className="text-sm text-gray-600">{award.issuer}</p>
-  </motion.div>
+  </div>
 ))
 
 AwardCard.displayName = 'AwardCard'
@@ -446,109 +419,109 @@ export default function AboutPage() {
   }, [router])
 
   return (
-    <motion.div 
+    <div 
       className="min-h-screen bg-white text-gray-900"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      
+      
+      
     >
       <Navigation />
 
       {/* Hero Section */}
-      <motion.section 
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="pt-28 pb-20 px-4 bg-gradient-to-b from-white to-gray-50"
+      <section 
+        
+        
+        
+        className="pt-28 pb-20 px-4 bg-linear-to-b from-white to-gray-50"
       >
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 bg-white mb-6"
+            <div 
+              
+              
+              
+              className="inline-flex items-center gap-2 px-4 py-2 border-gray-300 bg-white mb-6"
             >
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              <div
+                
+                
               >
                 <Sparkles className="w-4 h-4 text-gray-700" />
-              </motion.div>
+              </div>
               <span className="text-sm font-medium text-gray-700">OUR STORY</span>
-            </motion.div>
+            </div>
             
-            <motion.h1 
+            <h1 
               className="text-4xl md:text-5xl font-bold mb-6"
-              variants={staggerContainer}
-              initial="initial"
-              animate="animate"
+              
+              
+              
             >
-              <motion.span 
-                variants={fadeInUp}
+              <span 
+                
                 className="block text-gray-900"
               >
                 Securing Communities,
-              </motion.span>
-              <motion.span 
-                variants={fadeInUp}
+              </span>
+              <span 
+                
                 className="block text-gray-900"
               >
                 Building Trust
-              </motion.span>
-            </motion.h1>
+              </span>
+            </h1>
             
-            <motion.p 
-              variants={fadeInUp}
+            <p 
+              
               className="text-lg text-gray-600 mb-8 leading-relaxed"
             >
               EstateSecure was born from a simple observation: while commercial spaces enjoyed 
               enterprise-grade security, residential communities relied on outdated, fragmented systems. 
               We're on a mission to change that.
-            </motion.p>
+            </p>
 
-            <motion.div 
-              variants={fadeInUp}
+            <div 
+              
               className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
+                
+                
                 onClick={handleGetStarted}
                 className="px-6 py-3 bg-gray-900 text-white font-semibold hover:bg-gray-800 transition-all duration-300 flex items-center gap-2"
               >
                 Start Free Trial
-                <motion.span
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
+                <span
+                  
+                  
                 >
                   <ArrowRight className="w-4 h-4" />
-                </motion.span>
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                </span>
+              </button>
+              <button
+                
+                
                 onClick={handleContact}
-                className="px-6 py-3 border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-all duration-300"
+                className="px-6 py-3 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-all duration-300"
               >
                 Contact Us
-              </motion.button>
-            </motion.div>
+              </button>
+            </div>
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Mission & Vision */}
-      <motion.section 
-        initial="initial"
-        whileInView="animate"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={staggerContainer}
+      <section 
+        
+        
+        
+        
         className="py-16 px-4 bg-white"
       >
         <div className="container mx-auto">
           <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-            <motion.div variants={fadeInScale} className="border border-gray-200 p-8">
+            <div  className=" border-gray-200 p-8">
               <div className="flex items-center gap-3 mb-6">
                 <TargetIcon className="w-6 h-6 text-gray-900" />
                 <h2 className="text-2xl font-bold text-gray-900">Our Mission</h2>
@@ -564,27 +537,27 @@ export default function AboutPage() {
                   'Innovate continuously to stay ahead of threats',
                   'Maintain unwavering commitment to privacy'
                 ].map((item, index) => (
-                  <motion.li 
+                  <li 
                     key={index} 
                     className="flex items-start gap-2"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
+                    
+                    
+                    
+                    
                   >
-                    <motion.div
-                      whileHover={{ rotate: 360 }}
-                      transition={{ duration: 0.5 }}
+                    <div
+                      
+                      
                     >
-                      <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                    </motion.div>
+                      <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
+                    </div>
                     <span className="text-gray-700">{item}</span>
-                  </motion.li>
+                  </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
 
-            <motion.div variants={fadeInScale} className="border border-gray-200 p-8">
+            <div  className=" border-gray-200 p-8">
               <div className="flex items-center gap-3 mb-6">
                 <Lightbulb className="w-6 h-6 text-gray-900" />
                 <h2 className="text-2xl font-bold text-gray-900">Our Vision</h2>
@@ -599,40 +572,40 @@ export default function AboutPage() {
                   { label: 'By 2027', text: 'Expand to 15+ countries globally' },
                   { label: 'By 2030', text: 'Protect 10 million+ homes worldwide' }
                 ].map((goal, index) => (
-                  <motion.div 
+                  <div 
                     key={index} 
                     className="flex items-start gap-3 p-3 bg-gray-50"
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.2 }}
+                    
+                    
+                    
+                    
                   >
                     <div className="px-3 py-1 bg-gray-900 text-white text-sm font-medium">
                       {goal.label}
                     </div>
                     <span className="text-gray-700">{goal.text}</span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Stats Section */}
       <section ref={statsRef} className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <div 
+            
+            
+            
             className="text-center mb-12"
           >
             <h2 className="text-3xl font-bold mb-4">Our Impact in Numbers</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               The scale of our mission and the trust communities place in us
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
             {STATISTICS.map((stat, index) => (
@@ -645,17 +618,17 @@ export default function AboutPage() {
       {/* Timeline */}
       <section className="py-16 px-4 bg-white">
         <div className="container mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <div 
+            
+            
+            
             className="text-center mb-12"
           >
             <h2 className="text-3xl font-bold mb-4">Our Journey</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               From a simple idea to securing thousands of communities
             </p>
-          </motion.div>
+          </div>
 
           <div className="max-w-3xl mx-auto">
             {MILESTONES.map((milestone, index) => (
@@ -670,20 +643,20 @@ export default function AboutPage() {
       </section>
 
       {/* Values */}
-      <motion.section 
-        initial="initial"
-        whileInView="animate"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={staggerContainer}
+      <section 
+        
+        
+        
+        
         className="py-16 px-4 bg-gray-50"
       >
         <div className="container mx-auto">
-          <motion.div variants={fadeInUp} className="text-center mb-12">
+          <div  className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Our Core Values</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               The principles that guide every decision we make
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {COMPANY_VALUES.map((value, index) => (
@@ -691,19 +664,19 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Team Section */}
-      <motion.section 
-        initial="initial"
-        whileInView="animate"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={staggerContainer}
+      <section 
+        
+        
+        
+        
         className="py-16 px-4 bg-white"
       >
         <div className="container mx-auto">
-          <motion.div variants={fadeInUp} className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 bg-white mb-6">
+          <div  className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 border-gray-300 bg-white mb-6">
               <Users className="w-4 h-4 text-gray-700" />
               <span className="text-sm font-medium text-gray-700">MEET THE TEAM</span>
             </div>
@@ -712,73 +685,73 @@ export default function AboutPage() {
             <p className="text-gray-600 max-w-2xl mx-auto">
               Experts from security, technology, and community management working together
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div 
-            variants={staggerContainer}
+          <div 
+            
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
           >
             {TEAM_MEMBERS.map((member) => (
               <TeamMemberCard key={member.id} member={member} />
             ))}
-          </motion.div>
+          </div>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <div 
+            
+            
+            
             className="text-center mt-12"
           >
-            <div className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 bg-gray-50">
+            <div className="inline-flex items-center gap-2 px-6 py-3 border-gray-300 bg-gray-50">
               <span className="text-gray-700">And 50+ dedicated engineers, security experts, and support staff</span>
             </div>
-          </motion.div>
+          </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Awards & Recognition */}
-      <motion.section 
-        initial="initial"
-        whileInView="animate"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={staggerContainer}
+      <section 
+        
+        
+        
+        
         className="py-16 px-4 bg-gray-50"
       >
         <div className="container mx-auto">
-          <motion.div variants={fadeInUp} className="text-center mb-12">
+          <div  className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Awards & Recognition</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Recognition from industry leaders for our innovation and impact
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div 
-            variants={staggerContainer}
+          <div 
+            
             className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-12"
           >
             {AWARDS.map((award, index) => (
               <AwardCard key={index} award={award} index={index} />
             ))}
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ type: "spring", stiffness: 100 }}
+          <div
+            
+            
+            
+            
             className="max-w-4xl mx-auto"
           >
-            <div className="border border-gray-200 bg-white p-8">
+            <div className=" border-gray-200 bg-white p-8">
               <div className="flex flex-col md:flex-row items-center gap-6">
-                <motion.div 
-                  className="flex-shrink-0"
-                  whileHover={{ rotateY: 180 }}
-                  transition={{ duration: 0.6 }}
+                <div 
+                  className="shrink-0"
+                  
+                  
                 >
                   <div className="w-16 h-16 bg-gray-900 text-white rounded-full flex items-center justify-center">
                     <Trophy className="w-8 h-8" />
                   </div>
-                </motion.div>
+                </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
                     Certified & Compliant
@@ -789,40 +762,40 @@ export default function AboutPage() {
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {['ISO 27001', 'GDPR Compliant', 'SOC 2 Type II', 'Cyber Essentials'].map((cert, index) => (
-                      <motion.span
+                      <span
                         key={index}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: index * 0.1 }}
+                        
+                        
+                        
+                        
                         className="px-3 py-1 bg-gray-100 text-gray-700 text-sm font-medium"
                       >
                         {cert}
-                      </motion.span>
+                      </span>
                     ))}
                   </div>
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Community Impact */}
-      <motion.section 
-        initial="initial"
-        whileInView="animate"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={staggerContainer}
+      <section 
+        
+        
+        
+        
         className="py-16 px-4 bg-white"
       >
         <div className="container mx-auto">
-          <motion.div variants={fadeInUp} className="text-center mb-12">
+          <div  className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Beyond Security</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               How we're building stronger, more connected communities
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {[
@@ -842,118 +815,118 @@ export default function AboutPage() {
                 description: "We partner with local security agencies, emergency services, and businesses to create integrated safety ecosystems."
               }
             ].map((item, index) => (
-              <motion.div
+              <div
                 key={index}
-                variants={fadeInScale}
+                
                 className="text-center"
               >
-                <motion.div 
+                <div 
                   className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  
+                  
                 >
                   {item.icon}
-                </motion.div>
+                </div>
                 <h3 className="text-xl font-bold mb-3">{item.title}</h3>
                 <p className="text-gray-600">{item.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* CTA Section */}
-      <motion.section 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
+      <section 
+        
+        
+        
+        
         className="py-16 px-4 bg-gray-900 text-white"
       >
         <div className="container mx-auto text-center max-w-3xl">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-gray-700 bg-gray-800 mb-6"
+          <div 
+            
+            
+            
+            className="inline-flex items-center gap-2 px-4 py-2 border-gray-700 bg-gray-800 mb-6"
           >
-            <motion.div
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
+            <div
+              
+              
             >
               <Handshake className="w-4 h-4 text-gray-300" />
-            </motion.div>
+            </div>
             <span className="text-sm font-medium text-gray-300">JOIN OUR MISSION</span>
-          </motion.div>
+          </div>
           
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
+          <h2 
+            
+            
+            
+            
             className="text-3xl md:text-4xl font-bold mb-6"
           >
             <span className="block">Ready to Secure</span>
             <span className="block">Your Community?</span>
-          </motion.h2>
+          </h2>
           
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
+          <p 
+            
+            
+            
+            
             className="text-lg text-gray-300 mb-8"
           >
             Join thousands of communities that have transformed their security 
             with EstateSecure. Let's build safer neighborhoods together.
-          </motion.p>
+          </p>
           
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
+          <div 
+            
+            
+            
+            
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button
+              
+              
               onClick={handleGetStarted}
               className="px-8 py-3 bg-white text-gray-900 font-semibold hover:bg-gray-100 transition-all duration-300 flex items-center gap-2"
             >
               Start Free Trial
-              <motion.span
-                animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
+              <span
+                
+                
               >
                 <ArrowRight className="w-4 h-4" />
-              </motion.span>
-            </motion.button>
+              </span>
+            </button>
             
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button
+              
+              
               onClick={handleContact}
-              className="px-8 py-3 border border-gray-600 text-gray-300 font-semibold hover:bg-gray-800 transition-all duration-300"
+              className="px-8 py-3 border-gray-600 text-gray-300 font-semibold hover:bg-gray-800 transition-all duration-300"
             >
               Schedule a Demo
-            </motion.button>
-          </motion.div>
+            </button>
+          </div>
           
-          <motion.p 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.6 }}
+          <p 
+            
+            
+            
+            
             className="text-gray-400 text-sm mt-6"
           >
             Enterprise-grade security • 30-day free trial • Dedicated support
-          </motion.p>
+          </p>
         </div>
-      </motion.section>
+      </section>
       <FAQ/>
 
       <Footer />
-    </motion.div>
+    </div>
   )
 }

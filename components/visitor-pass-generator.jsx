@@ -1,6 +1,10 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image';
+import { useState, useEffect, useRef } from 'react';
+import { TechCard } from '@/components/ui/TechCard';
+import { CleanTable } from '@/components/ui/CleanTable';
+import { Key, Clock, ShieldCheck, Phone, MapPin, User, Calendar, Plus, ExternalLink, QrCode } from 'lucide-react';
 
 // Hardcoded database simulation
 const HARDCODED_DATA = {
@@ -108,6 +112,7 @@ export function VisitorPassGenerator() {
   const [blacklistedVisitors, setBlacklistedVisitors] = useState([])
   const [entryExitLogs, setEntryExitLogs] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState('active') // 'active', 'history', 'logs', 'blacklist'
 
   // Timer state for pass expiry
   const [timeLeft, setTimeLeft] = useState(null)
@@ -388,170 +393,186 @@ Valid until: ${new Date(generatedPass.expectedDeparture).toLocaleString()}`
 
   if (isLoading) {
     return (
-      <div className="max-w-4xl mx-auto p-4">
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
-          <div className="p-6">
-            <div className="flex items-center justify-center py-12">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700 mx-auto"></div>
-                <p className="mt-4 text-gray-700">Loading Visitor Pass Generator...</p>
-              </div>
-            </div>
-          </div>
+      <div className="flex items-center justify-center py-20 animate-pulse">
+        <div className="space-y-6 text-center">
+          <div className="w-16 h-16 border-4  -muted border-t-primary rounded-full animate-spin mx-auto"></div>
+          <p className="text-muted-foreground font-medium uppercase tracking-widest text-xs">Loading Visitor Pass Generator...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-blue-800 to-blue-900 p-6 text-white">
-          <div className="flex items-center space-x-3 mb-2">
-            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-              <span className="text-xl">🔐</span>
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold">Visitor Pass Generator</h2>
-              <p className="text-blue-200 font-medium">Generate QR codes and PINs for estate visitors</p>
-            </div>
-          </div>
+    <div className="space-y-6 animate-fadeIn">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 font-heading tracking-tight flex items-center gap-2">
+            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><Key className="w-6 h-6" /></div>
+            Visitor Pass Management
+          </h2>
+          <p className="text-gray-500 mt-1">Generate secure QR codes and Entry PINs for expected visitors</p>
         </div>
+        
+        <div className="flex bg-gray-100 p-1 rounded-xl">
+          {[
+            { id: 'active', label: 'Generator' },
+            { id: 'history', label: 'Recent Passes' },
+            { id: 'logs', label: 'Activity Logs' },
+            { id: 'blacklist', label: 'Blacklist' }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-4 py-2 text-sm font-bold rounded-lg transition-colors ${
+                activeTab === tab.id ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
-        <div className="p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Left Column: Form */}
-            <div className="space-y-6">
-              <div className="bg-blue-50 p-6 rounded-xl border border-blue-200">
-                <h3 className="font-bold text-gray-900 mb-3">Resident Information</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-800">Resident Name</label>
-                    <input
-                      type="text"
-                      name="residentName"
-                      value={formData.residentName}
-                      onChange={handleChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-800">Unit Number</label>
-                    <input
-                      type="text"
-                      name="unitNumber"
-                      value={formData.unitNumber}
-                      onChange={handleChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                    />
-                  </div>
+      {activeTab === 'active' && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left Column: Form */}
+          <div className="lg:col-span-7 space-y-6">
+            <TechCard>
+              <h3 className="text-lg font-bold text-gray-900 font-heading mb-4 pb-4 border-b border-gray-100 flex items-center gap-2">
+                <User className="w-5 h-5 text-gray-400" /> Resident Details
+              </h3>
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Name</label>
+                  <input
+                    type="text"
+                    name="residentName"
+                    value={formData.residentName}
+                    onChange={handleChange}
+                    className="w-full bg-white border-gray-200 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium placeholder-gray-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Unit</label>
+                  <input
+                    type="text"
+                    name="unitNumber"
+                    value={formData.unitNumber}
+                    onChange={handleChange}
+                    className="w-full bg-white border-gray-200 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium placeholder-gray-400"
+                  />
                 </div>
               </div>
+            </TechCard>
 
+            <TechCard>
+              <h3 className="text-lg font-bold text-gray-900 font-heading mb-4 pb-4 border-b border-gray-100 flex items-center gap-2">
+                <User className="w-5 h-5 text-gray-400" /> Visitor Details
+              </h3>
+              
               <div className="space-y-6">
-                <h3 className="text-xl font-bold text-gray-900">Visitor Details</h3>
-                
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-800">Visitor Name *</label>
-                  <input
-                    type="text"
-                    name="visitorName"
-                    value={formData.visitorName}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                    placeholder="Enter full name"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-800">Phone Number *</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                    placeholder="10-digit mobile number"
-                    maxLength="10"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-800">Purpose of Visit</label>
-                  <select
-                    name="purpose"
-                    value={formData.purpose}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                  >
-                    <option value="Personal">Personal</option>
-                    <option value="Delivery">Delivery</option>
-                    <option value="Service">Service/Maintenance</option>
-                    <option value="Guest">Guest</option>
-                    <option value="Business">Business</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-800">Vehicle Number (Optional)</label>
-                  <input
-                    type="text"
-                    name="vehicleNumber"
-                    value={formData.vehicleNumber}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                    placeholder="Vehicle registration number"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-800">Expected Arrival</label>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Visitor Name *</label>
+                    <input
+                      type="text"
+                      name="visitorName"
+                      value={formData.visitorName}
+                      onChange={handleChange}
+                      className="w-full bg-white border-gray-200 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium placeholder-gray-400"
+                      placeholder="Enter full name"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Phone Number *</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="w-full bg-white border-gray-200 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium placeholder-gray-400"
+                      placeholder="10-digit mobile number"
+                      maxLength="10"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Purpose of Visit</label>
+                    <select
+                      name="purpose"
+                      value={formData.purpose}
+                      onChange={handleChange}
+                      className="w-full bg-white border-gray-200 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium placeholder-gray-400"
+                    >
+                      <option value="Personal">Personal</option>
+                      <option value="Delivery">Delivery</option>
+                      <option value="Service">Service/Maintenance</option>
+                      <option value="Guest">Guest</option>
+                      <option value="Business">Business</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Vehicle Number <span className="text-gray-400 font-normal lowercase">(Optional)</span></label>
+                    <input
+                      type="text"
+                      name="vehicleNumber"
+                      value={formData.vehicleNumber}
+                      onChange={handleChange}
+                      className="w-full bg-white border-gray-200 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium placeholder-gray-400"
+                      placeholder="Registration number"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Expected Arrival</label>
                     <input
                       type="datetime-local"
                       name="expectedArrival"
                       value={formData.expectedArrival}
                       onChange={handleChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
+                      className="w-full bg-white border-gray-200 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium placeholder-gray-400"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-800">Expected Departure</label>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Expected Departure</label>
                     <input
                       type="datetime-local"
                       name="expectedDeparture"
                       value={formData.expectedDeparture}
                       onChange={handleChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
+                      className="w-full bg-white border-gray-200 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium placeholder-gray-400"
                       required
                     />
                   </div>
                 </div>
 
-                <button
-                  onClick={generatePass}
-                  disabled={isGenerating || !formData.visitorName || !formData.phone}
-                  className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium shadow-md disabled:opacity-70 disabled:cursor-not-allowed transition-all"
-                >
-                  {isGenerating ? (
-                    <span className="flex items-center justify-center">
-                      <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></span>
-                      Generating Pass...
-                    </span>
-                  ) : 'Generate Visitor Pass'}
-                </button>
-
-                <div className="flex gap-2">
+                <div className="pt-4 border-t border-gray-100 flex flex-col md:flex-row gap-4">
                   <button
-                    onClick={addToBlacklist}
-                    className="flex-1 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
+                    onClick={generatePass}
+                    disabled={isGenerating || !formData.visitorName || !formData.phone}
+                    className="flex-1 py-3.5 bg-gray-900 text-white rounded-xl hover:bg-gray-800 font-bold shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
                   >
-                    Add to Blacklist
+                    {isGenerating ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <span className="animate-spin rounded-full h-4 w-4 border-2 border-white/20 border-t-white"></span>
+                        Generating...
+                      </span>
+                    ) : (
+                      <>
+                        <QrCode className="w-5 h-5 opacity-80" /> Generate Pass
+                      </>
+                    )}
                   </button>
                   <button
                     onClick={() => {
@@ -566,120 +587,211 @@ Valid until: ${new Date(generatedPass.expectedDeparture).toLocaleString()}`
                         unitNumber: formData.unitNumber
                       })
                     }}
-                    className="flex-1 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-medium"
+                    className="md:w-auto px-6 py-3.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 font-bold transition-all"
                   >
-                    Clear Form
+                    Clear
                   </button>
                 </div>
               </div>
-            </div>
+            </TechCard>
+          </div>
 
-            {/* Right Column: Generated Pass & Features */}
-            <div className="space-y-6">
-              {/* Generated Pass Display */}
-              {generatedPass && (
-                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-xl p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-blue-900">Visitor Pass</h3>
-                      <p className="text-blue-800 font-medium">#{generatedPass.passCode}</p>
+          {/* Right Column: Generated Pass & Features */}
+          <div className="lg:col-span-5 relative">
+            {generatedPass ? (
+              <TechCard className="sticky top-6">
+                <div className="bg-white border-2 border-slate-200 rounded-2xl relative overflow-hidden">
+                  {/* Pass Header */}
+                  <div className="bg-slate-50 border-b border-slate-200 p-6">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="text-xl font-bold text-slate-900 font-heading">Digital Pass</h3>
+                        <p className="text-slate-500 font-medium font-mono mt-1 text-sm">#{generatedPass.passCode}</p>
+                      </div>
+                      <span className={`px-2.5 py-1 rounded text-[10px] uppercase font-bold tracking-widest ${
+                        generatedPass.status === 'pending' ? 'bg-amber-100 text-amber-800' :
+                        generatedPass.status === 'active' ? 'bg-green-100 text-green-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {generatedPass.status}
+                      </span>
                     </div>
-                    <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${
-                      generatedPass.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                      generatedPass.status === 'active' ? 'bg-green-100 text-green-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
-                      {generatedPass.status.toUpperCase()}
-                    </span>
                   </div>
 
-                  {/* QR Code Display */}
-                  <div className="flex flex-col items-center mb-4">
-                    {qrCodeData && (
-                      <div className="relative">
-                        <img 
-                          src={qrCodeData} 
-                          alt="QR Code" 
-                          className="w-48 h-48 border-4 border-white shadow-lg rounded-lg"
-                        />
-                        {timeLeft && (
-                          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-3 py-1.5 rounded-full text-sm font-medium">
-                            Expires in: {formatTime(timeLeft)}
+                  <div className="p-6">
+                    {/* QR and PIN visual centered */}
+                    <div className="flex flex-col items-center mb-8 pb-8 border-b border-slate-100 border-dashed">
+                      {qrCodeData && (
+                        <div className="relative mb-6">
+                          <div className="p-2 bg-white rounded-xl shadow-sm border-slate-100">
+                             <Image
+                               width={180}
+                               height={180}
+                               src={qrCodeData} 
+                               alt="QR Code" 
+                               className="rounded"
+                             />
                           </div>
-                        )}
+                          {timeLeft && (
+                            <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-red-50 text-red-700 border-red-200 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap shadow-sm">
+                              Expires: {formatTime(timeLeft)}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      
+                      <div className="flex gap-6 w-full max-w-[280px]">
+                        <div className="flex-1 bg-slate-50 p-4 rounded-xl border-slate-200 text-center">
+                          <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-1">Pass Code</p>
+                          <p className="text-xl font-bold font-mono text-slate-900 tracking-wider">{generatedPass.passCode}</p>
+                        </div>
+                        <div className="flex-1 bg-blue-50 p-4 rounded-xl border-blue-200 text-center">
+                          <p className="text-[10px] text-blue-500 uppercase tracking-widest font-bold mb-1">Entry PIN</p>
+                          <p className="text-xl font-bold font-mono text-blue-900 tracking-wider">{generatedPass.pin}</p>
+                        </div>
                       </div>
-                    )}
-                    
-                    <div className="mt-4 grid grid-cols-2 gap-4 text-center">
-                      <div>
-                        <p className="text-sm text-gray-700 font-medium">Pass Code</p>
-                        <p className="text-2xl font-bold font-mono text-gray-900">{generatedPass.passCode}</p>
+                    </div>
+
+                    {/* Meta details */}
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                         <div className="p-2 bg-slate-50 text-slate-500 rounded-lg"><User className="w-4 h-4" /></div>
+                         <div className="flex-1">
+                           <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Visitor</p>
+                           <p className="font-bold text-slate-900 text-sm">{generatedPass.visitorName} • {generatedPass.phone}</p>
+                         </div>
                       </div>
-                      <div>
-                        <p className="text-sm text-gray-700 font-medium">Entry PIN</p>
-                        <p className="text-2xl font-bold font-mono text-gray-900">{generatedPass.pin}</p>
+                      <div className="flex items-center gap-3">
+                         <div className="p-2 bg-slate-50 text-slate-500 rounded-lg"><MapPin className="w-4 h-4" /></div>
+                         <div className="flex-1">
+                           <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Destination</p>
+                           <p className="font-bold text-slate-900 text-sm">{generatedPass.residentName} (Unit {generatedPass.unitNumber})</p>
+                         </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                         <div className="p-2 bg-slate-50 text-slate-500 rounded-lg"><Calendar className="w-4 h-4" /></div>
+                         <div className="flex-1">
+                           <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Valid Until</p>
+                           <p className="font-bold text-slate-900 text-sm">{new Date(generatedPass.expectedDeparture).toLocaleString(undefined, {
+                             month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                           })}</p>
+                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Pass Details */}
-                  <div className="space-y-3 mb-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-800">Visitor:</span>
-                      <span className="font-bold text-gray-900">{generatedPass.visitorName}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-800">Phone:</span>
-                      <span className="font-bold text-gray-900">{generatedPass.phone}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-800">Purpose:</span>
-                      <span className="font-bold text-gray-900">{generatedPass.purpose}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-800">Resident:</span>
-                      <span className="font-bold text-gray-900">{generatedPass.residentName} ({generatedPass.unitNumber})</span>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="grid grid-cols-2 gap-2">
+                  {/* Actions footer */}
+                  <div className="bg-slate-50 border-t border-slate-200 p-4 grid grid-cols-2 gap-3">
                     <button
                       onClick={verifyEntry}
                       disabled={generatedPass.securityVerified}
-                      className={`py-2.5 rounded-lg font-medium ${
+                      className={`py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${
                         generatedPass.securityVerified
-                          ? 'bg-green-100 text-green-800 cursor-default border border-green-200'
-                          : 'bg-blue-700 text-white hover:bg-blue-800 shadow-md'
+                          ? 'bg-green-50 text-green-700 border-green-200 cursor-default shadow-sm'
+                          : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100 shadow-sm'
                       }`}
                     >
-                      {generatedPass.securityVerified ? '✓ Verified' : 'Verify Entry'}
+                      {generatedPass.securityVerified ? <><ShieldCheck className="w-4 h-4" /> Verified</> : 'Verify Check-in'}
                     </button>
                     <button
                       onClick={markExit}
-                      className="py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium shadow-md"
+                      className="py-3 bg-red-50 text-red-700 border-red-200 rounded-xl hover:bg-red-100 font-bold text-sm shadow-sm transition-all"
                     >
                       Mark Exit
                     </button>
                     <button
                       onClick={sharePass}
-                      className="py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium shadow-md col-span-2"
+                      className="py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold text-sm shadow-sm col-span-2 flex items-center justify-center gap-2 transition-all"
                     >
-                      Share Pass
+                      <ExternalLink className="w-4 h-4 opacity-80" /> Share Digital Pass
                     </button>
                   </div>
                 </div>
-              )}
-
-              
-
-              
-            </div>
+              </TechCard>
+            ) : (
+              <div className="h-full min-h-[400px] border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center text-center p-8 bg-gray-50/50">
+                 <div className="w-16 h-16 bg-white border-gray-200 rounded-full flex items-center justify-center mb-4 shadow-sm">
+                   <QrCode className="w-8 h-8 text-gray-400" />
+                 </div>
+                 <h3 className="text-xl font-bold text-gray-900 font-heading mb-2">No Pass Generated</h3>
+                 <p className="text-gray-500 max-w-[250px]">Fill out the visitor details form to generate a secure QR code and Entry PIN.</p>
+              </div>
+            )}
           </div>
-
-          
         </div>
-      </div>
+      )}
+
+      {/* ADDITIONAL TABS CONTENT */}
+      {activeTab === 'history' && (
+        <TechCard>
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-lg font-bold text-gray-900 font-heading">Recent Passes</h3>
+          </div>
+          <CleanTable 
+            data={passHistory}
+            columns={[
+              { accessorKey: 'visitorName', header: 'Visitor' },
+              { accessorKey: 'purpose', header: 'Purpose' },
+              { accessorKey: 'passCode', header: 'Pass Code', render: (val) => <span className="font-mono bg-slate-100 px-2 py-1 rounded text-xs">{val}</span> },
+              { accessorKey: 'status', header: 'Status', render: (val) => (
+                <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest   ${
+                  val === 'active' ? 'bg-green-50 text-green-700 border-green-200' :
+                  val === 'completed' ? 'bg-slate-50 text-slate-700 border-slate-200' :
+                  'bg-amber-50 text-amber-700 border-amber-200'
+                }`}>{val}</span>
+              ) },
+              { id: 'actions', header: 'Actions', render: (_, row) => (
+                <button onClick={() => loadFromHistory(row)} className="text-blue-600 hover:text-blue-700 text-xs font-bold uppercase tracking-widest">Load</button>
+              ) }
+            ]}
+          />
+        </TechCard>
+      )}
+
+      {activeTab === 'logs' && (
+        <TechCard>
+           <h3 className="text-lg font-bold text-gray-900 font-heading mb-6">Activity Logs</h3>
+           <CleanTable 
+             data={entryExitLogs}
+             columns={[
+               { accessorKey: 'visitor', header: 'Visitor' },
+               { accessorKey: 'type', header: 'Event', render: (val) => (
+                 <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest   ${
+                   val === 'entry' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-rose-50 text-rose-700 border-rose-200'
+                 }`}>
+                   {val}
+                 </span>
+               ) },
+               { accessorKey: 'passCode', header: 'Code', render: (val) => <span className="font-mono text-slate-500 text-xs">{val}</span> },
+               { accessorKey: 'timestamp', header: 'Time', render: (val) => new Date(val).toLocaleTimeString() },
+               { accessorKey: 'verifiedBy', header: 'Verified By' }
+             ]}
+           />
+        </TechCard>
+      )}
+
+      {activeTab === 'blacklist' && (
+        <TechCard>
+           <div className="flex justify-between items-center mb-6">
+             <h3 className="text-lg font-bold text-red-600 font-heading flex items-center gap-2">Blacklisted Visitors</h3>
+             <button onClick={addToBlacklist} className="px-4 py-2 bg-red-50 text-red-700 font-bold text-sm rounded-lg hover:bg-red-100 transition-colors flex items-center gap-2">
+               <Plus className="w-4 h-4" /> Add Entry
+             </button>
+           </div>
+           <CleanTable 
+             data={blacklistedVisitors}
+             columns={[
+               { accessorKey: 'name', header: 'Name' },
+               { accessorKey: 'phone', header: 'Phone' },
+               { accessorKey: 'reason', header: 'Reason' },
+               { accessorKey: 'added', header: 'Date Added', render: (val) => new Date(val).toLocaleDateString() },
+               { id: 'actions', header: 'Actions', render: (_, row, index) => (
+                 <button onClick={() => removeFromBlacklist(index)} className="text-sm text-gray-500 hover:text-red-600 font-bold transition-colors">Remove</button>
+               ) }
+             ]}
+           />
+        </TechCard>
+      )}
     </div>
   )
 }

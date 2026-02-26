@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-
+import { Search } from 'lucide-react';
+import AddPersonModal from '@/components/modals/AddPersonModal';
+import ProfileList from '@/components/admin/ProfileList';
+import ProfileDetails from '@/components/admin/ProfileDetails';
 // Mock data for demonstration
 const MOCK_DATA = {
   residents: [
@@ -337,7 +340,7 @@ export default function AdminPeopleManagement() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-b from-gray-50 to-white flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700 mx-auto"></div>
           <p className="mt-4 text-gray-700">Loading People Management...</p>
@@ -347,696 +350,65 @@ export default function AdminPeopleManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="animate-fadeIn p-6 md:p-10 max-w-7xl mx-auto space-y-6">
       {/* Header */}
-      <header className="bg-gradient-to-r from-blue-800 to-blue-900 text-white shadow-lg">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-xl">👨‍💼</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold">People Management</h1>
-                <p className="text-blue-200">Admin Dashboard - Manage Residents, Staff & Security</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <div className="text-right">
-                <p className="text-sm text-blue-200">Estate: Sunrise Towers</p>
-                <p className="text-sm text-blue-200">Admin: Estate Administrator</p>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg font-medium transition-colors"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4  p-4 rounded-lg dark:border-gray-800">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-50 dark:text-white">People Management</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
+            Manage Residents, Staff & Security personnel for the estate.
+          </p>
         </div>
-      </header>        
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+        >
+          Add New Person
+        </button>
+      </div>        
          
 
         {/* Main Content Area */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - List & Filters */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-
-              {/* Search & Filters */}
-              <div className="flex flex-col md:flex-row gap-4 mb-6">
-                <div className="flex-1">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      placeholder="Search by name, email, phone, or role..."
-                      className="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                    />
-                    <span className="absolute left-3 top-3 text-gray-400">🔍</span>
-                  </div>
-                </div>
-                
-                <div className="flex items-center space-x-4">
-                  <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                  >
-                    <option value="all">All Status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                    <option value="pending">Pending</option>
-                  </select>
-                  
-                  <span className="text-sm text-gray-600">
-                    {filteredProfiles.length} {filteredProfiles.length === 1 ? 'person' : 'people'} found
-                  </span>
-                </div>
-              </div>
-                            
-          
-
-              {/* Profiles List */}
-              <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
-                {filteredProfiles.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-3xl">👥</span>
-                    </div>
-                    <p className="text-gray-500 text-lg">No people found</p>
-                    <p className="text-gray-400 text-sm mt-2">
-                      {searchTerm ? 'Try a different search term' : 'Add new people to get started'}
-                    </p>
-                  </div>
-                ) : (
-                  filteredProfiles.map((profile) => (
-                    <div
-                      key={profile.id}
-                      onClick={() => handleProfileSelect(profile)}
-                      className={`border rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-all ${
-                        selectedProfile?.id === profile.id 
-                          ? 'border-blue-500 bg-blue-50' 
-                          : 'border-gray-200'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-xl">
-                            {profile.profileImage}
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-gray-900">{profile.name}</h4>
-                            <div className="flex items-center space-x-2 mt-1">
-                              <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(profile.status)}`}>
-                                {profile.status}
-                              </span>
-                              <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">
-                                {getProfileTypeLabel(profile.type)}
-                              </span>
-                            </div>
-                            <p className="text-sm text-gray-600 mt-1">
-                              {profile.email} • {profile.phone}
-                            </p>
-                          </div>
-                        </div>
-                        
-                        <div className="text-right">
-                          <p className="text-sm font-medium text-gray-900">
-                            {profile.role || profile.occupation || profile.unitNumber}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            ID: {profile.id}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+            <ProfileList
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              statusFilter={statusFilter}
+              setStatusFilter={setStatusFilter}
+              filteredProfiles={filteredProfiles}
+              selectedProfile={selectedProfile}
+              handleProfileSelect={handleProfileSelect}
+              getStatusColor={getStatusColor}
+              getProfileTypeLabel={getProfileTypeLabel}
+            />
           </div>
 
           {/* Right Column - Profile Details */}
           <div className="lg:col-span-1">
-            {selectedProfile ? (
-              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 sticky top-6">
-                {/* Profile Header */}
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center text-2xl">
-                      {selectedProfile.profileImage}
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900">{selectedProfile.name}</h3>
-                      <div className="flex items-center space-x-2 mt-1">
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(selectedProfile.status)}`}>
-                          {selectedProfile.status}
-                        </span>
-                        <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">
-                          {getProfileTypeLabel(selectedProfile.type)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="text-right">
-                    <p className="text-sm text-gray-500">ID: {selectedProfile.id}</p>
-                    <p className="text-xs text-gray-400">Click to copy</p>
-                  </div>
-                </div>
-
-                {/* Edit Mode Toggle */}
-                <div className="flex justify-between items-center mb-6">
-                  <h4 className="font-bold text-gray-900">
-                    {isEditing ? 'Edit Profile' : 'Profile Details'}
-                  </h4>
-                  <button
-                    onClick={() => setIsEditing(!isEditing)}
-                    className={`px-4 py-2 rounded-lg font-medium ${
-                      isEditing 
-                        ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' 
-                        : 'bg-blue-600 text-white hover:bg-blue-700'
-                    }`}
-                  >
-                    {isEditing ? 'Cancel' : 'Edit Profile'}
-                  </button>
-                </div>
-
-                {/* Profile Form/Details */}
-                <div className="space-y-4">
-                  {isEditing ? (
-                    // Edit Form
-                    <>
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-800">Full Name</label>
-                        <input
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-800">Email</label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-800">Phone</label>
-                        <input
-                          type="tel"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handleInputChange}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                        />
-                      </div>
-                      
-                      {selectedProfile.type === 'resident' && (
-                        <>
-                          <div>
-                            <label className="block text-sm font-medium mb-2 text-gray-800">Unit Number</label>
-                            <input
-                              type="text"
-                              name="unitNumber"
-                              value={formData.unitNumber}
-                              onChange={handleInputChange}
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                            />
-                          </div>
-                          
-                          <div>
-                            <label className="block text-sm font-medium mb-2 text-gray-800">Occupation</label>
-                            <input
-                              type="text"
-                              name="occupation"
-                              value={formData.occupation}
-                              onChange={handleInputChange}
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                            />
-                          </div>
-                        </>
-                      )}
-                      
-                      {selectedProfile.type === 'staff' && (
-                        <>
-                          <div>
-                            <label className="block text-sm font-medium mb-2 text-gray-800">Role</label>
-                            <input
-                              type="text"
-                              name="role"
-                              value={formData.role}
-                              onChange={handleInputChange}
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                            />
-                          </div>
-                          
-                          <div>
-                            <label className="block text-sm font-medium mb-2 text-gray-800">Department</label>
-                            <input
-                              type="text"
-                              name="department"
-                              value={formData.department}
-                              onChange={handleInputChange}
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                            />
-                          </div>
-                        </>
-                      )}
-                      
-                      {selectedProfile.type === 'security' && (
-                        <>
-                          <div>
-                            <label className="block text-sm font-medium mb-2 text-gray-800">Badge Number</label>
-                            <input
-                              type="text"
-                              name="badgeNumber"
-                              value={formData.badgeNumber}
-                              onChange={handleInputChange}
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                            />
-                          </div>
-                          
-                          <div>
-                            <label className="block text-sm font-medium mb-2 text-gray-800">Shift</label>
-                            <select
-                              name="shift"
-                              value={formData.shift}
-                              onChange={handleInputChange}
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                            >
-                              <option value="">Select Shift</option>
-                              <option value="Morning (6 AM - 2 PM)">Morning (6 AM - 2 PM)</option>
-                              <option value="Evening (2 PM - 10 PM)">Evening (2 PM - 10 PM)</option>
-                              <option value="Night (10 PM - 6 AM)">Night (10 PM - 6 AM)</option>
-                            </select>
-                          </div>
-                        </>
-                      )}
-                      
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-800">Status</label>
-                        <select
-                          name="status"
-                          value={formData.status}
-                          onChange={handleInputChange}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                        >
-                          <option value="active">Active</option>
-                          <option value="inactive">Inactive</option>
-                          <option value="pending">Pending</option>
-                        </select>
-                      </div>
-                      
-                      <div className="pt-4">
-                        <button
-                          onClick={handleUpdateProfile}
-                          className="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
-                        >
-                          Save Changes
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    // View Details
-                    <>
-                      <div className="space-y-3">
-                        <div>
-                          <p className="text-sm text-gray-600">Email</p>
-                          <p className="font-medium text-gray-900">{selectedProfile.email}</p>
-                        </div>
-                        
-                        <div>
-                          <p className="text-sm text-gray-600">Phone</p>
-                          <p className="font-medium text-gray-900">{selectedProfile.phone}</p>
-                        </div>
-                        
-                        {selectedProfile.type === 'resident' && (
-                          <>
-                            <div>
-                              <p className="text-sm text-gray-600">Unit Number</p>
-                              <p className="font-medium text-gray-900">{selectedProfile.unitNumber || 'N/A'}</p>
-                            </div>
-                            
-                            <div>
-                              <p className="text-sm text-gray-600">Occupation</p>
-                              <p className="font-medium text-gray-900">{selectedProfile.occupation || 'N/A'}</p>
-                            </div>
-                            
-                            <div>
-                              <p className="text-sm text-gray-600">Resident Since</p>
-                              <p className="font-medium text-gray-900">{formatDate(selectedProfile.residentSince)}</p>
-                            </div>
-                            
-                            <div>
-                              <p className="text-sm text-gray-600">Emergency Contact</p>
-                              <p className="font-medium text-gray-900">{selectedProfile.emergencyContact || 'N/A'}</p>
-                            </div>
-                          </>
-                        )}
-                        
-                        {selectedProfile.type === 'staff' && (
-                          <>
-                            <div>
-                              <p className="text-sm text-gray-600">Role</p>
-                              <p className="font-medium text-gray-900">{selectedProfile.role}</p>
-                            </div>
-                            
-                            <div>
-                              <p className="text-sm text-gray-600">Department</p>
-                              <p className="font-medium text-gray-900">{selectedProfile.department}</p>
-                            </div>
-                            
-                            <div>
-                              <p className="text-sm text-gray-600">Join Date</p>
-                              <p className="font-medium text-gray-900">{formatDate(selectedProfile.joinDate)}</p>
-                            </div>
-                            
-                            <div>
-                              <p className="text-sm text-gray-600">Salary</p>
-                              <p className="font-medium text-gray-900">{selectedProfile.salary || 'N/A'}</p>
-                            </div>
-                          </>
-                        )}
-                        
-                        {selectedProfile.type === 'security' && (
-                          <>
-                            <div>
-                              <p className="text-sm text-gray-600">Badge Number</p>
-                              <p className="font-medium text-gray-900">{selectedProfile.badgeNumber}</p>
-                            </div>
-                            
-                            <div>
-                              <p className="text-sm text-gray-600">Shift</p>
-                              <p className="font-medium text-gray-900">{selectedProfile.shift}</p>
-                            </div>
-                            
-                            <div>
-                              <p className="text-sm text-gray-600">Join Date</p>
-                              <p className="font-medium text-gray-900">{formatDate(selectedProfile.joinDate)}</p>
-                            </div>
-                            
-                            <div>
-                              <p className="text-sm text-gray-600">Experience</p>
-                              <p className="font-medium text-gray-900">{selectedProfile.experience}</p>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                      
-                      {/* Action Buttons */}
-                      <div className="pt-6 border-t border-gray-200 space-y-3">
-                        <button
-                          onClick={() => setIsEditing(true)}
-                          className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
-                        >
-                          Edit Profile
-                        </button>
-                        
-                        <button
-                          onClick={handleDeleteProfile}
-                          className="w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
-                        >
-                          Delete Profile
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            ) : (
-              // Empty State
-              <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200 text-center">
-                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-3xl">👤</span>
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">No Profile Selected</h3>
-                <p className="text-gray-600 mb-4">Select a person from the list to view and manage their profile</p>
-                <button
-                  onClick={() => setShowAddModal(true)}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
-                >
-                  Add New Person
-                </button>
-              </div>
-            )}
+            <ProfileDetails
+              selectedProfile={selectedProfile}
+              isEditing={isEditing}
+              setIsEditing={setIsEditing}
+              formData={formData}
+              handleInputChange={handleInputChange}
+              handleUpdateProfile={handleUpdateProfile}
+              handleDeleteProfile={handleDeleteProfile}
+              setShowAddModal={setShowAddModal}
+              getStatusColor={getStatusColor}
+              getProfileTypeLabel={getProfileTypeLabel}
+              formatDate={formatDate}
+            />
           </div>
         </div>
-        {showAddModal && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-xl font-bold text-gray-900">
-                    Add New Person
-                  </h3>
-                  <button
-                    onClick={() => setShowAddModal(false)}
-                    className="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-full transition-colors"
-                  >
-                    ✕
-                  </button>
-                </div>
-                
-                <div className="space-y-4">
-                  {/* Common Fields */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2 text-gray-800">Person Type</label>
-                      <select
-                        name="type"
-                        value={formData.type}
-                        onChange={handleInputChange}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                      >
-                        <option value="resident">Resident</option>
-                        <option value="staff">Staff</option>
-                        <option value="security">Security</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium mb-2 text-gray-800">Full Name *</label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                        placeholder="Enter full name"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2 text-gray-800">Email Address</label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                        placeholder="email@example.com"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium mb-2 text-gray-800">Phone Number</label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                        placeholder="+1 234 567 890"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Type Specific Fields */}
-                  
-                  {/* Resident Specific */}
-                  {formData.type === 'resident' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-blue-50 p-4 rounded-lg">
-                      <div className="col-span-full mb-2">
-                        <h4 className="text-sm font-semibold text-blue-800">Resident Details</h4>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-800">Unit Number</label>
-                        <input
-                          type="text"
-                          name="unitNumber"
-                          value={formData.unitNumber}
-                          onChange={handleInputChange}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                          placeholder="e.g. A-101"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-800">Occupation</label>
-                        <input
-                          type="text"
-                          name="occupation"
-                          value={formData.occupation}
-                          onChange={handleInputChange}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                          placeholder="e.g. Engineer"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-800">Emergency Contact</label>
-                        <input
-                          type="tel"
-                          name="emergencyContact"
-                          value={formData.emergencyContact}
-                          onChange={handleInputChange}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                          placeholder="Emergency phone"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Staff Specific */}
-                  {formData.type === 'staff' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-orange-50 p-4 rounded-lg">
-                      <div className="col-span-full mb-2">
-                        <h4 className="text-sm font-semibold text-orange-800">Staff Details</h4>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-800">Role</label>
-                        <input
-                          type="text"
-                          name="role"
-                          value={formData.role}
-                          onChange={handleInputChange}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                          placeholder="e.g. Cleaner"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-800">Department</label>
-                        <input
-                          type="text"
-                          name="department"
-                          value={formData.department}
-                          onChange={handleInputChange}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                          placeholder="e.g. Maintenance"
-                        />
-                      </div>
-
-                      <div>
-                         <label className="block text-sm font-medium mb-2 text-gray-800">Salary</label>
-                         <input
-                           type="text"
-                           name="salary"
-                           value={formData.salary}
-                           onChange={handleInputChange}
-                           className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                           placeholder="e.g. $50,000"
-                         />
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Security Specific */}
-                  {formData.type === 'security' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-green-50 p-4 rounded-lg">
-                      <div className="col-span-full mb-2">
-                        <h4 className="text-sm font-semibold text-green-800">Security Details</h4>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-800">Badge Number</label>
-                        <input
-                          type="text"
-                          name="badgeNumber"
-                          value={formData.badgeNumber}
-                          onChange={handleInputChange}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                          placeholder="e.g. SEC-001"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-800">Shift</label>
-                        <select
-                          name="shift"
-                          value={formData.shift}
-                          onChange={handleInputChange}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                        >
-                          <option value="">Select Shift</option>
-                          <option value="Morning (6 AM - 2 PM)">Morning (6 AM - 2 PM)</option>
-                          <option value="Evening (2 PM - 10 PM)">Evening (2 PM - 10 PM)</option>
-                          <option value="Night (10 PM - 6 AM)">Night (10 PM - 6 AM)</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-800">Experience</label>
-                         <input
-                           type="text"
-                           name="experience"
-                           value={formData.experience}
-                           onChange={handleInputChange}
-                           className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                           placeholder="e.g. 5 years"
-                         />
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-800">Status</label>
-                    <select
-                      name="status"
-                      value={formData.status}
-                      onChange={handleInputChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
-                    >
-                      <option value="active">Active</option>
-                      <option value="inactive">Inactive</option>
-                       <option value="pending">Pending</option>
-                    </select>
-                  </div>
-                  
-                  <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100 mt-2">
-                    <button
-                      onClick={() => setShowAddModal(false)}
-                      className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleAddProfile}
-                      disabled={!formData.name}
-                      className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      Add Person
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        <AddPersonModal 
+          showAddModal={showAddModal} 
+          setShowAddModal={setShowAddModal} 
+          formData={formData} 
+          handleInputChange={handleInputChange} 
+          handleAddProfile={handleAddProfile} 
+        />
       </div>  
 
 

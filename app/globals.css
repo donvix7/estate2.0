@@ -1,88 +1,201 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Core Palette - Sophisticated & Professional */
+    /* Professional Real Estate Theme: Deep Navy & Warm Greys */
+    --background: 210 20% 98%;   /* Very light cool grey */
+    --foreground: 222 47% 11%;   /* Deep Navy almost black */
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 222 47% 11%;      /* Deep Navy */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 215 16% 47%;    /* gray Grey */
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222 47% 11%;
+    
+    --accent-secondary: 35 100% 50%; /* Gold/Amber for subtle highlights */
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222 47% 11%;
+
+    --radius: 0.25rem; /* Boxy, professional look */
+
+  /* Success/Warning/Error */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Dark Mode: Deep Blue/Grey */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 217 33% 17%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    
+    --accent-secondary: 35 90% 50%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
   }
+}
+
+* {
+  border-color: var(--border);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter);
 }
 
-@keyframes slideInFromRight {
+/* Sophisticated Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--foreground);
+  font-family: var(--font-space-grotesk);
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  background: rgba(var(--background), 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
   from {
-    transform: translateX(100%);
     opacity: 0;
   }
   to {
-    transform: translateX(0);
     opacity: 1;
   }
 }
 
-@keyframes slideInFromLeft {
+@keyframes slideUp {
   from {
-    transform: translateX(-100%);
+    transform: trangrayY(20px);
     opacity: 0;
   }
   to {
-    transform: translateX(0);
+    transform: trangrayY(0);
     opacity: 1;
   }
 }
-@keyframes slideInFromTop {
-  from {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
 }
-@keyframes slideInFromBottom {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out forwards;
 }
-.blockright {
-  animation: slideInFromLeft linear;
-  animation-timeline: view();
-  animation-range: entry 0% cover 40%;
+
+/* Utilities */
+.mask-gradient-y {
+  mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
 }
-.blockleft {
-  animation: slideInFromRight linear;
-  animation-timeline: view();
-  animation-range: entry 0% cover 40%;
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
 }
-.blocktop {
-  animation: slideInFromTop linear;
-  animation-timeline: view();
-  animation-range: entry 0% cover 40%;
+
+::-webkit-scrollbar-track {
+  background: var(--background);
 }
-.blockbottom {
-  animation: slideInFromBottom linear;
-  animation-timeline: view();
-  animation-range: entry 0% cover 40%;
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+/* Transitions */
+* {
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Button & Input Base Styles */
+input,
+select,
+textarea {
+  border-radius: var(--radius);
+  padding: 0.625rem 1rem;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--ring);
 }

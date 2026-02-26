@@ -4,6 +4,40 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 // Mock invitation data for demonstration
+import { 
+  Building2, 
+  Shield, 
+  User, 
+  MapPin, 
+  CheckCircle2,
+  AlertTriangle,
+  ArrowRight,
+  ArrowLeft,
+  Loader2,
+  Lock,
+  Flag
+} from 'lucide-react'
+import Link from 'next/link'
+
+const CAROUSEL_IMAGES = [
+  { 
+    url: "https://images.unsplash.com/photo-1592595896551-12b371d546d5?q=80&w=2600&auto=format&fit=crop",
+    alt: "Community: Gated Community Street"
+  },
+  { 
+    url: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2600&auto=format&fit=crop",
+    alt: "Security: Concierge & Security"
+  },
+  { 
+    url: "https://images.unsplash.com/photo-1581578731117-e08f542e9466?q=80&w=2600&auto=format&fit=crop",
+    alt: "Service: Engineering & Maintenance"
+  },
+  { 
+    url: "https://images.unsplash.com/photo-1540497077202-7c8a3999166f?q=80&w=2600&auto=format&fit=crop",
+    alt: "Amenities: Premium Fitness Center"
+  }
+]
+
 const MOCK_INVITATIONS = {
   'invite_1_token': {
     id: 'invite_1',
@@ -77,7 +111,7 @@ const MOCK_ESTATES = {
 // Loading component
 function SignupLoading() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
+    <div className="min-h-screen bg-linear-to-b from-blue-50 to-white flex items-center justify-center">
       <div className="text-center">
         <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-700 mx-auto mb-4"></div>
         <p className="text-gray-700 text-lg">Loading invitation...</p>
@@ -101,6 +135,16 @@ function SignupContent() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  import('react').then(({ useEffect }) => {
+    useEffect(() => {
+      const timer = setInterval(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % CAROUSEL_IMAGES.length)
+      }, 5000)
+      return () => clearInterval(timer)
+    }, [])
+  })
 
   // Signup form state
   const [formData, setFormData] = useState({
@@ -304,8 +348,8 @@ function SignupContent() {
   // Invalid token state
   if (!isTokenValid) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
+      <div className="min-h-screen bg-linear-to-b from-blue-50 to-white flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center">
             <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <span className="text-3xl text-red-600">❌</span>
@@ -326,17 +370,21 @@ function SignupContent() {
                 <p>Contact your estate admin for a new invitation link.</p>
               </div>
             </div>
-          </div>
+
+            <p className="text-center text-sm text-gray-500 mt-8">
+                Already have an account? <Link href="/login" className="text-blue-600 font-bold hover:underline transition-all">Sign in here</Link>
+            </p>
         </div>
       </div>
-    )
-  }
+    </div>
+  )
+}
 
   // Success state
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
+      <div className="min-h-screen bg-linear-to-b from-blue-50 to-white flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center">
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <span className="text-3xl text-green-600">✅</span>
@@ -362,145 +410,125 @@ function SignupContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">ES</span>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">EstateSecure</h1>
-                <p className="text-sm text-gray-600">Resident Registration</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-medium text-gray-900">{estate?.name}</p>
-              <p className="text-xs text-gray-600">Secure Community Portal</p>
-            </div>
-          </div>
+    <div className="min-h-screen w-full flex bg-gray-50 overflow-hidden">
+      
+      {/* Left Side - Image & Branding (Matching Login) */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gray-900">
+        <div
+          key={currentImageIndex}
+          className="absolute inset-0 z-0"
+        >
+          <img 
+              src={CAROUSEL_IMAGES[currentImageIndex].url}
+              alt={CAROUSEL_IMAGES[currentImageIndex].alt}
+              className="w-full h-full object-cover"
+          />
         </div>
-      </header>
+        <div className="absolute inset-0 bg-linear-to-b from-transparent to-gray-900/90 z-10" />
+      
+        <div className="relative z-20 flex flex-col justify-between h-full p-12 text-white">
+          <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/10 backdrop-blur-md flex items-center justify-center rounded-sm shadow-lg">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <span className="font-bold text-xl tracking-tight">EstateSecure</span>
+          </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Progress Steps */}
-          <div className="flex justify-center mb-8">
-            <div className="flex items-center space-x-8">
-              {[1, 2, 3].map((stepNumber) => (
-                <div key={stepNumber} className="flex items-center">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg border-2 transition-all ${
-                      step >= stepNumber
-                        ? 'bg-blue-700 text-white border-blue-700'
-                        : 'bg-white text-gray-400 border-gray-300'
-                    }`}
-                  >
-                    {stepNumber}
+          <div className="space-y-8">
+            <div className="max-w-md bg-white/5 backdrop-blur-sm p-8 rounded-lg shadow-2xl">
+              <h2 className="text-4xl font-bold mb-6 leading-tight">
+                Welcome to<br />
+                {estate?.name || 'Your Community'}
+              </h2>
+              <p className="text-lg text-white/80 leading-relaxed mb-8 font-light">
+                You've been invited to join your community's private portal. Complete your registration to access amenities, pay dues, and stay connected.
+              </p>
+              
+              <div className="flex items-center gap-6 text-sm text-white/70">
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-emerald-500/20 rounded-full">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                   </div>
-                  <span className={`ml-3 font-medium ${step >= stepNumber ? 'text-blue-700' : 'text-gray-500'}`}>
-                    {stepNumber === 1 && 'Personal Info'}
-                    {stepNumber === 2 && 'Account Setup'}
-                    {stepNumber === 3 && 'Final Steps'}
-                  </span>
-                  {stepNumber < 3 && (
-                    <div className={`ml-8 w-16 h-0.5 ${step > stepNumber ? 'bg-blue-700' : 'bg-gray-300'}`} />
-                  )}
+                  <span>Verified Invitation</span>
                 </div>
+              </div>
+            </div>
+
+            {/* Carousel Indicators */}
+            <div className="flex gap-2">
+              {CAROUSEL_IMAGES.map((_, idx) => (
+                <div 
+                  key={idx} 
+                  onClick={() => setCurrentImageIndex(idx)}
+                  className={`h-1 cursor-pointer transition-all duration-500 rounded-full ${
+                    idx === currentImageIndex ? 'w-8 bg-white' : 'w-2 bg-white/30 hover:bg-white/50'
+                  }`}
+                />
               ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left Column - Invitation & Estate Info */}
-            <div className="lg:col-span-1">
-              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 sticky top-8">
-                {/* Invitation Status */}
-                <div className="mb-6">
-                  <h3 className="font-bold text-gray-900 mb-3">Invitation Details</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Status:</span>
-                      <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                        Valid
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Expires:</span>
-                      <span className="font-medium text-gray-900">
-                        {invitation && formatDate(invitation.expiresAt)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Role:</span>
-                      <span className="font-medium text-gray-900 capitalize">{invitation?.role}</span>
-                    </div>
-                  </div>
-                </div>
+          <div className="text-sm text-white/40 font-medium">
+            © {new Date().getFullYear()} EstateSecure Inc. All rights reserved.
+          </div>
+        </div>
+      </div>
 
-                {/* Estate Information */}
-                <div className="mb-6">
-                  <h3 className="font-bold text-gray-900 mb-3">Your Estate</h3>
-                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <h4 className="font-semibold text-blue-900 mb-2">{estate?.name}</h4>
-                    <p className="text-sm text-blue-800 mb-3">{estate?.address}</p>
-                    
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center text-sm text-blue-700">
-                        <span className="mr-2">👮</span>
-                        <span>Admin: {estate?.adminName}</span>
-                      </div>
-                      <div className="flex items-center text-sm text-blue-700">
-                        <span className="mr-2">📞</span>
-                        <span>Security: {estate?.securityContact}</span>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <p className="text-sm font-medium text-blue-900 mb-2">Amenities:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {estate?.amenities.map((amenity, index) => (
-                          <span key={index} className="text-xs px-2 py-1 bg-white text-blue-700 rounded border border-blue-300">
-                            {amenity}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+      {/* Right Side - Signup Form */}
+      <div className="w-full lg:w-1/2 flex flex-col justify-center p-8 md:p-12 lg:p-16 relative bg-white overflow-y-auto">
+        <div className="absolute top-8 left-8 lg:hidden">
+            <Link href="/" className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors">
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Home</span>
+            </Link> 
+        </div>
 
-                {/* Security Tips */}
-                <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-                  <h4 className="font-semibold text-amber-900 mb-2">🔒 Security Tips</h4>
-                  <ul className="text-sm text-amber-800 space-y-1">
-                    <li>• Use a strong, unique password</li>
-                    <li>• Don't share your account details</li>
-                    <li>• Enable 2-factor authentication</li>
-                    <li>• Keep emergency contact updated</li>
-                  </ul>
-                </div>
+        <div className="max-w-xl w-full mx-auto space-y-8">
+            
+            {/* Progress Bar (Compact for Right Side) */}
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-2">
+                {[
+                  { number: 1, label: 'Profile' },
+                  { number: 2, label: 'Security' },
+                  { number: 3, label: 'Finish' }
+                ].map((item) => (
+                   <div key={item.number} className="flex flex-col items-center gap-1 flex-1 relative">
+                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold z-10 ${
+                            step > item.number ? 'bg-gray-900 text-white' : 
+                            step === item.number ? 'bg-gray-900 text-white ring-4 ring-gray-100' : 
+                            'bg-gray-100 text-gray-400'
+                       }`}>
+                           {step > item.number ? <CheckCircle2 className="w-4 h-4" /> : item.number}
+                       </div>
+                       <div className={`text-[10px] font-semibold tracking-wider uppercase hidden sm:block ${step >= item.number ? 'text-gray-900' : 'text-gray-400'}`}>
+                           {item.label}
+                       </div>
+                       {item.number < 3 && (
+                           <div className={`absolute top-4 left-1/2 w-full h-[2px] z-0 ${step > item.number ? 'bg-gray-900' : 'bg-gray-100'}`} />
+                       )}
+                   </div>
+                ))}
               </div>
             </div>
 
-            {/* Right Column - Registration Form */}
-            <div className="lg:col-span-2">
-              <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Complete Your Registration</h2>
-                <p className="text-gray-700 mb-6">
-                  Welcome to {estate?.name}. Please complete the following steps to activate your resident account.
+            <div className="text-center lg:text-left mb-8">
+                <h1 className="text-3xl lg:text-4xl font-bold text-gray-700 mb-3 tracking-tight">
+                    {step === 1 && 'Personal Information'}
+                    {step === 2 && 'Account Setup'}
+                    {step === 3 && 'Final Steps'}
+                </h1>
+                <p className="text-gray-500 mt-2 text-lg">
+                    {step === 1 && 'Please verify and update your personal details.'}
+                    {step === 2 && 'Create secure credentials for your account.'}
+                    {step === 3 && 'Complete your registration with these important details.'}
                 </p>
-
-                <form onSubmit={handleSubmit}>
+            </div>
+            
+            <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Step 1: Personal Information */}
                   {step === 1 && (
                     <div className="space-y-6">
-                      <div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-4">Personal Information</h3>
-                        <p className="text-gray-600 mb-6">Please verify and update your personal details.</p>
-                      </div>
-
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                           <label className="block text-sm font-medium mb-2 text-gray-800">
@@ -511,7 +539,7 @@ function SignupContent() {
                             name="name"
                             value={formData.name}
                             onChange={handleInputChange}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
+                            className="w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-gray-50"
                             required
                           />
                         </div>
@@ -525,7 +553,7 @@ function SignupContent() {
                             name="email"
                             value={formData.email}
                             onChange={handleInputChange}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
+                            className="w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-gray-50"
                             required
                             disabled
                           />
@@ -541,7 +569,7 @@ function SignupContent() {
                             name="phone"
                             value={formData.phone}
                             onChange={handleInputChange}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
+                            className="w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-gray-50"
                             required
                             placeholder="+91 9876543210"
                           />
@@ -556,7 +584,7 @@ function SignupContent() {
                             name="unitNumber"
                             value={formData.unitNumber}
                             onChange={handleInputChange}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
+                            className="w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-gray-50"
                             required
                           />
                         </div>
@@ -570,7 +598,7 @@ function SignupContent() {
                             name="occupation"
                             value={formData.occupation}
                             onChange={handleInputChange}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
+                            className="w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-gray-50"
                             placeholder="e.g., Software Engineer"
                           />
                         </div>
@@ -581,12 +609,6 @@ function SignupContent() {
                   {/* Step 2: Account Setup */}
                   {step === 2 && (
                     <div className="space-y-6">
-                      <div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-4">Account Setup</h3>
-                        <p className="text-gray-600 mb-6">Create secure credentials for your account.</p>
-                      </div>
-
-                      <div className="space-y-6">
                         <div>
                           <label className="block text-sm font-medium mb-2 text-gray-800">
                             Create Password *
@@ -596,7 +618,7 @@ function SignupContent() {
                             name="password"
                             value={formData.password}
                             onChange={handleInputChange}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
+                            className="w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-gray-50"
                             required
                             placeholder="At least 8 characters"
                           />
@@ -628,7 +650,7 @@ function SignupContent() {
                             name="confirmPassword"
                             value={formData.confirmPassword}
                             onChange={handleInputChange}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
+                            className="w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-gray-50"
                             required
                           />
                           {formData.password && formData.confirmPassword && (
@@ -643,26 +665,20 @@ function SignupContent() {
                           )}
                         </div>
 
-                        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div className="p-4 bg-blue-50 rounded-lg">
                           <h4 className="font-semibold text-blue-900 mb-2">Password Requirements</h4>
                           <p className="text-sm text-blue-800">
                             Your password will be used to access the EstateSecure portal, mobile app, 
                             and all community services. Choose a strong password that you don't use elsewhere.
                           </p>
                         </div>
-                      </div>
                     </div>
                   )}
 
                   {/* Step 3: Final Steps */}
                   {step === 3 && (
                     <div className="space-y-6">
-                      <div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-4">Final Steps</h3>
-                        <p className="text-gray-600 mb-6">Complete your registration with these important details.</p>
-                      </div>
 
-                      <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div>
                             <label className="block text-sm font-medium mb-2 text-gray-800">
@@ -673,7 +689,7 @@ function SignupContent() {
                               name="emergencyContactName"
                               value={formData.emergencyContactName}
                               onChange={handleInputChange}
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
+                              className="w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-gray-50"
                               required
                               placeholder="Full name"
                             />
@@ -688,14 +704,14 @@ function SignupContent() {
                               name="emergencyContact"
                               value={formData.emergencyContact}
                               onChange={handleInputChange}
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-gray-50"
+                              className="w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-gray-50"
                               required
                               placeholder="+91 9876543210"
                             />
                           </div>
                         </div>
 
-                        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <div className="p-4 bg-red-50 rounded-lg">
                           <h4 className="font-semibold text-red-900 mb-2">⚠️ Important Notice</h4>
                           <p className="text-sm text-red-800">
                             Emergency contact information is critical for your safety. 
@@ -743,7 +759,7 @@ function SignupContent() {
                           </div>
                         </div>
 
-                        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="p-4 bg-green-50 rounded-lg">
                           <h4 className="font-semibold text-green-900 mb-2">🎉 Almost There!</h4>
                           <p className="text-sm text-green-800">
                             After completing registration, you'll gain access to:
@@ -757,17 +773,16 @@ function SignupContent() {
                           </ul>
                         </div>
                       </div>
-                    </div>
                   )}
-
+                  
                   {/* Navigation Buttons */}
-                  <div className="flex justify-between mt-8 pt-8 border-t border-gray-200">
+                  <div className="flex justify-between mt-8 pt-8">
                     {step > 1 ? (
                       <button
                         type="button"
                         onClick={handlePrevStep}
-                        className="px-8 py-3 border-2 border-gray-400 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-all"
-                      >
+                        className="px-8 py-3 bg-white hover:bg-gray-100 text-gray-700 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-all"
+                       >
                         Back
                       </button>
                     ) : (
@@ -813,59 +828,13 @@ function SignupContent() {
                     ></div>
                   </div>
                 </div>
-              </div>
 
-              {/* Help Section */}
-              <div className="mt-6 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl">
-                <h4 className="font-semibold text-blue-900 mb-3">Need Assistance?</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-blue-800 mb-2">Contact Estate Admin:</p>
-                    <p className="font-medium text-blue-900">{estate?.adminName}</p>
-                    <p className="text-sm text-blue-700">{estate?.adminEmail}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-blue-800 mb-2">Security Desk:</p>
-                    <p className="font-medium text-blue-900">{estate?.securityContact}</p>
-                    <p className="text-sm text-blue-700">Available 24/7</p>
-                  </div>
-                </div>
-              </div>
+                <p className="text-center text-sm text-gray-500 mt-8">
+                  Already have an account? <Link href="/login" className="text-blue-600 font-bold hover:underline transition-all">Sign in here</Link>
+                </p>
             </div>
-          </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8 mt-12">
-        <div className="container mx-auto px-4 text-center">
-          <div className="w-16 h-16 bg-blue-700 rounded-xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-xl">ES</span>
-          </div>
-          <h3 className="text-2xl font-bold mb-2">EstateSecure</h3>
-          <p className="text-gray-300 mb-6">Secure Estate Management Platform</p>
-          
-          <div className="flex flex-wrap justify-center gap-3 mb-6">
-            <span className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-sm">
-              Visitor Management
-            </span>
-            <span className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-sm">
-              Emergency Alerts
-            </span>
-            <span className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-sm">
-              Digital Payments
-            </span>
-            <span className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-sm">
-              Staff Management
-            </span>
-          </div>
-          
-          <p className="text-gray-400 text-sm">
-            © 2024 EstateSecure. Your security is our priority.
-          </p>
-        </div>
-      </footer>
-    </div>
   )
 }
 

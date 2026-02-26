@@ -112,10 +112,10 @@ const PaymentMethodCard = memo(({ method, isSelected, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className={`p-4 border transition-all duration-300 cursor-pointer ${
+      className={`p-4   transition-all duration-300 cursor-pointer ${
         isSelected
-          ? 'border-blue-600 bg-blue-50 shadow-sm'
-          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+          ? ' border-blue-600 bg-blue-50 shadow-sm'
+          : ' border-gray-200 hover:border-gray-300 hover:bg-gray-50'
       }`}
     >
       <div className="flex items-start justify-between">
@@ -198,7 +198,7 @@ const PaymentCardForm = memo(() => {
             onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
             placeholder="1234 5678 9012 3456"
             maxLength="19"
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+            className="w-full pl-10 pr-4 py-3 border-gray-300 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
           />
         </div>
       </div>
@@ -214,7 +214,7 @@ const PaymentCardForm = memo(() => {
             onChange={(e) => setExpiry(formatExpiry(e.target.value))}
             placeholder="MM/YY"
             maxLength="5"
-            className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+            className="w-full px-4 py-3 border-gray-300 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
           />
         </div>
         <div>
@@ -229,7 +229,7 @@ const PaymentCardForm = memo(() => {
               onChange={(e) => setCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
               placeholder="123"
               maxLength="4"
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+              className="w-full pl-10 pr-4 py-3 border-gray-300 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
             />
           </div>
         </div>
@@ -244,7 +244,7 @@ const PaymentCardForm = memo(() => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="John Doe"
-          className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+          className="w-full px-4 py-3 border-gray-300 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
         />
       </div>
 
@@ -298,10 +298,10 @@ const UPIPayment = memo(() => {
               key={app.id}
               type="button"
               onClick={() => setSelectedApp(app.id)}
-              className={`p-4 border text-center transition-all ${
+              className={`p-4   text-center transition-all ${
                 selectedApp === app.id
-                  ? 'border-blue-600 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                  ? ' border-blue-600 bg-blue-50'
+                  : ' border-gray-200 hover:border-gray-300'
               }`}
             >
               <div className="font-medium text-gray-900 mb-1">{app.icon}</div>
@@ -320,14 +320,14 @@ const UPIPayment = memo(() => {
           value={upiId}
           onChange={(e) => setUpiId(e.target.value)}
           placeholder="username@upi"
-          className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+          className="w-full px-4 py-3 border-gray-300 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
         />
       </div>
 
-      <div className="border border-gray-200 p-6 bg-gray-50">
+      <div className=" border-gray-200 p-6 bg-gray-50">
         <div className="text-center">
           <div className="mb-4">
-            <div className="w-48 h-48 bg-white border border-gray-300 mx-auto flex items-center justify-center">
+            <div className="w-48 h-48 bg-white border-gray-300 mx-auto flex items-center justify-center">
               <div className="text-center">
                 <QrCode className="w-24 h-24 text-gray-700 mx-auto mb-2" />
                 <p className="text-xs text-gray-600 font-mono">{generatedQR}</p>
@@ -343,7 +343,7 @@ const UPIPayment = memo(() => {
             <button
               type="button"
               onClick={handleCopyQR}
-              className="px-4 py-2 border border-gray-900 text-gray-900 text-sm font-medium hover:bg-gray-900 hover:text-white transition-colors flex items-center gap-2"
+              className="px-4 py-2 border-gray-900 text-gray-900 text-sm font-medium hover:bg-gray-900 hover:text-white transition-colors flex items-center gap-2"
             >
               {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
               {copied ? 'Copied!' : 'Copy UPI ID'}
@@ -385,10 +385,10 @@ const NetBanking = memo(() => {
               key={bank.id}
               type="button"
               onClick={() => setSelectedBank(bank.id)}
-              className={`w-full p-4 border text-left transition-all flex items-center justify-between ${
+              className={`w-full p-4   text-left transition-all flex items-center justify-between ${
                 selectedBank === bank.id
-                  ? 'border-blue-600 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                  ? ' border-blue-600 bg-blue-50'
+                  : ' border-gray-200 hover:border-gray-300'
               }`}
             >
               <div>
@@ -403,9 +403,9 @@ const NetBanking = memo(() => {
         </div>
       </div>
 
-      <div className="p-4 border border-yellow-200 bg-yellow-50">
+      <div className="p-4 border-yellow-200 bg-yellow-50">
         <div className="flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0" />
+          <AlertCircle className="w-5 h-5 text-yellow-600 shrink-0" />
           <div>
             <p className="text-sm text-yellow-800">
               You will be redirected to your bank's secure payment page to complete the transaction.
@@ -429,7 +429,7 @@ const OrderSummary = memo(({ plan, billingPeriod, addons = [] }) => {
   const total = subtotal + tax
 
   return (
-    <div className="border border-gray-200 bg-white">
+    <div className=" border-gray-200 bg-white">
       <div className="p-6 border-b border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900">Order Summary</h3>
       </div>
@@ -451,7 +451,7 @@ const OrderSummary = memo(({ plan, billingPeriod, addons = [] }) => {
           </div>
           
           {isAnnual && (
-            <div className="mt-2 p-3 bg-green-50 border border-green-200">
+            <div className="mt-2 p-3 bg-green-50 border-green-200">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-green-800">
                   Monthly equivalent
@@ -466,7 +466,7 @@ const OrderSummary = memo(({ plan, billingPeriod, addons = [] }) => {
 
         {/* Add-ons */}
         {addons.length > 0 && (
-          <div className="border-t border-gray-100 pt-4">
+          <div className=" border-t border-gray-100 pt-4">
             <h4 className="font-medium text-gray-900 mb-2">Add-ons</h4>
             {addons.map((addon, index) => (
               <div key={index} className="flex justify-between items-center py-1">
@@ -478,7 +478,7 @@ const OrderSummary = memo(({ plan, billingPeriod, addons = [] }) => {
         )}
 
         {/* Totals */}
-        <div className="border-t border-gray-200 pt-4 space-y-2">
+        <div className=" border-t border-gray-200 pt-4 space-y-2">
           <div className="flex justify-between">
             <span className="text-gray-600">Subtotal</span>
             <span className="font-medium text-gray-900"> ${subtotal}</span>
@@ -500,7 +500,7 @@ const OrderSummary = memo(({ plan, billingPeriod, addons = [] }) => {
 
         {/* Savings */}
         {isAnnual && (
-          <div className="p-3 bg-blue-50 border border-blue-200">
+          <div className="p-3 bg-blue-50 border-blue-200">
             <div className="flex items-center justify-between">
               <span className="text-sm text-blue-800">
                 💰 You save  ${plan.price * 2} with annual billing
@@ -562,7 +562,7 @@ const PaymentStatusModal = memo(({ status, onClose }) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-3 border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50"
+                className="flex-1 py-3 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50"
               >
                 Cancel
               </button>
@@ -580,7 +580,7 @@ const PaymentStatusModal = memo(({ status, onClose }) => {
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="flex-1 py-3 border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 flex items-center justify-center gap-2"
+                  className="flex-1 py-3 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 flex items-center justify-center gap-2"
                 >
                   <Download className="w-4 h-4" />
                   Receipt
@@ -593,7 +593,7 @@ const PaymentStatusModal = memo(({ status, onClose }) => {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex-1 py-3 border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50"
+                  className="flex-1 py-3 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50"
                 >
                   Try Again
                 </button>
@@ -656,9 +656,9 @@ const PaystackIntegration = memo(({ amount, email, onSuccess, onClose }) => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 border border-blue-200 bg-blue-50">
+      <div className="p-4 border-blue-200 bg-blue-50">
         <div className="flex items-start gap-3">
-          <Shield className="w-5 h-5 text-blue-600 flex-shrink-0" />
+          <Shield className="w-5 h-5 text-blue-600 shrink-0" />
           <div>
             <h4 className="font-medium text-blue-900 mb-1">Secure Payment via Paystack</h4>
             <p className="text-sm text-blue-800">
@@ -668,7 +668,7 @@ const PaystackIntegration = memo(({ amount, email, onSuccess, onClose }) => {
         </div>
       </div>
 
-      <div className="border border-gray-200 p-6">
+      <div className=" border-gray-200 p-6">
         <div className="flex justify-between items-center mb-4">
           <div>
             <p className="text-sm text-gray-600">Amount to pay</p>
@@ -846,7 +846,7 @@ export default function PaymentPage() {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Left Column - Payment Form */}
             <div className="lg:col-span-2">
-              <div className="bg-white border border-gray-200">
+              <div className="bg-white border-gray-200">
                 <div className="p-6 border-b border-gray-200">
                   <h1 className="text-2xl font-bold text-gray-900">
                     Complete Your Payment
@@ -881,10 +881,10 @@ export default function PaymentPage() {
                     <button
                       type="button"
                       onClick={() => setUsePaystack(true)}
-                      className={`w-full p-4 border transition-all text-left ${
+                      className={`w-full p-4   transition-all text-left ${
                         usePaystack
-                          ? 'border-purple-600 bg-purple-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? ' border-purple-600 bg-purple-50'
+                          : ' border-gray-200 hover:border-gray-300'
                       }`}
                     >
                       <div className="flex items-center justify-between">
@@ -914,9 +914,9 @@ export default function PaymentPage() {
                   {renderPaymentMethod()}
 
                   {/* Security Notice */}
-                  <div className="mt-8 p-4 border border-gray-200 bg-gray-50">
+                  <div className="mt-8 p-4 border-gray-200 bg-gray-50">
                     <div className="flex items-start gap-3">
-                      <Shield className="w-5 h-5 text-gray-700 flex-shrink-0" />
+                      <Shield className="w-5 h-5 text-gray-700 shrink-0" />
                       <div>
                         <h4 className="font-medium text-gray-900 mb-1">
                           Secure Payment
@@ -970,7 +970,7 @@ export default function PaymentPage() {
                   {['Razorpay', 'Stripe', 'PayPal', 'Instamojo', 'Cashfree'].map((processor) => (
                     <div
                       key={processor}
-                      className="px-4 py-2 border border-gray-200 bg-white text-sm text-gray-700"
+                      className="px-4 py-2 border-gray-200 bg-white text-sm text-gray-700"
                     >
                       {processor}
                     </div>
@@ -988,14 +988,14 @@ export default function PaymentPage() {
               />
 
               {/* Support */}
-              <div className="border border-gray-200 p-6 bg-white">
+              <div className=" border-gray-200 p-6 bg-white">
                 <h3 className="font-semibold text-gray-900 mb-4">
                   Need Help?
                 </h3>
                 <div className="space-y-3">
                   <a
                     href="mailto:support@estatesecure.com"
-                    className="flex items-center gap-3 p-3 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-3 p-3 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
                   >
                     <Bell className="w-5 h-5 text-gray-600" />
                     <div>
@@ -1005,7 +1005,7 @@ export default function PaymentPage() {
                   </a>
                   <a
                     href="tel:+911234567890"
-                    className="flex items-center gap-3 p-3 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-3 p-3 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
                   >
                     <UserCheck className="w-5 h-5 text-gray-600" />
                     <div>
@@ -1017,9 +1017,9 @@ export default function PaymentPage() {
               </div>
 
               {/* Guarantee */}
-              <div className="border border-blue-200 bg-blue-50 p-6">
+              <div className=" border-blue-200 bg-blue-50 p-6">
                 <div className="flex items-start gap-3">
-                  <Zap className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                  <Zap className="w-5 h-5 text-blue-600 shrink-0" />
                   <div>
                     <h3 className="font-semibold text-blue-900 mb-1">
                       30-Day Money-Back Guarantee

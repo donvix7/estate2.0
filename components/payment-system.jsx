@@ -66,7 +66,7 @@ export function PaymentSystem() {
           type="number"
           value={paymentAmount}
           onChange={(e) => setPaymentAmount(parseInt(e.target.value) || 0)}
-          className="w-full p-3 border rounded-lg"
+          className="w-full p-3   rounded-lg"
           min="0"
         />
       </div>
@@ -79,11 +79,11 @@ export function PaymentSystem() {
         {isProcessing ? 'Processing Payment...' : `Pay  $${paymentAmount.toLocaleString()}`}
       </button>
       
-      <div className="border-t pt-6">
+      <div className=" border-t pt-6">
         <h4 className="font-semibold mb-4">Recent Transactions</h4>
         <div className="space-y-3">
           {transactions.map((txn) => (
-            <div key={txn.id} className="flex justify-between items-center p-3 border rounded">
+            <div key={txn.id} className="flex justify-between items-center p-3   rounded">
               <div>
                 <p className="font-medium">{txn.type}</p>
                 <p className="text-sm text-gray-500">{txn.date}</p>
@@ -102,7 +102,7 @@ export function PaymentSystem() {
       </div>
       
       {showReceipt && (
-        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+        <div className="mt-6 p-4 bg-green-50 border-green-200 rounded-lg">
           <h4 className="font-semibold text-green-700 mb-2">📄 Digital Receipt Generated</h4>
           <p className="text-sm text-green-600">
             Receipt for  ${paymentAmount.toLocaleString()} has been saved to your account.

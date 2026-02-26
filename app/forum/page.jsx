@@ -165,10 +165,10 @@ const TRENDING_TAGS = [
 const CategoryCard = memo(({ category, isActive, onClick }) => (
   <div
     onClick={onClick}
-    className={`p-4 border transition-all duration-300 cursor-pointer ${
+    className={`p-4   transition-all duration-300 cursor-pointer ${
       isActive
-        ? 'border-blue-600 bg-blue-50 shadow-sm'
-        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+        ? ' border-blue-600 bg-blue-50 shadow-sm'
+        : ' border-gray-200 hover:border-gray-300 hover:bg-gray-50'
     }`}
   >
     <div className="flex items-start gap-3">
@@ -193,7 +193,7 @@ CategoryCard.displayName = 'CategoryCard'
 const ThreadCard = memo(({ thread, onClick }) => (
   <div
     onClick={() => onClick(thread.id)}
-    className="border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-300 cursor-pointer bg-white"
+    className=" border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-300 cursor-pointer bg-white"
   >
     <div className="p-4">
       <div className="flex items-start justify-between gap-4">
@@ -279,7 +279,7 @@ const ThreadCard = memo(({ thread, onClick }) => (
 ThreadCard.displayName = 'ThreadCard'
 
 const TrendingTag = memo(({ tag }) => (
-  <button className="group flex items-center justify-between p-3 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-300 w-full">
+  <button className="group flex items-center justify-between p-3 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-300 w-full">
     <div className="flex items-center gap-2">
       <Tag className="w-4 h-4 text-gray-400" />
       <span className="text-sm font-medium text-gray-700">#{tag.name}</span>
@@ -295,28 +295,28 @@ TrendingTag.displayName = 'TrendingTag'
 
 const QuickStats = memo(() => (
   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-    <div className="border border-gray-200 p-4">
+    <div className=" border-gray-200 p-4">
       <div className="flex items-center gap-2 mb-2">
         <MessageSquare className="w-4 h-4 text-gray-600" />
         <span className="text-sm text-gray-600">Total Threads</span>
       </div>
       <p className="text-2xl font-bold text-gray-900">1,284</p>
     </div>
-    <div className="border border-gray-200 p-4">
+    <div className=" border-gray-200 p-4">
       <div className="flex items-center gap-2 mb-2">
         <User className="w-4 h-4 text-gray-600" />
         <span className="text-sm text-gray-600">Active Users</span>
       </div>
       <p className="text-2xl font-bold text-gray-900">892</p>
     </div>
-    <div className="border border-gray-200 p-4">
+    <div className=" border-gray-200 p-4">
       <div className="flex items-center gap-2 mb-2">
         <ThumbsUp className="w-4 h-4 text-gray-600" />
         <span className="text-sm text-gray-600">Solutions</span>
       </div>
       <p className="text-2xl font-bold text-gray-900">456</p>
     </div>
-    <div className="border border-gray-200 p-4">
+    <div className=" border-gray-200 p-4">
       <div className="flex items-center gap-2 mb-2">
         <Clock className="w-4 h-4 text-gray-600" />
         <span className="text-sm text-gray-600">Avg. Response</span>
@@ -421,7 +421,7 @@ export default function ForumPage() {
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             {/* Search */}
-            <div className="bg-white border border-gray-200 p-4">
+            <div className="bg-white border-gray-200 p-4">
               <form onSubmit={handleSearch}>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -430,14 +430,14 @@ export default function ForumPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search forum..."
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+                    className="w-full pl-10 pr-4 py-2 border-gray-300 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
                   />
                 </div>
               </form>
             </div>
 
             {/* Categories */}
-            <div className="bg-white border border-gray-200">
+            <div className="bg-white border-gray-200">
               <div className="p-4 border-b border-gray-200">
                 <h3 className="font-semibold text-gray-900 flex items-center gap-2">
                   Categories
@@ -474,7 +474,7 @@ export default function ForumPage() {
             </div>
 
             {/* Trending Tags */}
-            <div className="bg-white border border-gray-200">
+            <div className="bg-white border-gray-200">
               <div className="p-4 border-b border-gray-200">
                 <h3 className="font-semibold text-gray-900 flex items-center gap-2">
                   <TrendingUp className="w-4 h-4" />
@@ -489,7 +489,7 @@ export default function ForumPage() {
             </div>
 
             {/* Quick Stats */}
-            <div className="bg-white border border-gray-200 p-4">
+            <div className="bg-white border-gray-200 p-4">
               <h3 className="font-semibold text-gray-900 mb-4">Forum Stats</h3>
               <QuickStats />
             </div>
@@ -498,12 +498,12 @@ export default function ForumPage() {
           {/* Main Content Area */}
           <div className="lg:col-span-3">
             {/* Filters */}
-            <div className="bg-white border border-gray-200 mb-6">
+            <div className="bg-white border-gray-200 mb-6">
               <div className="p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setShowFilters(!showFilters)}
-                    className="flex items-center gap-2 px-3 py-2 border border-gray-300 hover:border-gray-400"
+                    className="flex items-center gap-2 px-3 py-2 border-gray-300 hover:border-gray-400"
                   >
                     <Filter className="w-4 h-4" />
                     Filter
@@ -512,7 +512,7 @@ export default function ForumPage() {
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 focus:outline-none focus:border-gray-900"
+                    className="px-3 py-2 border-gray-300 focus:outline-none focus:border-gray-900"
                   >
                     <option value="latest">Latest</option>
                     <option value="popular">Most Viewed</option>
@@ -587,7 +587,7 @@ export default function ForumPage() {
                   />
                 ))
               ) : (
-                <div className="bg-white border border-gray-200 p-8 text-center">
+                <div className="bg-white border-gray-200 p-8 text-center">
                   <div className="max-w-md mx-auto">
                     <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                       <MessageSquare className="w-8 h-8 text-gray-400" />
@@ -613,22 +613,22 @@ export default function ForumPage() {
             {filteredThreads.length > 0 && (
               <div className="mt-8 flex justify-center">
                 <nav className="flex items-center gap-2">
-                  <button className="px-3 py-2 border border-gray-300 hover:border-gray-400 disabled:opacity-50">
+                  <button className="px-3 py-2 border-gray-300 hover:border-gray-400 disabled:opacity-50">
                     Previous
                   </button>
                   {[1, 2, 3, 4, 5].map((page) => (
                     <button
                       key={page}
-                      className={`px-3 py-2 border ${
+                      className={`px-3 py-2   ${
                         page === 1
-                          ? 'border-gray-900 bg-gray-900 text-white'
-                          : 'border-gray-300 hover:border-gray-400'
+                          ? ' border-gray-900 bg-gray-900 text-white'
+                          : ' border-gray-300 hover:border-gray-400'
                       }`}
                     >
                       {page}
                     </button>
                   ))}
-                  <button className="px-3 py-2 border border-gray-300 hover:border-gray-400">
+                  <button className="px-3 py-2 border-gray-300 hover:border-gray-400">
                     Next
                   </button>
                 </nav>
@@ -644,7 +644,7 @@ export default function ForumPage() {
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl font-bold mb-6 text-center">Community Guidelines</h2>
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="border border-gray-200 p-6">
+              <div className=" border-gray-200 p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <CheckCircle className="w-5 h-5 text-green-600" />
                   <h3 className="font-semibold">Do</h3>
@@ -658,7 +658,7 @@ export default function ForumPage() {
                 </ul>
               </div>
               
-              <div className="border border-gray-200 p-6">
+              <div className=" border-gray-200 p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <AlertCircle className="w-5 h-5 text-red-600" />
                   <h3 className="font-semibold">Don't</h3>

@@ -157,7 +157,7 @@ const InvitationWorkflowPage = () => {
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 md:p-8">
+        <div className="bg-white border-gray-200 rounded-xl p-6 md:p-8">
           <div className="flex items-center gap-4 mb-4">
             <div className="p-3 bg-gray-900 rounded-lg">
               <Shield className="w-8 h-8 text-white" />
@@ -205,7 +205,7 @@ const InvitationWorkflowPage = () => {
           {/* Left Column - Security Features */}
           <div className="lg:col-span-2 space-y-6">
             {/* Security Features Card */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <div className="bg-white border-gray-200 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-green-100 text-green-700 rounded-lg">
                   <Shield className="w-6 h-6" />
@@ -217,7 +217,7 @@ const InvitationWorkflowPage = () => {
                 {securityFeatures.map((feature, index) => (
                   <div
                     key={index}
-                    className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors"
+                    className=" border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors"
                   >
                     <div className="flex items-start gap-3">
                       <div className="p-2 bg-gray-100 text-gray-700 rounded-lg">
@@ -241,7 +241,7 @@ const InvitationWorkflowPage = () => {
             </div>
 
             {/* Detailed Workflow */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <div className="bg-white border-gray-200 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-blue-100 text-blue-700 rounded-lg">
                   <Target className="w-6 h-6" />
@@ -261,7 +261,7 @@ const InvitationWorkflowPage = () => {
                     )}
 
                     <div className="flex items-start">
-                      <div className="relative z-10 flex-shrink-0 w-12 h-12 bg-gray-900 text-white rounded-full flex items-center justify-center font-bold mr-4">
+                      <div className="relative z-10 shrink-0 w-12 h-12 bg-gray-900 text-white rounded-full flex items-center justify-center font-bold mr-4">
                         {step.step}
                       </div>
                       
@@ -296,7 +296,7 @@ const InvitationWorkflowPage = () => {
           {/* Right Column - Broadcast & Authorization */}
           <div className="space-y-6">
             {/* Authorization Process */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <div className="bg-white border-gray-200 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-indigo-100 text-indigo-700 rounded-lg">
                   <Key className="w-6 h-6" />
@@ -341,7 +341,7 @@ const InvitationWorkflowPage = () => {
             </div>
 
             {/* Broadcast Distribution */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <div className="bg-white border-gray-200 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-purple-100 text-purple-700 rounded-lg">
                   <Megaphone className="w-6 h-6" />
@@ -353,7 +353,7 @@ const InvitationWorkflowPage = () => {
                 {broadcastChannels.map((channel, index) => (
                   <div
                     key={index}
-                    className={`p-4 border rounded-lg ${channel.color}`}
+                    className={`p-4   rounded-lg ${channel.color}`}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
@@ -377,7 +377,7 @@ const InvitationWorkflowPage = () => {
             </div>
 
             {/* Priority Levels */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <div className="bg-white border-gray-200 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-amber-100 text-amber-700 rounded-lg">
                   <AlertTriangle className="w-6 h-6" />
@@ -387,7 +387,7 @@ const InvitationWorkflowPage = () => {
 
               <div className="space-y-4">
                 {priorityLevels.map((level, index) => (
-                  <div key={index} className={`p-4 border rounded-lg ${level.color}`}>
+                  <div key={index} className={`p-4   rounded-lg ${level.color}`}>
                     <div className="flex items-center gap-3 mb-3">
                       {level.icon}
                       <div>
@@ -412,7 +412,7 @@ const InvitationWorkflowPage = () => {
         </div>
 
         {/* Security Guidelines */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
+        <div className="bg-white border-gray-200 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2 bg-amber-100 text-amber-700 rounded-lg">
               <AlertTriangle className="w-6 h-6" />

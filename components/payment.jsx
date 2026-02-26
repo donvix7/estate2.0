@@ -56,9 +56,9 @@ export default function PaystackPayment() {
     // Show loading state during SSR hydration
     if (!isMounted) {
         return (
-            <div className="bg-gray-800/30 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-700/50 p-8">
+            <div className="bg-gray-800/30 backdrop-blur-sm rounded-2xl shadow-xl border-gray-700/50 p-8">
                 <div className="flex justify-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cyan-500"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
                     <p className="ml-3 text-gray-300">Loading payment form...</p>
                 </div>
             </div>
@@ -162,10 +162,10 @@ export default function PaystackPayment() {
                 theme="dark"
             />
             
-            <div className="bg-gray-800/30 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-700/50 p-8">
+            <div className="bg-gray-800/30 backdrop-blur-sm rounded-2xl shadow-xl border-gray-700/50 p-8">
                 <div className="flex items-center gap-4 mb-8 text-white">
                     <div className="w-14 h-14 rounded-xl flex items-center justify-center">
-                        <CreditCard className="w-7 h-7 text-cyan-400" />
+                        <CreditCard className="w-7 h-7 text-blue-400" />
                     </div>
                     <div>
                         <h3 className="text-2xl font-bold text-white">Make a Payment</h3>
@@ -174,7 +174,7 @@ export default function PaystackPayment() {
                 </div>
 
                 {!isConfigValid && (
-                    <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+                    <div className="mb-6 p-4 bg-red-500/10 border-red-500/30 rounded-xl">
                         <p className="text-red-300 text-sm">
                             ⚠️ Payment system is not configured. Please check environment variables.
                         </p>
@@ -191,7 +191,7 @@ export default function PaystackPayment() {
                             <input
                                 type="text"
                                 placeholder="Enter your name"
-                                className="w-full p-4 rounded-xl bg-gray-900/50 border border-gray-700 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 text-white transition-all"
+                                className="w-full p-4 rounded-xl bg-gray-900/50 border-gray-700 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 text-white transition-all"
                                 {...register("name")}
                             />
                             {errors.name && (
@@ -207,7 +207,7 @@ export default function PaystackPayment() {
                             <input
                                 type="email"
                                 placeholder="Enter your email"
-                                className="w-full p-4 rounded-xl bg-gray-900/50 border border-gray-700 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 text-white transition-all"
+                                className="w-full p-4 rounded-xl bg-gray-900/50 border-gray-700 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 text-white transition-all"
                                 {...register("email")}
                             />
                             {errors.email && (
@@ -225,7 +225,7 @@ export default function PaystackPayment() {
                             <input
                                 type="password"
                                 placeholder="Enter your password"
-                                className="w-full p-4 rounded-xl bg-gray-900/50 border border-gray-700 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 text-white transition-all"
+                                className="w-full p-4 rounded-xl bg-gray-900/50 border-gray-700 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 text-white transition-all"
                                 {...register("password")}
                             />
                             {errors.password && (
@@ -244,7 +244,7 @@ export default function PaystackPayment() {
                                     placeholder="Enter amount"
                                     min="100"
                                     max="1000000"
-                                    className="w-full p-4 rounded-xl bg-gray-900/50 border border-gray-700 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 text-white transition-all pl-12"
+                                    className="w-full p-4 rounded-xl bg-gray-900/50 border-gray-700 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 text-white transition-all pl-12"
                                     {...register("amount")}
                                 />
                                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -265,7 +265,7 @@ export default function PaystackPayment() {
                         <input
                             type="text"
                             placeholder="Enter payment description"
-                            className="w-full p-4 rounded-xl bg-gray-900/50 border border-gray-700 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 text-white transition-all"
+                            className="w-full p-4 rounded-xl bg-gray-900/50 border-gray-700 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 text-white transition-all"
                             {...register("description")}
                         />
                         {errors.description && (
@@ -281,7 +281,7 @@ export default function PaystackPayment() {
                         <input
                             type="text"
                             placeholder="Enter 10-digit account number"
-                            className="w-full p-4 rounded-xl bg-gray-900/50 border border-gray-700 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 text-white transition-all"
+                            className="w-full p-4 rounded-xl bg-gray-900/50 border-gray-700 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 text-white transition-all"
                             {...register("accountNumber")}
                         />
                         {errors.accountNumber && (
@@ -295,7 +295,7 @@ export default function PaystackPayment() {
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl hover:from-blue-700 hover:to-cyan-700 font-medium shadow-lg shadow-blue-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                                    className="w-full px-6 py-4 bg-linear-to-r from-blue-600 to-blue-600 text-white rounded-xl hover:from-blue-700 hover:to-blue-700 font-medium shadow-lg shadow-blue-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                                 >
                                     {isLoading ? (
                                         <>
@@ -314,7 +314,7 @@ export default function PaystackPayment() {
                                 </p>
                             </div>
                         ) : (
-                            <div className="mt-8 p-4 bg-gradient-to-r from-amber-900/20 to-yellow-900/20 border border-amber-500/30 rounded-xl">
+                            <div className="mt-8 p-4 bg-linear-to-r from-amber-900/20 to-yellow-900/20 border-amber-500/30 rounded-xl">
                                 <div className="flex items-center gap-3">
                                     <div className="w-6 h-6 rounded-full bg-amber-500/20 flex items-center justify-center">
                                         <span className="text-amber-400 text-sm">!</span>
@@ -329,7 +329,7 @@ export default function PaystackPayment() {
                             </div>
                         )
                     ) : (
-                        <div className="mt-8 p-4 bg-gradient-to-r from-red-900/20 to-orange-900/20 border border-red-500/30 rounded-xl">
+                        <div className="mt-8 p-4 bg-linear-to-r from-red-900/20 to-orange-900/20 border-red-500/30 rounded-xl">
                             <div className="flex items-center gap-3">
                                 <div className="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center">
                                     <span className="text-red-400 text-sm">!</span>

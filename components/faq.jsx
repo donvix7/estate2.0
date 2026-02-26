@@ -90,7 +90,7 @@ const FAQ = () => {
                     const isOpen = openIndex === `${categoryIndex}-${questionIndex}`
                     
                     return (
-                      <div key={questionIndex} className="border border-gray-200">
+                      <div key={questionIndex} className=" border-gray-200">
                         <button
                           onClick={() => toggleQuestion(categoryIndex, questionIndex)}
                           className="w-full p-4 text-left flex justify-between items-center hover:bg-gray-50"
@@ -133,7 +133,7 @@ const FAQ = () => {
               </a>
               <a
                 href="tel:+18001234567"
-                className="flex items-center gap-2 px-6 py-3 border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-2 px-6 py-3 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
               >
                 <Phone className="w-4 h-4" />
                 Call Support

@@ -51,7 +51,7 @@ export function PanicButton() {
   return (
     <div className="flex flex-col items-center">
       {showPin ? (
-        <div className="bg-red-50 p-6 rounded-xl border border-red-200">
+        <div className="bg-red-50 p-6 rounded-xl border-red-200">
           <h3 className="text-red-700 font-semibold mb-4">Emergency Panic System</h3>
           <div className="mb-4">
             <label className="block text-sm text-gray-600 mb-2">Enter Panic PIN (or wait {countdown}s)</label>
@@ -59,7 +59,7 @@ export function PanicButton() {
               type="password"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
-              className="w-full p-2 border border-red-300 rounded"
+              className="w-full p-2 border-red-300 rounded"
               placeholder="Enter 0000 for demo"
               maxLength="4"
             />
