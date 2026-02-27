@@ -13,7 +13,8 @@ import {
   Home,
   Users,
   User,
-  Bell
+  Bell,
+  Briefcase
 } from 'lucide-react'
 
 const SideBar = ({ role = 'resident' }) => {
