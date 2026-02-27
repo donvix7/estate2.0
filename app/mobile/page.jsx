@@ -633,7 +633,7 @@ const TechStackItem = memo(({ tech, index}) => {
             whileInView={{ opacity: 1, scale: 1}}
             viewport={{ once: true}}
             transition={{ delay: techIndex * 0.1}}
-            whileHover={{ scale: 1.05, y:border-2}}
+            whileHover={{ scale: 1.05, y: -2}}
  className="px-3 py-1 bg-gray-100 text-gray-700 text-sm font-medium"
           >
             {technology}
