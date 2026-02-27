@@ -131,7 +131,7 @@ const Hero = () => {
         {/* Bottom Banner Info */}
         <div  className="absolute bottom-10 left-0 w-full px-4"
         >
-            <div className="flex flex-col md:flex-row justify-between items-end border-t border-white/10 pt-8 gap-6">
+            <div className="flex flex-col md:flex-row justify-between items-end  pt-8 gap-6">
                 <div>
                    <p className="text-white/60 text-xs uppercase tracking-widest mb-2">Trusted By</p>
                    <div className="flex gap-6 text-white/80 font-serif text-lg">

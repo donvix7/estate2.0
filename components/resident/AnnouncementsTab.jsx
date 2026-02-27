@@ -2,7 +2,7 @@ import React from 'react'
 import { TechCard } from '@/components/ui/TechCard'
 import { Settings2, ShieldAlert, FileText, CheckCircle } from 'lucide-react'
 
-export default function AnnouncementsTab({ announcements, markAllAsRead, markAsRead }) {
+export default function AnnouncementsTab({ announcements = [], markAllAsRead, markAsRead }) {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">

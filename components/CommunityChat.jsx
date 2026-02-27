@@ -114,7 +114,7 @@ export default function CommunityChat({
   return (
     <div className="h-[calc(100vh-4rem)] grid grid-cols-1 lg:grid-cols-2 bg-gray-50 dark:bg-gray-900 animate-fadeIn overflow-hidden">
       {/* Sidebar - Channels & DMs */}
-      <div className={`w-full lg:w-80 bg-white dark:bg-gray-800 border-r border-gray-300 dark:border-gray-800 flex-col h-full shrink-0 relative overflow-hidden ${isMobileChatOpen ? 'hidden lg:flex' : 'flex'}`}>
+      <div className={`w-full lg:w-80 bg-white dark:bg-gray-800 flex-col h-full shrink-0 relative overflow-hidden ${isMobileChatOpen ? 'hidden lg:flex' : 'flex'}`}>
         {/* Sidebar Header */}
         <div className="p-4 bg-gray-50/50 dark:bg-gray-800/50 flex justify-between items-center z-10 shrink-0">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -131,13 +131,13 @@ export default function CommunityChat({
 
         {/* Sidebar Search */}
         <div className="p-4 shrink-0">
-          <div className="relative">
+          <div className="relative  bg-gray-200 dark:bg-gray-800 rounded-lg text-center">
             <input 
               type="text" 
               placeholder="Search channels..." 
               className="w-full bg-gray-100 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-800 rounded-lg pl-9 pr-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
             />
-            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
+            <Search className="w-5 h-5 font-bold text-gray-400 absolute right-3 top-0" />
           </div>
         </div>
 
@@ -222,7 +222,7 @@ export default function CommunityChat({
       <div className={`flex-1 flex-col h-full bg-slate-50 dark:bg-[#0B1120] min-w-0 ${!isMobileChatOpen ? 'hidden lg:flex' : 'flex'}`}>
         
         {/* Chat Header */}
-        <div className="px-4 py-3 border-b border-gray-300 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md flex justify-between items-center sticky top-0 z-10 shrink-0 shadow-sm">
+        <div className="px-4 py-3 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md flex justify-between items-center sticky top-0 z-10 shrink-0 shadow-sm">
           <div className="flex items-center gap-3">
              <button 
                 onClick={() => setIsMobileChatOpen(false)}
@@ -285,9 +285,9 @@ export default function CommunityChat({
           {activeMessages.length > 0 ? activeMessages.map((msg) => (
             <div key={`msg-${msg.id}`} className={`flex w-full group ${msg.isMe ? 'justify-end' : 'justify-start'}`}>
               
-              <div className={`flex max-w-[85%] sm:max-w-[75%] ${msg.isMe ? 'flex-row-reverse' : 'flex-row'}`}>
+              <div className={`flex max-w-[85%] sm:max-w-[75%] ${msg.isMe ? 'flex-row-reverse' : 'flex-row'} gap-2`}>
                  {!msg.isMe && (
-                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 flex items-center justify-center text-xs font-bold shrink-0 mt-auto mb-1 mx-2 shadow-sm border border-white dark:border-gray-800">
+                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 flex items-center justify-center text-xs font-bold shrink-0 mt-auto mb-1 mx-2 shadow-sm ">
                      {msg.avatar}
                    </div>
                  )}
@@ -301,7 +301,7 @@ export default function CommunityChat({
                    <div className={`px-4 py-2.5 shadow-sm text-[15px] leading-relaxed relative ${
                      msg.isMe 
                        ? 'bg-blue-600 dark:bg-blue-600 text-white rounded-2xl rounded-tr-sm' 
-                       : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-gray-700/50 rounded-2xl rounded-tl-sm'
+                       : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-2xl rounded-tl-sm'
                    }`}>
                      {msg.text}
                    </div>
@@ -321,7 +321,7 @@ export default function CommunityChat({
         </div>
 
         {/* Message Composer */}
-        <div className="p-4 bg-white dark:bg-gray-900 border-t border-gray-700 dark:border-gray-800 shrink-0 shadow-[0_-4px_20px_-15px_rgba(0,0,0,0.1)] z-10">
+        <div className="p-4 bg-white dark:bg-gray-900  shrink-0 shadow-[0_-4px_20px_-15px_rgba(0,0,0,0.1)] z-10">
           <form 
             onSubmit={handleSendMessage}
             className="flex items-end gap-2 bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-1.5 transition-all focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:border-blue-500 focus-within:bg-white dark:focus-within:bg-gray-800 shadow-inner"
