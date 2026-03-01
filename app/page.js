@@ -58,10 +58,10 @@ import '@material-symbols/font-400'
 // MVP Features based on your requirements
 const MVP_FEATURES = [
   {
-    id:'access-control',
-    title:'Access Control',
+    id: 'access-control',
+    title: 'Access Control',
     icon: <Key className="w-6 h-6" />,
-    description:'Secure visitor management with digital passes and verification',
+    description: 'Secure visitor management with digital passes and verification',
     items: [
       'Visitor pass via app',
       'Resident profile system',
@@ -70,15 +70,16 @@ const MVP_FEATURES = [
       'Visitor QR code/PIN generation',
       'Manual blacklist system'
     ],
-    demo:'access',
-    gradient:'from-gray-600 to-gray-800',
-    stats: { label:'Access Efficiency', value:'95%', change:'+24%'}
+    demo: 'access',
+    image: 'https://images.unsplash.com/photo-1555861496-faa3eafcb220?auto=format&fit=crop&q=80&w=1200',
+    gradient: 'from-gray-600 to-gray-800',
+    stats: { label: 'Access Efficiency', value: '95%', change: '+24%' }
   },
   {
-    id:'panic-emergency',
-    title:'Panic & Emergency',
+    id: 'panic-emergency',
+    title: 'Panic & Emergency',
     icon: <AlertTriangle className="w-6 h-6" />,
-    description:'Instant emergency alerts with multi-channel notification',
+    description: 'Instant emergency alerts with multi-channel notification',
     items: [
       'Panic button in resident app',
       'Panic PIN system',
@@ -86,53 +87,57 @@ const MVP_FEATURES = [
       'Admin dashboard alerts',
       'Panic activity logging'
     ],
-    demo:'emergency',
-    gradient:'from-gray-600 to-gray-800',
-    stats: { label:'Response Time', value:'< 60s', change:'-65%'}
+    demo: 'emergency',
+    image: 'https://images.unsplash.com/photo-1586775490184-b79f0621891f?auto=format&fit=crop&q=80&w=1200',
+    gradient: 'from-gray-600 to-gray-800',
+    stats: { label: 'Response Time', value: '< 60s', change: '-65%' }
   },
   {
-    id:'payments',
-    title:'Basic Payments',
+    id: 'payments',
+    title: 'Basic Payments',
     icon: <CreditCard className="w-6 h-6" />,
-    description:'Simple and secure estate dues collection',
+    description: 'Simple and secure estate dues collection',
     items: [
       'Estate dues payment',
       'Transaction history',
       'Digital receipt',
       'Arrears notification'
     ],
-    demo:'payments',
-    gradient:'from-gray-600 to-gray-800',
-    stats: { label:'Collection Rate', value:'98%', change:'+18%'}
+    demo: 'payments',
+    image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=1200',
+    gradient: 'from-gray-600 to-gray-800',
+    stats: { label: 'Collection Rate', value: '98%', change: '+18%' }
   },
   {
-    id:'admin-dashboard',
-    title:'Admin Dashboard',
+    id: 'admin-dashboard',
+    title: 'Admin Dashboard',
     icon: <BarChart3 className="w-6 h-6" />,
-    description:'Centralized management and monitoring platform',
+    description: 'Centralized management and monitoring platform',
     items: [
       'Resident management',
       'Visitor approval',
       'Panic alerts logs',
       'Payment overview'
     ],
-    demo:'admin',
-    gradient:'from-gray-600 to-gray-800',
-    stats: { label:'Operational Efficiency', value:'85%', change:'+32%'}
+    demo: 'admin',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200',
+    gradient: 'from-gray-600 to-gray-800',
+    stats: { label: 'Operational Efficiency', value: '85%', change: '+32%' }
   },
   {
-    id:'communication',
-    title:'Basic Communication',
+    id: 'communication',
+    title: 'Basic Communication',
     icon: <Megaphone className="w-6 h-6" />,
-    description:'Essential announcements and notifications',
+    description: 'Essential announcements and notifications',
     items: [
       'Announcements',
       'Emergency notifications',
       'Admin broadcast messages'
     ],
-    demo:'communication',
-    gradient:'from-gray-600 to-gray-800',
-    stats: { label:'Engagement Rate', value:'92%', change:'+41%'}
+    demo: 'communication',
+    image: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=1200',
+    gradient: 'from-gray-600 to-gray-800',
+    stats: { label: 'Engagement Rate', value: '92%', change: '+41%' }
   }
 ]
 
@@ -189,10 +194,10 @@ const MVPFeatureCard = ({ feature, isActive, onClick, index}) => (
     viewport={{ once: true}}
     transition={{ delay: index * 0.1, duration: 0.4}}
     whileHover={{ y: -3}}
-    className={`relative p-5 border-2 transition-all duration-300 cursor-pointer overflow-hidden rounded-2xl ${
+    className={`relative p-5 transition-all duration-300 cursor-pointer overflow-hidden rounded-2xl ${
       isActive
         ? ' border-emerald-500 bg-white shadow-xl shadow-emerald-900/5'
-        : 'bg-slate-50/50 border-slate-200 hover:border-emerald-300 hover:bg-white hover:shadow-lg'
+        : 'bg-slate-50/50 hover:border hover:border-emerald-300 hover:bg-white hover:shadow-lg'
     }`}
     onClick={onClick}
   >
@@ -200,7 +205,7 @@ const MVPFeatureCard = ({ feature, isActive, onClick, index}) => (
       <div className="flex items-start gap-4">
         <div className={`p-4 rounded-xl transition-all duration-300 ${
           isActive 
-            ? 'bg-linear-to-br from-emerald-500 to-emerald-700 text-white shadow-md'
+            ? 'bg-linear-to-br from-emerald-500 to-emerald-700 text-white shadow-md border border-emerald-500'
             : 'bg-slate-100 text-slate-500 group-hover:bg-emerald-50 group-hover:text-emerald-600'
         }`}>
           {feature.icon}
@@ -583,94 +588,72 @@ const DemoComponent = ({ demoType}) => {
 
 const features = [
   {
-    title:"Seamless Living",
-    description:"Automated amenity bookings, valet requests, and guest permissions at your fingertips via our intuitive mobile app.",
-    icon:"calendar_month",
-    
-    
+    title: "10x Property Management",
+    description: "Automate manual tasks and streamline operations. Reclaim hours of your week with our intuitive management dashboard.",
+    icon: "speed",
+    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800"
   },
   {
-    title:"Secure Management",
-    description:"Enterprise-grade encryption for all documents, contracts, and resident data with granular access controls.",
-    icon:"security",
-    
+    title: "Ironclad Security",
+    description: "Prevent unauthorized entry with digital visitor passes, instant panic alerts, and real-time security logs.",
+    icon: "security",
+    image: "https://images.unsplash.com/photo-1557989938-349f481cfaa2?auto=format&fit=crop&q=80&w=800"
   },
   {
-    title:"Financial Clarity",
-    description:"Transparent billing, automated collections, and real-time revenue dashboards for property managers.",
-    icon:"receipt",
-    
+    title: "Effortless Payments",
+    description: "Achieve 98%+ collection rates with automated billing, seamless online payments, and instant digital receipts.",
+    icon: "payments",
+    image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=800"
   },
   {
-    title:"Community Engagement",
-    description:"Integrated polls, event management, and feedback systems to foster a vibrant and connected community.",
-    icon:"groups",
-    
+    title: "Delightful Living",
+    description: "Give residents a VIP experience with instant amenity bookings, easy communication, and fast maintenance resolutions.",
+    icon: "sentiment_very_satisfied",
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800"
   },
   {
-    title:"Maintenance Management",
-    description:"Streamlined ticketing, vendor management, and automated escalation workflows for efficient facility upkeep.",
-    icon:"build",
-    
+    title: "Instant Communication",
+    description: "Broadcast important announcements instantly to all residents. No more ignored mass emails or paper notices.",
+    icon: "campaign",
+    image: "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=800"
   },
   {
-    title:"Visitor Management",
-    description:"Secure, self-service visitor pre-authorization and digital check-in for seamless entry and enhanced security.",
-    icon:"person_add",
-    
-  },
-  {
-    title:"Compliance & Reporting",
-    description:"Automated audit trails, regulatory compliance tracking, and comprehensive reporting for governance and transparency.",
-    icon:"description",
-    
+    title: "Data-Driven Decisions",
+    description: "Gain complete visibility into your estate's performance with real-time analytics and comprehensive reporting.",
+    icon: "analytics",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"
   },
 ]
 
 const testimonies = [
   {
-    name: "Daniel Nwachi",
-    role: "CEO of EstateEase",
-    review: "EstateEase has completely transformed how we handle resident requests. The ROI was immediate and resident satisfaction is at an all-time high. It&apos;s the gold standard for management.",
+    name: "Sarah Jenkins",
+    role: "Estate Manager",
+    review: "EstateEase has completely transformed how we handle resident requests. The ROI was immediate, and resident satisfaction is at an all-time high.",
     rating: 5,
     bio: ""
   },
   {
-    name: "Daniel Nwachi",
-    role: "CEO of EstateEase",
-    review: "EstateEase has completely transformed how we handle resident requests. The ROI was immediate and resident satisfaction is at an all-time high. It&apos;s the gold standard for management.",
+    name: "Mike Thompson",
+    role: "Chief of Security",
+    review: "The digital visitor pass system is flawless. We've eliminated unauthorized entries and the panic button feature helps our team respond to emergencies in under 60 seconds.",
     rating: 5,
     bio: ""
   },
   {
-    name: "Daniel Nwachi",
-    role: "CEO of EstateEase",
-    review: "EstateEase has completely transformed how we handle resident requests. The ROI was immediate and resident satisfaction is at an all-time high. It&apos;s the gold standard for management.",
+    name: "Dr. Alistair Chen",
+    role: "Resident",
+    review: "Paying my estate dues takes 30 seconds now. Booking the tennis court, approving my guests—everything is just so easy. It truly feels like a 5-star hotel experience.",
     rating: 5,
     bio: ""
   },
   {
-    name: "Daniel Nwachi",
-    role: "CEO of EstateEase",
-    review: "EstateEase has completely transformed how we handle resident requests. The ROI was immediate and resident satisfaction is at an all-time high. It&apos;s the gold standard for management.",
+    name: "Elena Rodriguez",
+    role: "Head of Finance",
+    review: "Our revenue collection improved by 40% in the first quarter of using EstateEase. The automated invoicing and reconciliation tools are a lifesaver.",
     rating: 5,
     bio: ""
   },
-  {
-    name: "Daniel Nwachi",
-    role: "CEO of EstateEase",
-    review: "EstateEase has completely transformed how we handle resident requests. The ROI was immediate and resident satisfaction is at an all-time high. It&apos;s the gold standard for management.",
-    rating: 5,
-    bio: ""
-  },
-  {
-    name: "Daniel Nwachi",
-    role: "CEO of EstateEase",
-    testimony: "EstateEase has completely transformed how we handle resident requests. The ROI was immediate and resident satisfaction is at an all-time high. It&apos;s the gold standard for management.",
-    rating: 5,
-    bio: ""
-  },
-
 ]
 
 const StatsBar = () => {
@@ -754,7 +737,7 @@ export default function HomePage() {
   }
 
   const handleScheduleDemo = () => {
-    router.push('/demo')
+    router.push('/register')
   }
 
   return (
@@ -784,21 +767,21 @@ export default function HomePage() {
                   View Features
                 </button>
               </div>
-              <div className="flex items-center gap-6 pt-8 border-t border-slate-200/50 dark:border-slate-800/50">
+              <div className="flex items-center gap-6 pt-8 border-t border-emerald-200/50 dark:border-emerald-800/50">
                 <div className="flex -space-x-3">
                   <img 
                     alt="User headshot of a property manager" 
-                    className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-900" 
+                    className="w-10 h-10 rounded-full border-2 border-emerald-500 dark:border-emerald-500" 
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcuhqVqpTvvUWMCnx1y16VFrWTgxzTuXKLmFdffguKm9_q0Juz2og0eWY_jmFGZfp3GmdqyGv0s_mX0g9hn6AUQ51fd941MoNh7OP94ZHpX6LOSJy6NN8KTjs8VRwCFO5jcE0x_iL5_c0oSaU8gUclI4d3VoSaUEdD1UpenXo8hwlngoTsmm_wo1vguXQFRttUyGx-36QsyaL9QeCDkkfUdbVFR3G83CbQcB-iP-w-oXkpu5m_SF6MhrmxjIi69EvcoRIp3Ln9U4c"
                   />
                   <img 
                     alt="User headshot of a luxury resident" 
-                    className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-900" 
+                    className="w-10 h-10 rounded-full border-2 border-emerald-500 dark:border-emerald-500" 
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc3rI4uTDu4bTFFtcHNZP5cpJ81OgEmY9gdqUM-FXKuQ9XPTNrP4CnAWbuUZgp6Y2LdQYeVQecVpybBRnsbe0mQwlVF7JZiupnTkOPdDNVn1prz9ettLk55Z1Uzt7tQPRhp32iqz_MEiGe-RNSn_L9gqGPdi13YD1UDlaVDb51KRGIMGw2ks-sn3eqAZPbWoxzkkShe4V6J3Rav43-8DHBOVCW0-lZKH0IKGGbZf62wUW53Hdluxce1fjYimCltL5yFY6q6JVHWnM"
                   />
                   <img 
                     alt="User headshot of a concierge" 
-                    className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-900" 
+                    className="w-10 h-10 rounded-full border-2 border-emerald-500 dark:border-emerald-500" 
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1d4kWeaElGb6OA4dg0sm2uarhYOoKNH1lIEVnblyB2oGazPtnBl7vYDFMlYzgtug9rZbmGmfDV01b8JiRXIMNdodoN6h8AuUhHxEiNCVAXYzZCay7nLrJm3ScAgucddpqBxgolsAYf1cTQJWNmBpkPNIYDYvyo7fdrjifkpdVh5oDptEYL5tbj1nRp1SvK0rt5pyQaPLo3-yh5k_kuyw7czntyeEqtTm0rmmGCYPxLDeaSGofOMdwRpR3HKlmFYXamnlBH4QO1os"
                   />
                 </div>
@@ -808,11 +791,11 @@ export default function HomePage() {
               </div>
             </div>
             <div className="relative">
-              <div className="absolute -inset-4 bg-primary/20 rounded-[2rem] blur-2xl"></div>
+              <div className="absolute -inset-4 bg-primary/20 rounded-4xl blur-2xl"></div>
               <div className="relative rounded-xl overflow-hidden shadow-2xl">
                 <img 
                   alt="Luxury modern villa exterior with swimming pool" 
-                  className="w-full h-full object-cover aspect-[4/3]" 
+                  className="w-full h-full object-cover aspect-4/3" 
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOsxYoOvVJUHJHYJQReCVfr7pkXY65gpp37NxMDzgJ9A33xpBVnhBz0Gihs1Ijyd7TgAxpoUsSRih-bbHO6ROVvVFZMeT-lD-PdiII0gISgd7ZPpC3fqInC4GSK6_zdpjSHv-fBSSq_3ZPnwe9XdcX2b4FkaONZOOCj8TzY2oRxZgj2z4cDsbcYr0xzI9Jgq2tfait8U6CFUDRBIwdDlcRbrsq8wk77ekh67nBwN54lVwG5wkr0xO_0VZoRHpYjyhAU8kI-jGelWg"
                 />
                 <div className="absolute bottom-6 left-6 right-6 bg-white/50 backdrop-blur-md p-6 rounded-xl ">
@@ -820,39 +803,144 @@ export default function HomePage() {
                     <span className="font-bold text-lg">Morning Concierge Feed</span>
                     <span className="bg-primary/20 text-emerald-800 dark:text-primary px-3 py-1 rounded-full text-xs font-bold">Active</span>
                   </div>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3  p-3 rounded-lg">
-                      <span className="material-symbols-outlined text-primary">directions_car</span>
-                      <span className="text-sm font-medium">Valet requested by Unit 402</span>
-                    </div>
-                    <div className="flex items-center gap-3  p-3 rounded-lg">
-                      <span className="material-symbols-outlined text-primary">spa</span>
-                      <span className="text-sm font-medium">Amenity Booking: Rooftop Spa - 2:00 PM</span>
-                    </div>
-                  </div>
+                  <div className="space-y-3"> <div className="flex items-center gap-3 p-3 rounded-lg"> <span className="material-symbols-outlined text-primary">directions_car</span> <span className="text-sm font-medium">Valet Service Request: Unit 402</span> </div> <div className="flex items-center gap-3 p-3 rounded-lg"> <span className="material-symbols-outlined text-primary">spa</span> <span className="text-sm font-medium">Amenity Booking: Rooftop Spa at 2:00 PM</span> </div> </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
+        {/* Stats Section */}
+        <StatsBar />
+
+        {/* Interactive Demo Section */}
+        <section className="py-24 bg-slate-50 relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-emerald-200 to-transparent"></div>
+          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            <div className="text-center mb-16 space-y-4">
+              <h2 className="text-3xl lg:text-5xl font-black">Experience the Platform</h2>
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto">See how EstateEase simplifies every aspect of property management in real-time.</p>
+            </div>
+            
+            <div className="grid lg:grid-cols-12 gap-12 items-start">
+              {/* Feature List */}
+              <div className="lg:col-span-5 space-y-4">
+                {MVP_FEATURES.map((feature, index) => (
+                  <MVPFeatureCard 
+                    key={feature.id}
+                    feature={feature}
+                    isActive={activeFeature === index}
+                    onClick={() => handleFeatureClick(index)}
+                    index={index}
+                  />
+                ))}
+              </div>
+              
+              {/* Interactive Demo Area */}
+              <div className="lg:col-span-7 sticky top-24 h-[600px] rounded-3xl overflow-hidden  shadow-2xl bg-white flex flex-col">
+                <div className="h-12 bg-slate-100 border-b border-slate-200 flex items-center px-4 gap-2">
+                  <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                    <div className="w-3 h-3 rounded-full bg-amber-400"></div>
+                    <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                  </div>
+                  <div className="ml-4 flex-1 flex justify-center">
+                    <div className="px-4 py-1 bg-white rounded-md text-xs font-medium text-slate-500 shadow-xs  w-64 text-center truncate">
+                      app.estateease.com/{MVP_FEATURES[activeFeature].demo}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex-1 bg-slate-50 relative overflow-hidden">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeFeature}
+                      initial={{ opacity: 0, scale: 1.05 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.4 }}
+                      className="absolute inset-0"
+                    >
+                      <img 
+                        src={MVP_FEATURES[activeFeature].image} 
+                        alt={MVP_FEATURES[activeFeature].title}
+                        className="w-full h-full object-cover"
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Integration Steps Section */}
+        <section ref={setupRef} className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            <div className="text-center mb-16 space-y-4">
+              <h2 className="text-3xl lg:text-4xl font-black">Go Live in Hours, Not Weeks</h2>
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto">Our streamlined onboarding process ensures your estate is fully operational with zero downtime.</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              {INTEGRATION_STEPS.map((step, index) => (
+                <div key={index} className="relative p-8 rounded-3xl bg-slate-50 hover:border-2 hover:border-emerald-500 hover:shadow-xl transition-all duration-300">
+                  <div className="absolute top-8 right-8 text-5xl font-black text-slate-200">
+                    {step.step}
+                  </div>
+                  <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+                    {step.icon}
+                  </div>
+                  <h3 className="text-xl font-bold mb-3">{step.title}</h3>
+                  <p className="text-slate-600 mb-6">{step.description}</p>
+                  <ul className="space-y-3 mb-8">
+                    {step.details.map((detail, idx) => (
+                      <li key={idx} className="flex items-center gap-3 text-sm text-slate-700 font-medium">
+                        <CheckCircle className="w-4 h-4 text-emerald-500" />
+                        {detail}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-200 text-slate-700 rounded-md text-sm font-semibold">
+                    <Clock className="w-4 h-4" />
+                    {step.duration}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Features Section */}
-        <section ref={featuresRef} className="py-24 lg:py-32 bg-white dark:bg-slate-950">
+        <section ref={featuresRef} className="py-24 lg:py-32 bg-slate-900 border-t border-slate-800">
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
             <div className="text-center mb-20 space-y-4">
-              <h2 className="text-4xl lg:text-5xl font-black tracking-tight">Redefining Property Management</h2>
-              <p className="text-lg text-slate-500 max-w-2xl mx-auto">Experience the pinnacle of efficiency with digital solutions tailored for high-end residential living.</p>
+              <h2 className="text-4xl lg:text-5xl font-black tracking-tight text-white">Redefining Property Management</h2>
+              <p className="text-lg text-slate-400 max-w-2xl mx-auto">Experience the pinnacle of efficiency with digital solutions tailored for high-end residential living.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => (
-                <div key={index} className="group p-10 rounded-3xl bg-white border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                  <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mb-8 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-inner">
-                    <span className="material-symbols-outlined text-3xl">{feature.icon}</span>
+                <div key={index} className="group relative rounded-4xl overflow-hidden aspect-[4/5] bg-slate-800 isolate">
+                  <img 
+                    src={feature.image} 
+                    alt={feature.title} 
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-0"
+                  />
+                  {/* Dark overlay for text readability */}
+                  <div className="absolute inset-0 bg-linear-to-b from-transparent via-slate-900/40 to-slate-950/90 z-10 transition-colors duration-500 group-hover:via-slate-900/60"></div>
+                  
+                  {/* Content Container (Glassmorphism overlay acting like the hero section's badge) */}
+                  <div className="absolute bottom-6 left-6 right-6 z-20">
+                    <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6 transition-all duration-300 group-hover:-translate-y-2 group-hover:bg-white/20">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center backdrop-blur-md">
+                          <span className="material-symbols-outlined text-2xl">{feature.icon}</span>
+                        </div>
+                        <h3 className="text-xl font-bold text-white leading-tight">{feature.title}</h3>
+                      </div>
+                      <p className="text-sm text-slate-300 leading-relaxed font-medium">
+                        {feature.description}
+                      </p>
+                    </div>
                   </div>
-                  <h3 className="text-2xl font-bold mb-4 text-slate-900">{feature.title}</h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    {feature.description}
-                  </p>
                 </div>
               ))}
             </div>
@@ -901,6 +989,17 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            <div className="text-center mb-16 space-y-4">
+              <h2 className="text-3xl lg:text-5xl font-black">Frequently Asked Questions</h2>
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto">Everything you need to know about implementing EstateEase.</p>
+            </div>
+            <FAQ />
           </div>
         </section>
 
