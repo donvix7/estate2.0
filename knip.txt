@@ -1,0 +1,145 @@
+Unused files (46)
+components/admin/AdminMobileNav.jsx      
+components/admin/AdminNav.jsx            
+components/admin/AdminSidebar.jsx        
+components/admin/ProfileDetails.jsx      
+components/admin/ProfileList.jsx         
+components/ComingSoon.jsx                
+components/CommunityChat.jsx             
+components/dashboard/DashboardShell.jsx  
+components/dashboard/DashboardSidebar.jsx
+components/DashboardTabs.jsx             
+components/faq.jsx                       
+components/Footer.jsx                    
+components/Hero.jsx                      
+components/modals/AddPersonModal.jsx     
+components/modals/CreateChannelModal.jsx 
+components/navigation.jsx                
+components/panic-button.jsx              
+components/payment-system.jsx            
+components/payment.jsx                   
+components/paystackButton.jsx            
+components/Providers.jsx                 
+components/resident/AnnouncementsTab.jsx 
+components/resident/EmergencyForm.jsx    
+components/resident/NotificationCard.jsx 
+components/resident/OverviewTab.jsx      
+components/resident/PaymentsTab.jsx      
+components/resident/ProfileTab.jsx       
+components/resident/VisitorsTab.jsx      
+components/resident/WalletCard.jsx       
+components/StaffNav.jsx                  
+components/StatsCard.jsx                 
+components/ui/CleanTable.jsx             
+components/ui/ErrorFallback.jsx          
+components/ui/LoadingScreen.jsx          
+components/ui/TechCard.jsx               
+components/user/MobileNavBar.jsx         
+components/user/NavBar.jsx               
+components/user/SideBar.jsx              
+components/visitor-pass-generator.jsx    
+fix-syntax.mjs                           
+lib/action.js                            
+lib/service.js                           
+remove-borders.js                        
+repair-borders.mjs                       
+services/api.js                          
+services/mockData.js                     
+Unused dependencies (5)
+@hookform/resolvers  package.json:12:6
+@nextui-org/react    package.json:14:6
+react-hook-form      package.json:20:6
+react-toastify       package.json:21:6
+zod                  package.json:22:6
+Unlisted dependencies (1)
+postcss  postcss.config.mjs
+Unresolved imports (88)
+@/components/navigation                 app/about/page.jsx:5:24                              
+@/components/Footer                     app/about/page.jsx:6:20                              
+@/components/faq                        app/about/page.jsx:37:17                             
+@/components/Footer                     app/community/page.jsx:3:20                          
+@/components/navigation                 app/community/page.jsx:4:24                          
+@/components/ComingSoon                 app/dashboard/admin/announcements/page.jsx:2:24      
+@/components/CommunityChat              app/dashboard/admin/community/page.jsx:1:27          
+@/components/ComingSoon                 app/dashboard/admin/finance/page.jsx:2:24            
+@/components/admin/AdminNav             app/dashboard/admin/layout.jsx:4:22                  
+@/components/admin/AdminSidebar         app/dashboard/admin/layout.jsx:5:26                  
+@/components/admin/AdminMobileNav       app/dashboard/admin/layout.jsx:6:28                  
+@/components/StatsCard                  app/dashboard/admin/page.jsx:25:23                   
+@/services/api                          app/dashboard/admin/page.jsx:26:21                   
+@/components/ComingSoon                 app/dashboard/admin/security/page.jsx:2:24           
+@/services/api                          app/dashboard/admin/staff/page.jsx:4:21              
+@/components/modals/AddPersonModal      app/dashboard/admin/users/page.jsx:6:28              
+@/components/admin/ProfileList          app/dashboard/admin/users/page.jsx:7:25              
+@/components/admin/ProfileDetails       app/dashboard/admin/users/page.jsx:8:28              
+@/components/resident/AnnouncementsTab  app/dashboard/resident/announcements/page.jsx:1:30   
+@/components/CommunityChat              app/dashboard/resident/community/page.jsx:1:27       
+@/components/ComingSoon                 app/dashboard/resident/dues/page.jsx:2:24            
+@/components/resident/EmergencyForm     app/dashboard/resident/emergency/[case]/page.jsx:2:27
+@/components/ComingSoon                 app/dashboard/resident/features/page.jsx:2:24        
+@/components/ui/TechCard                app/dashboard/resident/features/page.jsx:4:26        
+@/components/ComingSoon                 app/dashboard/resident/finance/page.jsx:2:24         
+@/components/resident/PaymentsTab       app/dashboard/resident/finance/page.jsx:4:25         
+@/components/ComingSoon                 app/dashboard/resident/fund-wallet/page.jsx:2:24     
+@/components/ComingSoon                 app/dashboard/resident/guests/page.jsx:2:24          
+@/components/ComingSoon                 app/dashboard/resident/history/page.jsx:5:24         
+@/components/ui/TechCard                app/dashboard/resident/history/page.jsx:7:26         
+@/components/ui/CleanTable              app/dashboard/resident/history/page.jsx:8:28         
+@/components/ComingSoon                 app/dashboard/resident/host-events/page.jsx:2:24     
+@/components/ComingSoon                 app/dashboard/resident/invoice/page.jsx:2:24         
+@/components/user/NavBar                app/dashboard/resident/layout.jsx:4:20               
+@/components/user/SideBar               app/dashboard/resident/layout.jsx:5:21               
+@/components/user/MobileNavBar          app/dashboard/resident/layout.jsx:6:26               
+@/components/ComingSoon                 app/dashboard/resident/long-term-visit/page.jsx:2:24 
+@/components/ComingSoon                 app/dashboard/resident/notices/page.jsx:2:24         
+@/components/ComingSoon                 app/dashboard/resident/other-payments/page.jsx:2:24  
+@/components/admin/AdminNav             app/dashboard/resident/page.jsx:13:22                
+@/components/resident/OverviewTab       app/dashboard/resident/page.jsx:14:25                
+@/components/resident/VisitorsTab       app/dashboard/resident/page.jsx:15:25                
+@/components/resident/PaymentsTab       app/dashboard/resident/page.jsx:16:25                
+@/components/resident/AnnouncementsTab  app/dashboard/resident/page.jsx:17:30                
+@/components/resident/ProfileTab        app/dashboard/resident/page.jsx:18:24                
+@/components/resident/WalletCard        app/dashboard/resident/page.jsx:19:28                
+@/components/resident/NotificationCard  app/dashboard/resident/page.jsx:20:34                
+@/lib/service                           app/dashboard/resident/page.jsx:28:8                 
+@/components/ComingSoon                 app/dashboard/resident/permits/page.jsx:2:24         
+@/components/resident/ProfileTab        app/dashboard/resident/profile/page.jsx:4:24         
+@/lib/service                           app/dashboard/resident/profile/page.jsx:5:56         
+@/components/ComingSoon                 app/dashboard/resident/staff/page.jsx:2:24           
+@/components/resident/VisitorsTab       app/dashboard/resident/visitors/page.jsx:1:25        
+@/components/ComingSoon                 app/dashboard/resident/workers/page.jsx:2:24         
+@/components/CommunityChat              app/dashboard/security/community/page.jsx:1:27       
+@/components/ComingSoon                 app/dashboard/security/finance/page.jsx:2:24         
+@/components/user/NavBar                app/dashboard/security/layout.jsx:4:20               
+@/components/user/SideBar               app/dashboard/security/layout.jsx:5:21               
+@/components/user/MobileNavBar          app/dashboard/security/layout.jsx:6:26               
+@/components/ui/CleanTable              app/dashboard/security/logs/page.jsx:5:28            
+@/lib/service                           app/dashboard/security/logs/page.jsx:6:33            
+@/components/ui/TechCard                app/dashboard/security/page.jsx:5:26                 
+@/components/ui/CleanTable              app/dashboard/security/page.jsx:6:28                 
+@/lib/service                           app/dashboard/security/page.jsx:7:40                 
+@/components/CommunityChat              app/dashboard/staff/community/page.jsx:1:27          
+@/components/ComingSoon                 app/dashboard/staff/finance/page.jsx:2:24            
+@/components/user/NavBar                app/dashboard/staff/layout.jsx:4:20                  
+@/components/user/SideBar               app/dashboard/staff/layout.jsx:5:21                  
+@/components/user/MobileNavBar          app/dashboard/staff/layout.jsx:6:26                  
+@/components/ui/ErrorFallback           app/error.jsx:4:27                                   
+@/components/navigation                 app/forum/page.jsx:5:24                              
+@/components/Footer                     app/forum/page.jsx:6:20                              
+@/components/Providers                  app/layout.js:3:27                                   
+@/components/ui/LoadingScreen           app/loading.jsx:1:27                                 
+@/components/navigation                 app/mobile/page.jsx:6:24                             
+@/components/Footer                     app/mobile/page.jsx:7:20                             
+@/components/faq                        app/mobile/page.jsx:38:17                            
+@/components/navigation                 app/page.js:5:24                                     
+@/components/Footer                     app/page.js:6:20                                     
+@/components/faq                        app/page.js:51:17                                    
+@/components/Hero                       app/page.js:52:30                                    
+@/components/navigation                 app/payments/page.jsx:5:24                           
+@/components/Footer                     app/payments/page.jsx:6:20                           
+@/components/navigation                 app/pricing/page.jsx:5:24                            
+@/components/Footer                     app/pricing/page.jsx:6:20                            
+@/components/faq                        app/pricing/page.jsx:35:17                           
+@/components/Footer                     app/security/page.jsx:3:20                           
+@/components/navigation                 app/security/page.jsx:4:24                           
+Configuration hints (1)

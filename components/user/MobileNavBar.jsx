@@ -2,11 +2,15 @@
 
 import { 
   Building2, 
+  Building,
   Settings,
   Users,
   Home,
   FileStack,
-  History
+  History,
+  BarChart3,
+  ShieldAlert,
+  Briefcase
 } from 'lucide-react'
 import React from 'react'
 import Link from 'next/link'
