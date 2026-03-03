@@ -137,14 +137,12 @@ function SignupContent() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  import('react').then(({ useEffect }) => {
-    useEffect(() => {
-      const timer = setInterval(() => {
-        setCurrentImageIndex((prev) => (prev + 1) % CAROUSEL_IMAGES.length)
-      }, 5000)
-      return () => clearInterval(timer)
-    }, [])
-  })
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % CAROUSEL_IMAGES.length)
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [])
 
   // Signup form state
   const [formData, setFormData] = useState({
@@ -441,7 +439,7 @@ function SignupContent() {
                 {estate?.name || 'Your Community'}
               </h2>
               <p className="text-lg text-white/80 leading-relaxed mb-8 font-light">
-                You've been invited to join your community's private portal. Complete your registration to access amenities, pay dues, and stay connected.
+                You&apos;ve been invited to join your community&apos;s private portal. Complete your registration to access amenities, pay dues, and stay connected.
               </p>
               
               <div className="flex items-center gap-6 text-sm text-white/70">
@@ -669,7 +667,7 @@ function SignupContent() {
                           <h4 className="font-semibold text-blue-900 mb-2">Password Requirements</h4>
                           <p className="text-sm text-blue-800">
                             Your password will be used to access the EstateSecure portal, mobile app, 
-                            and all community services. Choose a strong password that you don't use elsewhere.
+                            and all community services. Choose a strong password that you don&apos;t use elsewhere.
                           </p>
                         </div>
                     </div>
@@ -716,7 +714,7 @@ function SignupContent() {
                           <p className="text-sm text-red-800">
                             Emergency contact information is critical for your safety. 
                             This information will be used by security personnel in case of emergencies.
-                            Please ensure it's accurate and up-to-date.
+                            Please ensure it&apos;s accurate and up-to-date.
                           </p>
                         </div>
 
@@ -762,7 +760,7 @@ function SignupContent() {
                         <div className="p-4 bg-green-50 rounded-lg">
                           <h4 className="font-semibold text-green-900 mb-2">🎉 Almost There!</h4>
                           <p className="text-sm text-green-800">
-                            After completing registration, you'll gain access to:
+                            After completing registration, you&apos;ll gain access to:
                           </p>
                           <ul className="text-sm text-green-800 mt-2 space-y-1">
                             <li>• Visitor management system</li>

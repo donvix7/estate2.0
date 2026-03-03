@@ -477,7 +477,7 @@ export default function AboutPage() {
             >
               EstateSecure was born from a simple observation: while commercial spaces enjoyed 
               enterprise-grade security, residential communities relied on outdated, fragmented systems. 
-              We're on a mission to change that.
+              We&apos;re on a mission to change that.
             </p>
 
             <div 
@@ -563,7 +563,7 @@ export default function AboutPage() {
                 <h2 className="text-2xl font-bold text-gray-900">Our Vision</h2>
               </div>
               <p className="text-gray-600 mb-6">
-                To become the world's most trusted community security platform, protecting 
+                To become the world&apos;s most trusted community security platform, protecting 
                 millions of homes and transforming how people experience safety in their communities.
               </p>
               <div className="space-y-4">
@@ -793,7 +793,7 @@ export default function AboutPage() {
           <div  className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Beyond Security</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              How we're building stronger, more connected communities
+              How we&apos;re building stronger, more connected communities
             </p>
           </div>
 
@@ -878,7 +878,7 @@ export default function AboutPage() {
             className="text-lg text-gray-300 mb-8"
           >
             Join thousands of communities that have transformed their security 
-            with EstateSecure. Let's build safer neighborhoods together.
+            with EstateSecure. Let&apos;s build safer neighborhoods together.
           </p>
           
           <div 

@@ -148,7 +148,7 @@ export default function SecurityLogsPage() {
             <ShieldAlert className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-4" />
             <h3 className="text-lg font-medium text-gray-900 dark:text-white">No logs found</h3>
             <p className="text-gray-500 dark:text-gray-400 mt-1 max-w-sm">
-              We couldn't find any security logs matching your current filters. Try changing your search terms or severity filter.
+              We couldn&apos;t find any security logs matching your current filters. Try changing your search terms or severity filter.
             </p>
           </div>
         )}

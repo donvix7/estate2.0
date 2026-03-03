@@ -28,7 +28,7 @@ const CreateChannelModal = ({ isOpen, onClose }) => {
         {/* Form Body */}
         <div className="p-6 space-y-6">
           <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-            Channels are where your team communicates. They're best when organized around a topic — #events, for example.
+            Channels are where your team communicates. they&apos;re best when organized around a topic — #events, for example.
           </p>
           
           <div>
@@ -57,7 +57,7 @@ const CreateChannelModal = ({ isOpen, onClose }) => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-transparent dark:bg-gray-800/50"
-              placeholder="What's this channel about?"
+              placeholder="What&apos;s this channel about?"
             />
           </div>
           

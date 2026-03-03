@@ -2,37 +2,22 @@
 
 import { 
   Building2, 
-  LogOut, 
-  Menu, 
-  X,
-  BarChart3, 
   Settings,
-  Building,
-  DollarSign,
-  ShieldAlert,
-  Briefcase,
   Users,
-  User,
-  CreditCard,
-  MessageSquareWarning,
   Home,
-  Bell
+  FileStack,
+  History
 } from 'lucide-react'
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
-import { useRouter, usePathname } from 'next/navigation'
-import { logout } from '@/lib/action'
+import { usePathname } from 'next/navigation'
 
 const MobileNavBar = ({ 
     title = 'Estate 2.0', 
     icon: CustomIcon,
     role = 'resident'
 }) => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const router = useRouter()
     const pathname = usePathname()
-
-    const estate = { name: 'Lekki Phase 1' }
 
     const getRoleDetails = (userRole) => {
       switch(userRole) {
@@ -68,12 +53,9 @@ const MobileNavBar = ({
             identifier: 'Block A, Unit 4',
             navLinks: [
               { href: '/dashboard/resident', label: 'Overview', icon: Home, exact: true },
+              { href: '/dashboard/resident/history', label: 'History', icon: History },
               { href: '/dashboard/resident/visitors', label: 'Visitors', icon: Users },
-              { href: '/dashboard/resident/finance', label: 'Payments', icon: CreditCard },
-              { href: '/dashboard/resident/announcements', label: 'Announcements', icon: Bell },
-              { href: '/dashboard/resident/complaints', label: 'Complaints', icon: MessageSquareWarning },
-              { href: '/dashboard/resident/profile', label: 'Profile', icon: User },
-              { href: '/dashboard/resident/community', label: 'Community', icon: Building },
+              { href: '/dashboard/resident/features', label: 'Features', icon: FileStack },
               { href: '/dashboard/resident/settings', label: 'Settings', icon: Settings },
             ]
           };
@@ -82,125 +64,46 @@ const MobileNavBar = ({
 
     const { subtitle, name, identifier, navLinks } = getRoleDetails(role);
 
-    const handleLogout = async () => {
-        try {
-            await logout();
-            router.push('/login');
-        } catch (error) {
-            console.error('Logout failed:', error);
-        }
-    }
-
     return (
-        <nav className="md:hidden bg-gray-900 text-white sticky top-0 z-50">
-            {/* Top Bar */}
-            <div className="flex items-center justify-between h-16 px-4">
-                {/* Logo */}
-                <div className="flex items-center gap-3">
-                    <button 
-                       onClick={() => setIsMenuOpen(true)}
-                       className="p-1 -ml-1 text-gray-400 hover:text-white rounded transition-colors"
-                    >
-                        <Menu className="w-6 h-6" />
-                    </button>
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                            {CustomIcon ? <CustomIcon className="w-5 h-5 text-white" /> : <Building2 className="w-5 h-5 text-white" />}
-                        </div>
-                        <div>
-                            <span className="font-bold text-base font-heading tracking-tight block leading-none">{title}</span>
-                            <span className="text-[9px] text-gray-400 uppercase tracking-widest font-medium">{subtitle}</span>
-                        </div>
-                    </div>
-                </div>
+        <div className="md:hidden fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4 border-none">
+            <nav 
+                className="bg-gray-600/40 dark:bg-black/40 backdrop-blur-xl rounded-2xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.8)] max-w-md flex items-center justify-between gap-1.5 px-2 py-2 w-full  dark:border-gray-800/50"
+                style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}
+            >
+                {navLinks.map((link) => {
 
-                {/* Profile Avatar (Small) */}
-                <div className="flex items-center gap-2">
-                     <span className="text-xs text-gray-400 truncate max-w-[80px]">{estate.name}</span>
-                     <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center border-gray-700 text-gray-300 font-bold text-sm">
-                        {name.charAt(0)}
-                     </div>
-                </div>
-            </div>
+                    const isActive = link.exact 
+                    ? pathname === link.href 
+                    : pathname.startsWith(link.href);
+                    
+                    const Icon = link.icon;
 
-            {/* Mobile Menu Overlay */}
-            {isMenuOpen && (
-                <div className="fixed inset-0 z-60 bg-gray-900/80 backdrop-blur-sm animate-fadeIn">
-                    <div className="fixed inset-y-0 left-0 w-[280px] bg-gray-900 shadow-2xl flex flex-col transform transition-transform duration-300 ease-in-out">
-
-                        {/* Overlay Header */}
-                        <div className="flex items-center justify-between p-4">
-                             <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                                    <Building2 className="w-5 h-5 text-white" />
-                                </div>
-                                <span className="font-bold text-lg font-heading tracking-tight">{title}</span>
-                             </div>
-                             <button 
-                                onClick={() => setIsMenuOpen(false)}
-                                className="p-2 text-gray-400 hover:text-white bg-gray-800/50 rounded-lg"
-                             >
-                                <X className="w-5 h-5" />
-                             </button>
-                        </div>
-
-                        {/* User Micro-Profile */}
-                        <div className="flex items-center p-4 bg-gray-800/20">
-                            <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center border-gray-700 text-gray-300 font-bold">
-                                {name.charAt(0)}
-                            </div>
-                            <div className="ml-3">
-                                <p className="text-sm font-bold text-white leading-tight">{name}</p>
-                                <p className="text-xs text-gray-500">{identifier}</p>
-                            </div>
-                        </div>
-
-                        {/* Navigation Links */}
-                        <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-                            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-3">
-                                Main Menu
-                            </div>
-                            {navLinks.map((link) => {
-                                const isActive = link.exact 
-                                ? pathname === link.href 
-                                : pathname.startsWith(link.href);
-                                
-                                const Icon = link.icon;
-                                
-                                return (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    onClick={() => setIsMenuOpen(false)}
-                                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-                                    isActive 
-                                        ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20' 
-                                        : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800 cursor-pointer'
-                                    }`}
-                                >
-                                    <Icon className={`w-5 h-5 ${isActive ? 'text-blue-400' : 'text-gray-500'}`} />
-                                    <span className="font-medium text-sm">{link.label}</span>
-                                </Link>
-                                )
-                            })}
-                        </div>
-
-                        {/* Logout Footer */}
-                        <div className="p-4">
-                             <button 
-                                onClick={() => {
-                                    setIsMenuOpen(false);
-                                    handleLogout();
-                                }}
-                                className="flex items-center justify-center gap-2 w-full py-2.5 px-4 text-sm font-medium text-red-400 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-lg transition-colors"
-                             >
-                                <LogOut className="w-4 h-4" /> Sign Out
-                             </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </nav>
+                    return (
+                        <Link
+                            key={link.href}
+                            href={link.href}
+                            className={`flex flex-col items-center justify-center w-14 h-14 sm:w-[60px] sm:h-[60px] rounded-2xl transition-all duration-300 relative group cursor-pointer ${
+                            isActive 
+                                ? 'bg-gray-900 dark:bg-gray-800/80 text-gray-100 dark:text-gray-400 shadow-sm border border-blue-100 dark:border-gray-700/80' 
+                                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors'
+                            }`}
+                        >
+                            <Icon className={`w-[22px] h-[22px] mb-1 transition-all duration-300 ease-out ${
+                                isActive 
+                                    ? 'scale-110 -translate-y-0.5' 
+                                    : 'scale-100 group-hover:scale-110 group-hover:-translate-y-1'
+                            }`} />  
+                            
+                            <span className={`text-[10px] tracking-wide font-medium transition-all duration-300 ease-out ${
+                                isActive 
+                                    ? 'opacity-100 transform translate-y-0' 
+                                    : 'opacity-70 group-hover:opacity-100 transform group-hover:-translate-y-0.5'
+                            }`}>{link.label}</span>
+                        </Link>
+                    )
+                })}
+            </nav>
+        </div>
     )
 }
 

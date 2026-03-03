@@ -16,6 +16,8 @@ import VisitorsTab from '@/components/resident/VisitorsTab'
 import PaymentsTab from '@/components/resident/PaymentsTab'
 import AnnouncementsTab from '@/components/resident/AnnouncementsTab'
 import ProfileTab from '@/components/resident/ProfileTab'
+import { WalletCard } from '@/components/resident/WalletCard'
+import { NotificationCard } from '@/components/resident/NotificationCard'
 import {
   getAnnouncements,
   getVisitors,
@@ -228,24 +230,29 @@ export default function ResidentDashboard() {
     <div className="min-h-screen bg-gray-50 font-sans dark:bg-gray-900">
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 font-heading tracking-tight">Overview</h1>
-          <p className="text-gray-500 text-lg mt-1">
-             Welcome back, {getUserName()}. Here's what's happening in your estate.
-          </p>
-        </div>
+      
 
         {/* Overview Tab */}
         {activeTab === 'overview' && (
-          <OverviewTab 
-            residentData={residentData}
-            visitorStats={visitorStats}
-            announcements={announcements}
-            getUnreadCount={getUnreadCount}
-            visitors={visitors}
-            setActiveTab={setActiveTab}
-          />
+          <div className="space-y-8">
+            {/* Top Row: Wallet & Notifications */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 xl:gap-8">
+              <WalletCard />
+             
+            </div>
+
+            <OverviewTab 
+              residentData={residentData}
+              visitorStats={visitorStats}
+              announcements={announcements}
+              getUnreadCount={getUnreadCount}
+              visitors={visitors}
+              setActiveTab={setActiveTab}
+            />
+             <div className="w-full h-full min-h-[300px]">
+                 <NotificationCard announcements={announcements} />
+              </div>
+          </div>
         )}
 
      

@@ -376,7 +376,7 @@ export default function CommunityPage() {
                     <p className="text-xs text-gray-500 mt-1">{testimonial.duration}</p>
                   </div>
                 </div>
-                <p className="text-gray-600 mb-4 italic">"{testimonial.text}"</p>
+                <p className="text-gray-600 mb-4 italic">&quot;{testimonial.text}&quot;</p>
                 
                 <div className="pt-4 border-t border-gray-200">
                   <div className="space-y-2">
@@ -402,7 +402,7 @@ export default function CommunityPage() {
           <div className=" border-gray-300 bg-linear-to-r from-green-50 to-teal-50 p-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center">Seamless Integrations</h2>
             <p className="text-gray-600 mb-8 text-center max-w-3xl mx-auto">
-              Extend your community platform's capabilities with powerful integrations.
+              Extend your community platform&apos;s capabilities with powerful integrations.
             </p>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -431,7 +431,7 @@ export default function CommunityPage() {
         <div className="max-w-6xl mx-auto mb-20">
           <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center">Simple, Transparent Pricing</h2>
           <p className="text-gray-600 mb-12 text-center max-w-3xl mx-auto">
-            Choose the plan that fits your community's size and needs. All plans include our core platform features.
+            Choose the plan that fits your community&apos;s size and needs. All plans include our core platform features.
           </p>
           
           <div className="grid md:grid-cols-3 gap-8">

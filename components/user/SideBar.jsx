@@ -14,7 +14,10 @@ import {
   Users,
   User,
   Bell,
-  Briefcase
+  AlertTriangle,
+  Briefcase,
+  History,
+  FileStack
 } from 'lucide-react'
 
 const SideBar = ({ role = 'resident' }) => {
@@ -40,12 +43,10 @@ const SideBar = ({ role = 'resident' }) => {
       default:
         return [
           { href: '/dashboard/resident', label: 'Overview', icon: Home, exact: true },
+          { href: '/dashboard/resident/history', label: 'History', icon: History },
           { href: '/dashboard/resident/visitors', label: 'Visitors', icon: Users },
-          { href: '/dashboard/resident/finance', label: 'Payments', icon: CreditCard },
-          { href: '/dashboard/resident/announcements', label: 'Announcements', icon: Bell },
-          { href: '/dashboard/resident/complaints', label: 'Complaints', icon: MessageSquareWarning },
-          { href: '/dashboard/resident/profile', label: 'Profile', icon: User },
-          { href: '/dashboard/resident/community', label: 'Community', icon: Building },
+          { href: '/dashboard/resident/features', label: 'Features', icon: FileStack },
+          
           { href: '/dashboard/resident/settings', label: 'Settings', icon: Settings },
         ];
     }

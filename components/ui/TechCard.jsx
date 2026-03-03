@@ -14,7 +14,7 @@ export function TechCard({ children, className = '', hoverEffect = true, noPaddi
       className={`
         bg-white rounded-xl  shadow-sm 
         ${hoverEffect ? 'hover:shadow-md transition-shadow duration-200' : ''} 
-        ${noPadding ? 'p-0 overflow-hidden' : 'p-6'}
+        ${noPadding ? 'p-0 overflow-hidden' : 'p-4 sm:p-5 md:p-6'}
         ${className}
         dark:bg-gray-800
       `}

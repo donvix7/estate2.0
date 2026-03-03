@@ -313,7 +313,7 @@ export default function CommunityChat({
               <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800/50 flex items-center justify-center mb-4">
                  <MessageSquare className="w-8 h-8 text-gray-300 dark:text-gray-600" />
               </div>
-              <h3 className="text-gray-900 dark:text-white font-semibold mb-1">It's quiet in here</h3>
+              <h3 className="text-gray-900 dark:text-white font-semibold mb-1">It&apos;s quiet in here</h3>
               <p className="text-sm max-w-[200px]">Send a message to start the conversation.</p>
             </div>
           )}

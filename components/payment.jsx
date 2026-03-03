@@ -310,7 +310,7 @@ export default function PaystackPayment() {
                                     )}
                                 </button>
                                 <p className="text-xs text-gray-400 text-center mt-4">
-                                    You will be redirected to Paystack's secure payment page
+                                    You will be redirected to Paystack&apos;s secure payment page
                                 </p>
                             </div>
                         ) : (

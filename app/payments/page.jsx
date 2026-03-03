@@ -408,7 +408,7 @@ const NetBanking = memo(() => {
           <AlertCircle className="w-5 h-5 text-yellow-600 shrink-0" />
           <div>
             <p className="text-sm text-yellow-800">
-              You will be redirected to your bank's secure payment page to complete the transaction.
+              You will be redirected to your bank&apos;s secure payment page to complete the transaction.
             </p>
           </div>
         </div>
@@ -662,7 +662,7 @@ const PaystackIntegration = memo(({ amount, email, onSuccess, onClose }) => {
           <div>
             <h4 className="font-medium text-blue-900 mb-1">Secure Payment via Paystack</h4>
             <p className="text-sm text-blue-800">
-              You'll be redirected to Paystack's secure payment gateway to complete your transaction.
+              you&apos;ll be redirected to Paystack&apos;s secure payment gateway to complete your transaction.
             </p>
           </div>
         </div>
@@ -700,7 +700,7 @@ const PaystackIntegration = memo(({ amount, email, onSuccess, onClose }) => {
         </button>
 
         <p className="text-xs text-gray-500 text-center mt-4">
-          By continuing, you agree to Paystack's Terms of Service and Privacy Policy
+          By continuing, you agree to Paystack&apos;s Terms of Service and Privacy Policy
         </p>
       </div>
     </div>
@@ -785,7 +785,7 @@ export default function PaymentPage() {
       return (
         <PaystackIntegration
           amount={999} // Total amount
-          email="user@example.com" // User's email
+          email="user@example.com" // User&apos;s email
           onSuccess={handlePaystackSuccess}
           onClose={() => setUsePaystack(false)}
         />
@@ -922,7 +922,7 @@ export default function PaymentPage() {
                           Secure Payment
                         </h4>
                         <p className="text-sm text-gray-600">
-                          Your payment information is encrypted and secure. We don't store your card details.
+                          Your payment information is encrypted and secure. We don&apos;t store your card details.
                         </p>
                         <div className="flex items-center gap-4 mt-2">
                           <div className="flex items-center gap-2">

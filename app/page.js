@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback} from 'react'
 import { useRouter} from 'next/navigation'
-import { motion, AnimatePresence} from 'framer-motion'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/Footer'
 import { 
@@ -71,8 +70,8 @@ const MVP_FEATURES = [
       'Manual blacklist system'
     ],
     demo: 'access',
-    image: 'https://images.unsplash.com/photo-1555861496-faa3eafcb220?auto=format&fit=crop&q=80&w=1200',
-    gradient: 'from-gray-600 to-gray-800',
+    image: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&q=80&w=1200&h=800',
+    gradient: 'from-slate-700 to-slate-900',
     stats: { label: 'Access Efficiency', value: '95%', change: '+24%' }
   },
   {
@@ -88,8 +87,8 @@ const MVP_FEATURES = [
       'Panic activity logging'
     ],
     demo: 'emergency',
-    image: 'https://images.unsplash.com/photo-1586775490184-b79f0621891f?auto=format&fit=crop&q=80&w=1200',
-    gradient: 'from-gray-600 to-gray-800',
+    image: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&q=80&w=1200&h=800',
+    gradient: 'from-red-700 to-red-900',
     stats: { label: 'Response Time', value: '< 60s', change: '-65%' }
   },
   {
@@ -104,8 +103,8 @@ const MVP_FEATURES = [
       'Arrears notification'
     ],
     demo: 'payments',
-    image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=1200',
-    gradient: 'from-gray-600 to-gray-800',
+    image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=1200&h=800',
+    gradient: 'from-emerald-700 to-emerald-900',
     stats: { label: 'Collection Rate', value: '98%', change: '+18%' }
   },
   {
@@ -120,8 +119,8 @@ const MVP_FEATURES = [
       'Payment overview'
     ],
     demo: 'admin',
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200',
-    gradient: 'from-gray-600 to-gray-800',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200&h=800',
+    gradient: 'from-blue-700 to-blue-900',
     stats: { label: 'Operational Efficiency', value: '85%', change: '+32%' }
   },
   {
@@ -135,8 +134,8 @@ const MVP_FEATURES = [
       'Admin broadcast messages'
     ],
     demo: 'communication',
-    image: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=1200',
-    gradient: 'from-gray-600 to-gray-800',
+    image: 'https://images.unsplash.com/photo-1577563908411-5077b6dc7624?auto=format&fit=crop&q=80&w=1200&h=800',
+    gradient: 'from-purple-700 to-purple-900',
     stats: { label: 'Engagement Rate', value: '92%', change: '+41%' }
   }
 ]
@@ -188,12 +187,7 @@ const staggerContainer = {
 
 // MVP Feature Card Component
 const MVPFeatureCard = ({ feature, isActive, onClick, index}) => (
-  <motion.div
-    initial={{ opacity: 0, y: 15}}
-    whileInView={{ opacity: 1, y: 0}}
-    viewport={{ once: true}}
-    transition={{ delay: index * 0.1, duration: 0.4}}
-    whileHover={{ y: -3}}
+  <div
     className={`relative p-5 transition-all duration-300 cursor-pointer overflow-hidden rounded-2xl ${
       isActive
         ? ' border-emerald-500 bg-white shadow-xl shadow-emerald-900/5'
@@ -233,15 +227,12 @@ const MVPFeatureCard = ({ feature, isActive, onClick, index}) => (
         </div>
       </div>
     </div>
-  </motion.div>
+  </div>
 )
 
 // MVP Demo Components
 const AccessControlDemo = () => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.98}}
-    animate={{ opacity: 1, scale: 1}}
-    transition={{ duration: 0.4}}
+  <div
     className="relative p-6 bg-white h-full"
   >
     <div className="grid md:grid-cols-2 gap-6 h-full">
@@ -289,14 +280,11 @@ const AccessControlDemo = () => (
         </div>
       </div>
     </div>
-  </motion.div>
+  </div>
 )
 
 const PanicEmergencyDemo = () => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.98}}
-    animate={{ opacity: 1, scale: 1}}
-    transition={{ duration: 0.4}}
+  <div
     className="relative p-6 bg-white rounded-xl border-gray-100 h-full shadow-sm"
   >
     <div className="text-center space-y-6">
@@ -330,14 +318,11 @@ const PanicEmergencyDemo = () => (
         </div>
       </div>
     </div>
-  </motion.div>
+  </div>
 )
 
 const PaymentsDemo = () => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.98}}
-    animate={{ opacity: 1, scale: 1}}
-    transition={{ duration: 0.4}}
+  <div
     className="relative p-6 bg-white h-full"
   >
     <div className="space-y-6">
@@ -354,7 +339,7 @@ const PaymentsDemo = () => (
         </div>
         <div className="text-right">
           <div className="text-xs text-gray-500">Transaction ID</div>
-          <div className="text-sm font-mono font-semibold">PS-{Math.floor(100000 + Math.random() * 900000)}</div>
+          <div className="text-sm font-mono font-semibold">PS-849201</div>
         </div>
       </div>
 
@@ -466,14 +451,11 @@ const PaymentsDemo = () => (
         ))}
       </div>
     </div>
-  </motion.div>
+  </div>
 )
 
 const AdminDashboardDemo = () => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.98}}
-    animate={{ opacity: 1, scale: 1}}
-    transition={{ duration: 0.4}}
+  <div
     className="relative p-6 bg-white h-full"
   >
     <div className="space-y-6">
@@ -484,7 +466,7 @@ const AdminDashboardDemo = () => (
           <p className="text-2xl font-bold">1,248</p>
         </div>
         <div className="p-4 border-gray-200 rounded-lg">
-          <p className="text-sm text-gray-600 mb-1">Today's Visitors</p>
+          <p className="text-sm text-gray-600 mb-1">Today&apos;s Visitors</p>
           <p className="text-2xl font-bold">24</p>
         </div>
         <div className="p-4 border-gray-200 rounded-lg">
@@ -516,14 +498,11 @@ const AdminDashboardDemo = () => (
         </div>
       </div>
     </div>
-  </motion.div>
+  </div>
 )
 
 const CommunicationDemo = () => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.98}}
-    animate={{ opacity: 1, scale: 1}}
-    transition={{ duration: 0.4}}
+  <div
     className="relative p-6 bg-white h-full"
   >
     <div className="space-y-6">
@@ -566,7 +545,7 @@ const CommunicationDemo = () => (
         ))}
       </div>
     </div>
-  </motion.div>
+  </div>
 )
 
 const DemoComponent = ({ demoType}) => {
@@ -696,8 +675,11 @@ export default function HomePage() {
   const carouselIntervalRef = useRef(null)
 
   useEffect(() => {
-    setMounted(true)
-    return () => setMounted(false)
+    const timer = setTimeout(() => setMounted(true), 0)
+    return () => {
+      clearTimeout(timer)
+      setMounted(false)
+    }
   }, [])
 
   useEffect(() => {
@@ -763,11 +745,14 @@ export default function HomePage() {
                   Get Started 
                   <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
                 </button>
-                <button onClick={scrollToFeatures} className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-lg font-bold px-10 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:bg-slate-50 hover:-translate-y-1 transition-all">
+               <button 
+                  onClick={scrollToFeatures} 
+                  className="bg-white text-slate-900 text-lg font-bold px-10 py-4 rounded-2xl shadow-lg hover:bg-emerald-600 hover:text-white hover:-translate-y-1 transition-all duration-300 ease-in-out"
+                >
                   View Features
                 </button>
               </div>
-              <div className="flex items-center gap-6 pt-8 border-t border-emerald-200/50 dark:border-emerald-800/50">
+              <div className="flex items-center gap-6 pt-8">
                 <div className="flex -space-x-3">
                   <img 
                     alt="User headshot of a property manager" 
@@ -810,9 +795,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Stats Section */}
-        <StatsBar />
-
+       
         {/* Interactive Demo Section */}
         <section className="py-24 bg-slate-50 relative overflow-hidden">
           <div className="absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-emerald-200 to-transparent"></div>
@@ -845,19 +828,13 @@ export default function HomePage() {
                     <div className="w-3 h-3 rounded-full bg-green-400"></div>
                   </div>
                   <div className="ml-4 flex-1 flex justify-center">
-                    <div className="px-4 py-1 bg-white rounded-md text-xs font-medium text-slate-500 shadow-xs  w-64 text-center truncate">
-                      app.estateease.com/{MVP_FEATURES[activeFeature].demo}
-                    </div>
+                    
                   </div>
                 </div>
                 <div className="flex-1 bg-slate-50 relative overflow-hidden">
-                  <AnimatePresence mode="wait">
-                    <motion.div
+                  <div className="relative w-full h-full">
+                    <div
                       key={activeFeature}
-                      initial={{ opacity: 0, scale: 1.05 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.4 }}
                       className="absolute inset-0"
                     >
                       <img 
@@ -865,8 +842,8 @@ export default function HomePage() {
                         alt={MVP_FEATURES[activeFeature].title}
                         className="w-full h-full object-cover"
                       />
-                    </motion.div>
-                  </AnimatePresence>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -995,10 +972,6 @@ export default function HomePage() {
         {/* FAQ Section */}
         <section className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="text-center mb-16 space-y-4">
-              <h2 className="text-3xl lg:text-5xl font-black">Frequently Asked Questions</h2>
-              <p className="text-lg text-slate-600 max-w-2xl mx-auto">Everything you need to know about implementing EstateEase.</p>
-            </div>
             <FAQ />
           </div>
         </section>

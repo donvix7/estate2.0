@@ -370,7 +370,7 @@ export default function ForumPage() {
         break
     }
     
-    setFilteredThreads(threads)
+    setTimeout(() => setFilteredThreads(threads), 0)
   }, [activeCategory, searchQuery, sortBy])
 
   const handleCategoryClick = useCallback((categoryId) => {
@@ -661,7 +661,7 @@ export default function ForumPage() {
               <div className=" border-gray-200 p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <AlertCircle className="w-5 h-5 text-red-600" />
-                  <h3 className="font-semibold">Don't</h3>
+                  <h3 className="font-semibold">Don&apos;t</h3>
                 </div>
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li>• Share sensitive or private information</li>
