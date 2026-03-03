@@ -1,5 +1,5 @@
 import React from 'react'
-import { ShieldAlert, Users as UsersIcon, Bell, Activity, AlertTriangle, TriangleAlert, Settings } from 'lucide-react'
+import { ShieldAlert, Users as UsersIcon, Bell, Activity, AlertTriangle, TriangleAlert, Settings, Siren } from 'lucide-react'
 import { TechCard } from '@/components/ui/TechCard'
 import { PanicButton } from '@/components/panic-button'
 import Link from 'next/link'
@@ -16,7 +16,7 @@ export default function OverviewTab({
   const tabs = [
     { name: 'Visitors', icon: UsersIcon, href: '/dashboard/resident/visitors' },
     { name: 'Notices', icon: Bell, href: '/dashboard/resident/notices' },
-    { name: 'Emergency', icon: TriangleAlert, href: '/dashboard/resident/emergency' },
+    { name: 'Emergency', icon: Siren, href: '/dashboard/resident/emergency' },
     { name: 'Settings', icon: Settings, href: '/dashboard/resident/settings' },
   ]
   return (

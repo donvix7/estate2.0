@@ -154,7 +154,7 @@ const Navigation = () => {
                             className="flex items-center space-x-3 cursor-pointer group min-w-0 shrink-0"
                         >
                             <div className="shrink-0">
-                                <div className="w-10 h-10 sm:w-11 sm:h-11 bg-emerald-600 text-white font-bold flex items-center justify-center rounded-xl shadow-md group-hover:scale-105 transition-transform">
+                                <div className="w-10 h-10 sm:w-11 sm:h-11 bg-blue-600 text-white font-bold flex items-center justify-center rounded-xl shadow-md group-hover:scale-105 transition-transform">
                                     <Shield size={22} />
                                 </div>
                             </div>
@@ -179,8 +179,8 @@ const Navigation = () => {
                                                 onMouseLeave={() => setActiveDropdown(null)}
                                                 className={`relative px-4 py-2 font-medium transition-all duration-200 flex items-center gap-2 rounded-md ${
                                                     activeLink === item.path || activeDropdown === item.name
-                                                        ? 'text-emerald-700 bg-emerald-50' 
-                                                        : 'text-slate-600 hover:text-emerald-700 hover:bg-emerald-50'
+                                                        ? 'text-blue-700 bg-blue-50' 
+                                                        : 'text-slate-600 hover:text-blue-700 hover:bg-blue-50'
                                                 }`}
                                             >
                                                 {/* {item.icon} */}
@@ -202,9 +202,9 @@ const Navigation = () => {
                                                         <div key={subItem.name} className="mb-1 last:mb-0">
                                                             <button
                                                                 onClick={() => handleNavClick(subItem)}
-                                                                className="w-full px-4 py-3 text-left text-slate-800 hover:bg-emerald-50 hover:text-emerald-700 rounded-xl transition-all duration-200 flex items-center gap-4 group/item"
+                                                                className="w-full px-4 py-3 text-left text-slate-800 hover:bg-blue-50 hover:text-blue-700 rounded-xl transition-all duration-200 flex items-center gap-4 group/item"
                                                             >
-                                                                <div className="p-2 bg-slate-100 rounded-xl group-hover/item:bg-emerald-600 group-hover/item:text-white transition-all">
+                                                                <div className="p-2 bg-slate-100 rounded-xl group-hover/item:bg-blue-600 group-hover/item:text-white transition-all">
                                                                     {subItem.icon}
                                                                 </div>
                                                                 <div className="flex-1">
@@ -221,7 +221,7 @@ const Navigation = () => {
                                     ) : (
                                         <button
                                             onClick={() => handleNavClick(item)}
-                                            className="w-full text-left px-4 py-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 text-slate-600 font-semibold text-sm transition-colors"
+                                            className="w-full text-left px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 text-slate-600 font-semibold text-sm transition-colors"
                                         >
                                             {item.name}
                                         </button>
@@ -234,13 +234,13 @@ const Navigation = () => {
                         <div className="hidden lg:flex items-center gap-3 shrink-0">
                             <button
                                 onClick={() => router.push('/login')}
-                                className="px-5 py-2 text-slate-700 font-medium hover:text-emerald-700 transition-colors text-sm"
+                                className="px-5 py-2 text-slate-700 font-medium hover:text-blue-700 transition-colors text-sm"
                             >
                                 Sign In
                             </button>
                             <button
                                 onClick={() => router.push('/register')}
-                                className="px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-all duration-200 shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/50 hover:-translate-y-0.5 text-sm flex items-center gap-2 group"
+                                className="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 hover:-translate-y-0.5 text-sm flex items-center gap-2 group"
                             >
                                 Get Started
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -251,7 +251,7 @@ const Navigation = () => {
                         {!isMenuOpen && (<div className="lg:hidden flex items-center">
                             <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                className="p-2 text-slate-900 hover:bg-emerald-50 hover:text-emerald-700 rounded-xl transition-colors"
+                                className="p-2 text-slate-900 hover:bg-blue-50 hover:text-blue-700 rounded-xl transition-colors"
                             >
                                 <Menu size={22} />
                             </button>
@@ -271,7 +271,7 @@ const Navigation = () => {
                     <div className="absolute top-0 right-0 h-full w-full max-w-sm bg-white shadow-2xl animate-in slide-in-from-right duration-300 p-6 flex flex-col">
                         <div className="flex items-center justify-between mb-8">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-emerald-600 rounded-xl text-white shadow-md">
+                                <div className="p-2 bg-blue-600 rounded-xl text-white shadow-md">
                                     <Shield size={20} />
                                 </div>
                                 <span className="font-bold text-xl text-gray-900">EstateSecure</span>
@@ -288,7 +288,7 @@ const Navigation = () => {
                                         <div className="space-y-1">
                                             <button
                                                 onClick={() => handleDropdownToggle(item.name)}
-                                                className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition-colors"
+                                                className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-colors"
                                             >
                                                 <span className="font-semibold text-sm text-gray-900">{item.name}</span>
                                                 <ChevronDown size={16} className={activeDropdown === item.name ? 'rotate-180' : ''} />
@@ -300,7 +300,7 @@ const Navigation = () => {
                                                         <button
                                                             key={sub.name}
                                                             onClick={() => handleNavClick(sub)}
-                                                            className="w-full text-left px-4 py-3 rounded-xl hover:bg-emerald-50 text-sm text-slate-600 hover:text-emerald-700 transition-colors flex items-center gap-3"
+                                                            className="w-full text-left px-4 py-3 rounded-xl hover:bg-blue-50 text-sm text-slate-600 hover:text-blue-700 transition-colors flex items-center gap-3"
                                                         >
                                                             {sub.icon}
                                                             {sub.name}
@@ -312,7 +312,7 @@ const Navigation = () => {
                                     ) : (
                                         <button
                                             onClick={() => handleNavClick(item)}
-                                            className="w-full text-left px-4 py-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 text-slate-600 font-semibold text-sm transition-colors"
+                                            className="w-full text-left px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 text-slate-600 font-semibold text-sm transition-colors"
                                         >
                                             {item.name}
                                         </button>
@@ -322,7 +322,7 @@ const Navigation = () => {
                         </div>
 
                         <div className="pt-6 border-t border-gray-200 mt-auto space-y-4">
-                            <button className="w-full py-4 text-center font-bold text-sm bg-emerald-600 text-white rounded-xl shadow-lg shadow-emerald-600/30 hover:bg-emerald-700 transition-colors">
+                            <button className="w-full py-4 text-center font-bold text-sm bg-blue-600 text-white rounded-xl shadow-lg shadow-blue-600/30 hover:bg-blue-700 transition-colors">
                                 Start Free Trial
                             </button>
                             <button onClick={() => router.push('/login')} className="w-full py-4 text-center font-bold text-sm border-2 border-slate-200 rounded-xl text-slate-900 hover:bg-slate-50 transition-colors">

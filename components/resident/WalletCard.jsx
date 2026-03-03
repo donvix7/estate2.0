@@ -13,7 +13,7 @@ export function WalletCard({ balance = 0, currency = "₦" }) {
   }).format(balance)
 
   return (
-    <div className="p-4 max-w-2xl mx-auto rounded-2xl relative overflow-hidden text-white shadow-xl shadow-blue-900/20 w-full group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 bg-linear-to-br from-indigo-900 via-gray-900 to-blue-900">
+    <div className="p-4 max-w-2xl mx-auto rounded-2xl relative z-40 overflow-hidden text-white shadow-xl shadow-blue-900/20 w-full group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 bg-linear-to-br from-indigo-900 via-gray-900 to-blue-900">
     
       <div className="relative p-7 sm:p-8 flex flex-col h-full z-10">
         
