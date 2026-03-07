@@ -1,6 +1,6 @@
 import React from 'react'
 import ComingSoon from '@/components/ComingSoon'
-import { Bell, History, Settings, TriangleAlert, UserPlus, Wallet, FileText, CreditCard, Receipt, CalendarRange, PartyPopper, FileBadge2, UsersRound, UserCircle, ShieldCheck, HardHat, Megaphone, Siren, Info, Activity, Headset } from 'lucide-react'
+import { Bell, History, Settings, TriangleAlert, UserPlus, Wallet, FileText, CreditCard, Receipt, CalendarRange, PartyPopper, FileBadge2, UsersRound, UserCircle, ShieldCheck, HardHat, Megaphone, Siren, Info, Activity, Headset, Map, PersonStanding } from 'lucide-react'
 import { TechCard } from '@/components/ui/TechCard'
 import Link from 'next/link'
 
@@ -11,11 +11,12 @@ const page = () => {
     { name: 'Long Term Visit', icon: CalendarRange, href: '/dashboard/resident/visitors' },
     { name: 'Host Events', icon: PartyPopper, href: '/dashboard/resident/visitors' },
     { name: 'Permits', icon: FileBadge2, href: '/dashboard/resident/permits' },
-
+    { name: 'Services', icon: Headset, href: '/dashboard/resident/services' },
     { name: 'Guests', icon: UsersRound, href: '/dashboard/resident/history' },
     { name: 'My Profile', icon: UserCircle, href: '/dashboard/resident/profile' },
-    { name: 'Staff', icon: ShieldCheck, href: '/dashboard/resident/staff' },
+    { name: 'Staff', icon: PersonStanding, href: '/dashboard/resident/staff' },
     { name: 'Workers', icon: HardHat, href: '/dashboard/resident/workers' },
+    { name: 'Map', icon: Map, href: '/dashboard/resident/map' },
   ]
     const paymentTabs = [
     { name: 'Fund wallet', icon: Wallet, href: '/dashboard/resident/finance' },
@@ -105,27 +106,24 @@ const page = () => {
               ))}
             </div>
 
-            <div className="relative group inline-block">
-                <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white font-heading">Communication </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
-                    {communicationTabs.map((tab, index) => (
-                        <Link href={tab.href} key={index} className="group">
-                            <TechCard className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors h-full flex flex-col justify-center ">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-50/80 dark:bg-blue-900/40 rounded-xl flex items-center justify-center shrink-0">
-                                        <tab.icon className="w-5 h-5 md:w-6 md:h-6 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
-                                    </div>
-                                    <span className="text-sm md:text-base font-bold text-gray-700 dark:text-gray-300 font-heading group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{tab.name}</span>
+            <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white font-heading">Communication </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
+                {communicationTabs.map((tab, index) => (
+                    <Link href={tab.href} key={index} className="group">
+                        <TechCard className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors h-full flex flex-col justify-center ">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-50/80 dark:bg-blue-900/40 rounded-xl flex items-center justify-center shrink-0">
+                                    <tab.icon className="w-5 h-5 md:w-6 md:h-6 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
                                 </div>
-                            </TechCard>
-                        </Link>
-                    ))}
-                </div>
+                                <span className="text-sm md:text-base font-bold text-gray-700 dark:text-gray-300 font-heading group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{tab.name}</span>
+                            </div>
+                        </TechCard>
+                    </Link>
+                ))}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
             <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white font-heading">Payment </h2>
-
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
               {paymentTabs.map((tab, index) => (
                 <Link href={tab.href} key={index} className="group">
                   <TechCard className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors h-full flex flex-col justify-center ">
