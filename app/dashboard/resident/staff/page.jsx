@@ -1,8 +1,8 @@
-'use client'
-
+'use client';
 import React, { useState } from 'react'
 import { ShieldCheck, Plus, Users } from 'lucide-react'
 import AddStaffForm from '@/components/resident/AddStaffForm'
+import { BackButton } from '@/components/ui/BackButton'
 
 export default function ResidentStaffPage() {
   const [showAddForm, setShowAddForm] = useState(false)
@@ -10,6 +10,7 @@ export default function ResidentStaffPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
+        <BackButton fallbackRoute="/dashboard/resident" label="Back to Dashboard" />
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>

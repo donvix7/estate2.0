@@ -3,13 +3,14 @@ import ComingSoon from '@/components/ComingSoon'
 import { Landmark } from 'lucide-react'
 import PaymentsTab from '@/components/resident/PaymentsTab'
 import { WalletCard } from '@/components/resident/WalletCard'
+import { BackButton } from '@/components/ui/BackButton'
 
 export default function FinancePage() {
   return (
-    <div className='p-4 flex flex-col gap-4 max-w-7xl mx-auto'>
+    <div className='p-6 flex flex-col gap-4 max-w-7xl mx-auto'>
+        <BackButton fallbackRoute="/dashboard/resident" label="Back to Dashboard" />
         <WalletCard />
-
-      <PaymentsTab />
+        <PaymentsTab />
     </div>
   )
 }

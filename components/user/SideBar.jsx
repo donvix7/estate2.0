@@ -46,7 +46,6 @@ const SideBar = ({ role = 'resident' }) => {
           { href: '/dashboard/resident/history', label: 'History', icon: History },
           { href: '/dashboard/resident/visitors', label: 'Visitors', icon: Users },
           { href: '/dashboard/resident/features', label: 'Features', icon: FileStack },
-          
           { href: '/dashboard/resident/settings', label: 'Settings', icon: Settings },
         ];
     }

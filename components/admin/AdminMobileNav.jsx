@@ -20,7 +20,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import { logout } from '@/lib/action'
 
 const AdminMobileNav = ({ 
-    title = 'Estate 2.0', 
+    title = 'Estate Secure', 
     subtitle = 'Admin Console', 
     icon: CustomIcon 
 }) => {
@@ -34,12 +34,10 @@ const AdminMobileNav = ({
 
     const navLinks = [
         { href: '/dashboard/admin', label: 'Overview', icon: BarChart3, exact: true },
-        { href: '/dashboard/admin/staff', label: 'Staff', icon: UserCheck },
-        { href: '/dashboard/admin/security', label: 'Security', icon: Shield },
+        { href: '/dashboard/admin/security', label: 'Security Logs', icon: Shield },
         { href: '/dashboard/admin/users', label: 'Residents', icon: Users },
         { href: '/dashboard/admin/finance', label: 'Finance', icon: DollarSign },
         { href: '/dashboard/admin/announcements', label: 'Announcements', icon: MessageSquare },
-        { href: '/dashboard/admin/community', label: 'Community', icon: Building },
         { href: '/dashboard/admin/settings', label: 'Settings', icon: Settings },
     ]
 

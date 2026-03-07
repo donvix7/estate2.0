@@ -28,25 +28,6 @@ const USER_DATABASE = {
       accessLevel: 'full',
       phone: '+91 9876543211'
     },
-    {
-      id: 3,
-      email: 'security@demo.com',
-      password: '123456',
-      name: 'Security Officer',
-      type: 'security',
-      gateStation: 'Gate 1',
-      shift: 'Day Shift',
-      badgeNumber: 'SEC-001'
-    },
-    {
-      id: 4,
-      email: 'staff@demo.com',
-      password: '123456',
-      name: 'Staff Member',
-      type: 'staff',
-      department: 'Maintenance',
-      phone: '+91 9876543212'
-    }
   ],
   sessions: []
 }
@@ -85,7 +66,6 @@ const mockAPI = {
         type: user.type,
         ...(user.type === 'resident' && { unitNumber: user.unitNumber, building: user.building }),
         ...(user.type === 'admin' && { role: user.role, accessLevel: user.accessLevel }),
-        ...(user.type === 'security' && { gateStation: user.gateStation, badgeNumber: user.badgeNumber })
       },
       session: session.sessionId
     }
@@ -152,15 +132,7 @@ export default function LoginPage() {
           case 'admin':
             router.push('/dashboard/admin')
             break
-          case 'security':
-            router.push('/dashboard/security')
-            break
-          case 'staff':
-            router.push('/dashboard/staff')
-            break
-          default:
-            router.push('/dashboard/resident')
-        }
+         }
       }
     } catch (err) {
       setError('Invalid credentials. Use demo credentials: email@demo.com / 123456')
@@ -293,7 +265,7 @@ export default function LoginPage() {
                 <div className="space-y-3">
                     <label className="text-sm font-semibold text-gray-900 tracking-wide">SELECT YOUR ROLE</label>
                     <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
-                        {['resident', 'admin', 'security', 'staff'].map((type) => (
+                        {['resident', 'admin'].map((type) => (
                         <button
                             key={type}
                             type="button"
@@ -323,7 +295,7 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                                  {error && (
+                  {error && (
                       <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg border-red-100 text-sm flex items-start gap-2 overflow-hidden">
                           <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
                           <span className="flex-1">{error}</span>

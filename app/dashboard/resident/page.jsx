@@ -252,6 +252,8 @@ export default function ResidentDashboard() {
              <div className="w-full h-full min-h-[300px]">
                  <NotificationCard announcements={announcements} />
               </div>
+
+              
           </div>
         )}
 

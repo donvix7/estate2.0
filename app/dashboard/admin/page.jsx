@@ -20,10 +20,17 @@ import {
   Briefcase,
   Sun,
   Moon,
-  Mail
+  Mail,
+  Siren,
+  Receipt,
+  Map,
+  Search,
+  Wrench
 } from 'lucide-react'
 import StatsCard from '@/components/StatsCard'
 import { api } from '@/services/api' // Unified API Service
+import { TechCard } from '@/components/ui/TechCard'
+import Link from 'next/link'
 // Dynamically import the QR scanner
 const Scanner = dynamic(
   () => import('@yudiel/react-qr-scanner').then(mod => mod.Scanner),
@@ -56,20 +63,6 @@ export default function AdminDashboard() {
   
   // UI State
   const [isLoading, setIsLoading] = useState(true)
-
-  // Theme effect
-  useEffect(() => {
-    // Check for saved theme preference
-    const savedTheme = localStorage.getItem('theme') || 'light'
-    setTheme(savedTheme)
-    
-    // Apply theme to body
-    if (savedTheme === 'dark') {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [])
 
   // Load Initial Data
   useEffect(() => {
@@ -118,44 +111,155 @@ export default function AdminDashboard() {
     );
   }
 
+  const stats = [
+    {
+      title: "Total Residents",
+      value: 0,
+      icon: Users,
+      color: "blue",
+      subtext: "+12 this week"
+    },
+    {
+      title: "Emergencies",
+      value: 0,
+      icon: Siren,
+      color: "red",
+      subtext: "active alerts"
+    },
+    {
+      title: "Pending Invites",
+      value: pendingInvites.length,
+      icon: Mail,
+      color: "yellow",
+      subtext: "awaiting acceptance"
+    },
+    {
+      title: "Maintenance Requests",
+      value: 0,
+      icon: Settings,
+      color: "gray",
+      subtext: "3 high priority"
+    }
+  ]
+
+  const quickActions = [
+    {
+      name: "Users",
+      icon: Users,
+      color: "green",
+      href: '/dashboard/admin/users'
+ 
+    },
+    {
+      name: "Announcements",
+      icon: Bell,
+      color: "blue",
+      href: '/dashboard/admin/announcements'
+    },
+    {
+      name: "Security Logs",
+      icon: Shield,
+      color: "red",
+      href: '/dashboard/admin/security'
+    },
+    {
+      name: "Pending Invites",
+      icon: Mail,
+      color: "yellow",
+      href: '/dashboard/admin/invites'
+    },
+    {
+      name: "View Estates",
+      icon: Shield,
+      color: "purple",
+      href: '/dashboard/admin/estates'
+    },
+    {
+      name: "Invoices",
+      icon: Receipt,
+      color: "green",
+      href: '/dashboard/admin/finance'
+    },
+    {
+      name: "Map",
+      icon: Map,
+      color: "green",
+      href: '/dashboard/admin/map'
+    },
+    {
+      name: "Lost and Found",
+      icon: Search,
+      color: "blue",
+      href: '/dashboard/admin/lost_and_found'
+    },
+    {
+      name: "Services",
+      icon: Briefcase,
+      color: "purple",
+      href: '/dashboard/admin/services'
+    },
+    {
+      name: "Emergencies",
+      icon: Siren,
+      color: "red",
+      href: '/dashboard/admin/emergencies'
+    },
+    {
+      name: "Service workers",
+      icon: Wrench,
+      color: "green",
+      href: '/dashboard/admin/service_workers'
+    }
+  ]
+
   return (
     <div className="animate-fadeIn mt-6 p-10">
+      <div className='space-y-4'>
+        <h3 className='text-lg font-bold text-gray-900 dark:text-white'>Welcome back, {userData?.name}!</h3>
+        <p className='text-gray-500 dark:text-gray-400'>Here&apos;s what&apos;s happening in your estate today.</p>
+      </div>
       {/* OVERVIEW TAB */}
-            <div className="space-y-8">
+            <div className="space-y-4">
+                <h3 className='text-lg font-bold text-gray-900 dark:text-white'>Overview</h3>
+
               {/* Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatsCard 
-                  title="Total Residents" 
-                  value="1,245" 
-                  icon={Users} 
-                  color="blue" 
-                  subtext="+12 this week"
-                />
-                <StatsCard 
-                  title="Active Security" 
-                  value={staffMembers.filter(s => s.department === 'Security' || s.role.includes('Security')).length || 5} 
-                  icon={ShieldAlert} 
-                  color="red" 
-                  subtext="on duty now"
-                />
-                <StatsCard 
-                  title="Pending Invites" 
-                  value={pendingInvites.length} 
-                  icon={Mail} 
-                  color="yellow" 
-                  subtext="awaiting acceptance"
-                />
-                 <StatsCard 
-                  title="Maintenance Requests" 
-                  value="8" 
-                  icon={Settings} 
-                  color="gray" 
-                  subtext="3 high priority"
-                />
+              <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
+                {
+                  stats.map((stat, index) => (
+                    <StatsCard 
+                      key={index}
+                      title={stat.title}
+                      value={stat.value}
+                      icon={stat.icon}
+                      color={stat.color}
+                      subtext={stat.subtext}
+                    />
+                  ))
+                }
+              </div>
+
+              <div className='space-y-4'>
+                <h3 className='text-lg font-bold text-gray-900 dark:text-white'>Quick Actions</h3>
+                <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
+                  {
+                    quickActions.map((action, index) => (
+                      <Link key={index} href={action.href} className="block group">
+                        <StatsCard 
+                          title={action.name}
+                          icon={action.icon}
+                          color={action.color}
+                        />
+                      </Link>
+                    ))
+                  }
+                </div>
+                  
+                
               </div>
 
                {/* Recent Activity */}
-               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className='space-y-4'>
+                <h3 className='text-lg font-bold text-gray-900 dark:text-white'>Recent Activity</h3>
                  <div className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg p-6">
                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                      <Activity className="w-5 h-5 text-gray-600 dark:text-gray-400" /> Recent Security Logs
@@ -178,14 +282,17 @@ export default function AdminDashboard() {
                    </div>
                  </div>
 
-                 <div className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg p-6">
+              <div className='space-y-4'>
+                  <h3 className='text-lg font-bold text-gray-900 dark:text-white'>Recent Announcements</h3>
+                   <div className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg p-6">
                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                       <MessageSquare className="w-5 h-5 text-gray-600 dark:text-gray-400" /> Recent Announcements
                    </h3>
                    <div className="space-y-4">
                       {announcements.slice(0, 4).map(ann => (
                         <div key={ann.id} className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border-gray-200 dark:border-gray-600">
-                          <h4 className="font-semibold text-gray-800 dark:text-gray-200">{ann.title}</h4>
+                          <h3 className="font-semibold text-gray-900 dark:text-white">You&apos;ve discovered a new dimension</h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-4">We haven&apos;t built out this specific module yet, but the infrastructure is ready for it.</p>
                           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                             {new Date(ann.timestamp).toLocaleDateString()}
                           </p>
@@ -193,6 +300,7 @@ export default function AdminDashboard() {
                       ))}
                    </div>
                  </div>
+                  </div>
                </div>
             </div>
         </div>

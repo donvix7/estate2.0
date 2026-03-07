@@ -27,17 +27,17 @@ export default function OverviewTab({
       
       <div className="block md:hidden text-sm p-2 ">
       <div className="grid grid-cols-4 gap-2 mb-6 md:hidden">
-        {tabs.map((tab) => (
-          <div key={tab.name} className="flex flex-col items-center gap-1.5 w-full">
-          <Link href={tab.href}>
-          <TechCard noPadding className="w-[72px] h-[72px] sm:w-[84px] sm:h-[84px] rounded-2xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors flex items-center justify-center" hoverEffect={false}>
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50/80 rounded-full flex items-center justify-center">
-              <tab.icon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
-            </div>
-          </TechCard>
-              <span className="text-[10px] sm:text-xs font-bold text-gray-500 font-heading text-center leading-tight">{tab.name}</span>
-          </Link>
-          </div>
+        {tabs.map((tab, index) => (
+          <div key={index} className="flex flex-col items-center justify-start w-full">
+                  <Link href={tab.href} className="flex flex-col items-center gap-2 w-full group">
+                    <TechCard noPadding className="w-[80px] h-[80px] sm:w-[92px] sm:h-[92px] rounded-2xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors flex flex-col items-center justify-center " hoverEffect={false}>
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-50/80 dark:bg-blue-900/40 rounded-full flex items-center justify-center">
+                        <tab.icon className="w-6 h-6 sm:w-7 sm:h-7 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+                      </div>
+                    </TechCard>
+                    <span className="text-xs sm:text-sm font-bold text-gray-500 font-heading text-center leading-tight group-hover:text-gray-900 dark:group-hover:text-gray-300 transition-colors">{tab.name}</span>
+                  </Link>
+                  </div>
         ))}
       </div>
       </div>

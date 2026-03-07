@@ -1,14 +1,22 @@
+'use client'
+
 import React from 'react'
-import ComingSoon from '@/components/ComingSoon'
-import { ShieldAlert } from 'lucide-react'
+import AdminSecurityLogs from '@/components/admin/AdminSecurityLogs'
 
 const SecurityPage = () => {
   return (
-    <ComingSoon 
-      title="Security Headquarters" 
-      description="The security monitoring and incident logging module is currently undergoing maintenance and upgrades."
-      icon={ShieldAlert}
-    />
+    <div className="animate-fadeIn mt-6 p-6 sm:p-10">
+      <div className="mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white font-heading">
+          Security Logs
+        </h1>
+       
+      </div>
+
+      <div className="space-y-6">
+        <AdminSecurityLogs />
+      </div>
+    </div>
   )
 }
 

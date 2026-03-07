@@ -6,18 +6,18 @@ export function NotificationCard({ announcements = [] }) {
   const getIcon = (type) => {
     switch(type) {
       case 'alert': return <AlertTriangle className="w-5 h-5 text-red-500" />
-      case 'success': return <CheckCircle className="w-5 h-5 text-emerald-500" />
+      case 'success': return <CheckCircle className="w-5 h-5 text-blue-500" />
       case 'info': return <Info className="w-5 h-5 text-blue-500" />
-      default: return <Megaphone className="w-5 h-5 text-indigo-500" />
+      default: return <Megaphone className="w-5 h-5 text-blue-500" />
     }
   }
 
   const getBgColor = (type) => {
     switch(type) {
       case 'alert': return 'bg-red-50 dark:bg-red-500/10'
-      case 'success': return 'bg-emerald-50 dark:bg-emerald-500/10'
+      case 'success': return 'bg-emerald-50 dark:bg-blue-500/10'
       case 'info': return 'bg-blue-50 dark:bg-blue-500/10'
-      default: return 'bg-indigo-50 dark:bg-indigo-500/10'
+      default: return 'bg-blue-50 dark:bg-blue-500/10'
     }
   }
 

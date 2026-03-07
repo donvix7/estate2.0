@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+import { Edit, Edit2, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
 
 export default function ProfileDetails({
   selectedProfile,
@@ -13,10 +15,13 @@ export default function ProfileDetails({
   getProfileTypeLabel,
   formatDate
 }) {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   return (
     <>
       {selectedProfile ? (
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sticky top-24">
+        <>
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sticky top-24">
           {/* Profile Header */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
@@ -43,20 +48,25 @@ export default function ProfileDetails({
           </div>
 
           {/* Edit Mode Toggle */}
-          <div className="flex justify-between items-center mb-6">
-            <h4 className="font-bold text-gray-900 dark:text-white">
-              {isEditing ? 'Edit Profile' : 'Profile Details'}
-            </h4>
+          <div className="flex justify-end items-center mb-6">
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className={`px-4 py-2 rounded-lg font-medium ${
+              className={`px-4 py-2  rounded-lg font-medium flex items-center justify-center ${
                 isEditing 
                   ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' 
-                  : 'bg-blue-600 text-white hover:bg-blue-700'
+                  : `text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100`
               }`}
             >
-              {isEditing ? 'Cancel' : 'Edit Profile'}
+              {isEditing ? 'Cancel' : <Edit/>}
             </button>
+                              
+            <button
+              onClick={() => setShowDeleteModal(true)}
+              className={`px-4 py-2  rounded-lg font-medium flex items-center justify-center text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-600 transition-colors`}
+            >
+              <Trash2/>
+            </button>
+            
           </div>
 
           {/* Profile Form/Details */}
@@ -289,26 +299,42 @@ export default function ProfileDetails({
                   )}
                 </div>
                 
-                {/* Action Buttons */}
-                <div className="pt-6 border-t border-gray-200 dark:border-gray-700 space-y-3">
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors"
-                  >
-                    Edit Profile
-                  </button>
-                  
-                  <button
-                    onClick={handleDeleteProfile}
-                    className="w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition-colors"
-                  >
-                    Delete Profile
-                  </button>
-                </div>
               </>
             )}
           </div>
         </div>
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-sm w-full shadow-lg border border-gray-100 dark:border-gray-700 relative scale-in">
+              <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400 mb-4 mx-auto">
+                <Trash2 className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-center text-gray-900 dark:text-white mb-2">Delete Profile</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-center mb-6">Are you sure you want to delete this profile? This action cannot be undone.</p>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setShowDeleteModal(false);
+                    handleDeleteProfile();
+                  }}
+                  className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        </>
       ) : (
         // Empty State
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm  p-8 text-center sticky top-24">

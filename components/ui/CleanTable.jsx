@@ -8,8 +8,9 @@ import React from 'react';
  * @param {function} props.renderRow - Function to render a row (receives item, index)
  * @param {string} props.className - Extra classes
  * @param {React.ReactNode} props.emptyState - Content to show if data is empty
+ * @param {function} [props.onRowClick] - Optional row click handler
  */
-export function CleanTable({ headers, data, renderRow, className = '', emptyState }) {
+export function CleanTable({ headers, data, renderRow, className = '', emptyState, onRowClick }) {
   if (!data || data.length === 0) {
     return (
       <div className={`p-8 text-center text-gray-500 italic ${className}`}>
@@ -21,18 +22,22 @@ export function CleanTable({ headers, data, renderRow, className = '', emptyStat
   return (
     <div className={`overflow-x-auto ${className}`}>
       <table className="w-full text-left text-sm">
-        <thead className="bg-gray-50 border-b border-gray-200">
+        <thead className="bg-gray-50 dark:bg-gray-800/50">
           <tr>
             {headers.map((header, index) => (
-              <th key={index} className="px-6 py-4 font-semibold text-gray-900 font-heading whitespace-nowrap">
+              <th key={index} className="px-6 py-4 font-semibold text-gray-900 dark:text-gray-100 font-heading whitespace-nowrap">
                 {header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="">
           {data.map((item, index) => (
-            <tr key={index} className="hover:bg-gray-50/50 transition-colors group">
+            <tr 
+              key={index} 
+              onClick={onRowClick ? () => onRowClick(item) : undefined}
+              className={`hover:bg-gray-50/50 dark:hover:bg-gray-700/50 transition-colors group ${onRowClick ? 'cursor-pointer' : ''}`}
+            >
               {renderRow(item, index)}
             </tr>
           ))}

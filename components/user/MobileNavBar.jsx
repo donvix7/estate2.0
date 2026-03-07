@@ -92,18 +92,16 @@ const MobileNavBar = ({
                                 : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors'
                             }`}
                         >
-                            <Icon className={`w-[22px] h-[22px] mb-1 transition-all duration-300 ease-out ${
+                            <Icon className={`w-[22px]  h-[22px] mb-1 transition-all duration-300 ease-out ${
                                 isActive 
                                     ? 'scale-110 -translate-y-0.5' 
                                     : 'scale-100 group-hover:scale-110 group-hover:-translate-y-1'
                             }`} />  
-                            
-                            <span className={`text-[10px] tracking-wide font-medium transition-all duration-300 ease-out ${
-                                isActive 
-                                    ? 'opacity-100 transform translate-y-0' 
-                                    : 'opacity-70 group-hover:opacity-100 transform group-hover:-translate-y-0.5'
-                            }`}>{link.label}</span>
-                        </Link>
+
+                                <span className="text-xs font-bold text-gray-500 font-heading text-center leading-tight group-hover:text-gray-900 dark:group-hover:text-gray-300 transition-colors">{link.label}</span>
+
+                             </Link>
+
                     )
                 })}
             </nav>

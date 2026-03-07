@@ -7,25 +7,23 @@ const COLORS = {
   purple: 'text-purple-400 bg-purple-400/10 border-purple-400/20',
   red: 'text-red-400 bg-red-400/10 border-red-400/20',
   orange: 'text-orange-400 bg-orange-400/10 border-orange-400/20',
-   blue: 'text- blue-400 bg- blue-400/10  - blue-400/20',
-  teal: 'text-teal-400 bg-teal-400/10 border-teal-400/20'
+  teal: 'text-blue-400 bg-blue-400/10 border-blue-400/20'
 };
 
 export default function StatsCard({ title, value, icon: Icon, color = 'blue', subtext = '' }) {
   const colorClasses = COLORS[color] || COLORS.blue;
 
   return (
-    <div className="bg-gray-900 backdrop-blur dark:bg-gray-800  rounded-xl p-5 hover:scale-105 transition-all  ">
-      <div className="flex justify-between items-start mb-2">
-        <div className="flex-1">
-          <p className="text-gray-400 text-sm font-medium mb-1 truncate">{title}</p>
-          <p className=" text-gray-100 font-bold text-2xl mt-2">{value}</p>
-        </div>
-        <div className={`p-3 rounded-xl ml-4 ${colorClasses} shrink-0`}>
-          <Icon className="w-6 h-6" />
-        </div>
+    <div className="flex justify-between gap-4 dark:bg-gray-800 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)] backdrop-blur rounded-3xl p-6 hover:scale-105 transition-all border-none">
+    
+      <div className="pr-20 mb-2">
+        <p className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1 ">{title}</p>
+        <p className="text-gray-900 dark:text-white font-bold text-2xl mt-2">{value}</p>
+      {subtext && <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">{subtext}</p>}
       </div>
-      {subtext && <p className="text-xs text-gray-500 mt-2">{subtext}</p>}
+      <div className={`p-3 rounded-xl h-12 block ${colorClasses}`}>
+        <Icon className="w-6 h-6" />
+      </div>
     </div>
   );
 }

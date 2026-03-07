@@ -21,60 +21,164 @@ export const api = {
 
   // --- ANNOUNCEMENTS & ALERTS ---
   async getAnnouncements() {
-    await delay(300);
-    // Return a combined list of announcements and broadcasts for display
-    return [...STATE.announcements].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    return STATE.announcements || [];
   },
 
   async saveAnnouncement(announcement) {
-    await delay();
-    const newAnnouncement = { 
-      id: Date.now(), 
+    const newAnnouncement = {
+      id: Date.now(),
+      ...announcement,
       timestamp: new Date().toISOString(),
       read: false,
-      ...announcement 
+      author: announcement.author || 'Admin'
     };
+    if (!STATE.announcements) STATE.announcements = [];
     STATE.announcements.unshift(newAnnouncement);
     return { success: true, data: newAnnouncement };
   },
 
   async getAlerts() {
-    await delay();
-    return STATE.alerts;
+    const data = []
+    return data;
+  },
+
+  // --- SERVICE REQUESTS ---
+  async getServiceRequests() {
+    return STATE.serviceRequests || [];
+  },
+
+  async updateServiceRequest(id, updates) {
+    if (!STATE.serviceRequests) return { success: false, error: 'No requests found' };
+    
+    const index = STATE.serviceRequests.findIndex(req => req.id === id);
+    if (index === -1) return { success: false, error: 'Request not found' };
+
+    STATE.serviceRequests[index] = {
+      ...STATE.serviceRequests[index],
+      ...updates
+    };
+
+    return { success: true, data: STATE.serviceRequests[index] };
+  },
+
+  // --- STAFF / SERVICE WORKERS ---
+  async getStaffMembers() {
+    return STATE.staffMembers || [];
+  },
+
+  // --- LOST AND FOUND ---
+  async getLostAndFoundItems() {
+    return STATE.lostAndFoundItems || [];
+  },
+
+  async updateLostAndFoundItem(id, updates) {
+    if (!STATE.lostAndFoundItems) return { success: false, error: 'No items found' };
+    
+    const index = STATE.lostAndFoundItems.findIndex(item => item.id === id);
+    if (index === -1) return { success: false, error: 'Item not found' };
+
+    STATE.lostAndFoundItems[index] = {
+      ...STATE.lostAndFoundItems[index],
+      ...updates
+    };
+
+    return { success: true, data: STATE.lostAndFoundItems[index] };
+  },
+
+  // --- FINANCE ---
+  async getInvoices() {
+    return STATE.invoices || [];
+  },
+
+  async getTransactions() {
+    return STATE.transactions || [];
+  },
+
+  // --- ESTATES & BUILDINGS ---
+  async getBuildings() {
+    return STATE.buildings || [];
+  },
+
+  async getBuildingById(id) {
+    if (!STATE.buildings) return null;
+    const building = STATE.buildings.find(b => b.id === id);
+    if (!building) throw new Error('Building not found');
+    return building;
+  },
+
+  async getResidentsByBuildingId(id) {
+    if (!STATE.users) return [];
+    return STATE.users.filter(u => u.buildingId === id && u.role === 'resident');
+  },
+
+  // --- INVITES ---
+  async getInvites() {
+    return STATE.pendingInvites || [];
+  },
+
+  async updateInvite(id, updates) {
+    if (!STATE.pendingInvites) return { success: false, error: 'No invites found' };
+    
+    const index = STATE.pendingInvites.findIndex(invite => invite.id === id);
+    if (index === -1) return { success: false, error: 'Invite not found' };
+
+    STATE.pendingInvites[index] = {
+      ...STATE.pendingInvites[index],
+      ...updates
+    };
+
+    return { success: true, data: STATE.pendingInvites[index] };
+  },
+
+  // --- EMERGENCIES ---
+  async getEmergencies() {
+    return STATE.emergencies || [];
+  },
+  
+  async getEmergencyContacts() {
+    return STATE.emergencyContacts || [];
+  },
+
+  async updateEmergencyStatus(id, updates) {
+    if (!STATE.emergencies) return { success: false, error: 'No emergencies found' };
+    
+    const index = STATE.emergencies.findIndex(emg => emg.id === id);
+    if (index === -1) return { success: false, error: 'Emergency not found' };
+
+    STATE.emergencies[index] = {
+      ...STATE.emergencies[index],
+      ...updates
+    };
+
+    return { success: true, data: STATE.emergencies[index] };
   },
 
   async saveEmergencyAlert(alert) {
-    await delay();
+    if (!STATE.emergencies) STATE.emergencies = [];
     const newAlert = {
-      id: Date.now(),
-      timestamp: new Date().toISOString(),
-      ...alert
+      id: `EMG-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+      ...alert,
+      date: new Date().toISOString(),
+      status: 'active',
+      resolvedBy: null,
+      resolvedAt: null
     };
-    STATE.emergencyAlerts.unshift(newAlert);
-    STATE.alerts.unshift(newAlert);
-    // Also add to announcements for visibility
-    STATE.announcements.unshift({
-      ...newAlert,
-      priority: 'urgent',
-      type: 'emergency' 
-    });
-    return { success: true };
+    STATE.emergencies.unshift(newAlert);
+    return { success: true, data: newAlert };
   },
 
   // --- VISITOR MANAGEMENT ---
   async getVisitors() {
-    await delay();
-    return STATE.currentVisitors;
+    const data = []
+    return data;
   },
 
   async getSecurityLogs() {
-    await delay();
-    // Combine logs and securityLogs into one stream if needed, mostly returning securityLogs
-    return STATE.securityLogs || [];
+    const data = []
+    return data;
   },
 
   async verifyVisitorPass(code, pin) {
-    await delay(600);
     
     const isBlacklisted = BLACKLISTED_CODES.includes(code);
     
@@ -101,7 +205,7 @@ export const api = {
     }
     
     // Simulate finding a visitor
-    const residents = ['A-101', 'A-102', 'B-201', 'C-302'];
+    const residents = [];
     const randomResident = residents[Math.floor(Math.random() * residents.length)];
     
     const visitorData = {
@@ -141,78 +245,47 @@ export const api = {
   },
 
   async updateVisitorStatus(visitorId, updates) {
-    await delay();
-    const index = STATE.currentVisitors.findIndex(v => v.id === visitorId);
-    if (index !== -1) {
-      STATE.currentVisitors[index] = { ...STATE.currentVisitors[index], ...updates };
-      
-      if (updates.status === 'checked-out') {
-        const v = STATE.currentVisitors[index];
-        const logEntry = {
-          id: Date.now(),
-          type: 'exit',
-          visitorCode: v.code,
-          visitorName: v.name,
-          timestamp: new Date().toISOString(),
-          action: 'Checked out',
-        };
-        STATE.securityLogs.unshift(logEntry);
-      }
-      return { success: true };
-    }
-    return { success: false };
+    const data = []
+    return { success: true, data: data };
   },
 
   // --- STAFF & USER MANAGEMENT ---
   async getUserData() {
-    await delay(300);
-    return STATE.userData;
+    const data = []
+    return data;
   },
 
   async getStaffMembers() {
-    await delay();
-    return STATE.staffMembers;
+    const data = []
+    return data;
   },
 
   async addStaffMember(staff) {
-    await delay();
-    const newStaff = {
-      id: `staff_${Date.now()}`,
-      joinDate: new Date().toISOString().split('T')[0],
-      status: 'active',
-      ...staff
-    };
-    STATE.staffMembers.push(newStaff);
-    return { success: true, staff: newStaff };
+    const data = []
+    return { success: true, data: data };
   },
 
   async getStaffTasks() {
-    await delay();
-    return STATE.staffTasks;
+    const data = []
+    return data;
   },
 
   async updateTaskStatus(taskId, status) {
-    await delay();
-    const index = STATE.staffTasks.findIndex(t => t.id === taskId);
-    if (index !== -1) {
-      STATE.staffTasks[index] = { ...STATE.staffTasks[index], status };
-      return { success: true };
-    }
-    return { success: false };
+    const data = []
+    return { success: true, data: data };
   },
 
   async getInventory() {
-    await delay();
-    return STATE.inventory;
+    const data = []
+    return data;
   },
   
   async getWorkLogs() {
-    await delay();
-    return STATE.workLogs;
+    const data = []
+    return data;
   },
 
   async submitWorkLog(log) {
-    await delay();
      const newWorkLog = {
       id: Date.now(),
       ...log,
@@ -224,12 +297,11 @@ export const api = {
   },
 
   async getEstates() {
-    await delay();
-    return STATE.estates;
+    const data = []
+    return data;
   },
 
   async sendUserInvitation(invitation) {
-    await delay();
     const token = `invite_${Date.now()}`;
     const newInvite = {
       ...invitation,
@@ -243,12 +315,12 @@ export const api = {
   },
   
   async getPendingInvites() {
-    await delay();
-    return STATE.pendingInvites;
+    const data = []
+    return data;
   },
   
   async getAdminEstate(adminId) {
-    await delay();
-    return STATE.estates.find(e => e.adminId === adminId) || STATE.estates[0];
+    const data = []
+    return data;
   }
 };

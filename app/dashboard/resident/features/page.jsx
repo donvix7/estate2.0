@@ -105,7 +105,7 @@ const page = () => {
               ))}
             </div>
 
-            <div>
+            <div className="relative group inline-block">
                 <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white font-heading">Communication </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
                     {communicationTabs.map((tab, index) => (
@@ -123,8 +123,9 @@ const page = () => {
                 </div>
             </div>
 
-            <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white font-heading">Payment </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
+            <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white font-heading">Payment </h2>
+
               {paymentTabs.map((tab, index) => (
                 <Link href={tab.href} key={index} className="group">
                   <TechCard className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors h-full flex flex-col justify-center ">

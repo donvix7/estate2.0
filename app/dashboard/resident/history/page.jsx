@@ -6,6 +6,7 @@ import ComingSoon from '@/components/ComingSoon'
 import { History } from 'lucide-react'
 import { TechCard } from '@/components/ui/TechCard'
 import { CleanTable } from '@/components/ui/CleanTable'
+import { BackButton } from '@/components/ui/BackButton'
 
 const HistoryPage = () => {
   const [activeTab, setActiveTab] = useState('history')
@@ -13,6 +14,7 @@ const HistoryPage = () => {
 
   return (
     <div className="p-6 space-y-6">
+        <BackButton fallbackRoute="/dashboard/resident" label="Back to Dashboard" />
           
              <div className="flex bg-gray-100 dark:bg-gray-800/50 p-1 m-4 sm:mx-6 rounded-xl overflow-x-auto">
                {[

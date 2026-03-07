@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Stethoscope, ShieldAlert, Flame, TriangleAlert } from 'lucide-react'
+import { BackButton } from '@/components/ui/BackButton'
 
 const page = () => {
   const cases = [
@@ -21,6 +22,7 @@ const page = () => {
 
   return (
     <div className="p-6">
+      <BackButton fallbackRoute="/dashboard/resident" label="Back to Dashboard" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {cases.map((item, index) => {
           const colors = getColorClasses(item.color);
