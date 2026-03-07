@@ -213,7 +213,7 @@ export default function AdminDashboard() {
   ]
 
   return (
-    <div className="animate-fadeIn mt-6 p-10">
+    <div className="animate-fade-in mt-6 p-10">
       <div className='space-y-4'>
         <h3 className='text-lg font-bold text-gray-900 dark:text-white'>Welcome back, {userData?.name}!</h3>
         <p className='text-gray-500 dark:text-gray-400'>Here&apos;s what&apos;s happening in your estate today.</p>

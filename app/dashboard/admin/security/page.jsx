@@ -5,7 +5,7 @@ import AdminSecurityLogs from '@/components/admin/AdminSecurityLogs'
 
 const SecurityPage = () => {
   return (
-    <div className="animate-fadeIn mt-6 p-6 sm:p-10">
+    <div className="animate-fade-in mt-6 p-6 sm:p-10">
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white font-heading">
           Security Logs

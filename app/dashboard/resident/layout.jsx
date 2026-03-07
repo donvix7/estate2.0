@@ -19,7 +19,7 @@ export default function ResidentLayout({ children }) {
         <SideBar role="resident" />
         
         {/* Page Content */}
-        <div className="flex-1 overflow-y-auto mb-12 pb-12">
+        <div className="flex-1 overflow-y-auto pb-28">
           {children}
         </div>
       </div>

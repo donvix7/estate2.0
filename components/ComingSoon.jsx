@@ -7,7 +7,7 @@ const ComingSoon = ({
   icon: Icon = Hammer
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 text-center animate-fadeIn">
+    <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 text-center animate-fade-in">
       <div className="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-6 shadow-sm ">
         <Icon className="w-12 h-12 text-blue-500" />
       </div>

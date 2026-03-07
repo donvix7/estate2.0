@@ -114,7 +114,7 @@ export default function UserProfilePage() {
     }
 
     return (
-        <div className="animate-fadeIn p-6 md:p-10 max-w-4xl mx-auto space-y-6">
+        <div className="animate-fade-in p-6 md:p-10 max-w-4xl mx-auto space-y-6">
             <BackButton fallbackRoute="/dashboard/admin/users" label="Back to Directory" />
 
             <div className="flex items-center gap-4 mb-4">

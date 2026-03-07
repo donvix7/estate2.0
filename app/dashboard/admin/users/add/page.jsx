@@ -67,7 +67,7 @@ export default function AddUserPage() {
   };
 
   return (
-    <div className="animate-fadeIn p-6 md:p-10 max-w-4xl mx-auto space-y-6">
+    <div className="animate-fade-in p-6 md:p-10 max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <BackButton fallbackRoute="/dashboard/admin/users" label="Back to Directory" />
 
@@ -158,7 +158,7 @@ export default function AddUserPage() {
 
           {/* Resident Specific */}
           {formData.type === 'resident' && (
-            <div className="space-y-6 animate-fadeIn">
+            <div className="space-y-6 animate-fade-in">
               <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-300 border-b border-blue-100 dark:border-blue-900/30 pb-2">
                 Resident Details
               </h3>
@@ -204,7 +204,7 @@ export default function AddUserPage() {
 
           {/* Staff Specific */}
           {formData.type === 'staff' && (
-            <div className="space-y-6 animate-fadeIn">
+            <div className="space-y-6 animate-fade-in">
               <h3 className="text-lg font-semibold text-orange-800 dark:text-orange-300 border-b border-orange-100 dark:border-orange-900/30 pb-2">
                 Staff Details
               </h3>
@@ -250,7 +250,7 @@ export default function AddUserPage() {
 
           {/* Security Specific */}
           {formData.type === 'security' && (
-            <div className="space-y-6 animate-fadeIn">
+            <div className="space-y-6 animate-fade-in">
               <h3 className="text-lg font-semibold text-green-800 dark:text-green-300 border-b border-green-100 dark:border-green-900/30 pb-2">
                 Security Details
               </h3>

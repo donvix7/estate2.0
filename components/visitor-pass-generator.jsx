@@ -403,7 +403,7 @@ Valid until: ${new Date(generatedPass.expectedDeparture).toLocaleString()}`
   }
 
   return (
-    <div className="space-y-6 animate-fadeIn mb-12 pb-6">
+    <div className="space-y-6 animate-fade-in mb-12 pb-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
         <div>

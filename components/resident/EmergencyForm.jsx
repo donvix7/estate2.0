@@ -106,7 +106,7 @@ export default function EmergencyForm({ caseType }) {
   })
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-gray-900/40 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-9999 flex items-center justify-center p-4 sm:p-6 bg-gray-900/40 backdrop-blur-sm animate-fade-in">
       <div 
         className="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden animate-scaleIn flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}

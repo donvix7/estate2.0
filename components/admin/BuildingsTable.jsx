@@ -119,7 +119,7 @@ export default function BuildingsTable({ buildings, onRowClick }) {
               </button>
               
               {openDropdownId === block.id && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)] border-none z-50 flex flex-col py-2 animate-fadeIn">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)] border-none z-50 flex flex-col py-2 animate-fade-in">
                    <button 
                      onClick={(e) => { e.stopPropagation(); setOpenDropdownId(null); onRowClick(block); }} 
                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-300 w-full text-left font-medium text-sm transition-colors"

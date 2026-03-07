@@ -52,7 +52,7 @@ export default function EstatesPage() {
   const globalOccupancyRate = totalUnits > 0 ? Math.round((occupiedUnits / totalUnits) * 100) : 0;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto animate-fadeIn">
+    <div className="p-6 max-w-7xl mx-auto animate-fade-in">
       {/* Header */}
       <PageHeader 
         title="Estate Overview" 

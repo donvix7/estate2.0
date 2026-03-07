@@ -9,7 +9,7 @@ const CreateChannelModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+    <div className="fixed inset-0 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
       <div className="bg-white dark:bg-gray-800  dark:border-gray-700 rounded-xl shadow-2xl w-full max-w-md mx-auto">
         
         {/* Header */}

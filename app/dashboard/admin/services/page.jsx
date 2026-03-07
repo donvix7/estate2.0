@@ -51,7 +51,7 @@ export default function ServicesPage() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto animate-fadeIn">
+    <div className="p-6 max-w-7xl mx-auto animate-fade-in">
       {/* Header */}
       <PageHeader 
         title="Service Requests" 

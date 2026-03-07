@@ -48,7 +48,7 @@ export default function InvitesPage() {
   const activeInvites = invites.filter(i => i.status === 'approved' || i.status === 'accepted').length;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto animate-fadeIn">
+    <div className="p-6 max-w-7xl mx-auto animate-fade-in">
       {/* Header */}
       <PageHeader 
         title="Guest Invites" 

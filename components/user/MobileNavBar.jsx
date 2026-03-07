@@ -69,9 +69,9 @@ const MobileNavBar = ({
     const { subtitle, name, identifier, navLinks } = getRoleDetails(role);
 
     return (
-        <div className="md:hidden fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4 border-none">
+        <div className="md:hidden fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4 border-none pb-[env(safe-area-inset-bottom)]">
             <nav 
-                className="bg-gray-600/40 dark:bg-black/40 backdrop-blur-xl rounded-2xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.8)] max-w-md flex items-center justify-between gap-1.5 px-2 py-2 w-full  dark:border-gray-800/50"
+                className="bg-white/70 dark:bg-black/40 backdrop-blur-xl rounded-2xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.8)] max-w-md flex items-center justify-between gap-1.5 px-2 py-2 w-full transition-colors"
                 style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}
             >
                 {navLinks.map((link) => {
@@ -88,8 +88,8 @@ const MobileNavBar = ({
                             href={link.href}
                             className={`flex flex-col items-center justify-center w-14 h-14 sm:w-[60px] sm:h-[60px] rounded-2xl transition-all duration-300 relative group cursor-pointer ${
                             isActive 
-                                ? 'bg-gray-900 dark:bg-gray-800/80 text-gray-100 dark:text-gray-400 shadow-sm border border-blue-100 dark:border-gray-700/80' 
-                                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors'
+                                ? 'bg-blue-600 dark:bg-blue-600 text-white shadow-lg shadow-blue-600/30' 
+                                : 'text-slate-500 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-gray-800/60 transition-colors'
                             }`}
                         >
                             <Icon className={`w-[22px]  h-[22px] mb-1 transition-all duration-300 ease-out ${
@@ -98,7 +98,11 @@ const MobileNavBar = ({
                                     : 'scale-100 group-hover:scale-110 group-hover:-translate-y-1'
                             }`} />  
 
-                                <span className="text-xs font-bold text-gray-500 font-heading text-center leading-tight group-hover:text-gray-900 dark:group-hover:text-gray-300 transition-colors">{link.label}</span>
+                                <span className={`text-[10px] font-bold font-heading text-center leading-tight transition-colors ${
+                                    isActive 
+                                        ? 'text-white' 
+                                        : 'text-slate-500 dark:text-gray-400 group-hover:text-slate-900 dark:group-hover:text-gray-200'
+                                }`}>{link.label}</span>
 
                              </Link>
 

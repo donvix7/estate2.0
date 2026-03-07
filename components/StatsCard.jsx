@@ -14,14 +14,14 @@ export default function StatsCard({ title, value, icon: Icon, color = 'blue', su
   const colorClasses = COLORS[color] || COLORS.blue;
 
   return (
-    <div className="flex justify-between gap-4 dark:bg-gray-800 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)] backdrop-blur rounded-3xl p-6 hover:scale-105 transition-all border-none">
-    
+    <div className=" relative flex justify-between gap-4 dark:bg-gray-800 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)] backdrop-blur rounded-3xl p-6 hover:scale-105 transition-all border-none">
+     
       <div className="pr-20 mb-2">
         <p className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1 ">{title}</p>
         <p className="text-gray-900 dark:text-white font-bold text-2xl mt-2">{value}</p>
       {subtext && <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">{subtext}</p>}
       </div>
-      <div className={`p-3 rounded-xl h-12 block ${colorClasses}`}>
+     <div className={ `absolute top-4 right-4 p-3 rounded-xl h-12 block ${colorClasses}`}>
         <Icon className="w-6 h-6" />
       </div>
     </div>

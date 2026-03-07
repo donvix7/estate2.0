@@ -51,72 +51,73 @@ const AdminMobileNav = ({
     }
 
     return (
-        <nav className="md:hidden bg-gray-900  text-white sticky top-0 z-50">
+        <nav className="md:hidden bg-white/80 dark:bg-gray-900 backdrop-blur-md text-slate-900 dark:text-white sticky top-0 z-50 transition-colors">
             {/* Top Bar */}
             <div className="flex items-center justify-between h-16 px-4">
-                {/* Logo */}
-                <div className="flex items-center gap-3">
-                    <button 
-                       onClick={() => setIsMenuOpen(true)}
-                       className="p-1 -ml-1 text-gray-400 hover:text-white rounded transition-colors"
-                    >
-                        <Menu className="w-6 h-6" />
-                    </button>
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                            {CustomIcon ? <CustomIcon className="w-5 h-5 text-white" /> : <Building2 className="w-5 h-5 text-white" />}
-                        </div>
-                        <div>
-                            <span className="font-bold text-base font-heading tracking-tight block leading-none">{title}</span>
-                            <span className="text-[9px] text-gray-400 uppercase tracking-widest font-medium">{subtitle}</span>
-                        </div>
+                {/* Logo Section */}
+                <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+                        {CustomIcon ? <CustomIcon className="w-5 h-5 text-white" /> : <Building2 className="w-5 h-5 text-white" />}
+                    </div>
+                    <div>
+                        <span className="font-bold text-base font-heading tracking-tight block leading-none text-slate-900 dark:text-white">{title}</span>
+                        <span className="text-[9px] text-slate-500 dark:text-gray-400 uppercase tracking-widest font-medium">{subtitle}</span>
                     </div>
                 </div>
 
-                {/* Profile Avatar (Small) */}
-                <div className="flex items-center gap-2">
-                     <span className="text-xs text-gray-400 truncate max-w-[80px]">{adminEstate.name}</span>
-                     <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center border-gray-700 text-gray-300 font-bold text-sm">
+                {/* Actions Section */}
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-slate-100 dark:bg-gray-800 rounded-full flex items-center justify-center text-slate-600 dark:text-gray-300 font-bold text-sm transition-colors">
                         {userData.name.charAt(0)}
-                     </div>
+                    </div>
+                    
+                    <button 
+                       onClick={() => setIsMenuOpen(true)}
+                       className="p-2 text-slate-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-white rounded-xl bg-slate-100/50 dark:bg-gray-800/50 transition-colors"
+                    >
+                        <Menu className="w-6 h-6" />
+                    </button>
                 </div>
             </div>
 
             {/* Mobile Menu Overlay */}
             {isMenuOpen && (
-                <div className="fixed inset-0 z-60 bg-gray-900/80 backdrop-blur-sm animate-fadeIn">
-                    <div className="fixed inset-y-0 left-0 w-[280px] bg-gray-900 shadow-2xl flex flex-col transform transition-transform duration-300 ease-in-out">
+                <div className="fixed inset-0 z-200 bg-slate-900/60 dark:bg-gray-900/80 backdrop-blur-sm animate-fade-in" onClick={() => setIsMenuOpen(false)}>
+                    <div 
+                        className="fixed inset-y-0 right-0 w-[280px] bg-white dark:bg-gray-900 shadow-2xl flex flex-col z-210 animate-slide-in-right"
+                        onClick={(e) => e.stopPropagation()}
+                    >
 
                         {/* Overlay Header */}
-                        <div className="flex items-center justify-between p-4">
+                        <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-gray-800/20">
                              <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
                                     <Building2 className="w-5 h-5 text-white" />
                                 </div>
-                                <span className="font-bold text-lg font-heading tracking-tight">{title}</span>
+                                <span className="font-bold text-lg font-heading tracking-tight text-slate-900 dark:text-white">{title}</span>
                              </div>
                              <button 
                                 onClick={() => setIsMenuOpen(false)}
-                                className="p-2 text-gray-400 hover:text-white bg-gray-800/50 rounded-lg"
+                                className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-white bg-slate-100 dark:bg-gray-800/50 rounded-lg transition-colors"
                              >
                                 <X className="w-5 h-5" />
                              </button>
                         </div>
 
                         {/* User Micro-Profile */}
-                        <div className="flex items-center p-4 bg-gray-800/20">
-                            <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center border-gray-700 text-gray-300 font-bold">
+                        <div className="flex items-center p-4">
+                            <div className="w-10 h-10 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center text-slate-600 dark:text-gray-300 font-bold">
                                 {userData.name.charAt(0)}
                             </div>
                             <div className="ml-3">
-                                <p className="text-sm font-bold text-white leading-tight">{userData.name}</p>
-                                <p className="text-xs text-gray-500">{adminEstate.name}</p>
+                                <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{userData.name}</p>
+                                <p className="text-xs text-slate-500 dark:text-gray-500">{adminEstate.name}</p>
                             </div>
                         </div>
 
                         {/* Navigation Links */}
                         <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-                            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-3">
+                            <div className="text-xs font-semibold text-slate-400 dark:text-gray-500 uppercase tracking-wider mb-2 px-3">
                                 Admin Menu
                             </div>
                             {navLinks.map((link) => {
@@ -131,14 +132,14 @@ const AdminMobileNav = ({
                                     key={link.href}
                                     href={link.href}
                                     onClick={() => setIsMenuOpen(false)} // Close menu on click
-                                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                                     isActive 
-                                        ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20' 
-                                        : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800 cursor-pointer'
+                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
+                                        : 'text-slate-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-gray-800 cursor-pointer'
                                     }`}
                                 >
-                                    <Icon className={`w-5 h-5 ${isActive ? 'text-blue-400' : 'text-gray-500'}`} />
-                                    <span className="font-medium text-sm">{link.label}</span>
+                                    <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-400 dark:text-gray-500'}`} />
+                                    <span className="font-semibold text-sm">{link.label}</span>
                                 </Link>
                                 )
                             })}
@@ -146,12 +147,12 @@ const AdminMobileNav = ({
 
                         {/* Logout Footer */}
                         <div className="p-4">
-                             <button 
+                             <button
                                 onClick={() => {
                                     setIsMenuOpen(false);
                                     handleLogout();
                                 }}
-                                className="flex items-center justify-center gap-2 w-full py-2.5 px-4 text-sm font-medium text-red-400 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-lg transition-colors"
+                                 className="flex items-center justify-center gap-2 w-full py-2.5 px-4 text-sm font-medium text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-colors"
                              >
                                 <LogOut className="w-4 h-4" /> Sign Out
                              </button>

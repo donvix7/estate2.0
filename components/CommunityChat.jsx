@@ -112,7 +112,7 @@ export default function CommunityChat({
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] grid grid-cols-1 lg:grid-cols-2 bg-gray-50 dark:bg-gray-900 animate-fadeIn overflow-hidden">
+    <div className="h-[calc(100vh-4rem)] grid grid-cols-1 lg:grid-cols-2 bg-gray-50 dark:bg-gray-900 animate-fade-in overflow-hidden">
       {/* Sidebar - Channels & DMs */}
       <div className={`w-full lg:w-80 bg-white dark:bg-gray-800 flex-col h-full shrink-0 relative overflow-hidden ${isMobileChatOpen ? 'hidden lg:flex' : 'flex'}`}>
         {/* Sidebar Header */}

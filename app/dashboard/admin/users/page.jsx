@@ -9,7 +9,7 @@ export default function UsersPage() {
   const router = useRouter();
 
   return (
-    <div className="animate-fadeIn p-6 md:p-10 max-w-7xl mx-auto space-y-6">
+    <div className="animate-fade-in p-6 md:p-10 max-w-7xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 rounded-lg dark:border-gray-800">
         <div>
