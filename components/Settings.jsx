@@ -12,6 +12,7 @@ import {
   Server,
   Key
 } from 'lucide-react'
+import { toast } from 'react-toastify'
 
 export default function Settings({ role = 'resident' }) {
   const [isSaving, setIsSaving] = useState(false)
@@ -21,7 +22,7 @@ export default function Settings({ role = 'resident' }) {
     // Simulate API call
     setTimeout(() => {
       setIsSaving(false)
-      alert("Settings saved successfully!")
+      toast.success("Settings saved successfully!")
     }, 1000)
   }
 
@@ -80,7 +81,7 @@ export default function Settings({ role = 'resident' }) {
         <div className="space-y-8">
           
           {/* 1. Profile Settings */}
-          <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)] overflow-hidden">
+          <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
             <div className="px-6 py-4 bg-gray-50/50 dark:bg-gray-800/50 flex items-center gap-3 ">
               <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                   <User className="w-4 h-4 text-blue-500" />
@@ -101,7 +102,7 @@ export default function Settings({ role = 'resident' }) {
                 <input 
                   type="email" 
                   defaultValue={role === 'admin' ? "admin@estate2.0.com" : "user@example.com"}
-                  className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900 border border-transparent dark:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm text-gray-900 dark:text-white transition-all shadow-sm"
+                  className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900 border-none focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-sm text-gray-900 dark:text-white transition-all shadow-sm"
                 />
               </div>
               {showAssignedStation && (
@@ -118,7 +119,7 @@ export default function Settings({ role = 'resident' }) {
           </section>
 
           {/* 2. Security Preferences */}
-          <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)] overflow-hidden">
+          <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
             <div className="px-6 py-4 bg-gray-50/50 dark:bg-gray-800/50 flex items-center gap-3">
                <div className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
                   <Shield className="w-4 h-4 text-red-500" />
@@ -151,7 +152,7 @@ export default function Settings({ role = 'resident' }) {
           
           {/* 3. Estate Details */}
           {!isEstatePreferencesHidden && (
-            <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)] overflow-hidden">
+            <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
                 <div className="px-6 py-4 bg-gray-50/50 dark:bg-gray-800/50 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
                     <Building className="w-4 h-4 text-purple-500" />
@@ -211,7 +212,7 @@ export default function Settings({ role = 'resident' }) {
           )}
 
           {/* 4. Notifications */}
-          <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)] overflow-hidden">
+          <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
              <div className="px-6 py-4 bg-gray-50/50 dark:bg-gray-800/50 flex items-center gap-3 ">
                <div className="w-8 h-8 rounded-lg bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center">
                   <Bell className="w-4 h-4 text-orange-500" />

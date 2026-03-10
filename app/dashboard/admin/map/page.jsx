@@ -1,14 +1,10 @@
-import ComingSoon from '@/components/ComingSoon'
+import MapPage from '@/components/Map'
 import React from 'react'
 
 const page = () => {
   return (
     <div>
-        <ComingSoon
-            title="Map"
-            description="Manage map of the estate."
-            image="/images/coming-soon.png"
-        />
+        <MapPage role="admin" />
     </div>
   )
 }

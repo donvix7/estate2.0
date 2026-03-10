@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, User, MoreHorizontal, Eye, Edit, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CleanTable } from '@/components/ui/CleanTable';
+import { AlertModal } from '@/components/ui/AlertModal';
 
 const mockAPI = {
   async getAllProfiles() {
@@ -60,6 +61,7 @@ export default function ProfileList() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedActionProfile, setSelectedActionProfile] = useState(null);
   const [actionMenuPos, setActionMenuPos] = useState({ top: 0, left: 0 });
+  const [profileToDelete, setProfileToDelete] = useState(null);
 
   useEffect(() => {
     const loadProfiles = async () => {
@@ -107,6 +109,13 @@ export default function ProfileList() {
     router.push(`/dashboard/admin/users/${profile.id}`);
   };
 
+  const confirmDelete = () => {
+    if (profileToDelete) {
+      setProfiles(prev => prev.filter(p => p.id !== profileToDelete.id));
+      setProfileToDelete(null);
+    }
+  };
+
   const handleAction = (e, action, profile) => {
     e.stopPropagation();
     setSelectedActionProfile(null);
@@ -115,11 +124,7 @@ export default function ProfileList() {
     } else if (action === 'edit') {
       router.push(`/dashboard/admin/users/${profile.id}?edit=true`);
     } else if (action === 'delete') {
-      // In a real app we would usually trigger a modal here
-      // For now, prompt the user natively or alert them
-      if (window.confirm(`Are you sure you want to delete ${profile.name}?`)) {
-        setProfiles(prev => prev.filter(p => p.id !== profile.id));
-      }
+      setProfileToDelete(profile);
     }
   };
 
@@ -180,8 +185,8 @@ export default function ProfileList() {
 
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 flex items-center justify-center">
-         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="bg-white/90 dark:bg-slate-900/80 rounded-xl shadow-sm p-8 flex items-center justify-center">
+         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1241a1]"></div>
       </div>
     );
   }
@@ -192,7 +197,7 @@ export default function ProfileList() {
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+    <div className="bg-white/90 dark:bg-slate-900/80 rounded-xl shadow-sm p-6">
       {/* Search & Filters */}
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="flex-1">
@@ -202,7 +207,7 @@ export default function ProfileList() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by name, email, phone, or role..."
-              className="w-full p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-transparent dark:bg-gray-800/50"
+              className="w-full p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
             />
             <span className="absolute left-3 top-3 text-gray-400"><Search className="w-5 h-5" /></span>
           </div>
@@ -212,7 +217,7 @@ export default function ProfileList() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-white dark:bg-gray-800/50"
+            className="p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -400,6 +405,17 @@ export default function ProfileList() {
           </div>
         </div>
       )}
+
+      <AlertModal
+        isOpen={!!profileToDelete}
+        onClose={() => setProfileToDelete(null)}
+        onConfirm={confirmDelete}
+        title="Confirm Deletion"
+        message={`Are you sure you want to permanentely delete the profile for ${profileToDelete?.name}? This action cannot be undone.`}
+        confirmText="Delete User"
+        type="error"
+        showCancel={true}
+      />
     </div>
   );
 }

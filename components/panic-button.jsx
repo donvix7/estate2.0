@@ -1,12 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { AlertModal } from './ui/AlertModal'
+import { toast } from 'react-toastify'
 
 export function PanicButton() {
   const [isPanicking, setIsPanicking] = useState(false)
   const [countdown, setCountdown] = useState(5)
   const [showPin, setShowPin] = useState(false)
   const [pin, setPin] = useState('')
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, title: '', message: '', type: 'info' })
 
   const handlePanic = () => {
     if (!isPanicking) {
@@ -25,13 +28,18 @@ export function PanicButton() {
   const handlePinSubmit = () => {
     if (pin === '0000') { // Default emergency PIN
       // Send panic alert
-      alert(' PANIC ALERT SENT! Security and Admin notified!')
+      setAlertConfig({
+        isOpen: true,
+        title: 'Emergency Alert Sent!',
+        message: 'Panic alert has been successfully broadcasted. Security and Admin have been notified of your location.',
+        type: 'success'
+      })
       setIsPanicking(false)
       setShowPin(false)
       setPin('')
       // Here you would make API call
     } else {
-      alert('Incorrect PIN')
+      toast.error('Incorrect Emergency PIN')
     }
   }
 
@@ -42,7 +50,12 @@ export function PanicButton() {
     } else if (countdown === 0 && isPanicking) {
       // Auto-trigger without PIN after countdown
       timer = setTimeout(() => {
-        alert(' PANIC ALERT SENT! Security and Admin notified!')
+        setAlertConfig({
+          isOpen: true,
+          title: 'Emergency Alert Sent!',
+          message: 'Panic alert has been auto-triggered. Security and Admin have been notified.',
+          type: 'success'
+        })
         setIsPanicking(false)
         setShowPin(false)
         setCountdown(5)
@@ -54,29 +67,30 @@ export function PanicButton() {
   return (
     <div className="flex flex-col items-center">
       {showPin ? (
-        <div className="bg-red-50 p-6 rounded-xl border-red-200">
-          <h3 className="text-red-700 font-semibold mb-4">Emergency Panic System</h3>
+        <div className="bg-red-50 dark:bg-red-900/10 p-8 rounded-3xl animate-in zoom-in-95 duration-300">
+          <h3 className="text-red-700 dark:text-red-400 font-black mb-4 tracking-tight text-lg">Emergency Panic System</h3>
           <div className="mb-4">
             <label className="block text-sm text-gray-600 mb-2">Enter Panic PIN (or wait {countdown}s)</label>
             <input
+              autoFocus
               type="password"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
-              className="w-full p-2 border-red-300 rounded"
-              placeholder="Enter 0000 for demo"
+              className="w-full px-5 py-4 rounded-2xl bg-white dark:bg-slate-900 border-none text-center text-2xl font-black tracking-[0.5em] text-red-600 focus:ring-2 focus:ring-red-500/20 outline-none transition-all shadow-sm"
+              placeholder="••••"
               maxLength="4"
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-4">
             <button
               onClick={handlePinSubmit}
-              className="flex-1 bg-red-600 text-white py-2 rounded hover:bg-red-700"
+              className="flex-1 bg-red-600 text-white py-4 rounded-2xl font-black shadow-lg shadow-red-600/20 hover:brightness-110 active:scale-95 transition-all"
             >
-              Confirm Emergency
+              Emergency
             </button>
             <button
               onClick={handleCancel}
-              className="flex-1 bg-gray-200 text-gray-800 py-2 rounded hover:bg-gray-300"
+              className="flex-1 bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 py-4 rounded-2xl font-bold hover:brightness-110 active:scale-95 transition-all"
             >
               Cancel
             </button>
@@ -94,9 +108,17 @@ export function PanicButton() {
           {isPanicking ? countdown : 'PANIC'}
         </button>
       )}
-      <p className="mt-4 text-sm text-gray-300 text-center">
+      <p className="mt-4 text-sm text-slate-500 text-center max-w-[200px] leading-relaxed">
         Press in case of emergency. Alerts security and admin immediately.
       </p>
+
+      <AlertModal
+        isOpen={alertConfig.isOpen}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        title={alertConfig.title}
+        message={alertConfig.message}
+        type={alertConfig.type}
+      />
     </div>
   )
 }

@@ -17,6 +17,7 @@ import {
   CheckCircle2
 } from 'lucide-react'
 import { api } from '@/services/api'
+import { toast } from 'react-toastify'
 
 // Convert the URL slug back to a readable title
 const formatCaseTitle = (slug) => {
@@ -88,7 +89,7 @@ export default function EmergencyForm({ caseType }) {
       router.push('/dashboard/resident/emergency')
     } catch (error) {
       console.error('Failed to dispatch emergency:', error)
-      alert('Failed to send emergency request. Please try again or call emergency contacts directly.')
+      toast.error('Failed to send emergency request. Please try again or call emergency contacts directly.')
     } finally {
       setIsSubmitting(false)
     }
@@ -136,7 +137,7 @@ export default function EmergencyForm({ caseType }) {
             {/* Form Section */}
             <form id="emergency-form" onSubmit={handleSubmit} className="space-y-6">
                 {/* Location Field */}
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)]">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
                     <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
                         Exact Location
                     </label>
@@ -154,7 +155,7 @@ export default function EmergencyForm({ caseType }) {
                 </div>
 
                 {/* Description Field */}
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)]">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
                     <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
                         Situation Brief
                     </label>
@@ -169,7 +170,7 @@ export default function EmergencyForm({ caseType }) {
                 </div>
 
                 {/* Media (UI Only) */}
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)]">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
                     <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
                         Attach Evidence (Optional)
                     </label>
@@ -197,7 +198,7 @@ export default function EmergencyForm({ caseType }) {
                     placeholder="Search emergency services..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white dark:bg-gray-800 border-none text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)] font-medium"
+                    className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white dark:bg-gray-800 border-none text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all shadow-sm font-medium"
                   />
                   <Search className="w-5 h-5 text-gray-400 absolute left-4 top-3.5" />
                 </div>
@@ -211,9 +212,8 @@ export default function EmergencyForm({ caseType }) {
                         {filteredContacts.length > 0 ? (
                             filteredContacts.map(contact => {
                                 const caseMainType = caseType?.split('-')[0].toLowerCase()
-                                const isRecommended = contact.type?.toLowerCase() === caseMainType;
                                 return (
-                                <div key={contact.id} className={`flex flex-col p-4 rounded-xl border-none ${isRecommended ? 'bg-red-50/50 dark:bg-red-500/10' : 'bg-white dark:bg-gray-800 shadow-[0_4px_30px_rgb(0,0,0,0.03)]'}`}>
+                                <div key={contact.id} className={`flex flex-col p-4 rounded-xl border-none ${isRecommended ? 'bg-red-50/50 dark:bg-red-500/10' : 'bg-white dark:bg-gray-800 shadow-sm'}`}>
                                     <div className="flex justify-between items-start mb-3">
                                         <div>
                                             <div className="font-bold text-gray-900 dark:text-white flex items-center gap-2">

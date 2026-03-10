@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Building2, Shield, User, Users, KeyRound, LogIn, AlertCircle, CheckCircle2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
 // Hardcoded user database simulation
@@ -32,7 +31,7 @@ const USER_DATABASE = {
   sessions: []
 }
 
-// Mock API functions (Unchanged logic)
+// Mock API functions
 const mockAPI = {
   async authenticateUser(email, password, userType) {
     await new Promise(resolve => setTimeout(resolve, 800))
@@ -76,39 +75,13 @@ const mockAPI = {
   }
 }
 
-const CAROUSEL_IMAGES = [
-  { 
-    url: "https://images.unsplash.com/photo-1592595896551-12b371d546d5?q=80&w=2600&auto=format&fit=crop",
-    alt: "Community: Gated Community Street"
-  },
-  { 
-    url: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2600&auto=format&fit=crop",
-    alt: "Security: Concierge & Security"
-  },
-  { 
-    url: "https://images.unsplash.com/photo-1581578731117-e08f542e9466?q=80&w=2600&auto=format&fit=crop",
-    alt: "Service: Engineering & Maintenance"
-  },
-  { 
-    url: "https://images.unsplash.com/photo-1540497077202-7c8a3999166f?q=80&w=2600&auto=format&fit=crop",
-    alt: "Amenities: Premium Fitness Center"
-  }
-]
-
 export default function LoginPage() {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % CAROUSEL_IMAGES.length)
-    }, 5000)
-    return () => clearInterval(timer)
-  }, [])
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [userType, setUserType] = useState('resident')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const router = useRouter()
 
   const handleLogin = async (e) => {
@@ -132,262 +105,183 @@ export default function LoginPage() {
           case 'admin':
             router.push('/dashboard/admin')
             break
-         }
+        }
       }
     } catch (err) {
-      setError('Invalid credentials. Use demo credentials: email@demo.com / 123456')
+      setError('Invalid credentials. Use demo credentials.')
       setIsLoading(false)
     }
   }
 
-  const getDemoCredentials = () => {
-    const user = USER_DATABASE.users.find(u => u.type === userType)
-    return {
-      email: user?.email || `${userType}@demo.com`,
-      password: '123456',
-      name: user?.name || `${userType.charAt(0).toUpperCase() + userType.slice(1)} User`
-    }
-  }
-
-  const demoCredentials = getDemoCredentials()
-
-  const userTypeConfig = {
-    resident: { icon: <Building2 className="w-5 h-5" />, color: 'bg-blue-600' },
-    admin: { icon: <Shield className="w-5 h-5" />, color: 'bg-indigo-600' },
-    security: { icon: <Users className="w-5 h-5" />, color: 'bg-emerald-600' },
-    staff: { icon: <User className="w-5 h-5" />, color: 'bg-orange-600' }
-  }
-
-  const userTypeLabels = {
-    resident: 'Resident',
-    admin: 'Admin',
-    security: 'Security',
-    staff: 'Staff'
-  }
-
   return (
-    <div className="min-h-screen w-full flex bg-gray-50 overflow-hidden">
-      {/* Left Side - Image & Branding */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gray-900"
+    <div className="relative min-h-screen w-full flex flex-col items-center justify-center p-4 overflow-hidden bg-background-light dark:bg-background-dark font-sans selection:bg-[#1241a1]/10 selection:text-[#1241a1]">
+      {/* Background Image with Overlay */}
+      <div 
+        className="absolute inset-0 z-0 bg-center bg-cover bg-no-repeat opacity-20 transition-opacity duration-1000"
+        style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2000&auto=format&fit=crop")' }}
       >
-         <div
-            key={currentImageIndex}
-           className="absolute inset-0 z-0"
-          >
-            <img 
-               src={CAROUSEL_IMAGES[currentImageIndex].url}
-               alt={CAROUSEL_IMAGES[currentImageIndex].alt}
-               className="w-full h-full object-cover"
-            />
-          </div>
-              <div className="absolute inset-0 bg-linear-to-b from-transparent to-gray-900/90 z-10" />
+      </div>
+      <div className="absolute inset-0 z-10 bg-linear-to-b from-[#111621]/80 via-[#111621] to-[#111621]"></div>
       
-      <div className="relative z-20 flex flex-col justify-between h-full p-12 text-white">
-        <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/10 backdrop-blur-md flex items-center justify-center rounded-sm border-white/20 shadow-lg">
-              <Shield className="w-6 h-6 text-white" />
+      {/* Main Login Card */}
+      <div className="relative z-20 w-full max-w-[960px] flex flex-col md:flex-row bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl rounded-xl overflow-hidden shadow-2xl">
+        
+        {/* Left Side: Visual/Context (Hidden on small screens) */}
+        <div className="hidden md:flex flex-1 flex-col justify-between p-10 bg-[#1241a1]/10">
+          <div>
+            <div className="flex items-center gap-2 mb-8 cursor-pointer group" onClick={() => router.push('/')}>
+              <div className="p-2 bg-[#1241a1] rounded-lg text-white shadow-lg group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined">domain</span>
+              </div>
+              <h1 className="text-2xl font-bold tracking-tight text-slate-100">EstatePro</h1>
             </div>
-            <span className="font-bold text-xl tracking-tight">EstateSecure</span>
-        </div>
-
-        <div className="space-y-8">
-          <div 
-            
-            
-            
-            className="max-w-md bg-white/5 backdrop-blur-sm p-8 rounded-lg border-white/10 shadow-2xl"
-          >
-            <h2 className="text-4xl font-bold mb-6 leading-tight">
-              Secure Living,<br />
-              Simplified Management.
-            </h2>
-            <p className="text-lg text-white/80 leading-relaxed mb-8 font-light">
-              Experience the next generation of community living. 
-              Advanced security, seamless payments, and instant communication 
-              all in one professional dashboard.
-            </p>
-            
-            <div className="flex items-center gap-6 text-sm text-white/70">
-              <div className="flex items-center gap-2">
-                <div className="p-1 bg-emerald-500/20 rounded-full">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                </div>
-                <span>Enterprise Security</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="p-1 bg-emerald-500/20 rounded-full">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                </div>
-                <span>24/7 Monitoring</span>
-              </div>
+            <h2 className="text-3xl font-bold leading-tight text-white mb-4 italic">Next-Gen Estate Management</h2>
+            <p className="text-slate-400 text-lg leading-relaxed">Experience the ultimate all-in-one suite designed for luxury residences and smart communities.</p>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 text-slate-300">
+              <span className="material-symbols-outlined text-[#1241a1]">verified_user</span>
+              <span className="text-sm font-medium">Enterprise Grade Security</span>
+            </div>
+            <div className="flex items-center gap-3 text-slate-300">
+              <span className="material-symbols-outlined text-[#1241a1]">support_agent</span>
+              <span className="text-sm font-medium">24/7 Professional Support</span>
             </div>
           </div>
+        </div>
 
-          {/* Carousel Indicators */}
-          <div className="flex gap-2">
-            {CAROUSEL_IMAGES.map((_, idx) => (
-              <div 
-                key={idx} 
-                onClick={() => setCurrentImageIndex(idx)}
-                className={`h-1 cursor-pointer transition-all duration-500 rounded-full ${
-                  idx === currentImageIndex ? 'w-8 bg-white' : 'w-2 bg-white/30 hover:bg-white/50'
-                }`}
+        {/* Right Side: Login Form */}
+        <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
+          <div className="mb-8 text-center md:text-left">
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Welcome Back</h3>
+            <p className="text-slate-500 dark:text-slate-400">Please select your account type to continue</p>
+          </div>
+
+          {/* Role Selector */}
+          <div className="flex h-12 w-full items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 p-1 mb-8 shadow-inner">
+            <label className={`flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 text-sm font-semibold transition-all ${userType === 'resident' ? 'bg-[#1241a1] text-white shadow-lg' : 'text-slate-500 dark:text-slate-400 hover:text-[#1241a1]'}`}>
+              <span className="truncate">Resident</span>
+              <input 
+                type="radio" 
+                name="userType" 
+                value="resident"
+                className="sr-only"
+                checked={userType === 'resident'}
+                onChange={() => setUserType('resident')}
               />
-            ))}
+            </label>
+            <label className={`flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 text-sm font-semibold transition-all ${userType === 'admin' ? 'bg-[#1241a1] text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}>
+              <span className="truncate">Admin / Staff</span>
+              <input 
+                type="radio" 
+                name="userType" 
+                value="admin"
+                className="sr-only"
+                checked={userType === 'admin'}
+                onChange={() => setUserType('admin')}
+              />
+            </label>
           </div>
-        </div>
 
-        <div className="text-sm text-white/40 font-medium">
-          © {new Date().getFullYear()} EstateSecure Inc. All rights reserved.
+          {error && (
+            <div className="mb-6 p-4 bg-red-500/10 rounded-xl flex items-start gap-3 text-red-400 animate-in fade-in slide-in-from-top-2">
+              <span className="material-symbols-outlined text-sm mt-0.5">error_outline</span>
+              <p className="text-xs font-medium leading-relaxed">{error}</p>
+            </div>
+          )}
+
+          {/* Form Inputs */}
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-slate-300 ml-1">Email Address</label>
+              <div className="relative group">
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-[#1241a1] transition-colors">mail</span>
+                <input 
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white pl-12 pr-4 py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] outline-none transition-all placeholder:text-slate-500 shadow-sm"
+                  placeholder={userType === 'resident' ? 'resident@demo.com' : 'admin@demo.com'}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-slate-300 ml-1">Password</label>
+              <div className="relative group">
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-[#1241a1] transition-colors">lock</span>
+                <input 
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white pl-12 pr-12 py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] outline-none transition-all placeholder:text-slate-500 shadow-sm"
+                  placeholder="••••••••"
+                  required
+                />
+                <button 
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                >
+                  <span className="material-symbols-outlined">{showPassword ? 'visibility_off' : 'visibility'}</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between py-1">
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input type="checkbox" className="rounded bg-slate-800 text-[#1241a1] focus:ring-[#1241a1]/30 transition-all pointer-events-none" />
+                <span className="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">Remember me</span>
+              </label>
+              <a href="#" className="text-sm font-semibold text-[#1241a1] hover:text-blue-400 transition-colors">Forgot Password?</a>
+            </div>
+
+            <button 
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-[#1241a1] hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-xl shadow-[#1241a1]/20 transition-all transform active:scale-95 flex items-center justify-center gap-2"
+            >
+              {isLoading ? (
+                <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <span className="material-symbols-outlined">login</span>
+              )}
+              {isLoading ? 'Authenticating...' : 'Sign In to Dashboard'}
+            </button>
+          </form>
+
+          {/* Auto-fill Hint */}
+          <div className="mt-8 p-4 bg-slate-800/30 rounded-xl text-center">
+            <p className="text-xs text-slate-500 mb-2 font-medium">Quick Access</p>
+            <button 
+              type="button"
+              onClick={() => {
+                setEmail(userType === 'resident' ? 'resident@demo.com' : 'admin@demo.com')
+                setPassword('123456')
+              }}
+              className="text-xs font-bold text-[#1241a1] hover:text-blue-400 flex items-center justify-center gap-1 mx-auto transition-colors"
+            >
+              <span className="material-symbols-outlined text-[14px]">auto_fix</span>
+              Auto-fill Demo Details
+            </button>
+          </div>
+
+          <div className="mt-8 text-center pt-8">
+            <p className="text-slate-400 text-sm">
+              New to the estate? 
+              <Link href="/register" className="text-[#1241a1] font-bold ml-1 hover:underline">Request Access</Link>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
 
-      {/* Right Side - Login Form */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center p-8 md:p-12 lg:p-16 relative bg-white">
-        <div className="absolute top-8 left-8 lg:hidden">
-            <Link href="/" className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors">
-                <ArrowLeft className="w-4 h-4" />
-                <span>Back to Home</span>
-            </Link> 
-        </div>
-
-        <div className="max-w-md w-full mx-auto space-y-8">
-            <div className="text-center lg:text-left">
-                <div>
-                  <h1 className="text-3xl lg:text-4xl font-bold text-gray-700 mb-3 tracking-tight">Welcome Back</h1>
-                  <p className="text-gray-500 text-lg">Sign in to access your dashboard</p>
-                </div>
-            </div>
-
-            <form onSubmit={handleLogin} className="space-y-6 bg-gradient-to-b from-gray-200 via-white to-white p-6 rounded-lg">
-                {/* User Type Selection */}
-                <div className="space-y-3">
-                    <label className="text-sm font-semibold text-gray-900 tracking-wide">SELECT YOUR ROLE</label>
-                    <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
-                        {['resident', 'admin'].map((type) => (
-                        <button
-                            key={type}
-                            type="button"
-                            onClick={() => {
-                                setUserType(type)
-                                const creds = USER_DATABASE.users.find(u => u.type === type)
-                                setEmail(creds?.email || '')
-                            }}
-                            className={`
-                                relative flex flex-col items-center justify-center p-4 gap-2 rounded-lg transition-all duration-200
-                                ${userType === type 
-                                    ? 'bg-gray-900 text-white' 
-                                    : 'hover:shadow-lg'
-                                }
-                            `}
-                        >
-                            {userTypeConfig[type].icon}
-                            <span className="text-sm font-medium">{userTypeLabels[type]}</span>
-                            {userType === type && (
-                              <div
-                                
-                                className="absolute top-2 right-2 w-2 h-2 bg-white rounded-full"
-                              />
-                            )}
-                        </button>
-                        ))}
-                    </div>
-                </div>
-
-                  {error && (
-                      <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg border-red-100 text-sm flex items-start gap-2 overflow-hidden">
-                          <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
-                          <span className="flex-1">{error}</span>
-                      </div>
-                  )}
-                
-                <div className="space-y-5">
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-900">Email Address</label>
-                        <div className="relative group">
-                            <User className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full p-4 pr-12 bg-gray-50 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all text-gray-900 placeholder:text-gray-400 focus:bg-white"
-                                placeholder={demoCredentials.email}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                         <div className="flex items-center justify-between">
-                            <label className="text-sm font-medium text-gray-900">Password</label>
-                            <a href="#" className="text-xs text-blue-600 font-medium hover:underline">Forgot password?</a>
-                        </div>
-                        <div className="relative group">
-                            <KeyRound className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full p-4 pr-12 bg-gray-50 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all text-gray-900 placeholder:text-gray-400 focus:bg-white"
-                                placeholder="••••••••"
-                                required
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <button
-                    type="submit"
-                      disabled={isLoading}
-                      className="w-full py-4 hover:bg-gray-900 hover:text-white text-gray-900 font-bold rounded-lg transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed hover:shadow-gray-900/25 flex items-center justify-center gap-2"
-                >
-                    {isLoading ? (
-                        <>
-                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            <span>Signing In...</span>
-                        </>
-                    ) : (
-                        <>
-                            <LogIn className="w-5 h-5" />
-                            <span>Sign In</span>
-                        </>
-                    )}
-                </button>
-
-                <div className="mt-6 pt-6 ">
-                  <div className="bg-blue-50/50 p-4 shadow-lg rounded-lg">
-                    <div className="flex items-start gap-3">
-                       <div className="p-2 bg-blue-100 rounded-lg text-blue-600 shrink-0">
-                          <CheckCircle2 className="w-4 h-4" />
-                       </div>
-                       <div className="flex-1 space-y-1">
-                          <p className="text-sm font-semibold text-blue-900">Demo Credentials Available</p>
-                          <p className="text-xs text-blue-700">
-                            Use <span className="font-mono bg-blue-100 px-1.5 py-0.5 rounded text-blue-900 font-bold">{demoCredentials.email}</span>  
-                            {' '}&{' '}<span className="font-mono bg-blue-100 px-1.5 py-0.5 rounded text-blue-900 font-bold">123456</span>
-                          </p>
-                          
-                          <button
-                            type="button"
-                            onClick={() => {
-                                setEmail(demoCredentials.email)
-                                setPassword('123456')
-                            }}
-                            className="text-xs text-blue-600 font-bold hover:text-blue-800 hover:underline mt-2 inline-flex items-center gap-1 transition-colors"
-                          >
-                            Auto-fill Credentials <ArrowLeft className="w-3 h-3 rotate-180" />
-                          </button>
-                       </div>
-                    </div>
-                  </div>
-                </div>
-            </form>
-            
-            <p className="text-center text-sm text-gray-500">
-                Don&apos;t have an account? <Link href="/register" className="text-blue-600 font-bold hover:underline transition-all">Register your estate</Link>
-            </p>
-        </div>
+      {/* Optional Bottom Navigation/Links */}
+      <div className="mt-8 flex gap-6 text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] opacity-60">
+        <a className="hover:text-[#1241a1] transition-colors" href="#">Privacy Policy</a>
+        <a className="hover:text-[#1241a1] transition-colors" href="#">Terms of Service</a>
+        <a className="hover:text-[#1241a1] transition-colors" href="#">Help Center</a>
       </div>
     </div>
   )

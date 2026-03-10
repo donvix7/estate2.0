@@ -7,6 +7,7 @@ import LostAndFoundTable from '@/components/admin/LostAndFoundTable';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { FilterBar } from '@/components/ui/FilterBar';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
+import { toast } from 'react-toastify';
 
 export default function LostAndFoundPage() {
   const [items, setItems] = useState([]);
@@ -53,7 +54,7 @@ export default function LostAndFoundPage() {
       >
         <button 
           className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 rounded-xl font-medium shadow-[0_4px_24px_rgba(168,85,247,0.25)] transition-all active:scale-95 border-none"
-          onClick={() => alert("Report Found Item clicked")}
+          onClick={() => toast.info("Report Found Item feature coming soon.")}
         >
           <Plus className="w-5 h-5" />
           Report Item

@@ -34,7 +34,7 @@ const StaffPage = () => {
     <div>
         {/* STAFF TAB */}
             <div className="space-y-6">
-               <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border-gray-200 dark:border-gray-700">
+               <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg">
                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">Staff Directory</h2>
                  <button className="px-4 py-2 bg-gray-900 dark:bg-gray-700 hover:bg-gray-800 dark:hover:bg-gray-600 text-white rounded-lg transition-colors text-sm font-medium">
                    + Add Staff
@@ -43,7 +43,7 @@ const StaffPage = () => {
                
                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                  {staffMembers.map(staff => (
-                   <div key={staff.id} className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 p-6 rounded-lg hover:border-gray-300 dark:hover:border-gray-600 transition-all">
+                   <div key={staff.id} className="bg-white/90 dark:bg-slate-900/80 p-6 rounded-xl shadow-md hover:shadow-lg transition-all">
                      <div className="flex items-center gap-4 mb-4">
                        <div className="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
                          <Briefcase className="w-6 h-6 text-gray-600 dark:text-gray-400" />

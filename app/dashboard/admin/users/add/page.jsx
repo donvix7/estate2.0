@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BackButton } from '@/components/ui/BackButton';
+import { toast } from 'react-toastify';
 
 const mockAPI = {
   // Add new profile
@@ -55,12 +56,12 @@ export default function AddUserPage() {
     try {
       const result = await mockAPI.addProfile(formData);
       if (result.success) {
-        alert('Person added successfully!');
+        toast.success(`${formData.name} added successfully!`);
         router.push('/dashboard/admin/users');
       }
     } catch (error) {
       console.error('Error adding profile:', error);
-      alert('Error adding person. Please try again.');
+      toast.error('Error adding person. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -80,11 +81,11 @@ export default function AddUserPage() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
         <form onSubmit={handleAddProfile} className="p-6 md:p-8 space-y-8">
           
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-2">
+            <h3 className="text-lg font-black text-gray-900 dark:text-white pb-2 tracking-tight">
               Basic Information
             </h3>
             
@@ -95,7 +96,7 @@ export default function AddUserPage() {
                   name="type"
                   value={formData.type}
                   onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-white dark:bg-gray-800/50"
+                  className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
                 >
                   <option value="resident">Resident</option>
                   <option value="staff">Staff</option>
@@ -109,7 +110,7 @@ export default function AddUserPage() {
                   name="status"
                   value={formData.status}
                   onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-white dark:bg-gray-800/50"
+                  className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
                 >
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
@@ -125,7 +126,7 @@ export default function AddUserPage() {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-transparent dark:bg-gray-800/50"
+                  className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
                   placeholder="Enter full name"
                 />
               </div>
@@ -137,7 +138,7 @@ export default function AddUserPage() {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-transparent dark:bg-gray-800/50"
+                  className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
                   placeholder="email@example.com"
                 />
               </div>
@@ -149,7 +150,7 @@ export default function AddUserPage() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-transparent dark:bg-gray-800/50"
+                  className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
                   placeholder="+1 234 567 890"
                 />
               </div>
@@ -170,7 +171,7 @@ export default function AddUserPage() {
                     name="unitNumber"
                     value={formData.unitNumber}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-transparent dark:bg-gray-800/50"
+                    className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
                     placeholder="e.g. A-101"
                   />
                 </div>
@@ -182,7 +183,7 @@ export default function AddUserPage() {
                     name="occupation"
                     value={formData.occupation}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-transparent dark:bg-gray-800/50"
+                    className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
                     placeholder="e.g. Engineer"
                   />
                 </div>
@@ -194,7 +195,7 @@ export default function AddUserPage() {
                     name="emergencyContact"
                     value={formData.emergencyContact}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-transparent dark:bg-gray-800/50"
+                    className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
                     placeholder="Emergency phone"
                   />
                 </div>
@@ -216,7 +217,7 @@ export default function AddUserPage() {
                     name="role"
                     value={formData.role}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-transparent dark:bg-gray-800/50"
+                    className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
                     placeholder="e.g. Cleaner"
                   />
                 </div>
@@ -228,7 +229,7 @@ export default function AddUserPage() {
                     name="department"
                     value={formData.department}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-transparent dark:bg-gray-800/50"
+                    className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
                     placeholder="e.g. Maintenance"
                   />
                 </div>
@@ -240,7 +241,7 @@ export default function AddUserPage() {
                      name="salary"
                      value={formData.salary}
                      onChange={handleInputChange}
-                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-transparent dark:bg-gray-800/50"
+                     className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
                      placeholder="e.g. $50,000"
                    />
                 </div>
@@ -262,7 +263,7 @@ export default function AddUserPage() {
                     name="badgeNumber"
                     value={formData.badgeNumber}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-transparent dark:bg-gray-800/50"
+                    className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
                     placeholder="e.g. SEC-001"
                   />
                 </div>
@@ -273,7 +274,7 @@ export default function AddUserPage() {
                     name="shift"
                     value={formData.shift}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-white dark:bg-gray-800/50"
+                    className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
                   >
                     <option value="">Select Shift</option>
                     <option value="Morning (6 AM - 2 PM)">Morning (6 AM - 2 PM)</option>
@@ -289,7 +290,7 @@ export default function AddUserPage() {
                      name="experience"
                      value={formData.experience}
                      onChange={handleInputChange}
-                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-transparent dark:bg-gray-800/50"
+                     className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
                      placeholder="e.g. 5 years"
                    />
                 </div>
@@ -308,7 +309,7 @@ export default function AddUserPage() {
             <button
               type="submit"
               disabled={!formData.name || isSubmitting}
-              className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-6 py-2.5 bg-primary text-white rounded-xl hover:brightness-110 font-bold shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95"
             >
               {isSubmitting ? 'Adding...' : 'Add Person'}
             </button>

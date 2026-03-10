@@ -8,6 +8,7 @@ import StatsCard from '@/components/StatsCard';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { FilterBar } from '@/components/ui/FilterBar';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
+import { toast } from 'react-toastify';
 
 export default function FinancePage() {
   const [invoices, setInvoices] = useState([]);
@@ -66,7 +67,7 @@ export default function FinancePage() {
       >
         <button 
           className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl font-medium shadow-[0_4px_24px_rgba(34,197,94,0.25)] transition-all active:scale-95 border-none"
-          onClick={() => alert("Issue New Invoice clicked")}
+          onClick={() => toast.info("Select a booking or service from the directory to issue an invoice.")}
         >
           <CopyPlus className="w-5 h-5" />
           Issue Invoice
@@ -106,7 +107,7 @@ export default function FinancePage() {
             onClick={() => setActiveTab('invoices')}
             className={`flex-1 md:flex-none px-6 py-2.5 rounded-lg font-medium text-sm whitespace-nowrap transition-colors border-none ${
               activeTab === 'invoices' 
-                ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)]' 
+                ? 'bg-white dark:bg-slate-800 text-gray-900 dark:text-white shadow-md' 
                 : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >
@@ -116,7 +117,7 @@ export default function FinancePage() {
             onClick={() => setActiveTab('transactions')}
             className={`flex-1 md:flex-none px-6 py-2.5 rounded-lg font-medium text-sm whitespace-nowrap transition-colors border-none ${
               activeTab === 'transactions' 
-                ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)]' 
+                ? 'bg-white dark:bg-slate-800 text-gray-900 dark:text-white shadow-md' 
                 : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >

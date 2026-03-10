@@ -80,7 +80,7 @@ export default function AnnouncementModal({ isOpen, onClose, onAnnouncementCreat
                 value={formData.title}
                 onChange={handleInputChange}
                 placeholder="E.g., Scheduled Power Outage"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all"
+                className="w-full px-4 py-3 rounded-xl border-none bg-slate-100 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 outline-none transition-all shadow-sm"
               />
             </div>
             
@@ -95,7 +95,7 @@ export default function AnnouncementModal({ isOpen, onClose, onAnnouncementCreat
                     name="type"
                     value={formData.type}
                     onChange={handleInputChange}
-                    className="w-full appearance-none px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all"
+                    className="w-full appearance-none px-4 py-3 rounded-xl border-none bg-slate-100 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 outline-none transition-all shadow-sm"
                   >
                     <option value="general">🟢 General Info</option>
                     <option value="maintenance">🟠 Maintenance</option>
@@ -118,7 +118,7 @@ export default function AnnouncementModal({ isOpen, onClose, onAnnouncementCreat
                     name="priority"
                     value={formData.priority}
                     onChange={handleInputChange}
-                    className="w-full appearance-none px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all"
+                    className="w-full appearance-none px-4 py-3 rounded-xl border-none bg-slate-100 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 outline-none transition-all shadow-sm"
                   >
                     <option value="low">Low</option>
                     <option value="normal">Normal</option>
@@ -143,7 +143,7 @@ export default function AnnouncementModal({ isOpen, onClose, onAnnouncementCreat
                 value={formData.message}
                 onChange={handleInputChange}
                 placeholder="Enter the full details of your announcement here..."
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all resize-none"
+                className="w-full px-4 py-3 rounded-xl border-none bg-slate-100 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 outline-none transition-all resize-none shadow-sm"
               ></textarea>
             </div>
             

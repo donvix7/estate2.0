@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Hash, Lock, Users } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 const CreateChannelModal = ({ isOpen, onClose }) => {
   const [channelName, setChannelName] = useState('');
@@ -92,10 +93,10 @@ const CreateChannelModal = ({ isOpen, onClose }) => {
            <button
              disabled={!channelName}
              onClick={() => {
-                alert(`Mock: Created #${channelName}`);
+                toast.success(`Channel #${channelName} created successfully!`);
                 onClose();
              }}
-             className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+             className="px-5 py-2.5 bg-[#1241a1] hover:brightness-110 text-white rounded-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95"
            >
              Create Channel
            </button>

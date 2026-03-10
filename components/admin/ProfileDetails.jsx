@@ -21,7 +21,7 @@ export default function ProfileDetails({
     <>
       {selectedProfile ? (
         <>
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sticky top-24">
+          <div className="bg-gray-100 dark:bg-gray-900 rounded-xl p-6 sticky top-24">
           {/* Profile Header */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">

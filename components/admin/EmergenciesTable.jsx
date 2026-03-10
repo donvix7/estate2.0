@@ -115,7 +115,7 @@ export default function EmergenciesTable({ emergencies, onResolveClick }) {
   );
 
   const renderMobileItem = (emg) => (
-    <div className={`p-4 rounded-xl border-l-4 ${emg.status === 'active' ? 'border-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'}`}>
+    <div className={`p-4 rounded-xl ${emg.status === 'active' ? 'border-l-4 border-red-500 bg-red-50 dark:bg-red-900/10' : 'bg-white dark:bg-gray-800 shadow-sm'}`}>
       <div className="flex justify-between items-start mb-3">
         <div className="flex items-center gap-3">
           <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${getUrgencyIconColor(emg.type)}`}>
@@ -153,7 +153,7 @@ export default function EmergenciesTable({ emergencies, onResolveClick }) {
       </div>
 
       {emg.status === 'active' && (
-        <div className="pt-3 border-t border-gray-200 dark:border-gray-700/50 flex justify-end">
+        <div className="pt-3 flex justify-end">
            <button 
              onClick={(e) => {
                e.stopPropagation();
@@ -169,7 +169,7 @@ export default function EmergenciesTable({ emergencies, onResolveClick }) {
   );
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)]">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30_rgb(0,0,0,0.2)] border-none">
         {/* Render the CleanTable component directly handling mobile styling using standard CSS classes within renderMobileItem instead of passing the entire component directly */}
         {/* CleanTable assumes a standard array with objects rendering rows unless customized. */}
        <CleanTable 

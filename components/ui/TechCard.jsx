@@ -12,11 +12,11 @@ export function TechCard({ children, className = '', hoverEffect = true, noPaddi
   return (
     <div 
       className={`
-        bg-white rounded-xl  shadow-sm 
-        ${hoverEffect ? 'hover:shadow-md transition-shadow duration-200' : ''} 
+        bg-white rounded-xl shadow-md 
+        ${hoverEffect ? 'hover:shadow-lg transition-shadow duration-200' : ''} 
         ${noPadding ? 'p-0 overflow-hidden' : 'p-4 sm:p-5 md:p-6'}
         ${className}
-        dark:bg-gray-800
+        dark:bg-slate-900/80
       `}
     >
       {children}

@@ -37,7 +37,7 @@ const HistoryPage = () => {
       {/* Bottom Section: History Table */}
       <div className="w-full">
          <TechCard noPadding className="overflow-hidden">
-             <div className="px-5 py-4 sm:px-6 sm:py-5 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 flex items-center justify-between">
+             <div className="px-5 py-4 sm:px-6 sm:py-5 bg-gray-50/50 dark:bg-gray-800/50 flex items-center justify-between">
                  <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white font-heading">Visitor History</h3>
                  <span className="text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 px-2.5 py-1 rounded-full">{visitors.length} total</span>
              </div>
@@ -54,10 +54,10 @@ const HistoryPage = () => {
                            <td className="px-5 py-4 sm:px-6 text-gray-500 dark:text-gray-400 capitalize whitespace-nowrap">{visitor.purpose}</td>
                            <td className="px-5 py-4 sm:px-6 text-gray-500 dark:text-gray-400 font-mono text-xs whitespace-nowrap">{visitor.time}</td>
                            <td className="px-5 py-4 sm:px-6 whitespace-nowrap">
-                               <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wide border ${
-                                   visitor.status === 'Active' ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:border-green-800/50 dark:text-green-400' :
-                                   visitor.status === 'Pending' ? 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800/50 dark:text-amber-400' :
-                                   'bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300'
+                               <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wide ${
+                                   visitor.status === 'Active' ? 'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400' :
+                                   visitor.status === 'Pending' ? 'bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400' :
+                                   'bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
                                }`}>
                                    {visitor.status}
                                </span>

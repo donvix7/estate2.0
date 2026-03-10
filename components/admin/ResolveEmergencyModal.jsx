@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Search, Phone, ShieldAlert, CheckCircle2, Loader2 } from 'lucide-react';
 import { api } from '@/services/api';
+import { toast } from 'react-toastify';
 
 export default function ResolveEmergencyModal({ emergency, onClose, onResolve }) {
   const [contacts, setContacts] = useState([]);
@@ -37,9 +38,10 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
         resolvedAt: new Date().toISOString()
       });
       onResolve();
+      toast.success('Emergency resolved successfully.');
     } catch (err) {
       console.error('Failed to resolve', err);
-      alert('Failed to resolve emergency.');
+      toast.error('Failed to resolve emergency.');
     } finally {
       setIsResolving(false);
     }
@@ -87,7 +89,7 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
         <div className="flex-1 overflow-y-auto p-8 pt-6 space-y-8 custom-scrollbar bg-gray-50/50 dark:bg-gray-900/50">
             
             {/* Alert Summary Box */}
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)]">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
               <div className="flex items-start justify-between mb-4">
                 <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400">
                   {emergency.type} Alert
@@ -119,7 +121,7 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
                     placeholder="Search emergency services..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white dark:bg-gray-800 border-none text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)]"
+                    className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white dark:bg-gray-800 border-none text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all shadow-sm"
                   />
                   <Search className="w-5 h-5 text-gray-400 absolute left-4 top-3.5" />
                 </div>
@@ -134,7 +136,7 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
                             filteredContacts.map(contact => {
                                 const isRecommended = contact.type.toLowerCase() === emergency?.type.toLowerCase();
                                 return (
-                                <div key={contact.id} className={`flex flex-col p-4 rounded-xl border-none ${isRecommended ? 'bg-red-50/50 dark:bg-red-500/10 shadow-sm' : 'bg-white dark:bg-gray-800 shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)]'}`}>
+                                <div key={contact.id} className={`flex flex-col p-4 rounded-xl border-none ${isRecommended ? 'bg-red-50/50 dark:bg-red-500/10 shadow-sm' : 'bg-white dark:bg-gray-800 shadow-sm'}`}>
                                     <div className="flex justify-between items-start mb-3 pb-3">
                                         <div>
                                             <div className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -154,7 +156,7 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
                                 </div>
                             )})
                         ) : (
-                            <div className="col-span-2 text-center py-8 bg-white dark:bg-gray-800 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
+                            <div className="col-span-2 text-center py-8 bg-white dark:bg-gray-800 rounded-xl">
                                <p className="text-sm text-gray-500">No contacts available.</p>
                             </div>
                         )}
@@ -169,7 +171,7 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
                   value={resolutionNote}
                   onChange={(e) => setResolutionNote(e.target.value)}
                   placeholder="Detail the response taken to resolve this emergency..."
-                  className="w-full p-4 bg-white dark:bg-gray-800 border-none rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all min-h-[120px] resize-y shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)]"
+                  className="w-full p-4 bg-white dark:bg-gray-800 border-none rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all min-h-[120px] resize-y shadow-sm"
                />
             </div>
         </div>

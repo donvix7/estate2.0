@@ -3,7 +3,7 @@
 :root {
   /* Core Palette - Sophisticated & Professional */
     /* Professional Real Estate Theme: Deep Navy & Warm Greys */
-    --background: 210 20% 98%;   /* Very light cool grey */
+    --background: 225 10% 97%;   /* #f6f6f8 (approx) */
     --foreground: 222 47% 11%;   /* Deep Navy almost black */
 
     --card: 0 0% 100%;
@@ -12,7 +12,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 222 47% 11%;      /* Deep Navy */
+    --primary: 220 80% 35%;      /* #1241a1 */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 215 16% 47%;    /* gray Grey */
@@ -60,7 +60,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Dark Mode: Deep Blue/Grey */
-    --background: 222 47% 11%;
+    --background: 222 31% 10%;   /* #111621 (approx) */
     --foreground: 210 40% 98%;
 
     --card: 217 33% 17%;

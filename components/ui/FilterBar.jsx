@@ -11,7 +11,7 @@ export function FilterBar({
   children
 }) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)] p-4 mb-6 flex flex-col sm:flex-row gap-4 border-none items-center justify-between">
+    <div className="bg-white/90 dark:bg-slate-900/80 rounded-3xl shadow-md p-4 mb-6 flex flex-col sm:flex-row gap-4 border-none items-center justify-between">
       
       {/* Optional Left Action Area (Tabs, Toggles) */}
       {children && (

@@ -190,8 +190,8 @@ const MVPFeatureCard = ({ feature, isActive, onClick, index}) => (
   <div
     className={`relative p-5 transition-all duration-300 cursor-pointer overflow-hidden rounded-2xl ${
       isActive
-        ? ' border-emerald-500 bg-white shadow-xl shadow-emerald-900/5'
-        : 'bg-slate-50/50 hover:border hover:border-emerald-300 hover:bg-white hover:shadow-lg'
+        ? ' bg-white shadow-xl shadow-emerald-900/5'
+        : 'bg-white/50 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-900/60 hover:shadow-lg'
     }`}
     onClick={onClick}
   >
@@ -199,7 +199,7 @@ const MVPFeatureCard = ({ feature, isActive, onClick, index}) => (
       <div className="flex items-start gap-4">
         <div className={`p-4 rounded-xl transition-all duration-300 ${
           isActive 
-            ? 'bg-linear-to-br from-emerald-500 to-emerald-700 text-white shadow-md border border-emerald-500'
+            ? 'bg-linear-to-br from-emerald-500 to-emerald-700 text-white shadow-md'
             : 'bg-slate-100 text-slate-500 group-hover:bg-emerald-50 group-hover:text-emerald-600'
         }`}>
           {feature.icon}
@@ -242,7 +242,7 @@ const AccessControlDemo = () => (
           <QrCode className="w-5 h-5 text-gray-600" />
           <h4 className="font-bold text-gray-900">Visitor Pass</h4>
         </div>
-        <div className=" border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
+        <div className=" p-6 rounded-lg text-center">
           <div className="inline-block p-4 bg-gray-100 mb-4">
             <QrCode className="w-24 h-24 text-gray-700" />
           </div>
@@ -263,7 +263,7 @@ const AccessControlDemo = () => (
             { time:'9:15 AM', name:'Sarah Miller', type:'Exit', status:'Completed'},
             { time:'8:45 AM', name:'Mike Wilson', type:'Entry', status:'Pending'}
           ].map((log, i) => (
-            <div key={i} className="flex items-center justify-between p-3 border-b border-gray-200">
+            <div key={i} className="flex items-center justify-between p-3">
               <div>
                 <p className="font-medium text-gray-900">{log.name}</p>
                 <p className="text-xs text-gray-500">{log.time} • {log.type}</p>
@@ -285,7 +285,7 @@ const AccessControlDemo = () => (
 
 const PanicEmergencyDemo = () => (
   <div
-    className="relative p-6 bg-white rounded-xl border-gray-100 h-full shadow-sm"
+    className="relative p-6 bg-white rounded-xl h-full shadow-sm"
   >
     <div className="text-center space-y-6">
       {/* Panic Button */}
@@ -299,7 +299,7 @@ const PanicEmergencyDemo = () => (
 
       {/* Alert Status */}
       <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-        <div className="p-4 border-gray-200 rounded-lg">
+        <div className="p-4 rounded-lg bg-gray-50/50">
           <p className="text-sm text-gray-600 mb-2">Alert Sent To</p>
           <div className="space-y-2">
             {['Estate Security','Admin Dashboard'].map((item, i) => (
@@ -311,7 +311,7 @@ const PanicEmergencyDemo = () => (
           </div>
         </div>
         
-        <div className="p-4 border-gray-200 rounded-lg">
+        <div className="p-4 rounded-lg bg-gray-50/50">
           <p className="text-sm text-gray-600 mb-2">Response Time</p>
           <p className="text-2xl font-bold text-gray-900">60s</p>
           <p className="text-xs text-gray-500 mt-1">Average</p>
@@ -327,7 +327,7 @@ const PaymentsDemo = () => (
   >
     <div className="space-y-6">
       {/* Paystack Header */}
-      <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+      <div className="flex items-center justify-between pb-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-linear-to-r from-gray-500 to-gray-600 rounded-lg flex items-center justify-center">
             <CreditCard className="w-6 h-6 text-white" />
@@ -381,7 +381,7 @@ const PaymentsDemo = () => (
       <div>
         <p className="font-medium text-gray-900 mb-3">Select Payment Method</p>
         <div className="grid grid-cols-3 gap-3 mb-6">
-          <button className="p-4 border-2 border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors text-center group">
+          <button className="p-4 rounded-lg hover:bg-green-50 transition-colors text-center group">
             <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mx-auto mb-2">
               <CreditCard className="w-5 h-5" />
             </div>
@@ -389,7 +389,7 @@ const PaymentsDemo = () => (
             <p className="text-xs text-gray-500 mt-1">Visa/Mastercard</p>
           </button>
           
-          <button className="p-4 border-2 border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors text-center group">
+          <button className="p-4 rounded-lg hover:bg-green-50 transition-colors text-center group">
             <div className="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mx-auto mb-2">
               <Smartphone className="w-5 h-5" />
             </div>
@@ -397,7 +397,7 @@ const PaymentsDemo = () => (
             <p className="text-xs text-gray-500 mt-1">Nigerian Banks</p>
           </button>
           
-          <button className="p-4 border-2 border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors text-center group">
+          <button className="p-4 rounded-lg hover:bg-green-50 transition-colors text-center group">
             <div className="w-10 h-10 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mx-auto mb-2">
               <QrCode className="w-5 h-5" />
             </div>
@@ -414,7 +414,7 @@ const PaymentsDemo = () => (
       </button>
 
       {/* Security Badge */}
-      <div className="flex items-center justify-center gap-2 p-3 bg-gray-50 border-gray-200 rounded-lg">
+      <div className="flex items-center justify-center gap-2 p-3 bg-gray-50 rounded-lg">
         <Shield className="w-4 h-4 text-green-600" />
         <span className="text-sm text-gray-600">Secured by Paystack • PCI DSS compliant</span>
       </div>
@@ -432,7 +432,7 @@ const PaymentsDemo = () => (
           { date:'May 15, 2024', amount:'₦85,000', status:'Paid', method:'Transfer'},
           { date:'Apr 15, 2024', amount:'₦80,000', status:'Partial', method:'USSD'}
         ].map((txn, i) => (
-          <div key={i} className="flex items-center justify-between p-3 border-b border-gray-200 hover:bg-gray-50 transition-colors">
+          <div key={i} className="flex items-center justify-between p-3 hover:bg-gray-50 transition-colors">
             <div>
               <div className="flex items-center gap-2">
                 <p className="font-medium text-gray-900">{txn.date}</p>
@@ -461,19 +461,19 @@ const AdminDashboardDemo = () => (
     <div className="space-y-6">
       {/* Dashboard Stats */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="p-4 border-gray-200 rounded-lg">
+        <div className="p-4 rounded-lg bg-gray-50/50">
           <p className="text-sm text-gray-600 mb-1">Active Residents</p>
           <p className="text-2xl font-bold">1,248</p>
         </div>
-        <div className="p-4 border-gray-200 rounded-lg">
+        <div className="p-4 rounded-lg bg-gray-50/50">
           <p className="text-sm text-gray-600 mb-1">Today&apos;s Visitors</p>
           <p className="text-2xl font-bold">24</p>
         </div>
-        <div className="p-4 border-gray-200 rounded-lg">
+        <div className="p-4 rounded-lg bg-gray-50/50">
           <p className="text-sm text-gray-600 mb-1">Pending Approvals</p>
           <p className="text-2xl font-bold">3</p>
         </div>
-        <div className="p-4 border-gray-200 rounded-lg">
+        <div className="p-4 rounded-lg bg-gray-50/50">
           <p className="text-sm text-gray-600 mb-1">Collection Rate</p>
           <p className="text-2xl font-bold">98%</p>
         </div>
@@ -513,7 +513,7 @@ const CommunicationDemo = () => (
           <h4 className="font-bold text-gray-900">Send Announcement</h4>
         </div>
         <textarea 
-          className="w-full h-32 p-3 border-gray-300 focus:border-gray-900 focus:outline-none rounded-lg"
+          className="w-full h-32 p-3 focus:outline-none rounded-lg bg-gray-50/50"
           placeholder="Type your announcement here..."
         />
         <button className="w-full py-3 bg-gray-900 text-white font-semibold hover:bg-gray-800 transition-colors">
@@ -529,7 +529,7 @@ const CommunicationDemo = () => (
           { title:'Security Alert: Suspicious Activity', time:'Yesterday', type:'Security'},
           { title:'Community Meeting Reminder', time:'2 days ago', type:'General'}
         ].map((announcement, i) => (
-          <div key={i} className="p-3 border-gray-200 rounded-lg">
+          <div key={i} className="p-3 rounded-lg bg-gray-50/50">
             <div className="flex justify-between items-start mb-1">
               <p className="font-medium">{announcement.title}</p>
               <span className={`px-2 py-1 text-xs ${
@@ -665,183 +665,106 @@ const StatsBar = () => {
 }
 
 export default function HomePage() {
-  const [activeFeature, setActiveFeature] = useState(0)
-  const [mounted, setMounted] = useState(false)
-  
   const router = useRouter()
-  const featuresRef = useRef(null)
-  const setupRef = useRef(null)
-
-  const carouselIntervalRef = useRef(null)
-
-  useEffect(() => {
-    const timer = setTimeout(() => setMounted(true), 0)
-    return () => {
-      clearTimeout(timer)
-      setMounted(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (mounted) {
-      carouselIntervalRef.current = setInterval(() => {
-        setActiveFeature(prev => (prev + 1) % MVP_FEATURES.length)
-      }, 10000)
-
-      return () => {
-        if (carouselIntervalRef.current) {
-          clearInterval(carouselIntervalRef.current)
-        }
-      }
-    }
-  }, [mounted])
-
-  const navigateFeature = (direction) => {
-    if (direction === 'next') {
-      setActiveFeature(prev => (prev + 1) % MVP_FEATURES.length)
-    } else {
-      setActiveFeature(prev => (prev - 1 + MVP_FEATURES.length) % MVP_FEATURES.length)
-    }
-  }
-
-  const handleFeatureClick = (index) => {
-    setActiveFeature(index)
-  }
-
-  const scrollToFeatures = () => {
-    featuresRef.current?.scrollIntoView({ behavior:'smooth'})
-  }
-  const scrollToSetup = () => {
-    setupRef.current?.scrollIntoView({ behavior:'smooth'})
-  }
+  
   const handleGetStarted = () => {
     router.push('/register')
   }
 
-  const handleScheduleDemo = () => {
-    router.push('/register')
+  const handleLearnMore = () => {
+    const featuresSection = document.getElementById('features')
+    featuresSection?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 overflow-hidden">
-      <Navigation/>
-      <main className="pt-20">
+    <div className="min-h-screen bg-[#f6f6f8] dark:bg-[#111621] text-slate-900 dark:text-slate-100 font-sans selection:bg-[#1241a1]/10 selection:text-[#1241a1]">
+      <Navigation />
+      
+      <main>
         {/* Hero Section */}
-        <section className="relative overflow-hidden hero-gradient py-20 lg:py-32">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="flex flex-col gap-8">
-              <div className="inline-flex items-center gap-2 bg-primary/20 text-emerald-800 dark:text-primary px-4 py-1.5 rounded-full w-fit">
-                <span className="material-symbols-outlined text-sm">verified</span>
-                <span className="text-xs font-bold uppercase tracking-widest">Next-Gen Management</span>
-              </div>
-              <h1 className="text-5xl lg:text-7xl font-black leading-[1.1] tracking-tight text-slate-900 dark:text-slate-50">
-                Elevate the Art of <span className="text-primary">Living.</span>
-              </h1>
-              <p className="text-lg lg:text-xl text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
-                The world&apos;s most sophisticated all-in-one management suite designed exclusively for luxury residences and elite property managers.
-              </p>
-              <div className="flex flex-wrap gap-4 pt-4">
-                <button onClick={handleGetStarted} className="bg-emerald-600 text-white text-lg font-bold px-10 py-4 rounded-2xl shadow-xl shadow-emerald-600/30 hover:shadow-emerald-600/50 hover:-translate-y-1 transition-all flex items-center gap-2 group">
-                  Get Started 
-                  <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                </button>
-               <button 
-                  onClick={scrollToFeatures} 
-                  className="bg-white text-slate-900 text-lg font-bold px-10 py-4 rounded-2xl shadow-lg hover:bg-emerald-600 hover:text-white hover:-translate-y-1 transition-all duration-300 ease-in-out"
-                >
-                  View Features
-                </button>
-              </div>
-              <div className="flex items-center gap-6 pt-8">
-                <div className="flex -space-x-3">
-                  <img 
-                    alt="User headshot of a property manager" 
-                    className="w-10 h-10 rounded-full border-2 border-emerald-500 dark:border-emerald-500" 
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcuhqVqpTvvUWMCnx1y16VFrWTgxzTuXKLmFdffguKm9_q0Juz2og0eWY_jmFGZfp3GmdqyGv0s_mX0g9hn6AUQ51fd941MoNh7OP94ZHpX6LOSJy6NN8KTjs8VRwCFO5jcE0x_iL5_c0oSaU8gUclI4d3VoSaUEdD1UpenXo8hwlngoTsmm_wo1vguXQFRttUyGx-36QsyaL9QeCDkkfUdbVFR3G83CbQcB-iP-w-oXkpu5m_SF6MhrmxjIi69EvcoRIp3Ln9U4c"
-                  />
-                  <img 
-                    alt="User headshot of a luxury resident" 
-                    className="w-10 h-10 rounded-full border-2 border-emerald-500 dark:border-emerald-500" 
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc3rI4uTDu4bTFFtcHNZP5cpJ81OgEmY9gdqUM-FXKuQ9XPTNrP4CnAWbuUZgp6Y2LdQYeVQecVpybBRnsbe0mQwlVF7JZiupnTkOPdDNVn1prz9ettLk55Z1Uzt7tQPRhp32iqz_MEiGe-RNSn_L9gqGPdi13YD1UDlaVDb51KRGIMGw2ks-sn3eqAZPbWoxzkkShe4V6J3Rav43-8DHBOVCW0-lZKH0IKGGbZf62wUW53Hdluxce1fjYimCltL5yFY6q6JVHWnM"
-                  />
-                  <img 
-                    alt="User headshot of a concierge" 
-                    className="w-10 h-10 rounded-full border-2 border-emerald-500 dark:border-emerald-500" 
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1d4kWeaElGb6OA4dg0sm2uarhYOoKNH1lIEVnblyB2oGazPtnBl7vYDFMlYzgtug9rZbmGmfDV01b8JiRXIMNdodoN6h8AuUhHxEiNCVAXYzZCay7nLrJm3ScAgucddpqBxgolsAYf1cTQJWNmBpkPNIYDYvyo7fdrjifkpdVh5oDptEYL5tbj1nRp1SvK0rt5pyQaPLo3-yh5k_kuyw7czntyeEqtTm0rmmGCYPxLDeaSGofOMdwRpR3HKlmFYXamnlBH4QO1os"
-                  />
-                </div>
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                  Trusted by <span className="text-slate-900 dark:text-slate-100 font-bold">500+ Luxury Estates</span> globally
-                </p>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="absolute -inset-4 bg-primary/20 rounded-4xl blur-2xl"></div>
-              <div className="relative rounded-xl overflow-hidden shadow-2xl">
-                <img 
-                  alt="Luxury modern villa exterior with swimming pool" 
-                  className="w-full h-full object-cover aspect-4/3" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOsxYoOvVJUHJHYJQReCVfr7pkXY65gpp37NxMDzgJ9A33xpBVnhBz0Gihs1Ijyd7TgAxpoUsSRih-bbHO6ROVvVFZMeT-lD-PdiII0gISgd7ZPpC3fqInC4GSK6_zdpjSHv-fBSSq_3ZPnwe9XdcX2b4FkaONZOOCj8TzY2oRxZgj2z4cDsbcYr0xzI9Jgq2tfait8U6CFUDRBIwdDlcRbrsq8wk77ekh67nBwN54lVwG5wkr0xO_0VZoRHpYjyhAU8kI-jGelWg"
-                />
-                <div className="absolute bottom-6 left-6 right-6 bg-white/50 backdrop-blur-md p-6 rounded-xl ">
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="font-bold text-lg">Morning Concierge Feed</span>
-                    <span className="bg-primary/20 text-emerald-800 dark:text-primary px-3 py-1 rounded-full text-xs font-bold">Active</span>
-                  </div>
-                  <div className="space-y-3"> <div className="flex items-center gap-3 p-3 rounded-lg"> <span className="material-symbols-outlined text-primary">directions_car</span> <span className="text-sm font-medium">Valet Service Request: Unit 402</span> </div> <div className="flex items-center gap-3 p-3 rounded-lg"> <span className="material-symbols-outlined text-primary">spa</span> <span className="text-sm font-medium">Amenity Booking: Rooftop Spa at 2:00 PM</span> </div> </div>
-                </div>
-              </div>
-            </div>
+        <section className="relative pt-20 pb-24 lg:pt-32 lg:pb-40 overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full opacity-30 dark:opacity-20 pointer-events-none">
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-400/20 blur-[120px] rounded-full" />
+            <div className="absolute bottom-[20%] right-[-5%] w-[35%] h-[35%] bg-[#1241a1]/20 blur-[100px] rounded-full" />
           </div>
-        </section>
 
-       
-        {/* Interactive Demo Section */}
-        <section className="py-24 bg-slate-50 relative overflow-hidden">
-          <div className="absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-emerald-200 to-transparent"></div>
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="text-center mb-16 space-y-4">
-              <h2 className="text-3xl lg:text-5xl font-black">Experience the Platform</h2>
-              <p className="text-lg text-slate-600 max-w-2xl mx-auto">See how EstateEase simplifies every aspect of property management in real-time.</p>
-            </div>
-            
-            <div className="grid lg:grid-cols-12 gap-12 items-start">
-              {/* Feature List */}
-              <div className="lg:col-span-5 space-y-4">
-                {MVP_FEATURES.map((feature, index) => (
-                  <MVPFeatureCard 
-                    key={feature.id}
-                    feature={feature}
-                    isActive={activeFeature === index}
-                    onClick={() => handleFeatureClick(index)}
-                    index={index}
-                  />
-                ))}
-              </div>
-              
-              {/* Interactive Demo Area */}
-              <div className="lg:col-span-7 sticky top-24 h-[600px] rounded-3xl overflow-hidden  shadow-2xl bg-white flex flex-col">
-                <div className="h-12 bg-slate-100 border-b border-slate-200 flex items-center px-4 gap-2">
-                  <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                    <div className="w-3 h-3 rounded-full bg-amber-400"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                  </div>
-                  <div className="ml-4 flex-1 flex justify-center">
-                    
-                  </div>
+          <div className="max-w-7xl mx-auto px-6 relative z-10">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="space-y-8 max-w-2xl">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#1241a1]/10 rounded-full text-[#1241a1] dark:text-blue-400 text-xs font-bold uppercase tracking-wider">
+                  <span className="material-symbols-outlined text-[14px]">verified</span>
+                  Next Generation Management
                 </div>
-                <div className="flex-1 bg-slate-50 relative overflow-hidden">
-                  <div className="relative w-full h-full">
-                    <div
-                      key={activeFeature}
-                      className="absolute inset-0"
-                    >
-                      <img 
-                        src={MVP_FEATURES[activeFeature].image} 
-                        alt={MVP_FEATURES[activeFeature].title}
-                        className="w-full h-full object-cover"
-                      />
+                
+                <h1 className="text-5xl lg:text-7xl font-black tracking-tight leading-[1.05]">
+                  Experience <span className="text-[#1241a1]">Modern Living</span> in a Secure Community
+                </h1>
+                
+                <p className="text-lg lg:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
+                  The world's most sophisticated all-in-one management suite designed exclusively for luxury residences and smart estates.
+                </p>
+
+                <div className="flex flex-wrap gap-4 pt-4">
+                  <button 
+                    onClick={handleGetStarted}
+                    className="px-8 py-4 bg-[#1241a1] hover:bg-[#1241a1]/90 text-white rounded-xl text-lg font-bold transition-all shadow-xl shadow-[#1241a1]/25 hover:-translate-y-1 active:scale-95 flex items-center gap-2"
+                  >
+                    Get Started Now
+                    <span className="material-symbols-outlined">arrow_forward</span>
+                  </button>
+                  <button 
+                    onClick={handleLearnMore}
+                    className="px-8 py-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-lg font-bold transition-all hover:bg-slate-50 dark:hover:bg-slate-700 active:scale-95"
+                  >
+                    Learn More
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-4 pt-8">
+                  <div className="flex -space-x-3">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="size-10 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden shadow-sm">
+                        <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm font-medium text-slate-500">
+                    Trusted by <span className="font-bold text-slate-900 dark:text-white">10,000+ residents</span> and <span className="font-bold text-slate-900 dark:text-white">500+ estates</span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="relative group">
+                <div className="absolute -inset-4 bg-[#1241a1]/10 rounded-[2.5rem] blur-2xl group-hover:bg-[#1241a1]/15 transition-colors" />
+                <div className="relative rounded-[2rem] overflow-hidden shadow-2xl">
+                  <img 
+                    src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2000&auto=format&fit=crop" 
+                    alt="Luxury Estate" 
+                    className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700" 
+                  />
+                  <div className="absolute bottom-6 left-6 right-6 p-6 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-2xl shadow-xl">
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="font-bold text-lg dark:text-white">Real-time Security Feed</span>
+                      <span className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-widest animate-pulse">
+                        <span className="size-1.5 rounded-full bg-emerald-500" />
+                        Live Monitoring
+                      </span>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+                        <span className="material-symbols-outlined text-[#1241a1] text-xl">qr_code_2</span>
+                        <div className="flex-1">
+                          <p className="text-xs font-bold dark:text-white">QR Access Authorized</p>
+                          <p className="text-[10px] text-slate-500">Visitor: John Doe • Unit 402 • 10:24 AM</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-emerald-50/50 dark:bg-emerald-500/5 rounded-xl">
+                        <span className="material-symbols-outlined text-emerald-500 text-xl">notifications_active</span>
+                        <div className="flex-1">
+                          <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">Patrol Check-in Successful</p>
+                          <p className="text-[10px] text-emerald-600/70 dark:text-emerald-400/70">Zone B • Guard: Mike Ross • Just now</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -850,158 +773,214 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Integration Steps Section */}
-        <section ref={setupRef} className="py-24 bg-white">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="text-center mb-16 space-y-4">
-              <h2 className="text-3xl lg:text-4xl font-black">Go Live in Hours, Not Weeks</h2>
-              <p className="text-lg text-slate-600 max-w-2xl mx-auto">Our streamlined onboarding process ensures your estate is fully operational with zero downtime.</p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-8">
-              {INTEGRATION_STEPS.map((step, index) => (
-                <div key={index} className="relative p-8 rounded-3xl bg-slate-50 hover:border-2 hover:border-emerald-500 hover:shadow-xl transition-all duration-300">
-                  <div className="absolute top-8 right-8 text-5xl font-black text-slate-200">
-                    {step.step}
-                  </div>
-                  <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
-                    {step.icon}
-                  </div>
-                  <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-                  <p className="text-slate-600 mb-6">{step.description}</p>
-                  <ul className="space-y-3 mb-8">
-                    {step.details.map((detail, idx) => (
-                      <li key={idx} className="flex items-center gap-3 text-sm text-slate-700 font-medium">
-                        <CheckCircle className="w-4 h-4 text-emerald-500" />
-                        {detail}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-200 text-slate-700 rounded-md text-sm font-semibold">
-                    <Clock className="w-4 h-4" />
-                    {step.duration}
-                  </div>
-                </div>
-              ))}
+        {/* Partners Section */}
+        <section className="py-12 bg-white/50 dark:bg-slate-900/30">
+          <div className="max-w-7xl mx-auto px-6">
+            <p className="text-center text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-10">Trusted by Modern Communities</p>
+            <div className="flex flex-wrap justify-center items-center gap-12 lg:gap-20 opacity-50 grayscale dark:invert transition-all">
+              <span className="text-2xl font-black tracking-tighter italic">LAKEFRONT</span>
+              <span className="text-2xl font-black tracking-tighter italic">SKYLINE</span>
+              <span className="text-2xl font-black tracking-tighter italic">PARKVIEW</span>
+              <span className="text-2xl font-black tracking-tighter italic">RIVERSIDE</span>
+              <span className="text-2xl font-black tracking-tighter italic">OAKWOOD</span>
             </div>
           </div>
         </section>
 
         {/* Features Section */}
-        <section ref={featuresRef} className="py-24 lg:py-32 bg-slate-900 border-t border-slate-800">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="text-center mb-20 space-y-4">
-              <h2 className="text-4xl lg:text-5xl font-black tracking-tight text-white">Redefining Property Management</h2>
-              <p className="text-lg text-slate-400 max-w-2xl mx-auto">Experience the pinnacle of efficiency with digital solutions tailored for high-end residential living.</p>
+        <section id="features" className="py-24 lg:py-32 bg-white dark:bg-[#111621]">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="max-w-3xl mx-auto text-center mb-20">
+              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-[#1241a1] mb-4">Core Ecosystem</h2>
+              <h3 className="text-4xl lg:text-5xl font-black tracking-tight mb-6">Smart Solutions for Modern Estates</h3>
+              <p className="text-lg text-slate-500 leading-relaxed">Everything you need to manage your community with precision and ease, all in one unified platform.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((feature, index) => (
-                <div key={index} className="group relative rounded-4xl overflow-hidden aspect-[4/5] bg-slate-800 isolate">
-                  <img 
-                    src={feature.image} 
-                    alt={feature.title} 
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-0"
-                  />
-                  {/* Dark overlay for text readability */}
-                  <div className="absolute inset-0 bg-linear-to-b from-transparent via-slate-900/40 to-slate-950/90 z-10 transition-colors duration-500 group-hover:via-slate-900/60"></div>
-                  
-                  {/* Content Container (Glassmorphism overlay acting like the hero section's badge) */}
-                  <div className="absolute bottom-6 left-6 right-6 z-20">
-                    <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6 transition-all duration-300 group-hover:-translate-y-2 group-hover:bg-white/20">
-                      <div className="flex items-center gap-4 mb-3">
-                        <div className="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center backdrop-blur-md">
-                          <span className="material-symbols-outlined text-2xl">{feature.icon}</span>
-                        </div>
-                        <h3 className="text-xl font-bold text-white leading-tight">{feature.title}</h3>
-                      </div>
-                      <p className="text-sm text-slate-300 leading-relaxed font-medium">
-                        {feature.description}
-                      </p>
-                    </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[
+                { icon: 'shield_person', title: 'Seamless Access', desc: 'Secure QR-based visitor management system with instant resident notifications.' },
+                { icon: 'payments', title: 'Smart Billing', desc: 'Automated estate dues collection with real-time tracking and digital receipts.' },
+                { icon: 'emergency_home', title: 'Panic Response', desc: 'One-tap emergency alerts that notify security and neighbors within seconds.' },
+                { icon: 'groups', title: 'Community Portal', desc: 'A central hub for announcements, bookings, and interactive resident engagement.' }
+              ].map((feature, i) => (
+                <div key={i} className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-900/50 hover:shadow-2xl hover:shadow-[#1241a1]/5 hover:-translate-y-2 transition-all group">
+                  <div className="size-16 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-[#1241a1] shadow-lg mb-8 group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-3xl">{feature.icon}</span>
                   </div>
+                  <h4 className="text-xl font-bold mb-4 dark:text-white">{feature.title}</h4>
+                  <p className="text-slate-500 text-sm leading-relaxed">{feature.desc}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Testimonials Section */}
-        <section className="py-24 lg:py-32 bg-background-light dark:bg-background-dark">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="flex flex-col lg:flex-row justify-between items-end gap-8 mb-16">
-              <div className="space-y-4">
-                <h2 className="text-4xl lg:text-5xl font-black tracking-tight">Voices of Excellence</h2>
-                <p className="text-lg text-slate-600 dark:text-slate-400">Hear from property managers who transformed their estates with EstateEase.</p>
+        {/* Featured Estates */}
+        <section className="py-24 lg:py-32 bg-slate-50/50 dark:bg-slate-950/20">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+              <div className="max-w-2xl">
+                <h2 className="text-xs font-black uppercase tracking-[0.3em] text-[#1241a1] mb-4">Portfolio</h2>
+                <h3 className="text-4xl lg:text-5xl font-black tracking-tight mb-0">Discover Premier Living</h3>
               </div>
-              <div className="flex gap-4">
-                <button className="w-12 h-12 rounded-full border-slate-300 dark:border-slate-700 flex items-center justify-center hover:bg-white dark:hover:bg-slate-800 transition-all">
-                  <span className="material-symbols-outlined">arrow_back</span>
-                </button>
-                <button className="w-12 h-12 rounded-full border-slate-300 dark:border-slate-700 flex items-center justify-center hover:bg-white dark:hover:bg-slate-800 transition-all">
-                  <span className="material-symbols-outlined">arrow_forward</span>
-                </button>
-              </div>
+              <button className="flex items-center gap-2 font-bold text-[#1241a1] hover:gap-3 transition-all px-6 py-3 bg-white dark:bg-slate-800 rounded-xl shadow-lg">
+                View All Estates
+                <span className="material-symbols-outlined">east</span>
+              </button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {testimonies && testimonies.slice(0, 4).map((testimony, i) => (
-                <div key={i} className="bg-white dark:bg-slate-900 p-10 rounded-3xl shadow-sm border-slate-200 dark:border-slate-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                  <div className="flex gap-1 text-emerald-500 mb-6">
-                    <span className="material-symbols-outlined text-emerald-400 fill-emerald-400">star</span>
-                    <span className="material-symbols-outlined text-emerald-400 fill-emerald-400">star</span>
-                    <span className="material-symbols-outlined text-emerald-400 fill-emerald-400">star</span>
-                    <span className="material-symbols-outlined text-emerald-400 fill-emerald-400">star</span>
-                    <span className="material-symbols-outlined text-emerald-400 fill-emerald-400">star</span>
-                  </div>
-                  <p className="text-xl italic font-medium leading-relaxed mb-8 text-slate-700 dark:text-slate-300">
-                    &quot;{testimony.review || testimony.testimony}&quot;
-                  </p>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-lg">
-                      {testimony.name.charAt(0)}
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                { name: 'The Azure Residences', location: 'Lekki Phase 1', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000' },
+                { name: 'Oakwood Heights', location: 'Victoria Island', img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1000' },
+                { name: 'Skyloft Gardens', location: 'Ikoyi, Lagos', img: 'https://images.unsplash.com/photo-1600607687940-477a128f198e?q=80&w=1000' }
+              ].map((estate, i) => (
+                <div key={i} className="group cursor-pointer">
+                  <div className="relative aspect-4/5 rounded-3xl overflow-hidden shadow-2xl group/img">
+                    <img src={estate.img} alt={estate.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="absolute top-6 right-6">
+                      <div className="size-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
+                        <span className="material-symbols-outlined">favorite</span>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-bold text-slate-900 dark:text-white">{testimony.name}</p>
-                      <p className="text-sm text-slate-500">{testimony.role}</p>
+                  </div>
+                  <h4 className="text-2xl font-bold dark:text-white mb-2">{estate.name}</h4>
+                  <p className="text-slate-500 flex items-center gap-1.5 text-sm">
+                    <span className="material-symbols-outlined text-base">location_on</span>
+                    {estate.location}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Stats Section */}
+        <section className="py-24 bg-[#1241a1] relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-1/3 h-full bg-white/5 skew-x-[-20deg] translate-x-1/2" />
+          <div className="max-w-7xl mx-auto px-6 relative z-10">
+            <div className="grid md:grid-cols-4 gap-12 text-center">
+              {[
+                { label: 'Happy Residents', value: '10K+' },
+                { label: 'Licensed Estates', value: '500+' },
+                { label: 'Emergency Alerts', value: '2k+' },
+                { label: 'Collection Rate', value: '98%' }
+              ].map((stat, i) => (
+                <div key={i}>
+                  <p className="text-5xl font-black text-white mb-3 tracking-tighter">{stat.value}</p>
+                  <p className="text-blue-200/60 font-medium uppercase tracking-[0.2em] text-[10px]">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Mobile App Promo */}
+        <section className="py-24 lg:py-40 bg-white dark:bg-[#111621] overflow-hidden">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="bg-[#1241a1]/5 dark:bg-slate-900/50 rounded-[3rem] p-8 lg:p-20 relative overflow-hidden">
+              <div className="absolute bottom-0 right-0 w-1/2 h-full bg-linear-to-tl from-[#1241a1]/10 to-transparent pointer-events-none" />
+              
+              <div className="grid lg:grid-cols-2 gap-20 items-center">
+                <div className="space-y-10">
+                  <div className="space-y-6">
+                    <h2 className="text-xs font-black uppercase tracking-[0.3em] text-[#1241a1]">Mobile Experience</h2>
+                    <h3 className="text-4xl lg:text-5xl font-black tracking-tight leading-tight">Management at your Fingertips</h3>
+                    <p className="text-lg text-slate-500 leading-relaxed">Download our mobile app to manage your home from anywhere in the world. Secure, fast, and remarkably easy to use.</p>
+                  </div>
+
+                  <div className="space-y-6">
+                    {['Generate instant visitor QR codes', 'Receive real-time security alerts', 'Pay estate dues in one-tap', 'Book amenities & track maintenance'].map((item, i) => (
+                      <div key={i} className="flex items-center gap-4 group">
+                        <div className="size-6 bg-emerald-500 rounded-full flex items-center justify-center text-white">
+                          <span className="material-symbols-outlined text-sm font-bold">check</span>
+                        </div>
+                        <span className="font-semibold text-slate-700 dark:text-slate-300 group-hover:translate-x-1 transition-transform">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-wrap gap-4 pt-4">
+                    <button className="flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-2xl hover:bg-black transition-all shadow-xl active:scale-95">
+                      <span className="material-symbols-outlined text-3xl">phone_iphone</span>
+                      <div className="text-left">
+                        <p className="text-[10px] uppercase font-bold opacity-60 leading-none mb-1">Download on the</p>
+                        <p className="text-lg font-bold leading-none">App Store</p>
+                      </div>
+                    </button>
+                    <button className="flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-2xl hover:bg-black transition-all shadow-xl active:scale-95">
+                      <span className="material-symbols-outlined text-3xl">play_store</span>
+                      <div className="text-left">
+                        <p className="text-[10px] uppercase font-bold opacity-60 leading-none mb-1">Get it on</p>
+                        <p className="text-lg font-bold leading-none">Google Play</p>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[120%] bg-[#1241a1]/20 blur-[120px] rounded-full pointer-events-none" />
+                  <div className="relative flex justify-center perspective-[1000px]">
+                    <div className="relative z-10 w-[280px] aspect-[9/19] bg-slate-900 rounded-[3rem] p-3 shadow-2xl skew-y-[-6deg] rotate-3 hover:translate-y-[-20px] transition-transform duration-700">
+                      <div className="w-full h-full bg-slate-800 rounded-[2.5rem] overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1000" alt="Mobile App" className="w-full h-full object-cover opacity-80" />
+                        <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-transparent to-transparent" />
+                        {/* Mock App UI */}
+                        <div className="absolute top-12 left-6 right-6 space-y-4">
+                          <div className="size-12 bg-white/20 backdrop-blur-md rounded-xl" />
+                          <div className="h-4 w-2/3 bg-white/20 backdrop-blur-md rounded-full" />
+                          <div className="h-4 w-1/2 bg-white/20 backdrop-blur-md rounded-full" />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="absolute -bottom-10 right-0 z-20 w-[280px] aspect-[9/19] bg-slate-900 rounded-[3rem] p-3 shadow-2xl skew-y-6 rotate-[-3deg] hidden lg:block hover:translate-y-[-20px] transition-transform duration-700">
+                      <div className="w-full h-full bg-slate-800 rounded-[2.5rem] overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1000" alt="Mobile App" className="w-full h-full object-cover opacity-80" />
+                        <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-transparent to-transparent" />
+                      </div>
                     </div>
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </section>
 
         {/* FAQ Section */}
-        <section className="py-24 bg-white">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <section className="py-24 bg-white dark:bg-[#111621]">
+          <div className="max-w-4xl mx-auto px-6">
+             <div className="text-center mb-16">
+              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-[#1241a1] mb-4">Support</h2>
+              <h3 className="text-4xl font-black tracking-tight mb-0">Frequently Asked Questions</h3>
+            </div>
             <FAQ />
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-20 bg-emerald-50 lg:py-32">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="relative bg-slate-900 text-white rounded-[3rem] overflow-hidden p-12 lg:p-24 text-center shadow-2xl">
-              <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/20 blur-[120px] rounded-full"></div>
-              <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/20 blur-[120px] rounded-full"></div>
-              <div className="relative z-10 max-w-3xl mx-auto space-y-8">
-                <h2 className="text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white">Ready to Modernize Your Property?</h2>
-                <p className="text-xl text-slate-300">Join the world&apos;s most elite property managers and give your residents the experience they deserve.</p>
-                <div className="flex flex-wrap justify-center gap-6 pt-4">
-                  <button onClick={handleGetStarted} className="bg-emerald-500 text-white text-lg font-bold px-10 py-4 rounded-2xl hover:bg-emerald-400 hover:scale-105 hover:shadow-xl hover:shadow-emerald-500/20 transition-all">
-                    Get Started Now
-                  </button>
-                  <button onClick={handleScheduleDemo} className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20 text-lg font-bold hover:scale-105 px-10 py-4 rounded-2xl transition-all">
-                    Schedule a Call
-                  </button>
-                </div>
-              </div>
-            </div>
+        {/* CTA Banner */}
+        <section className="py-12 px-6">
+          <div className="max-w-7xl mx-auto bg-[#1241a1] rounded-[3rem] py-20 px-8 text-center relative overflow-hidden">
+             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+             <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+             
+             <div className="relative z-10 space-y-8">
+               <h3 className="text-4xl lg:text-5xl font-black text-white tracking-tight">Ready to Transform your Estate?</h3>
+               <p className="text-blue-100/70 text-lg max-w-2xl mx-auto leading-relaxed">Join the hundreds of forward-thinking estates who have already upgraded to the next generation of property management.</p>
+               <div className="flex flex-wrap justify-center gap-4 pt-4">
+                 <button onClick={handleGetStarted} className="px-10 py-5 bg-white text-[#1241a1] rounded-2xl text-lg font-bold hover:bg-blue-50 transition-all shadow-xl hover:-translate-y-1 active:scale-95">
+                   Request a Free Demo
+                 </button>
+                 <button className="px-10 py-5 bg-[#1241a1] border border-white/30 text-white rounded-2xl text-lg font-bold hover:bg-white/10 transition-all active:scale-95">
+                   Pricing Plans
+                 </button>
+               </div>
+             </div>
           </div>
         </section>
       </main>
-      
-      {/* Footer */}
-      <Footer/>
-     
+
+      <Footer />
     </div>
   )
 }

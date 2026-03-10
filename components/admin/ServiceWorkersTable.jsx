@@ -104,7 +104,7 @@ export default function ServiceWorkersTable({ workers, onRowClick }) {
         </div>
       </div>
       
-      <div className="grid grid-cols-2 gap-y-3 gap-x-4 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg border border-gray-100 dark:border-gray-700/50 text-sm">
+      <div className="grid grid-cols-2 gap-y-3 gap-x-4 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg text-sm">
         <div>
           <span className="text-gray-500 text-xs block mb-1">Department</span>
           <span className="font-medium text-gray-900 dark:text-gray-100">{worker.department}</span>
@@ -115,7 +115,7 @@ export default function ServiceWorkersTable({ workers, onRowClick }) {
              <Clock className="w-3.5 h-3.5" /> {worker.shift.split(' (')[0]}
           </span>
         </div>
-        <div className="col-span-2 space-y-1.5 pt-1 border-t border-gray-200 dark:border-gray-700/50 mt-1">
+        <div className="col-span-2 space-y-1.5 pt-3 mt-1">
           <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
             <Phone className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">{worker.phone}</span>

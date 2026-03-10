@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Wrench, Save } from 'lucide-react';
 import { BackButton } from '@/components/ui/BackButton';
+import { toast } from 'react-toastify';
 
 export default function AddServiceWorkerPage() {
   const router = useRouter();
@@ -35,7 +36,7 @@ export default function AddServiceWorkerPage() {
     // Simulate API Call
     setTimeout(() => {
       setIsSubmitting(false);
-      alert('Service worker added successfully!');
+      toast.success('Service worker added successfully!');
       router.push('/dashboard/admin/service_workers');
     }, 1000);
   };
@@ -45,7 +46,7 @@ export default function AddServiceWorkerPage() {
       <BackButton fallbackRoute="/dashboard/admin/service_workers" label="Back to Staff List" />
 
       <div className="flex items-center gap-4 mb-4">
-        <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center">
+        <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center">
             <Wrench className="w-6 h-6 text-white" />
         </div>
         <div>
@@ -56,7 +57,7 @@ export default function AddServiceWorkerPage() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)] overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
         <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
@@ -67,7 +68,7 @@ export default function AddServiceWorkerPage() {
                 value={formData.name}
                 onChange={handleInputChange}
                 required
-                className="w-full p-3 border border-gray-100 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900/50"
+                className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-900/50"
                 placeholder="Enter worker name"
               />
             </div>
@@ -80,7 +81,7 @@ export default function AddServiceWorkerPage() {
                 value={formData.role}
                 onChange={handleInputChange}
                 required
-                className="w-full p-3 border border-gray-100 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900/50"
+                className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-900/50"
                 placeholder="e.g., Senior Plumber"
               />
             </div>
@@ -91,7 +92,7 @@ export default function AddServiceWorkerPage() {
                 name="department"
                 value={formData.department}
                 onChange={handleInputChange}
-                className="w-full p-3 border border-gray-100 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900/50"
+                className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-900/50"
               >
                 <option value="Maintenance">Maintenance</option>
                 <option value="Security">Security</option>
@@ -109,7 +110,7 @@ export default function AddServiceWorkerPage() {
                 value={formData.phone}
                 onChange={handleInputChange}
                 required
-                className="w-full p-3 border border-gray-100 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900/50"
+                className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-900/50"
                 placeholder="+1 234 567 8900"
               />
             </div>
@@ -121,7 +122,7 @@ export default function AddServiceWorkerPage() {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full p-3 border border-gray-100 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900/50"
+                className="w-full p-3 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-900/50"
                 placeholder="worker@example.com"
               />
             </div>
@@ -131,7 +132,7 @@ export default function AddServiceWorkerPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-500/25 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 bg-primary hover:brightness-110 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/25 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'Saving...' : (
                 <>

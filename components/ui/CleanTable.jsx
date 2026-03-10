@@ -22,7 +22,7 @@ export function CleanTable({ headers, data, renderRow, className = '', emptyStat
   return (
     <div className={`overflow-x-auto ${className}`}>
       <table className="w-full text-left text-sm">
-        <thead className="bg-gray-50 dark:bg-gray-800/50">
+        <thead className="bg-slate-50/50 dark:bg-slate-900/50">
           <tr>
             {headers.map((header, index) => (
               <th key={index} className="px-6 py-4 font-semibold text-gray-900 dark:text-gray-100 font-heading whitespace-nowrap">
