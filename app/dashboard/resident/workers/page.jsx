@@ -256,13 +256,16 @@ export default function WorkersDirectoryPage() {
               className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col"
             >
               {/* Photo */}
-              <div className="relative h-48 bg-slate-100 dark:bg-slate-800">
+              <Link 
+                href={`/dashboard/resident/workers/${worker.id}`}
+                className="relative h-48 bg-slate-100 dark:bg-slate-800 cursor-pointer block overflow-hidden"
+              >
                 {worker.image ? (
                   <Image
                     src={worker.image}
                     alt={worker.name}
                     fill
-                    className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                    className="object-cover object-top group-hover:scale-110 transition-transform duration-700"
                   />
                 ) : (
                   <div className={`absolute inset-0 flex items-center justify-center ${worker.color || 'bg-[#1241a1]'}`}>
@@ -271,17 +274,17 @@ export default function WorkersDirectoryPage() {
                 )}
                 {/* Verified badge */}
                 {worker.verified && (
-                  <div className="absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-2 py-1 rounded-lg flex items-center gap-1 text-[10px] font-bold text-[#1241a1] uppercase tracking-wider">
+                  <div className="absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-2 py-1 rounded-lg flex items-center gap-1 text-[10px] font-bold text-[#1241a1] uppercase tracking-wider z-10">
                     <CheckCircle2 className="w-3 h-3 fill-[#1241a1] text-white" />
                     Verified
                   </div>
                 )}
                 {/* Rating overlay */}
-                <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-lg flex items-center gap-1">
+                <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-lg flex items-center gap-1 z-10">
                   <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                   <span className="text-white text-xs font-black">{worker.rating}</span>
                 </div>
-              </div>
+              </Link>
 
               {/* Info */}
               <div className="p-4 flex flex-col gap-3 flex-1">

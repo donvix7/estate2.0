@@ -134,7 +134,15 @@ export default function ItemDetailModal({ item, onClose }) {
               </button>
               
               <div className="flex gap-3">
-                <button className="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-sm">
+                <button 
+                  onClick={() => {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('item', item.id);
+                    navigator.clipboard.writeText(url.toString());
+                    toast.success('Link copied to clipboard!');
+                  }}
+                  className="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-sm active:scale-95"
+                >
                   <Share2 size={16} />
                   Share
                 </button>

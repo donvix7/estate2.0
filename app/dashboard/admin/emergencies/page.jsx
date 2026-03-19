@@ -27,6 +27,7 @@ import {
 import { api } from '@/services/api';
 import ResolveEmergencyModal from '@/components/admin/ResolveEmergencyModal';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
+import ResourceItem from '@/components/ResourceItem';
 
 export default function EmergenciesPage() {
   const [emergencies, setEmergencies] = useState([]);
@@ -36,6 +37,11 @@ export default function EmergenciesPage() {
   // Modal State
   const [selectedEmergency, setSelectedEmergency] = useState(null);
 
+  const resources = [
+    {name:"Patrol Alpha", status:"Active • South Gate", color:"text-emerald-500 bg-emerald-500/10", icon:<Shield className="w-4 h-4" />},
+    {name:"Medic 1", status:"Deploying • Wing 4", color:"text-red-500 bg-red-500/10", icon:<Stethoscope className="w-4 h-4" />}, 
+    {name:"Patrol Beta", status:"On Break • Base", color:"text-slate-400 bg-slate-100 dark:bg-slate-800", icon:<Shield className="w-4 h-4" />}
+  ]
   useEffect(() => {
     loadEmergencies();
   }, []);
@@ -181,58 +187,7 @@ export default function EmergenciesPage() {
           </div>
         </div>
 
-        {/* Middle Column: Map Overview */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="flex items-center justify-between">
-            <h3 className="font-black text-sm uppercase tracking-widest flex items-center gap-2">
-              <MapIcon className="w-4 h-4 text-primary" />
-              Estate Map Overview
-            </h3>
-            <div className="flex gap-2">
-              <button className="px-3 py-1 bg-primary/20 text-primary text-[10px] font-black rounded-lg transition-all hover:bg-primary/30">Satellite</button>
-              <button className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-400 text-[10px] font-black rounded-lg transition-all">2D View</button>
-            </div>
-          </div>
-          
-          <div className="relative w-full aspect-square bg-slate-100 dark:bg-slate-900 rounded-2xl overflow-hidden shadow-inner group">
-            {/* Mock Map Background */}
-            <div 
-              className="absolute inset-0 bg-cover bg-center opacity-30 grayscale contrast-125" 
-              style={{ backgroundImage: `url('https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?q=80&w=1000&auto=format&fit=crop')` }}
-            ></div>
-            
-            {/* Map Markers for Active Emergencies */}
-            {activeEmergencies.map((emg, idx) => (
-              <div 
-                key={emg.id}
-                className="absolute group/marker cursor-pointer"
-                style={{ 
-                  top: `${20 + (idx * 15) % 60}%`, 
-                  left: `${30 + (idx * 25) % 50}%` 
-                }}
-              >
-                <div className="w-12 h-12 bg-red-500/20 rounded-full animate-ping absolute -inset-4"></div>
-                <div className="relative w-4 h-4 bg-red-500 border-2 border-white rounded-full shadow-lg"></div>
-                <div className="hidden group-hover/marker:block absolute top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] font-bold p-2 rounded-lg whitespace-nowrap z-20 shadow-2xl">
-                  {emg.type}: Unit {emg.unit}
-                </div>
-              </div>
-            ))}
-
-            {/* Legend */}
-            <div className="absolute bottom-4 left-4 p-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-xl shadow-lg border-none text-[10px] space-y-2">
-              <div className="flex items-center gap-2 font-black text-slate-500 uppercase tracking-wider">
-                <div className="size-2 rounded-full bg-red-500"></div> Critical Alert
-              </div>
-              <div className="flex items-center gap-2 font-black text-slate-500 uppercase tracking-wider">
-                <div className="size-2 rounded-full bg-amber-500"></div> Warning
-              </div>
-              <div className="flex items-center gap-2 font-black text-slate-500 uppercase tracking-wider">
-                <div className="size-2 rounded bg-primary"></div> Security Unit
-              </div>
-            </div>
-          </div>
-        </div>
+    
 
         {/* Right Column: Resources & Comms */}
         <div className="lg:col-span-3 space-y-8">
@@ -243,25 +198,16 @@ export default function EmergenciesPage() {
               Resource Status
             </h3>
             <div className="bg-white dark:bg-primary/5 rounded-xl space-y-1 overflow-hidden shadow-sm">
-              <ResourceItem 
-                icon={<Shield className="w-4 h-4" />}
-                name="Patrol Alpha"
-                status="Active • South Gate"
-                color="text-emerald-500 bg-emerald-500/10"
+              {resources.map((item, index) => (
+                <ResourceItem 
+                key={index}
+                icon={item.icon}
+                name={item.name}
+                status={item.status}
+                color={item.color}
               />
-              <ResourceItem 
-                icon={<Stethoscope className="w-4 h-4" />}
-                name="Medic 1"
-                status="Deploying • Wing 4"
-                color="text-red-500 bg-red-500/10"
-                active
-              />
-              <ResourceItem 
-                icon={<Shield className="w-4 h-4" />}
-                name="Patrol Beta"
-                status="On Break • Base"
-                color="text-slate-400 bg-slate-100 dark:bg-slate-800"
-              />
+              ))}
+            
             </div>
           </div>
 
@@ -315,25 +261,6 @@ export default function EmergenciesPage() {
             }}
          />
       )}
-    </div>
-  );
-}
-
-function ResourceItem({ icon, name, status, color, active }) {
-  return (
-    <div className={`p-4 flex items-center justify-between ${active ? 'bg-red-500/5' : ''}`}>
-      <div className="flex items-center gap-3">
-        <div className={`size-9 rounded-xl flex items-center justify-center ${color}`}>
-          {icon}
-        </div>
-        <div>
-          <p className="text-xs font-black">{name}</p>
-          <p className={`text-[10px] ${active ? 'text-red-500 font-black' : 'text-slate-500 font-bold'}`}>{status}</p>
-        </div>
-      </div>
-      <button className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-        <MoreVertical className="w-4 h-4 text-slate-400" />
-      </button>
     </div>
   );
 }

@@ -19,51 +19,53 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
   };
 
   return (
-    <nav className="lg:hidden bg-background-light dark:bg-background-dark sticky top-0 z-50 transition-colors">
-      <div className="flex items-center justify-between h-16 px-4">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
-          <div className="bg-[#1241a1] rounded-lg p-1.5 text-white">
-            <Building2 className="w-5 h-5" />
+    <>
+      <nav className="lg:hidden bg-background-light dark:bg-background-dark sticky top-0 z-50 transition-colors backdrop-blur-sm">
+        <div className="flex items-center justify-between h-16 px-4">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push('/')}>
+            <div className="bg-[#1241a1] rounded-lg p-1.5 text-white">
+              <span className="material-symbols-outlined text-xl text-white">apartment</span>
+            </div>
+            <div>
+              <span className="font-bold text-sm tracking-tight block leading-none">Elite Towers</span>
+              <span className="text-[8px] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold">
+                {role === 'admin' ? 'Admin Console' : 'Resident Portal'}
+              </span>
+            </div>
           </div>
-          <div>
-            <span className="font-black text-sm tracking-tight block leading-none">EstatePro</span>
-            <span className="text-[8px] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold">
-              {role === 'admin' ? 'Admin Console' : 'Resident Portal'}
-            </span>
-          </div>
-        </div>
 
-        <div className="flex items-center gap-3">
-        {role === 'resident' && (
-            <Link href={`/dashboard/${role}/emergency`} className="w-full px-4 flex items-center justify-center gap-2 bg-red-500/5 text-red-600 dark:text-red-400 py-3 rounded-xl font-bold text-sm hover:bg-red-500/10 transition-all active:scale-95">
-              <ShieldAlert className="w-4 h-4" />
-              Emergency Alert
+          <div className="flex items-center gap-3">
+            {role === 'resident' && (
+              <Link href={`/dashboard/${role}/emergency`} className="w-full px-4 flex items-center justify-center gap-2 bg-red-500/5 text-red-600 dark:text-red-400 py-3 rounded-xl font-bold text-sm hover:bg-red-500/10 transition-all active:scale-95">
+                <ShieldAlert className="w-4 h-4" />
+                Emergency Alert
+              </Link>
+            )}
+            <Link href={`/dashboard/${role}/profile`}>
+              <div className="size-8 rounded-full bg-slate-300 dark:bg-slate-700 bg-cover bg-center shadow-sm" style={{ backgroundImage: `url(${user?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop'})` }}></div>
             </Link>
-          )}
-          <Link href={`/dashboard/${role}/profile`}>
-            <div className="size-8 rounded-full bg-slate-300 dark:bg-slate-700 bg-cover bg-center shadow-sm" style={{ backgroundImage: `url(${user?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop'})` }}></div>
-          </Link>
-          <button 
-            onClick={() => setIsMenuOpen(true)}
-            className="p-2 text-slate-500 dark:text-slate-400 hover:text-[#1241a1] rounded-xl bg-slate-100 dark:bg-slate-800 transition-colors"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
+            <button 
+              onClick={() => setIsMenuOpen(true)}
+              className="p-2 text-slate-500 dark:text-slate-400 hover:text-[#1241a1] rounded-xl bg-slate-100 dark:bg-slate-800 transition-colors"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
         </div>
-      </div>
+      </nav>
 
       {isMenuOpen && (
-        <div className="fixed inset-0 z-100 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-sm animate-fade-in" onClick={() => setIsMenuOpen(false)}>
+        <div className="fixed inset-0 z-100 bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-md animate-fade-in" onClick={() => setIsMenuOpen(false)}>
           <div 
             className="fixed inset-y-0 right-0 w-[280px] bg-slate-50 dark:bg-slate-900 shadow-2xl flex flex-col z-110 animate-slide-in-right"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between p-4">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <div className="bg-[#1241a1] rounded-lg p-1.5 text-white">
-                  <Building2 className="w-5 h-5" />
+                  <span className="material-symbols-outlined text-xl text-white">apartment</span>
                 </div>
-                <span className="font-black text-lg tracking-tight">EstatePro</span>
+                <span className="font-bold text-lg tracking-tight">Elite Towers</span>
               </div>
               <button 
                 onClick={() => setIsMenuOpen(false)}
@@ -102,7 +104,9 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      {Icon && <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-400'}`} />}
+                      <span className={`material-symbols-outlined text-xl ${isActive ? 'text-white' : 'text-slate-400'}`}>
+                        {typeof link.icon === 'string' ? link.icon : 'dashboard'}
+                      </span>
                       <span className="font-bold text-sm">{link.label}</span>
                     </div>
                     {link.badge > 0 && (
@@ -135,6 +139,7 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
           </div>
         </div>
       )}
+
       <AlertModal
         isOpen={showLogoutConfirm}
         onClose={() => setShowLogoutConfirm(false)}
@@ -145,6 +150,6 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
         type="warning"
         showCancel={true}
       />
-    </nav>
+    </>
   );
 }

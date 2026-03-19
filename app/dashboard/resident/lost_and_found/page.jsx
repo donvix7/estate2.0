@@ -54,11 +54,29 @@ const ITEM_BG = {
   Accessories: 'from-rose-500/20 to-rose-100/10',
 }
 
+const ITEMS_PER_PAGE = 8
+
 export default function LostAndFoundPage() {
   const [activeFilter, setActiveFilter] = useState('All Items')
   const [activeTab, setActiveTab] = useState('all') // all | active | resolved
   const [search, setSearch] = useState('')
   const [selectedItem, setSelectedItem] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
+
+  // Support Deep Linking
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const itemId = params.get('item')
+    if (itemId) {
+      const item = ITEMS.find(i => i.id === parseInt(itemId))
+      if (item) setSelectedItem(item)
+    }
+  }, [])
+
+  // Reset page when filters change
+  React.useEffect(() => {
+    setCurrentPage(1)
+  }, [activeFilter, activeTab, search])
 
   const filtered = ITEMS.filter(item => {
     const matchesTab = activeTab === 'all' || (activeTab === 'active' && item.status !== 'resolved') || (activeTab === 'resolved' && item.status === 'resolved')
@@ -67,10 +85,12 @@ export default function LostAndFoundPage() {
     return matchesTab && matchesCategory && matchesSearch
   })
 
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
+  const currentItems = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
-
-      {/* ── Page Header ── */}
+      {/* ... Header & Filters unchanged ... */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-2">
@@ -104,7 +124,6 @@ export default function LostAndFoundPage() {
         </div>
       </div>
 
-      {/* ── Search + Filters ── */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1 max-w-xl">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
@@ -129,7 +148,6 @@ export default function LostAndFoundPage() {
         </div>
       </div>
 
-      {/* ── Item Grid ── */}
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
           <div className="size-16 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400">
@@ -139,82 +157,94 @@ export default function LostAndFoundPage() {
           <p className="text-sm text-slate-400">Try adjusting your search or filters.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filtered.map(item => (
-            <div
-              key={item.id}
-              className="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
-            >
-              <div className="relative h-48 overflow-hidden bg-slate-100 dark:bg-slate-800" onClick={() => setSelectedItem(item)}>
-                {item.image ? (
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
-                  />
-                ) : (
-                  <div className={`absolute inset-0 bg-linear-to-br ${ITEM_BG[item.category] || 'from-slate-500/20 to-slate-100/10'} flex items-center justify-center cursor-pointer`}>
-                    <item.icon className={`size-12 opacity-40 ${CATEGORY_COLORS[item.category] || 'text-slate-500'}`} />
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {currentItems.map(item => (
+              <div
+                key={item.id}
+                className="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+              >
+                <div className="relative h-48 overflow-hidden bg-slate-100 dark:bg-slate-800" onClick={() => setSelectedItem(item)}>
+                  {item.image ? (
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+                    />
+                  ) : (
+                    <div className={`absolute inset-0 bg-linear-to-br ${ITEM_BG[item.category] || 'from-slate-500/20 to-slate-100/10'} flex items-center justify-center cursor-pointer`}>
+                      <item.icon className={`size-12 opacity-40 ${CATEGORY_COLORS[item.category] || 'text-slate-500'}`} />
+                    </div>
+                  )}
+                  <div className={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${item.status === 'lost' ? 'bg-red-500 text-white shadow-lg' : 'bg-emerald-500 text-white shadow-lg'}`}>
+                    {item.status}
                   </div>
-                )}
-                <div className={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${item.status === 'lost' ? 'bg-red-500 text-white shadow-lg' : 'bg-emerald-500 text-white shadow-lg'}`}>
-                  {item.status}
+                </div>
+
+                <div className="p-5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <item.icon size={16} className={`${CATEGORY_COLORS[item.category] || 'text-[#1241a1]'}`} />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{item.category}</span>
+                  </div>
+                  <h3 className="text-base font-bold leading-tight mb-4 text-slate-900 dark:text-white truncate">{item.name}</h3>
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                      <MapPin size={14} />
+                      <span className="text-xs">{item.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                      <Calendar size={14} />
+                      <span className="text-xs">{item.date}</span>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setSelectedItem(item)}
+                    className="mt-4 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-[#1241a1] hover:text-white text-sm font-bold transition-all dark:text-slate-300"
+                  >
+                    View Details
+                  </button>
                 </div>
               </div>
+            ))}
+          </div>
 
-              <div className="p-5">
-                <div className="flex items-center gap-2 mb-2">
-                  <item.icon size={16} className={`${CATEGORY_COLORS[item.category] || 'text-[#1241a1]'}`} />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{item.category}</span>
-                </div>
-                <h3 className="text-base font-bold leading-tight mb-4 text-slate-900 dark:text-white truncate">{item.name}</h3>
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-                    <MapPin size={14} />
-                    <span className="text-xs">{item.location}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-                    <Calendar size={14} />
-                    <span className="text-xs">{item.date}</span>
-                  </div>
-                </div>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 pb-12">
+            <p className="text-sm text-slate-500">
+              Showing <span className="font-bold text-slate-700 dark:text-slate-300">{currentItems.length}</span> of <span className="font-bold text-slate-700 dark:text-slate-300">{filtered.length}</span> items
+            </p>
+            {totalPages > 1 && (
+              <div className="flex items-center gap-2">
                 <button 
-                  onClick={() => setSelectedItem(item)}
-                  className="mt-4 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-[#1241a1] hover:text-white text-sm font-bold transition-all dark:text-slate-300"
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="size-10 flex items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 disabled:opacity-30 disabled:cursor-not-allowed"
                 >
-                  View Details
+                  <ChevronLeft size={20} />
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                  <button
+                    key={p}
+                    onClick={() => setCurrentPage(p)}
+                    className={`size-10 flex items-center justify-center rounded-xl text-sm font-bold transition-all ${p === currentPage ? 'bg-[#1241a1] text-white shadow-xl shadow-[#1241a1]/20' : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                  >
+                    {p}
+                  </button>
+                ))}
+                <button 
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="size-10 flex items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <ChevronRight size={20} />
                 </button>
               </div>
-            </div>
-          ))}
-        </div>
+            )}
+          </div>
+        </>
       )}
 
-      {/* ── Pagination ── */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 pb-12">
-        <p className="text-sm text-slate-500">Showing {filtered.length} of {ITEMS.length} items</p>
-        <div className="flex items-center gap-2">
-          <button className="size-10 flex items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500">
-            <ChevronLeft size={20} />
-          </button>
-          {[1, 2, 3].map(p => (
-            <button
-              key={p}
-              className={`size-10 flex items-center justify-center rounded-xl text-sm font-bold transition-all ${p === 1 ? 'bg-[#1241a1] text-white shadow-xl shadow-[#1241a1]/20' : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
-            >
-              {p}
-            </button>
-          ))}
-          <button className="size-10 flex items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500">
-            <ChevronRight size={20} />
-          </button>
-        </div>
-      </div>
-
-      {/* Result Modal */}
       <ItemDetailModal item={selectedItem} onClose={() => setSelectedItem(null)} />
-
     </div>
   )
 }

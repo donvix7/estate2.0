@@ -151,13 +151,13 @@ export default function AnnouncementsPage() {
         {/* High-Density List Container */}
         <div className="bg-white dark:bg-slate-900/50 rounded-xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            {/* Desktop Table View */}
+            <table className="w-full hidden md:table">
               <thead>
                 <tr className="text-left bg-slate-50 dark:bg-primary/5">
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Announcement</th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Category</th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Action</th>
+                  {['Announcement', 'Category', 'Date', 'Action'].map((header) => (
+                    <th key={header} className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">{header}</th>
+                  ))}
                 </tr>
               </thead>
               <tbody className="divide-y-0">
@@ -219,6 +219,59 @@ export default function AnnouncementsPage() {
                 )}
               </tbody>
             </table>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden ">
+              {isLoading ? (
+                <div className="px-6 py-12 text-center text-slate-400">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="size-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                    <p className="text-sm font-medium">Fetching updates...</p>
+                  </div>
+                </div>
+              ) : filteredAnnouncements.length === 0 ? (
+                <div className="px-6 py-12 text-center text-slate-400">
+                  <div className="flex flex-col items-center gap-3">
+                    <span className="material-symbols-outlined text-4xl opacity-20">campaign</span>
+                    <p className="text-sm font-medium">No announcements found.</p>
+                  </div>
+                </div>
+              ) : (
+                filteredAnnouncements.map((ann) => (
+                  <div key={ann.id} className="p-4 space-y-4 hover:bg-primary/5 transition-colors">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 shrink-0 flex items-center justify-center">
+                        {ann.type?.toLowerCase() === 'maintenance' ? <Wrench className="w-4 h-4 text-primary" /> : 
+                         ann.type?.toLowerCase() === 'security' ? <Shield className="w-4 h-4 text-primary" /> : 
+                         ann.type?.toLowerCase() === 'community' ? <Users className="w-4 h-4 text-primary" /> : 
+                         <Info className="w-4 h-4 text-primary" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${getCategoryBadge(ann.type)}`}>
+                            {ann.type || 'General'}
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-medium">
+                            {new Date(ann.timestamp || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          </span>
+                        </div>
+                        <h4 className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{ann.title}</h4>
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">{ann.message}</p>
+                    <div className="flex justify-end pt-1">
+                      <button 
+                        onClick={() => handleReadMore(ann)}
+                        className="text-primary text-xs font-bold flex items-center gap-1"
+                      >
+                        Read More
+                        <span className="material-symbols-outlined text-sm">chevron_right</span>
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
           {/* Pagination Footer */}
           {!isLoading && filteredAnnouncements.length > 0 && (

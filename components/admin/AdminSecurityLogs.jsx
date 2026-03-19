@@ -82,9 +82,7 @@ const STATUS_DOT = {
 const STATS = [
   { title: 'Total Alerts',     value: '0', badge: '+12%', badgeStyle: 'bg-emerald-500/10 text-emerald-500', bar: 'bg-[#1241a1]',     barW: 'w-[0%]' },
   { title: 'Active Alarms',    value: '0',    badge: 'LIVE', badgeStyle: 'bg-rose-500 text-white animate-pulse', bar: 'bg-rose-500',   barW: 'w-[0%]' },
-  { title: 'Response Time',    value: '0',  badge: '-3m',  badgeStyle: 'bg-amber-500/10 text-amber-500', bar: 'bg-amber-500',         barW: 'w-[0%]' },
-  { title: 'Daily Success Rate',value: '0%', badge: 'Stable', badgeStyle: 'bg-[#1241a1]/10 text-[#1241a1]', bar: 'bg-emerald-500', barW: 'w-[0%]' },
-]
+  ]
 
 const BARS = [40, 55, 85, 30, 60, 90, 45]
 const BAR_FILL = [60, 40, 10, 70, 30, 20, 50]
@@ -338,46 +336,7 @@ export default function ActivityPage() {
         </div>
       </div>
 
-      {/* ── Bottom Charts ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-6">
-
-        {/* Bar chart */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-2xl">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="font-bold text-lg">Daily Incident Trends</h3>
-            <div className="flex gap-4">
-              <span className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-                <span className="size-2 rounded-full bg-[#1241a1]" /> Entrances
-              </span>
-              <span className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-                <span className="size-2 rounded-full bg-rose-500" /> Alarms
-              </span>
-            </div>
-          </div>
-          <div className="h-56 w-full flex items-end justify-between gap-2 px-2">
-            {BARS.map((h, i) => (
-              <div key={i} className="flex-1 relative group flex flex-col justify-end" style={{ height: '100%' }}>
-                {/* total bar (light bg) */}
-                <div
-                  className="relative bg-[#1241a1]/15 rounded-t-lg overflow-hidden"
-                  style={{ height: `${h}%` }}
-                >
-                  {/* filled portion (darker) */}
-                  <div
-                    className="absolute bottom-0 left-0 right-0 bg-[#1241a1] rounded-t-lg transition-all"
-                    style={{ height: `${BAR_FILL[i]}%` }}
-                  />
-                  {/* Tooltip */}
-                  <div className="absolute -top-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] bg-slate-800 dark:bg-slate-700 text-white px-1.5 py-0.5 rounded whitespace-nowrap z-10">
-                    {h} entries
-                  </div>
-                </div>
-                <span className="text-[9px] font-bold text-slate-400 text-center mt-1.5 block">{LABELS[i]}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+     
 
       {/* Manual Entry Modal */}
       {showEntryModal && (

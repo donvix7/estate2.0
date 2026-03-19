@@ -157,7 +157,8 @@ export default function FinancePage() {
             </button>
           </div>
           <div className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm">
-            <table className="w-full text-left">
+            {/* Desktop Table */}
+            <table className="w-full text-left hidden md:table">
               <thead>
                 <tr className="bg-slate-50 dark:bg-slate-800/50">
                   {['Date', 'Description', 'Amount', 'Status', 'Receipt'].map(h => (
@@ -188,6 +189,33 @@ export default function FinancePage() {
                 ))}
               </tbody>
             </table>
+
+            {/* Mobile Card List */}
+            <div className="md:hidden flex flex-col gap-4">
+              {RECENT_TRANSACTIONS.map((tx, i) => (
+                <div key={i} className="p-4 flex flex-col gap-3 rounded-xl">
+                  <div className="flex justify-between items-start">
+                    <div className="flex flex-col">
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{tx.date}</span>
+                      <span className="text-sm font-bold text-slate-900 dark:text-white mt-0.5">{tx.description}</span>
+                    </div>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${tx.statusClass}`}>
+                      {tx.status}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className={`text-lg font-black ${tx.amountClass || 'text-slate-900 dark:text-white'}`}>{tx.amount}</span>
+                    <button 
+                      onClick={() => setSelectedTx(tx)}
+                      className="flex items-center gap-2 text-[#1241a1] font-bold text-xs bg-[#1241a1]/5 px-3 py-1.5 rounded-lg"
+                    >
+                      <span className="material-symbols-outlined text-sm">receipt</span>
+                      Receipt
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 

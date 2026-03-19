@@ -18,16 +18,16 @@ export default function DashboardSidebar({ links, user, role, estateName }) {
   };
 
   return (
-    <aside className="w-72 bg-slate-50 dark:bg-slate-900/50 flex-col justify-between p-6 shrink-0 overflow-y-auto hidden lg:flex transition-colors">
+    <aside className="w-72  bg-slate-50 dark:bg-slate-900/50 flex-col justify-between p-6 shrink-0 overflow-y-auto hidden lg:flex transition-colors">
       <div className="flex flex-col gap-8">
         {/* Branding & User */}
         <div className="flex items-center gap-3 px-2 cursor-pointer group" onClick={() => router.push('/')}>
-          <div className="bg-[#1241a1] rounded-lg p-2 text-white shadow-lg shadow-[#1241a1]/20 group-hover:scale-110 transition-transform">
-            <Building2 className="w-6 h-6" />
+          <div className="bg-[#1241a1] rounded-lg p-2 text-white shadow-lg shadow-[#1241a1]/20 group-hover:scale-110 transition-transform flex items-center justify-center">
+            <span className="material-symbols-outlined text-2xl">apartment</span>
           </div>
           <div>
-            <h1 className="text-lg font-black leading-tight tracking-tight">EstatePro</h1>
-            <p className="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest">{role === 'admin' ? 'Admin Console' : 'Resident Portal'}</p>
+            <h1 className="text-lg font-bold leading-tight tracking-tight">Elite Towers</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-widest">{role === 'admin' ? 'Admin Console' : 'Resident Portal'}</p>
           </div>
         </div>
 
@@ -47,7 +47,7 @@ export default function DashboardSidebar({ links, user, role, estateName }) {
         <nav className="flex flex-col gap-1">
           {links.map((link) => {
             const isActive = pathname === link.href;
-            const Icon = link.icon;
+            const iconName = typeof link.icon === 'string' ? link.icon : (link.iconName || 'dashboard');
             return (
               <Link
                 key={link.href}
@@ -55,12 +55,14 @@ export default function DashboardSidebar({ links, user, role, estateName }) {
                 className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 group ${
                   isActive 
                     ? 'bg-[#1241a1] text-white shadow-lg shadow-[#1241a1]/20' 
-                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  {Icon && <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? '' : 'group-hover:scale-110'}`} />}
-                  <span className="text-sm font-bold">{link.label}</span>
+                  <span className={`material-symbols-outlined text-xl transition-transform duration-300 ${isActive ? '' : 'group-hover:scale-110'}`}>
+                    {iconName}
+                  </span>
+                  <span className="text-sm font-semibold">{link.label}</span>
                 </div>
                 {link.badge > 0 && (
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${isActive ? 'bg-white text-[#1241a1]' : 'bg-[#1241a1] text-white'}`}>{link.badge}</span>
@@ -74,20 +76,20 @@ export default function DashboardSidebar({ links, user, role, estateName }) {
       {/* Sidebar Footer */}
       <div className="flex flex-col gap-4">
         {role === 'resident' && (
-          <Link href={`/dashboard/${role}/emergency`} className="w-full flex items-center justify-center gap-2 bg-red-500/5 text-red-600 dark:text-red-400 py-3 rounded-xl font-bold text-sm hover:bg-red-500/10 transition-all active:scale-95">
-            <ShieldAlert className="w-4 h-4" />
-            Emergency Alert
+          <Link href={`/dashboard/${role}/emergency`} className="w-full flex items-center justify-center gap-2 bg-red-500/10 text-red-600 dark:text-red-400 py-3 rounded-xl font-bold text-sm hover:bg-red-500/20 transition-all active:scale-95">
+            <span className="material-symbols-outlined text-base">emergency_share</span>
+            Emergency Contact
           </Link>
         )}
         <div className="flex items-center justify-between px-2 text-slate-500 dark:text-slate-400">
           <Link href={`/dashboard/${role}/settings`} className="cursor-pointer hover:text-[#1241a1] transition-colors p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg" title="Settings">
-            <Settings className="w-5 h-5" />
+            <span className="material-symbols-outlined">settings</span>
           </Link>
           <button className="cursor-pointer hover:text-[#1241a1] transition-colors p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg" title="Help">
-            <HelpCircle className="w-5 h-5" />
+            <span className="material-symbols-outlined">help</span>
           </button>
           <button className="cursor-pointer hover:text-red-500 transition-colors p-2 hover:bg-red-500/10 rounded-lg" onClick={() => setShowLogoutConfirm(true)} title="Logout">
-            <LogOut className="w-5 h-5" />
+            <span className="material-symbols-outlined">logout</span>
           </button>
         </div>
       </div>
