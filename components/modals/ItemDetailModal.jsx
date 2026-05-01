@@ -14,8 +14,17 @@ import {
   Info
 } from 'lucide-react'
 import { toast } from 'react-toastify'
+import { updateLostAndFoundAction } from '@/lib/action'
 
 export default function ItemDetailModal({ item, onClose }) {
+
+  const handleClaim = async (type) => {
+    const res = await updateLostAndFoundAction(item._id || item.id, type)
+    if (res.success) {
+      toast.success(item.status === 'lost' ? 'Report submitted! Thank you.' : 'Item claimed successfully!')
+      onClose()
+    }
+  }
   if (!item) return null
 
   const CATEGORY_COLORS = {
@@ -42,24 +51,32 @@ export default function ItemDetailModal({ item, onClose }) {
         {/* Left: Image Section */}
         <div className="md:w-1/2 relative h-64 md:h-auto bg-slate-100 dark:bg-slate-800">
           {item.image ? (
-            <Image
+            <img
               src={item.image}
               alt={item.name}
-              fill
-              className="object-cover"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
             />
-          ) : (
-            <div className={`absolute inset-0 flex flex-col items-center justify-center p-8 text-center`}>
-               <div className={`size-20 rounded-2xl flex items-center justify-center mb-4 ${CATEGORY_COLORS[item.category] || 'bg-slate-500/10 text-slate-500'}`}>
-                  <Tag className="size-10" />
-               </div>
-               <p className="text-slate-400 font-medium">No photo provided for this item</p>
-            </div>
-          )}
+          ) : null}
+          <div className={`absolute inset-0 flex flex-col items-center justify-center p-8 text-center ${item.image ? 'hidden' : 'flex'}`}>
+             <div className={`size-20 rounded-2xl flex items-center justify-center mb-4 ${CATEGORY_COLORS[item.category] || 'bg-slate-500/10 text-slate-500'}`}>
+                <Tag className="size-10" />
+             </div>
+             <p className="text-slate-400 font-medium">No photo provided for this item</p>
+          </div>
           
           {/* Status Badge */}
-          <div className={`absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-lg ${item.status === 'lost' ? 'bg-red-500 text-white' : 'bg-emerald-500 text-white'}`}>
-            {item.status}
+          <div className={`absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-white backdrop-blur-md shadow-xl border border-white/20 z-10
+            ${(item.status || item.type) === 'lost' ? 'bg-rose-500/90 shadow-rose-500/20' : 
+              (item.status || item.type) === 'resolved' ? 'bg-blue-500/90 shadow-blue-500/20' : 
+              'bg-emerald-500/90 shadow-emerald-500/20'}`}>
+            {(item.status || item.type) === 'lost' ? <AlertCircle size={12} strokeWidth={3} /> : 
+             (item.status || item.type) === 'resolved' ? <CheckCircle2 size={12} strokeWidth={3} /> : 
+             <Search size={12} strokeWidth={3} />}
+            {item.status || item.type}
           </div>
 
           <button 
@@ -137,7 +154,7 @@ export default function ItemDetailModal({ item, onClose }) {
                 <button 
                   onClick={() => {
                     const url = new URL(window.location.href);
-                    url.searchParams.set('item', item.id);
+                    url.searchParams.set('item', item._id || item.id);
                     navigator.clipboard.writeText(url.toString());
                     toast.success('Link copied to clipboard!');
                   }}
@@ -146,8 +163,17 @@ export default function ItemDetailModal({ item, onClose }) {
                   <Share2 size={16} />
                   Share
                 </button>
-                {item.status === 'found' && (
-                  <button className="flex-1 border-2 border-emerald-500/20 hover:border-emerald-500/40 text-emerald-600 dark:text-emerald-400 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-sm">
+                {item.status === 'found' ? (
+                  <button 
+                  onClick={() => handleClaim('claim')}
+                  className="flex-1 border-2 border-emerald-500/20 hover:border-emerald-500/40 text-emerald-600 dark:text-emerald-400 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-sm">
+                    <CheckCircle2 size={16} />
+                    This is Mine
+                  </button>
+                ) : (
+                  <button 
+                  onClick={() => handleClaim('found')}
+                  className="flex-1 border-2 border-emerald-500/20 hover:border-emerald-500/40 text-emerald-600 dark:text-emerald-400 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-sm">
                     <CheckCircle2 size={16} />
                     I Found This
                   </button>

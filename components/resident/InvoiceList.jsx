@@ -14,10 +14,8 @@ import {
   Eye
 } from 'lucide-react'
 import Link from 'next/link';
+import { getInvoices } from '@/lib/service';
 
-// Mock Data
-const MOCK_INVOICES = [
-];
 
 const getStatusConfig = (status) => {
   switch (status) {
@@ -56,18 +54,21 @@ const getStatusConfig = (status) => {
   }
 }
 
-export default function InvoiceList() {
+export default async function InvoiceList() {
+
+    const invoices = await getInvoices();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  const filteredInvoices = MOCK_INVOICES.filter(inv => {
+  const filteredInvoices = invoices.docs.filter(inv => {
     const matchesSearch = inv.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           inv.id.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || inv.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
-  const totalOutstanding = MOCK_INVOICES
+  const totalOutstanding = invoices.docs
     .filter(inv => inv.status !== 'paid')
     .reduce((sum, inv) => sum + inv.amount, 0);
 

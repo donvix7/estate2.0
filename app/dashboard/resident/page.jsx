@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import ServiceCard from '@/components/ServiceCard'
 
 import {
   getAnnouncements,
   getVisitors,
   getResidentData,
+  getServiceRequests,
 } from '@/lib/service'
 
 import { 
@@ -19,8 +21,23 @@ import {
   Search, 
   AlertTriangle, 
   Briefcase, 
-  Megaphone
+  Megaphone,
+  CreditCard,
+  Shield,
+  Receipt,
+  Map,
+  User,
+  MoreHorizontal,
+  ChevronRight,
+  Droplets,
+  Waves,
+  Building2
 } from 'lucide-react';
+import AnnouncementItem from '@/components/AnnouncementItems';
+import ActionCard from '@/components/ActionCard';
+import BillItem from '@/components/BillItems';
+import ServiceIconLink from '@/components/ServiceIconLink';
+import ServiceRow from '@/components/ServiceRow';
 
 export default function ResidentDashboard() {
   const router = useRouter()
@@ -28,69 +45,51 @@ export default function ResidentDashboard() {
   const [visitors, setVisitors] = useState([])
   const [residentData, setResidentData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const outstandingServices = [
-    {
-      id: "#SR-9421",
-      category: "Climate",
-      icon: "ac_unit",
-      desc: "Living room HVAC making resonance noise",
-      status: "Active",
-      statusColor: "bg-blue-500",
-      iconColor: "text-blue-500"
-    },
-    {
-      id: "#SR-9388",
-      category: "Plumbing",
-      icon: "plumbing",
-      desc: "Kitchen mixer needs seal replacement",
-      status: "Scheduled",
-      statusColor: "bg-slate-400",
-      iconColor: "text-slate-400"
-    }
-  ]
+  const [outstandingServices, setOutstandingServices] = useState([])
 
   const actions = [
     {
       id: "visitor-code",
       title: "Visitor Code",
       desc: "Temporary access for guests",
-      icon: "qr_code_2",
+      icon: QrCode,
       href: "/dashboard/resident/visitors"
     },
     {
       id: "new-request",
       title: "New Request",
       desc: "Report maintenance issue",
-      icon: "add_task",
+      icon: PlusSquare,
       href: "/dashboard/resident/maintenance/new"
     },
     {
       id: "bills-payments",
       title: "Bills & Payments",
       desc: "View bills and pay dues",
-      icon: "payments",
+      icon: CreditCard,
       href: "/dashboard/resident/finance"
     },
     {
       id: "lost-found",
       title: "Lost & Found",
       desc: "Report or find lost items",
-      icon: "search",
+      icon: Search,
       href: "/dashboard/resident/lost_and_found"
     },
     {
       id: "emergency-contacts",
       title: "Emergency Contacts",
       desc: "Manage emergency contacts",
-      icon: "emergency",
+      icon: AlertTriangle,
       href: "/dashboard/resident/emergency"
     },
     {
       id: "estate-services",
       title: "Estate Services",
       desc: "Browse & book professionals",
-      icon: "business_center",
+      icon: Briefcase,
       href: "/dashboard/resident/workers"
     }
   ]
@@ -98,80 +97,116 @@ export default function ResidentDashboard() {
   const residentsServiceItems = [
     {
       href:"/dashboard/resident/announcements" ,
-      icon:"campaign" ,
+      icon: Megaphone ,
       label:"Announce" 
     },
     {
       href:"/dashboard/resident/activity",
-      icon:"shield" ,
+      icon: Shield ,
       label:"Logs" 
     },
     {
       href:"/dashboard/resident/finance",
-      icon:"receipt_long" ,
+      icon: Receipt ,
       label:"Invoices" 
     },
     {
       href:"/dashboard/resident/map",
-      icon:"map",
+      icon: Map,
       label:"Map" 
     },
     {
       href:"/dashboard/resident/maintenance",
-      icon:"handyman",
+      icon: Wrench,
       label:"Services" 
     },
     {
       href:"/dashboard/resident/lost_and_found",
-      icon:"search_check",
+      icon: Search,
       label:"Lost & Found"
     },
     {
       href:"/dashboard/resident/emergency",
-      icon:"emergency",
+      icon: AlertTriangle,
       label:"SOS",
       urgent: true
     },
     {
       href:"/dashboard/resident/profile",
-      icon:"account_circle",
+      icon: User,
       label:"Profile"
-    }
-
-  ]
-  const mobileOverviewItems = [
-    {
-      
     }
   ] 
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
       try {
-        const [announcementsData, visitorsData, residentDataResponse] = await Promise.all([
+        const [announcementsData, visitorsData, residentDataResponse, serviceRequestsData] = await Promise.all([
           getAnnouncements(),
           getVisitors(),
-          getResidentData()
+          getResidentData(),
+          getServiceRequests()
         ]);
         
-        setAnnouncements(announcementsData || []);
+        // Map string icons to Lucide components
+        const iconMap = { Cloud, Droplets, Wrench, Megaphone, Shield, Receipt, Map, Search, AlertTriangle, User };
+        const mappedServices = (serviceRequestsData || []).map(s => ({
+          ...s,
+          icon: iconMap[s.icon] || Wrench
+        }));
+
+        setAnnouncements(announcementsData.docs || []);
         setVisitors(visitorsData || []);
         setResidentData(residentDataResponse);
+        setOutstandingServices(mappedServices);
+        setError(null);
       } catch (error) {
         console.error('Error loading data:', error);
+        setError('Failed to load dashboard data. Please check your connection and try again.');
       } finally {
         setIsLoading(false);
       }
     };
-
     loadData();
   }, [])
 
+  const handleRefresh = () => {
+    setError(null);
+    setIsLoading(true);
+    router.refresh();
+    // After router.refresh(), we still want to trigger our client-side loadData
+    setTimeout(() => {
+      window.location.reload(); // More reliable for a "Try Again" feel in this context
+    }, 100);
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#111621] flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-[#111621] flex flex-col items-center justify-center">
         <div className="size-16 border-4 border-[#1241a1]/20 border-t-[#1241a1] rounded-full animate-spin"></div>
         <p className="mt-6 text-slate-400 font-bold tracking-widest uppercase text-xs">Loading Portal...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+        <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-2xl shadow-2xl p-8 flex flex-col items-center text-center animate-in zoom-in-95 duration-300">
+          <div className="size-20 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-6">
+            <AlertTriangle className="size-10 text-red-600 dark:text-red-500" />
+          </div>
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Unexpected Error</h3>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 leading-relaxed">
+            {error}
+          </p>
+          <button 
+            onClick={handleRefresh}
+            className="w-full bg-[#1241a1] hover:bg-[#1241a1]/90 text-white font-bold py-4 rounded-xl shadow-lg shadow-[#1241a1]/20 transition-all active:scale-95 flex items-center justify-center gap-2"
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
@@ -192,10 +227,10 @@ export default function ResidentDashboard() {
         <Link href="/dashboard/resident/visitors">
           <button className="w-full bg-[#1241a1] hover:bg-[#1241a1]/90 text-white rounded-xl py-4 px-6 flex items-center justify-between shadow-lg shadow-[#1241a1]/20 transition-all active:scale-[0.98]">
             <div className="flex items-center gap-3">
-              <span className="material-symbols-outlined text-2xl">qr_code_2</span>
+              <QrCode className="size-6" />
               <span className="font-bold text-lg">Generate Visitor Code</span>
             </div>
-            <span className="material-symbols-outlined">chevron_right</span>
+            <ChevronRight className="size-5" />
           </button>
         </Link>
       </section>
@@ -205,7 +240,7 @@ export default function ResidentDashboard() {
         <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 px-1">Status Overview</h3>
         <div className="grid gap-3">
           <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-xl flex gap-3 items-start">
-            <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">warning</span>
+            <AlertTriangle className="size-6 text-amber-600 dark:text-amber-400" />
             <div>
               <p className="font-bold text-amber-900 dark:text-amber-100 text-sm">Security Alert</p>
               <p className="text-amber-800 dark:text-amber-300 text-xs text-left">Scheduled maintenance on perimeter sensors today at 2:00 PM.</p>
@@ -213,7 +248,7 @@ export default function ResidentDashboard() {
           </div>
           <div className="bg-white dark:bg-slate-800 p-4 rounded-xl flex justify-between items-center shadow-sm">
             <div className="flex gap-3 items-center">
-              <span className="material-symbols-outlined text-[#1241a1]">payments</span>
+              <CreditCard className="size-5 text-[#1241a1]" />
               <div className="text-left">
                 <p className="font-bold text-sm">Service Charge Due</p>
                 <p className="text-slate-500 dark:text-slate-400 text-xs">Due in 3 days • $120.00</p>
@@ -273,13 +308,13 @@ export default function ResidentDashboard() {
           ))}          
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mt-12">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-12">
           {/* Billing Summary */}
           <div className="lg:col-span-1 flex flex-col gap-4">
             <div className="bg-white dark:bg-slate-900 rounded-xl p-6 h-full shadow-sm">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-bold">Billing Summary</h3>
-                <span className="material-symbols-outlined text-slate-400 cursor-pointer">more_horiz</span>
+                <MoreHorizontal className="size-5 text-slate-400 cursor-pointer" />
               </div>
               <div className="mb-6 text-left">
                 <p className="text-sm text-slate-500 dark:text-slate-400">Total Outstanding</p>
@@ -289,7 +324,7 @@ export default function ResidentDashboard() {
                 {outstandingServices.map((service) => (
                   <BillItem 
                     key={service.id} 
-                    icon={service.category === 'Climate' ? 'ac_unit' : 'plumbing'} 
+                    icon={service.icon} 
                     label={service.category} 
                     amount="$225.00" 
                   />
@@ -307,7 +342,7 @@ export default function ResidentDashboard() {
           </div>
 
           {/* Recent Announcements */}
-          <div className="lg:col-span-2 flex flex-col gap-4">
+          <div className="lg:col-span-1.5 flex flex-col gap-4">
             <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-bold">Recent Announcements</h3>
@@ -320,7 +355,7 @@ export default function ResidentDashboard() {
                   announcements.slice(0, 3).map((ann, idx) => (
                     <AnnouncementItem 
                       key={ann.id || idx}
-                      icon={ann.icon || 'campaign'} 
+                      icon={ann.icon === 'pool' ? Waves : Megaphone} 
                       title={ann.title} 
                       desc={ann.content} 
                       time={ann.timestamp || 'Just now'} 
@@ -330,7 +365,7 @@ export default function ResidentDashboard() {
                 ) : (
                   <>
                     <AnnouncementItem 
-                      icon="pool" 
+                      icon={Waves} 
                       title="Pool Maintenance Schedule" 
                       desc="The main swimming pool will be closed for quarterly deep cleaning and filtration maintenance starting next Monday, July 15th..." 
                       time="2 hours ago" 
@@ -357,7 +392,7 @@ export default function ResidentDashboard() {
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-transparent">
                 <tr>
-                  {['Request ID', 'Category', 'Description', 'Status', 'Actions'].map((header) => (
+                  {['Request ID', 'Category', 'Description', 'Status'].map((header) => (
                     <th key={header} className="px-6 py-4 font-semibold">{header}</th>
                   ))}
                 </tr>
@@ -383,7 +418,7 @@ export default function ResidentDashboard() {
         {/* Mobile Card List */}
         <div className="lg:hidden grid gap-4">
           {outstandingServices.map((request) => (
-            <ServiceCard 
+            <ServiceCard
               key={request.id}
               {...request}
             />
@@ -398,111 +433,7 @@ export default function ResidentDashboard() {
   )
 }
 
-function ServiceIconLink({ href, icon, label, urgent = false }) {
-  return (
-    <Link href={href} className="flex flex-col items-center gap-2 group">
-      <div className={`size-12 rounded-xl flex items-center justify-center transition-all ${urgent ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 group-active:bg-[#1241a1]/10 group-active:text-[#1241a1]'}`}>
-        <span className="material-symbols-outlined">{icon}</span>
-      </div>
-      <span className={`text-[11px] font-medium text-center ${urgent ? 'text-red-600 dark:text-red-400 font-bold' : 'text-slate-600 dark:text-slate-400'}`}>{label}</span>
-    </Link>
-  );
-}
-
-function ActionCard({ icon, title, desc, href = '#' }) {
-  return (
-    <Link href={href} className="group p-5 bg-white dark:bg-slate-900 rounded-xl hover:border-[#1241a1] transition-all cursor-pointer text-left">
-      <div className="bg-[#1241a1]/10 text-[#1241a1] p-3 rounded-lg w-fit mb-4 group-hover:bg-[#1241a1] group-hover:text-white transition-colors">
-        <span className="material-symbols-outlined">{icon}</span>
-      </div>
-      <h4 className="font-bold mb-1 text-sm">{title}</h4>
-      <p className="text-xs text-slate-500 dark:text-slate-400">{desc}</p>
-    </Link>
-  )
-}
 
 
-function BillItem({ icon, label, amount }) {
-  return (
-    <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-      <div className="flex items-center gap-3">
-        <div className="p-2 rounded bg-[#1241a1]/20 text-[#1241a1]">
-          <span className="material-symbols-outlined text-sm">{icon}</span>
-        </div>
-        <span className="text-sm font-medium">{label}</span>
-      </div>
-      <span className="text-sm font-bold">{amount}</span>
-    </div>
-  )
-}
 
-function AnnouncementItem({ icon, title, desc, time, urgent = false }) {
-  return (
-    <div className="flex gap-4 p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors cursor-pointer text-left">
-      <div className="shrink-0 size-12 bg-[#1241a1]/10 rounded-xl flex items-center justify-center text-[#1241a1]">
-        <span className="material-symbols-outlined">{icon}</span>
-      </div>
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
-          <h4 className="font-bold text-sm">{title}</h4>
-          {urgent && <span className="text-[10px] px-2 py-0.5 bg-orange-500/10 text-orange-500 rounded-full font-bold">URGENT</span>}
-        </div>
-        <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">{desc}</p>
-        <p className="text-[10px] text-slate-400 mt-1">{time} • Building Management</p>
-      </div>
-    </div>
-  )
-}
 
-function ServiceRow({ id, category, icon, iconColor, desc, status, statusColor }) {
-  return (
-    <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors">
-      <td className="px-6 py-4 font-bold text-slate-700 dark:text-slate-300">{id}</td>
-      <td className="px-6 py-4">
-        <span className="flex items-center gap-2 font-medium">
-          <span className={`material-symbols-outlined text-sm ${iconColor}`}>{icon}</span>
-          {category}
-        </span>
-      </td>
-      <td className="px-6 py-4 text-slate-500 dark:text-slate-400 font-medium max-w-xs truncate" title={desc}>{desc}</td>
-      <td className="px-6 py-4">
-        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${status === 'In Progress' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-slate-500/10 text-slate-500'}`}>
-          <span className={`size-1.5 rounded-full ${statusColor} ${status === 'In Progress' ? 'animate-pulse' : ''}`}></span>
-          {status}
-        </span>
-      </td>
-      <td className="px-6 py-4 text-right">
-        <button className="text-[#1241a1] font-semibold hover:underline">Track</button>
-      </td>
-    </tr>
-  )
-}
-
-function ServiceCard({ id, category, icon, iconColor, desc, status, statusColor }) {
-  return (
-    <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm flex flex-col gap-4">
-      <div className="flex justify-between items-start">
-        <div className="flex items-center gap-3">
-          <div className={`size-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center ${iconColor}`}>
-            <span className="material-symbols-outlined text-xl">{icon}</span>
-          </div>
-          <div>
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{id}</p>
-            <p className="text-sm font-bold text-slate-900 dark:text-white">{category}</p>
-          </div>
-        </div>
-        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold ${status === 'Active' || status === 'In Progress' ? 'bg-blue-500/10 text-blue-500' : 'bg-slate-500/10 text-slate-500'}`}>
-          <span className={`size-1 rounded-full ${statusColor} ${status === 'Active' || status === 'In Progress' ? 'animate-pulse' : ''}`}></span>
-          {status}
-        </span>
-      </div>
-      <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">{desc}</p>
-      <div className="pt-2 flex justify-end">
-        <button className="text-[#1241a1] text-xs font-bold flex items-center gap-1">
-          Track Status
-          <span className="material-symbols-outlined text-sm">chevron_right</span>
-        </button>
-      </div>
-    </div>
-  )
-}

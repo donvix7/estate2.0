@@ -202,7 +202,6 @@ input,
 select,
 textarea {
   border-radius: var(--radius);
-  padding: 0.625rem 1rem;
   background-color: var(--background);
   border: 1px solid var(--border);
 }

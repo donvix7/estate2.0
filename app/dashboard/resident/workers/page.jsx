@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -20,6 +20,9 @@ import {
   UserSearch, 
   X 
 } from 'lucide-react';
+import { getWorkers, getResidentData } from '@/lib/service';
+import { bookService } from '@/lib/action';
+import { toast } from 'react-toastify';
 
 const CATEGORIES = [
   { id: 'all',         label: 'All Services',  icon: Briefcase },
@@ -30,110 +33,8 @@ const CATEGORIES = [
   { id: 'gardening',  label: 'Gardening',      icon: Flower2 },
 ]
 
-const WORKERS = [
-  {
-    id: 1,
-    name: 'John Miller',
-    title: 'Master Plumber • 12 yrs exp.',
-    category: 'plumbing',
-    rating: 4.9,
-    jobs: '150+',
-    rate: '₦25,000/hr',
-    verified: true,
-    skills: ['Emergency Repair', 'Pipe Fitting'],
-    image: '/sw_plumber1.png',
-  },
-  {
-    id: 2,
-    name: 'Sarah Chen',
-    title: 'Leak Detection Specialist',
-    category: 'plumbing',
-    rating: 4.8,
-    jobs: '89',
-    rate: '₦30,000/hr',
-    verified: true,
-    skills: ['Smart Homes', 'Solar Heating'],
-    image: null,
-    initials: 'SC',
-    color: 'bg-sky-500',
-  },
-  {
-    id: 3,
-    name: 'Amara Nwosu',
-    title: 'Commercial Electrician',
-    category: 'electrical',
-    rating: 5.0,
-    jobs: '210+',
-    rate: '₦35,000/hr',
-    verified: true,
-    skills: ['Solar Panels', 'Smart Wiring'],
-    image: '/sw_electrician1.png',
-  },
-  {
-    id: 4,
-    name: 'Robert Smith',
-    title: 'Master Carpenter',
-    category: 'carpentry',
-    rating: 4.9,
-    jobs: '175',
-    rate: '₦20,000/hr',
-    verified: true,
-    skills: ['Custom Furniture', 'Flooring'],
-    image: '/sw_carpenter1.png',
-  },
-  {
-    id: 5,
-    name: 'Grace Eze',
-    title: 'Deep Clean Specialist',
-    category: 'cleaning',
-    rating: 4.8,
-    jobs: '320+',
-    rate: '₦15,000/hr',
-    verified: true,
-    skills: ['Post-Construction', 'Steam Clean'],
-    image: '/sw_cleaner1.png',
-  },
-  {
-    id: 6,
-    name: 'Victor Okafor',
-    title: 'Landscape Gardener',
-    category: 'gardening',
-    rating: 4.7,
-    jobs: '98',
-    rate: '₦18,000/hr',
-    verified: false,
-    skills: ['Lawn Care', 'Irrigation'],
-    image: '/sw_gardener1.png',
-  },
-  {
-    id: 7,
-    name: 'Elena Rodriguez',
-    title: 'Residential Maintenance',
-    category: 'plumbing',
-    rating: 4.7,
-    jobs: '45',
-    rate: '₦22,000/hr',
-    verified: false,
-    skills: ['Renovations', 'Drainage'],
-    image: null,
-    initials: 'ER',
-    color: 'bg-rose-500',
-  },
-  {
-    id: 8,
-    name: 'James Taylor',
-    title: 'Appliance Technician',
-    category: 'electrical',
-    rating: 4.5,
-    jobs: '64',
-    rate: '₦20,000/hr',
-    verified: false,
-    skills: ['Washing Machines', 'Dishwashers'],
-    image: null,
-    initials: 'JT',
-    color: 'bg-violet-500',
-  },
-]
+
+
 
 const ACTIVE_FILTERS = {
   verifiedOnly: false,
@@ -142,18 +43,71 @@ const ACTIVE_FILTERS = {
 }
 
 export default function WorkersDirectoryPage() {
+  const [workers, setWorkers] = useState([])
+  const [residentData, setResidentData] = useState(null)
+
+  useEffect(() => {
+    const loadData = async () => {
+      const [workersData, resData] = await Promise.all([
+        getWorkers(),
+        getResidentData()
+      ])  
+      setWorkers(workersData?.docs || [])
+      setResidentData(resData)
+    }
+    loadData()
+  }, [])
+
   const [activeCategory, setActiveCategory] = useState('all')
   const [search, setSearch] = useState('')
   const [filters, setFilters] = useState(ACTIVE_FILTERS)
-  const [showBook, setShowBook] = useState(null) // worker id
+  const [showBook, setShowBook] = useState(null) // selected worker object
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [bookingForm, setBookingForm] = useState({
+    date: '',
+    description: ''
+  })
 
   const toggleFilter = (key) => setFilters(f => ({ ...f, [key]: !f[key] }))
 
-  const filtered = WORKERS.filter(w => {
+  const handleBookSubmit = async (e) => {
+    e.preventDefault()
+    if (!showBook) return
+    setIsSubmitting(true)
+
+    const requestData = {
+      category: showBook.category || 'General',
+      icon: showBook.category === 'plumbing' ? 'Droplets' : 
+            showBook.category === 'electrical' ? 'Bolt' : 
+            showBook.category === 'carpentry' ? 'Hammer' : 
+            showBook.category === 'cleaning' ? 'Sparkles' : 'Briefcase',
+      desc: bookingForm.description,
+      date: bookingForm.date,
+      status: 'Scheduled',
+      statusColor: 'bg-slate-400',
+      iconColor: showBook.category === 'plumbing' ? 'text-blue-500' : 'text-slate-500',
+      workerId: showBook.id,
+      workerName: showBook.name,
+      residentId: residentData?.id || 'RES-005'
+    }
+
+    try {
+      await bookService(requestData)
+      toast.success(`Booking request sent to ${showBook.name}!`)
+      setShowBook(null)
+      setBookingForm({ date: '', description: '' })
+    } catch (error) {
+      toast.error('Failed to send booking request. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const filtered = workers.filter(w => {
     const matchesCat = activeCategory === 'all' || w.category === activeCategory
-    const matchesSearch = w.name.toLowerCase().includes(search.toLowerCase()) ||
-                          w.title.toLowerCase().includes(search.toLowerCase()) ||
-                          w.skills.some(s => s.toLowerCase().includes(search.toLowerCase()))
+    const matchesSearch = (w.name || '').toLowerCase().includes(search.toLowerCase()) ||
+                          (w.title || '').toLowerCase().includes(search.toLowerCase()) ||
+                          (w.skills || []).some(s => s.toLowerCase().includes(search.toLowerCase()))
     const matchesVerified = !filters.verifiedOnly || w.verified
     const matchesRating = !filters.topRated || w.rating >= 4.9
     return matchesCat && matchesSearch && matchesVerified && matchesRating
@@ -269,7 +223,9 @@ export default function WorkersDirectoryPage() {
                   />
                 ) : (
                   <div className={`absolute inset-0 flex items-center justify-center ${worker.color || 'bg-[#1241a1]'}`}>
-                    <span className="text-4xl font-black text-white/80">{worker.initials}</span>
+                    <span className="text-4xl font-black text-white/80">
+                      {worker.initials || worker.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                    </span>
                   </div>
                 )}
                 {/* Verified badge */}
@@ -279,11 +235,7 @@ export default function WorkersDirectoryPage() {
                     Verified
                   </div>
                 )}
-                {/* Rating overlay */}
-                <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-lg flex items-center gap-1 z-10">
-                  <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                  <span className="text-white text-xs font-black">{worker.rating}</span>
-                </div>
+             
               </Link>
 
               {/* Info */}
@@ -302,13 +254,6 @@ export default function WorkersDirectoryPage() {
                   ))}
                 </div>
 
-                {/* Stats */}
-                <div className="flex items-center justify-between pt-2 mt-auto">
-                  <div className="text-xs text-slate-500">
-                    <span className="font-bold text-slate-900 dark:text-white">{worker.jobs}</span> jobs done
-                  </div>
-                  <div className="text-xs font-black text-[#1241a1]">{worker.rate}</div>
-                </div>
 
                 <button
                   onClick={() => setShowBook(worker)}
@@ -334,52 +279,59 @@ export default function WorkersDirectoryPage() {
       {/* ── Booking Modal ── */}
       {showBook && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between p-6">
-              <div>
-                <h3 className="font-bold text-lg">Book {showBook.name}</h3>
-                <p className="text-sm text-slate-500">{showBook.title}</p>
-              </div>
-              <button onClick={() => setShowBook(null)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+          <form onSubmit={handleBookSubmit} className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-md animate-in zoom-in-95 duration-200 overflow-hidden">
+             <div className="p-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-900">
+              <h3 className="font-black text-xs uppercase tracking-widest text-[#1241a1]">Service Request</h3>
+              <button type="button" onClick={() => setShowBook(null)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
                 <X className="w-5 h-5 text-slate-400" />
               </button>
             </div>
-            <div className="p-6 space-y-4">
-              {[
-                { label: 'Service Required', placeholder: 'Describe what you need...', type: 'text' },
-                { label: 'Preferred Date', placeholder: '', type: 'date' },
-                { label: 'Preferred Time', placeholder: '', type: 'time' },
-                { label: 'Additional Notes', placeholder: 'Any special instructions...', type: 'text' },
-              ].map(field => (
-                <div key={field.label} className="space-y-1.5">
-                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">{field.label}</label>
-                  <input
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    className="w-full bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none transition-all"
-                  />
+            
+            <div className="p-8 space-y-4">
+              <div className="flex items-center gap-4 mb-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl">
+                <div className={`size-12 rounded-xl flex items-center justify-center text-white font-black ${showBook.color || 'bg-[#1241a1]'}`}>
+                   {showBook.initials || 'W'}
                 </div>
-              ))}
-              <div className="flex items-center justify-between py-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl px-4">
-                <span className="text-sm font-semibold">Estimated Rate</span>
-                <span className="font-black text-[#1241a1]">{showBook.rate}</span>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Provider</p>
+                  <p className="text-sm font-black dark:text-white">{showBook.name}</p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 leading-none">Preferred Date</label>
+                <input 
+                  type="date" 
+                  required
+                  value={bookingForm.date}
+                  onChange={e => setBookingForm(f => ({ ...f, date: e.target.value }))}
+                  className="w-full bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none border-none dark:text-white" 
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 leading-none">Service Description</label>
+                <textarea 
+                  placeholder="Tell us what you need..." 
+                  rows={3} 
+                  required
+                  value={bookingForm.description}
+                  onChange={e => setBookingForm(f => ({ ...f, description: e.target.value }))}
+                  className="w-full bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none border-none dark:text-white resize-none" 
+                />
               </div>
             </div>
-            <div className="p-6 pt-0 flex gap-3">
-              <button
-                onClick={() => setShowBook(null)}
-                className="flex-1 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold text-sm rounded-xl transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => setShowBook(null)}
-                className="flex-1 py-3 bg-[#1241a1] hover:bg-[#1241a1]/90 text-white font-bold text-sm rounded-xl transition-colors"
-              >
-                Confirm Booking
-              </button>
+
+            <div className="p-8 pt-0 flex gap-4">
+               <button type="button" onClick={() => setShowBook(null)} className="flex-1 py-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-black text-[11px] uppercase tracking-widest rounded-2xl transition-all">Cancel</button>
+               <button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="flex-1 py-4 bg-[#1241a1] text-white font-black text-[11px] uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-[#1241a1]/20 disabled:opacity-50"
+               >
+                 {isSubmitting ? 'Sending...' : 'Confirm'}
+               </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
     </div>

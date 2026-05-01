@@ -3,11 +3,11 @@
 import React, { useState } from 'react'
 import { Eye, EyeOff, Plus, ArrowUpRight, History, CreditCard, Wallet, Nfc } from 'lucide-react'
 
-export function WalletCard({ balance = 0, currency = "₦" }) {
+export function WalletCard({ balance = 0, currency = "$" }) {
   const [showBalance, setShowBalance] = useState(true)
   
   // Format balance with commas
-  const formattedBalance = new Intl.NumberFormat('en-NG', {
+  const formattedBalance = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }).format(balance)

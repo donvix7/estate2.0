@@ -2,68 +2,56 @@
 
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
-import { Key, Clock, ShieldCheck, Phone, MapPin, User, Calendar, Plus, ExternalLink, QrCode, History, Shield, AlertCircle, CheckCircle2 as CheckIcon, UserPlus } from 'lucide-react';
+import { 
+  Key, 
+  Clock, 
+  ShieldCheck, 
+  Phone, 
+  MapPin, 
+  User, 
+  Calendar, 
+  Plus, 
+  ExternalLink, 
+  QrCode, 
+  History, 
+  Shield, 
+  AlertCircle, 
+  CheckCircle2 as CheckIcon, 
+  UserPlus,
+  UserCheck,
+  Search,
+  BellRing,
+  Activity,
+  Ban,
+  Share2,
+  Printer,
+  Download,
+  LogOut,
+  ArrowLeft,
+  Car,
+  LogIn
+} from 'lucide-react';
 import { toast } from 'react-toastify';
+import { 
+  getPassHistory as apiGetPassHistory, 
+  getEntryExitLogs as apiGetEntryExitLogs, 
+  getBlacklist as apiGetBlacklist 
+} from '@/lib/service';
+import { 
+  savePassToHistory as apiSavePassToHistory, 
+  logEntryExit as apiLogEntryExit, 
+  addToBlacklist as apiAddToBlacklist, 
+  removeFromBlacklist as apiRemoveFromBlacklist 
+} from '@/lib/action';
 import { AlertModal } from './ui/AlertModal';
 import { PromptModal } from './ui/PromptModal';
 
-// Hardcoded database simulation
-const HARDCODED_DATA = {
-  passHistory: [],
-  entryExitLogs: [],
-  blacklist: []
-}
-
-const mockAPI = {
-  async getPassHistory() {
-    try {
-      const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=5');
-      const data = await response.json();
-      return data.map((post, index) => ({
-        id: post.id,
-        visitorName: `Visitor ${post.id}`,
-        phone: `98765${post.id.toString().padStart(5, '0')}`,
-        purpose: ['Personal', 'Delivery', 'Service'][index % 3],
-        residentName: 'John Doe',
-        unitNumber: `A-${101 + index}`,
-        passCode: `PASS${post.id.toString().padStart(3, '0')}`,
-        pin: Math.floor(1000 + Math.random() * 9000).toString(),
-        timestamp: new Date(Date.now() - (index * 86400000)).toISOString(),
-        expectedDeparture: new Date(Date.now() + (index + 1) * 3600000).toISOString(),
-        status: ['pending', 'active', 'completed'][index % 3]
-      }));
-    } catch {
-      return HARDCODED_DATA.passHistory;
-    }
-  },
-  async getEntryExitLogs() {
-    try {
-      const response = await fetch('https://jsonplaceholder.typicode.com/comments?_limit=5');
-      const data = await response.json();
-      return data.map((comment, index) => ({
-        id: comment.id,
-        visitor: `Visitor ${comment.id}`,
-        type: index % 2 === 0 ? 'entry' : 'exit',
-        passCode: `PASS${comment.id.toString().padStart(3, '0')}`,
-        timestamp: new Date(Date.now() - (index * 3600000)).toISOString(),
-        verifiedBy: index % 2 === 0 ? 'System' : 'Security'
-      }));
-    } catch {
-      return HARDCODED_DATA.entryExitLogs;
-    }
-  },
-  async savePassToHistory(passData) { HARDCODED_DATA.passHistory.unshift(passData); return { success: true }; },
-  async addToBlacklist(visitor) { HARDCODED_DATA.blacklist.push(visitor); return { success: true }; },
-  async removeFromBlacklist(index) { HARDCODED_DATA.blacklist.splice(index, 1); return { success: true }; },
-  async logEntryExit(log) { HARDCODED_DATA.entryExitLogs.unshift(log); return { success: true }; },
-  async getBlacklist() { return HARDCODED_DATA.blacklist; },
-};
 
 const TABS = [
-  { id: 'schedule', label: 'Schedule Visitor', icon: 'qr_code_2' },
-  { id: 'history', label: 'Pass History', icon: 'history' },
-  { id: 'logs', label: 'Activity Logs', icon: 'monitoring' },
-  { id: 'blacklist', label: 'Blacklist', icon: 'block' },
+  { id: 'schedule', label: 'Schedule Visitor', icon: <QrCode className="size-4" /> },
+  { id: 'history', label: 'Pass History', icon: <History className="size-4" /> },
+  { id: 'logs', label: 'Activity Logs', icon: <Activity className="size-4" /> },
+  { id: 'blacklist', label: 'Blacklist', icon: <Ban className="size-4" /> },
 ];
 
 export function VisitorPassGenerator() {
@@ -100,11 +88,11 @@ export function VisitorPassGenerator() {
       setIsLoading(true);
       try {
         const [history, blacklist, logs] = await Promise.all([
-          mockAPI.getPassHistory(),
-          mockAPI.getBlacklist(),
-          mockAPI.getEntryExitLogs()
+          apiGetPassHistory(),
+          apiGetBlacklist(),
+          apiGetEntryExitLogs()
         ]);
-        setPassHistory(history);
+        setPassHistory(history.docs);
         setBlacklistedVisitors(Array.isArray(blacklist) ? blacklist : []);
         setEntryExitLogs(logs);
       } catch {
@@ -153,10 +141,10 @@ export function VisitorPassGenerator() {
         const passData = { id: Date.now().toString(), ...formData, passCode, pin, timestamp: new Date().toISOString(), status: 'pending', securityVerified: false };
         setGeneratedPass(passData);
         setQrCodeData(generateQRCode(passData));
-        await mockAPI.savePassToHistory(passData);
+        await apiSavePassToHistory(passData);
         setPassHistory(prev => [passData, ...prev.slice(0, 9)]);
         const logEntry = { id: Date.now(), type: 'entry', visitor: passData.visitorName, passCode: passData.passCode, timestamp: new Date().toISOString(), verifiedBy: 'System' };
-        await mockAPI.logEntryExit(logEntry);
+        await apiLogEntryExit(logEntry);
         setEntryExitLogs(prev => [logEntry, ...prev.slice(0, 9)]);
         const expiryTime = new Date(formData.expectedDeparture).getTime() - Date.now();
         if (expiryTime > 0) {
@@ -190,7 +178,7 @@ export function VisitorPassGenerator() {
       setGeneratedPass(prev => ({ ...prev, securityVerified: true, status: 'active' }));
       toast.success('Visitor verified and allowed entry!');
       const logEntry = { id: Date.now(), type: 'entry', visitor: generatedPass.visitorName, passCode: generatedPass.passCode, timestamp: new Date().toISOString(), verifiedBy: 'Security' };
-      mockAPI.logEntryExit(logEntry).then(() => {
+      apiLogEntryExit(logEntry).then(() => {
         setEntryExitLogs(prev => [logEntry, ...prev.slice(0, 9)]);
       });
     } else { 
@@ -212,7 +200,7 @@ export function VisitorPassGenerator() {
 
   const handleBlacklistConfirm = (reason) => {
     const visitor = { name: formData.visitorName, phone: formData.phone, reason, added: new Date().toISOString() };
-    mockAPI.addToBlacklist(visitor).then(() => {
+    apiAddToBlacklist(visitor).then(() => {
       setBlacklistedVisitors(prev => [...prev, visitor]);
       toast.success('Visitor added to blacklist');
     });
@@ -237,14 +225,14 @@ export function VisitorPassGenerator() {
     if (!generatedPass) return;
     setGeneratedPass(prev => ({ ...prev, status: 'completed' }));
     const logExit = { id: Date.now(), type: 'exit', visitor: generatedPass.visitorName, passCode: generatedPass.passCode, timestamp: new Date().toISOString(), verifiedBy: 'Security' };
-    await mockAPI.logEntryExit(logExit);
+    await apiLogEntryExit(logExit);
     setEntryExitLogs(prev => [logExit, ...prev.slice(0, 9)]);
     if (timerRef.current) { clearInterval(timerRef.current); setTimeLeft(null); }
     toast.info(`Visitor ${generatedPass.visitorName} has checked out.`);
   };
 
   const removeFromBlacklist = async (index) => {
-    await mockAPI.removeFromBlacklist(index);
+    await apiRemoveFromBlacklist(index);
     setBlacklistedVisitors(prev => prev.filter((_, i) => i !== index));
   };
 
@@ -289,35 +277,26 @@ export function VisitorPassGenerator() {
         <div>
           <div className="flex items-center gap-3 mb-1">
             <div className="size-9 bg-[#1241a1] rounded-xl flex items-center justify-center text-white">
-              <span className="material-symbols-outlined text-lg">badge</span>
+              <UserCheck className="size-5" />
             </div>
             <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Visitor Management</h2>
           </div>
           <p className="text-slate-500 text-sm ml-12">Authorize entry and generate secure digital passes</p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
-            <input className="pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-[#1241a1] w-full sm:w-52 outline-none" placeholder="Search visitors..." type="text" />
-          </div>
-          <button className="size-9 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 relative">
-            <span className="material-symbols-outlined text-lg">notifications</span>
-            <span className="absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full"></span>
-          </button>
-        </div>
+       
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Total Passes', value: passHistory.length, icon: 'qr_code_2', color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600' },
-          { label: 'Active Now', value: passHistory.filter(p => p.status === 'active').length, icon: 'how_to_reg', color: 'bg-green-100 dark:bg-green-900/30 text-green-600' },
-          { label: 'Pending', value: passHistory.filter(p => p.status === 'pending').length, icon: 'pending', color: 'bg-amber-100 dark:bg-amber-900/30 text-amber-600' },
-          { label: 'Blacklisted', value: blacklistedVisitors.length, icon: 'block', color: 'bg-red-100 dark:bg-red-900/30 text-red-600' },
+          { label: 'Total Passes', value: passHistory.length, icon: <QrCode className="size-5" />, color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600' },
+          { label: 'Active Now', value: passHistory.filter(p => p.status === 'active').length, icon: <UserCheck className="size-5" />, color: 'bg-green-100 dark:bg-green-900/30 text-green-600' },
+          { label: 'Pending', value: passHistory.filter(p => p.status === 'pending').length, icon: <Clock className="size-5" />, color: 'bg-amber-100 dark:bg-amber-900/30 text-amber-600' },
+          { label: 'Blacklisted', value: blacklistedVisitors.length, icon: <Ban className="size-5" />, color: 'bg-red-100 dark:bg-red-900/30 text-red-600' },
         ].map(stat => (
           <div key={stat.label} className="bg-white dark:bg-slate-900 p-5 rounded-2xl flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
             <div className={`size-10 rounded-xl flex items-center justify-center flex-shrink-0 ${stat.color}`}>
-              <span className="material-symbols-outlined text-lg">{stat.icon}</span>
+              {stat.icon}
             </div>
             <div>
               <p className="text-2xl font-bold">{stat.value}</p>
@@ -339,7 +318,7 @@ export function VisitorPassGenerator() {
                 : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
             }`}
           >
-            <span className="material-symbols-outlined text-base">{tab.icon}</span>
+            {tab.icon}
             {tab.label}
           </button>
         ))}
@@ -353,7 +332,7 @@ export function VisitorPassGenerator() {
           <div className="flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Hero */}
             <div className="size-20 bg-emerald-500/15 text-emerald-500 rounded-full flex items-center justify-center mb-5">
-              <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'wght' 700" }}>check_circle</span>
+              <CheckIcon className="size-10 stroke-3" />
             </div>
             <h2 className="text-2xl sm:text-3xl font-black mb-2 text-center">Visitor Access Code Generated</h2>
             <p className="text-slate-500 text-center mb-10 max-w-lg text-sm">The access code is now active and ready for use. Please share it with your visitor for seamless entry.</p>
@@ -401,7 +380,7 @@ export function VisitorPassGenerator() {
                     onClick={sharePass}
                     className="w-full flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-emerald-500/20"
                   >
-                    <span className="material-symbols-outlined text-lg">share</span>
+                    <Share2 className="size-5" />
                     Share via WhatsApp
                   </button>
                   <div className="grid grid-cols-2 gap-3">
@@ -409,7 +388,7 @@ export function VisitorPassGenerator() {
                       onClick={() => window.print()}
                       className="flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-3 rounded-xl transition-all text-sm"
                     >
-                      <span className="material-symbols-outlined text-sm">print</span>
+                      <Printer className="size-4" />
                       Print Pass
                     </button>
                     <button
@@ -422,7 +401,7 @@ export function VisitorPassGenerator() {
                       }}
                       className="flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-3 rounded-xl transition-all text-sm"
                     >
-                      <span className="material-symbols-outlined text-sm">download</span>
+                      <Download className="size-4" />
                       Download
                     </button>
                   </div>
@@ -432,7 +411,7 @@ export function VisitorPassGenerator() {
                       {generatedPass.securityVerified ? 'Verified' : 'Verify'}
                     </button>
                     <button onClick={markExit} className="flex items-center justify-center gap-2 py-2.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-xl font-bold text-sm transition-all">
-                      <span className="material-symbols-outlined text-sm">logout</span>
+                      <LogOut className="size-4" />
                       Mark Exit
                     </button>
                   </div>
@@ -446,7 +425,7 @@ export function VisitorPassGenerator() {
                 onClick={() => setGeneratedPass(null)}
                 className="flex items-center gap-2 text-[#1241a1] font-bold hover:underline"
               >
-                <span className="material-symbols-outlined">arrow_back</span>
+                <ArrowLeft className="size-5" />
                 Schedule Another Visitor
               </button>
             </div>
@@ -464,7 +443,7 @@ export function VisitorPassGenerator() {
               {/* Visitor Info */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-[#1241a1]">
-                  <span className="material-symbols-outlined text-lg">account_circle</span>
+                  <User className="size-5" />
                   <h4 className="font-bold uppercase tracking-wider text-xs">Visitor Information</h4>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -492,7 +471,7 @@ export function VisitorPassGenerator() {
               {/* Timing */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-[#1241a1]">
-                  <span className="material-symbols-outlined text-lg">event</span>
+                  <Calendar className="size-5" />
                   <h4 className="font-bold uppercase tracking-wider text-xs">Access Timing</h4>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -510,7 +489,7 @@ export function VisitorPassGenerator() {
               {/* Vehicle */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-[#1241a1]">
-                  <span className="material-symbols-outlined text-lg">directions_car</span>
+                  <Car className="size-5" />
                   <h4 className="font-bold uppercase tracking-wider text-xs">Vehicle Details <span className="text-slate-400 font-normal normal-case">(Optional)</span></h4>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -543,7 +522,7 @@ export function VisitorPassGenerator() {
                     </span>
                   ) : (
                     <>
-                      <span className="material-symbols-outlined group-hover:rotate-12 transition-transform">qr_code_2</span>
+                      <QrCode className="size-5 group-hover:rotate-12 transition-transform" />
                       Generate Access Code
                     </>
                   )}
@@ -557,7 +536,7 @@ export function VisitorPassGenerator() {
           <div className="lg:col-span-2">
             <div className="h-80 lg:h-full min-h-[300px] bg-white dark:bg-slate-900 rounded-2xl flex flex-col items-center justify-center text-center p-8 gap-3">
               <div className="size-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center">
-                <span className="material-symbols-outlined text-3xl text-slate-400">qr_code_2</span>
+                <QrCode className="size-8 text-slate-400" />
               </div>
               <div>
                 <h3 className="font-bold text-slate-700 dark:text-slate-300 mb-1">No Pass Generated</h3>
@@ -581,7 +560,7 @@ export function VisitorPassGenerator() {
           </div>
           {passHistory.length === 0 ? (
             <div className="p-12 text-center text-slate-400">
-              <span className="material-symbols-outlined text-4xl mb-3 block">history</span>
+              <History className="size-10 mb-3 mx-auto opacity-50" />
               <p className="font-medium">No pass history yet</p>
             </div>
           ) : (
@@ -622,7 +601,7 @@ export function VisitorPassGenerator() {
           </div>
           {entryExitLogs.length === 0 ? (
             <div className="p-12 text-center text-slate-400">
-              <span className="material-symbols-outlined text-4xl mb-3 block">monitoring</span>
+              <Activity className="size-10 mb-3 mx-auto opacity-50" />
               <p className="font-medium">No activity logged yet</p>
             </div>
           ) : (
@@ -630,7 +609,7 @@ export function VisitorPassGenerator() {
               {entryExitLogs.map((log, i) => (
                 <div key={log.id || i} className="p-4 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                   <div className={`size-9 rounded-full flex items-center justify-center flex-shrink-0 ${log.type === 'entry' ? 'bg-green-100 text-green-600 dark:bg-green-900/30' : 'bg-red-100 text-red-600 dark:bg-red-900/30'}`}>
-                    <span className="material-symbols-outlined text-base">{log.type === 'entry' ? 'login' : 'logout'}</span>
+                    {log.type === 'entry' ? <LogIn className="size-4" /> : <LogOut className="size-4" />}
                   </div>
                   <div className="flex-1">
                     <p className="font-semibold text-sm">{log.visitor}</p>
@@ -652,7 +631,7 @@ export function VisitorPassGenerator() {
         <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm">
           <div className="p-6 flex items-center justify-between">
             <h3 className="font-bold text-lg text-red-600 dark:text-red-500 flex items-center gap-2">
-              <span className="material-symbols-outlined">block</span>
+              <Ban className="size-5" />
               Blacklisted Visitors
             </h3>
             <button onClick={addToBlacklist} className="flex items-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl text-sm font-bold hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors">
@@ -662,7 +641,7 @@ export function VisitorPassGenerator() {
           </div>
           {blacklistedVisitors.length === 0 ? (
             <div className="p-12 text-center text-slate-400">
-              <span className="material-symbols-outlined text-4xl mb-3 block">verified_user</span>
+              <ShieldCheck className="size-10 mb-3 mx-auto opacity-50" />
               <p className="font-medium">No blacklisted visitors</p>
             </div>
           ) : (

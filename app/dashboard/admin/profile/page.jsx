@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { Camera, BadgeCheck, Mail, ShieldCheck, Settings2, History, ShieldAlert, CheckCircle2, UserPlus, Droplets, Wallet, BellRing, Download, User } from 'lucide-react';
+import { getAdminData } from '@/lib/service';
 
 export default function AdminProfilePage() {
   const [adminData, setAdminData] = useState(null)
@@ -11,21 +13,24 @@ export default function AdminProfilePage() {
   const [saveStatus, setSaveStatus] = useState('')
 
   // Mock Admin Data
-  const mockAdmin = {
-    id: 'ADM-9021',
-    name: 'Officer John Doe',
-    email: 'j.doe@estateflow.com',
-    phone: '+1 (555) 098-7654',
-    role: 'Senior System Administrator',
-    department: 'Security & Operations',
-    joiningDate: 'January 15, 2022',
-    accessLevel: 'Level 4 (Full Access)',
-    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDHYVlzHn-BdZ9ymJImLncgoWcrSTw44-gAGlp_LGdp0jTKj02OhZsyp4aUhTVCdsDLfWp5CDwBSH8bmCNKt-rd7sQuRwoe6DOZuzE69rdBZrajwTqYwyYxCFLlaBqSyumcNmaNa0X_Y2mfQ8ySBC186KSIMUbBd5K6ZvmBofPi30u3bw-TPHw-O4yA5I8YOyCmLVsJZvkeJfh5FzVfujJ9RqnU0A-gC44KnFgsqnMyl1MYX4QwxlH5vEY5D55o8nNimDrpHKejrwg'
-  };
+
 
   useEffect(() => {
-    setAdminData(mockAdmin);
-    setEditForm(mockAdmin);
+    const loadAdminData = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getAdminData();
+        setAdminData(data);
+        setEditForm(data);
+      } catch (error) {
+        console.error('Error loading admin data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadAdminData();
+
   }, []);
 
   const handleEditProfile = () => {
@@ -75,25 +80,32 @@ export default function AdminProfilePage() {
         <div className="relative flex flex-col md:flex-row gap-8 items-center">
           <div className="relative">
             <div 
-              className="h-32 w-32 rounded-3xl bg-cover bg-center ring-4 ring-[#1241a1]/10 shadow-xl" 
-              style={{ backgroundImage: `url(${adminData?.avatar})` }}
-            ></div>
+              className="h-32 w-32 rounded-3xl bg-cover bg-center ring-4 ring-[#1241a1]/10 shadow-xl flex items-center justify-center bg-slate-100 dark:bg-slate-800" 
+              style={adminData?.avatar ? { backgroundImage: `url(${adminData?.avatar})` } : {}}
+            >
+              {!adminData?.avatar && <User className="size-12 text-slate-300" />}
+            </div>
             <button className="absolute bottom-[-10px] right-[-10px] p-2.5 bg-white dark:bg-slate-800 text-[#1241a1] rounded-2xl shadow-xl hover:scale-105 transition-transform border-4 border-slate-50 dark:border-background-dark">
-              <span className="material-symbols-outlined text-sm">photo_camera</span>
+              <Camera className="size-4" />
             </button>
           </div>
           
           <div className="flex-1 text-center md:text-left">
-            <h2 className="text-3xl font-black dark:text-white mb-2 tracking-tight">
+            <h2 className="text-3xl font-black dark:text-white mb-2 tracking-tight flex items-center justify-center md:justify-start gap-3">
               {adminData?.name}
+              {adminData?.estateID && (
+                <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 px-2 py-1 rounded-lg font-black tracking-widest uppercase">
+                  {adminData.estateID}
+                </span>
+              )}
             </h2>
             <div className="flex flex-col md:flex-row gap-2 md:gap-6">
               <p className="text-slate-500 dark:text-slate-400 flex items-center justify-center md:justify-start gap-2 text-sm font-bold uppercase tracking-widest">
-                <span className="material-symbols-outlined text-base">badge</span> 
+                <BadgeCheck className="size-4" /> 
                 {adminData?.role}
               </p>
               <p className="text-slate-500 dark:text-slate-400 flex items-center justify-center md:justify-start gap-2 text-sm font-medium">
-                <span className="material-symbols-outlined text-base">mail</span> 
+                <Mail className="size-4" /> 
                 {adminData?.email}
               </p>
             </div>
@@ -136,7 +148,9 @@ export default function AdminProfilePage() {
           {/* Admin Information */}
           <section className="bg-white dark:bg-slate-900 border-none p-8 shadow-sm rounded-4xl">
             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#1241a1] mb-8 flex items-center gap-3">
-              <span className="p-2 rounded-xl bg-[#1241a1]/10 material-symbols-outlined text-lg">admin_panel_settings</span>
+              <div className="p-2 rounded-xl bg-[#1241a1]/10 text-[#1241a1]">
+                <ShieldCheck className="size-5" />
+              </div>
               Admin Info
             </h3>
             
@@ -147,7 +161,7 @@ export default function AdminProfilePage() {
                 { label: 'Access Level', value: adminData?.accessLevel, name: 'accessLevel' },
                 { label: 'Joining Date', value: adminData?.joiningDate, name: 'joiningDate' }
               ].map((item, idx) => (
-                <div key={idx} className={`flex flex-col gap-1.5 ${idx !== 3 ? 'border-b border-slate-50 dark:border-slate-800/50 pb-5' : ''}`}>
+                <div key={idx} className={`flex flex-col gap-1.5 ${idx !== 3 ? 'border-b border-slate-50 dark:border-slate-900/50 pb-5' : ''}`}>
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{item.label}</span>
                   {isEditing && item.name ? (
                      <input 
@@ -167,7 +181,9 @@ export default function AdminProfilePage() {
           {/* System Settings */}
           <section className="bg-white dark:bg-slate-900 border-none p-8 shadow-sm rounded-4xl">
             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#1241a1] mb-8 flex items-center gap-3">
-              <span className="p-2 rounded-xl bg-[#1241a1]/10 material-symbols-outlined text-lg">settings_suggest</span>
+              <div className="p-2 rounded-xl bg-[#1241a1]/10 text-[#1241a1]">
+                <Settings2 className="size-5" />
+              </div>
               System Controls
             </h3>
             
@@ -196,7 +212,9 @@ export default function AdminProfilePage() {
           <section className="bg-white dark:bg-slate-900 border-none p-8 shadow-sm h-full rounded-4xl">
             <div className="flex items-center justify-between mb-10">
               <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#1241a1] flex items-center gap-3">
-                <span className="p-2 rounded-xl bg-[#1241a1]/10 material-symbols-outlined text-lg">history</span>
+                <div className="p-2 rounded-xl bg-[#1241a1]/10 text-[#1241a1]">
+                  <History className="size-5" />
+                </div>
                 Administrative Logs
               </h3>
               <button className="text-[11px] font-black uppercase tracking-widest text-[#1241a1] hover:underline">View Full Audit</button>
@@ -204,16 +222,16 @@ export default function AdminProfilePage() {
             
             <div className="space-y-10 relative before:absolute before:inset-0 before:ml-6 before:-translate-x-px before:h-full before:w-0.5 before:bg-linear-to-b before:from-slate-100 before:via-slate-200 before:to-transparent dark:before:from-slate-800 dark:before:via-slate-800">
               {[
-                { icon: 'verified_user', title: 'System Approval', time: '45m ago', desc: 'Approved visitor registration for Block A - House 42B', status: 'Completed', statusColor: 'emerald' },
-                { icon: 'emergency', title: 'Emergency Coordination', time: '2h ago', desc: 'Coordinated response for Medical Alert #9012 at West Gate', iconType: 'emergency' },
-                { icon: 'security_update_good', title: 'Security Protocol Update', time: '1 day ago', desc: 'Updated QR scanning protocols for Night Watch patrol' },
-                { icon: 'group_add', title: 'New Staff Onboarding', time: '3 days ago', desc: 'Approved access for 2 new service worker profiles', status: 'Verified', statusColor: 'blue' }
+                { icon: ShieldCheck, title: 'System Approval', time: '45m ago', desc: 'Approved visitor registration for Block A - House 42B', status: 'Completed', statusColor: 'emerald' },
+                { icon: ShieldAlert, title: 'Emergency Coordination', time: '2h ago', desc: 'Coordinated response for Medical Alert #9012 at West Gate', iconType: 'emergency' },
+                { icon: CheckCircle2, title: 'Security Protocol Update', time: '1 day ago', desc: 'Updated QR scanning protocols for Night Watch patrol' },
+                { icon: UserPlus, title: 'New Staff Onboarding', time: '3 days ago', desc: 'Approved access for 2 new service worker profiles', status: 'Verified', statusColor: 'blue' }
               ].map((activity, idx) => (
                 <div key={idx} className="relative flex items-start gap-8 group">
                   <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ring-8 ring-white dark:ring-slate-900 shadow-lg z-10 transition-transform group-hover:scale-110 ${
                     activity.iconType === 'emergency' ? 'bg-red-500/10 text-red-500' : 'bg-[#1241a1]/10 text-[#1241a1]'
                   }`}>
-                    <span className="material-symbols-outlined">{activity.icon}</span>
+                    <activity.icon className="size-6" />
                   </div>
                   
                   <div className="flex-1 pt-1 text-left">

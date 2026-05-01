@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
@@ -23,113 +23,90 @@ import {
   Calendar,
   X
 } from 'lucide-react'
+import { getWorkerById, getResidentData } from '@/lib/service'
+import { bookService } from '@/lib/action'
+import { toast } from 'react-toastify'
 
-// Extended worker data for profiles
-const WORKER_DETAILS = {
-  1: {
-    name: 'John Miller',
-    title: 'Master Plumber • 12 yrs exp.',
-    bio: 'Dedicated professional with over a decade of experience in residential and commercial plumbing systems. Specialist in high-efficiency boiler installations and emergency pipe repairs.',
-    rating: 4.9,
-    reviews: 128,
-    jobsDone: 154,
-    successRate: '98%',
-    available: true,
-    skills: ['Emergency Repair', 'Pipe Fitting', 'Gas Safety', 'Drainage Specialists'],
-    qualifications: [
-      'Certified Master Plumber (CMP)',
-      'OSHA Safety Certification',
-      'Advanced Hydro-Jetting Specialist',
-      'Solar Thermal Installation Diploma'
-    ],
-    socials: {
-      instagram: 'https://instagram.com',
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://twitter.com'
-    },
-    image: '/sw_plumber1.png',
-    initials: 'JM',
-    color: 'bg-blue-600',
-    rate: '₦25,000/hr'
-  },
-  2: {
-    name: 'Sarah Chen',
-    title: 'Leak Detection Specialist',
-    bio: 'Sarah leverages advanced acoustic technology to find hidden leaks. She specializes in smart home water management and eco-friendly heating solutions.',
-    rating: 4.8,
-    reviews: 74,
-    jobsDone: 89,
-    successRate: '96%',
-    available: true,
-    skills: ['Smart Homes', 'Solar Heating', 'Acoustic Leak Detection', 'Water Audits'],
-    qualifications: [
-      'BSc Environmental Engineering',
-      'Smart Home Systems Certified',
-      'Advanced Thermal Imaging Specialist'
-    ],
-    socials: {
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://twitter.com'
-    },
-    image: null,
-    initials: 'SC',
-    color: 'bg-sky-500',
-    rate: '₦30,000/hr'
-  },
-  3: {
-    name: 'Amara Nwosu',
-    title: 'Commercial Electrician',
-    bio: 'High-voltage expert specializing in commercial electrical infrastructure and solar power integration. Known for precision wiring and safety compliance.',
-    rating: 5.0,
-    reviews: 156,
-    jobsDone: 212,
-    successRate: '100%',
-    available: true,
-    skills: ['Solar Panels', 'Smart Wiring', 'Industrial Panels', 'Energy Audits'],
-    qualifications: [
-      'Certified Electrical Engineer',
-      'Solar PV Installation Professional',
-      'IEE Regulations Expert'
-    ],
-    socials: {
-      instagram: 'https://instagram.com',
-      linkedin: 'https://linkedin.com',
-      facebook: 'https://facebook.com'
-    },
-    image: '/sw_electrician1.png',
-    initials: 'AN',
-    color: 'bg-amber-600',
-    rate: '₦35,000/hr'
-  }
-}
-
-// Fallback for demo workers not in the detail map
-const getMockWorker = (id) => {
-  return WORKER_DETAILS[id] || {
-    name: 'Professional Worker',
-    title: 'Estate Verified Specialist',
-    bio: 'Comprehensive property maintenance expert dedicated to providing high-quality service to estate residents.',
-    rating: 4.5,
-    reviews: 42,
-    jobsDone: 50,
-    successRate: '95%',
-    available: true,
-    skills: ['General Repair', 'Maintenance'],
-    qualifications: ['Estate Safety Certified'],
-    socials: { linkedin: '#' },
-    image: null,
-    initials: 'PW',
-    color: 'bg-slate-600',
-    rate: '₦15,000/hr'
-  }
-}
 
 export default function WorkerProfilePage() {
   const { id } = useParams()
   const router = useRouter()
   const [showBook, setShowBook] = useState(false)
+  const [worker, setWorker] = useState(null)
+  const [residentData, setResidentData] = useState(null)
+  const [loading, setLoading] = useState(true)
   
-  const worker = getMockWorker(id)
+  useEffect(() => {
+    const loadData = async () => {
+      if (!id) return
+      const [workerData, resData] = await Promise.all([
+        getWorkerById(id),
+        getResidentData()
+      ])
+      setWorker(workerData)
+      setResidentData(resData)
+      setLoading(false)
+    }
+    loadData()
+  }, [id])
+
+  const [bookingForm, setBookingForm] = useState({
+    date: '',
+    description: ''
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleBookSubmit = async (e) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    const requestData = {
+      id: `#SR-${Math.floor(1000 + Math.random() * 9000)}`,
+      category: worker.category || 'General',
+      icon: worker.category === 'plumbing' ? 'Droplets' : 
+            worker.category === 'electrical' ? 'Bolt' : 
+            worker.category === 'carpentry' ? 'Hammer' : 
+            worker.category === 'cleaning' ? 'Sparkles' : 'Briefcase',
+      desc: bookingForm.description,
+      date: bookingForm.date,
+      status: 'Scheduled',
+      statusColor: 'bg-slate-400',
+      iconColor: worker.category === 'plumbing' ? 'text-blue-500' : 'text-slate-500',
+      workerId: id,
+      workerName: worker.name,
+      residentId: residentData?.id || 'RES-005'
+    }
+
+    try {
+      await bookService(requestData)
+      toast.success(`Booking request sent to ${worker.name}!`)
+      setShowBook(false)
+      setBookingForm({ date: '', description: '' })
+    } catch (error) {
+      toast.error('Failed to send booking request. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  if (loading) return (
+    <div className="flex items-center justify-center py-20">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#1241a1]"></div>
+    </div>
+  )
+
+  if (!worker) return (
+    <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
+      <p className="font-bold">Worker not found</p>
+      <button onClick={() => router.back()} className="text-[#1241a1] font-bold">Go Back</button>
+    </div>
+  )
+
+  const bio = worker.bio || 'Comprehensive property maintenance expert dedicated to providing high-quality service to estate residents.'
+  const qualifications = worker.qualifications || ['Estate Safety Certified']
+  const socials = worker.socials || { linkedin: '#' }
+  const successRate = worker.successRate || '95%'
+  const reviews = worker.reviews || 0
 
   return (
     <div className="max-w-5xl mx-auto w-full pb-20 animate-in fade-in duration-700">
@@ -157,8 +134,8 @@ export default function WorkerProfilePage() {
               {worker.image ? (
                 <Image src={worker.image} alt={worker.name} fill className="object-cover" />
               ) : (
-                <div className={`absolute inset-0 flex items-center justify-center text-4xl font-black text-white ${worker.color}`}>
-                  {worker.initials}
+                <div className={`absolute inset-0 flex items-center justify-center text-4xl font-black text-white ${worker.color || 'bg-[#1241a1]'}`}>
+                  {worker.initials || worker.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
                 </div>
               )}
               {worker.available && (
@@ -172,17 +149,17 @@ export default function WorkerProfilePage() {
             <div className="flex items-center gap-1.5 mt-4 bg-amber-50 dark:bg-amber-900/20 px-4 py-1.5 rounded-full">
               <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
               <span className="text-sm font-black text-amber-700 dark:text-amber-400">{worker.rating}</span>
-              <span className="text-xs text-amber-600/60 dark:text-amber-400/50 font-bold ml-1">({worker.reviews} reviews)</span>
+              <span className="text-xs text-amber-600/60 dark:text-amber-400/50 font-bold ml-1">({reviews} reviews)</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 w-full mt-8 pt-8 border-t border-slate-100 dark:border-slate-800">
+            <div className="grid grid-cols-2 gap-4 w-full mt-8 pt-8 border-t border-slate-100 dark:border-slate-900">
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Rate</p>
                 <p className="text-sm font-black dark:text-white">{worker.rate}</p>
               </div>
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Success</p>
-                <p className="text-sm font-black text-emerald-500">{worker.successRate}</p>
+                <p className="text-sm font-black text-emerald-500">{successRate}</p>
               </div>
             </div>
 
@@ -202,24 +179,24 @@ export default function WorkerProfilePage() {
           <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm">
             <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6">Connected Socials</h4>
             <div className="flex flex-col gap-4">
-              {worker.socials.linkedin && (
-                <a href={worker.socials.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-[#1241a1] transition-colors">
+              {socials.linkedin && (
+                <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-[#1241a1] transition-colors">
                   <div className="size-8 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center">
                     <Linkedin className="w-4 h-4" />
                   </div>
                   LinkedIn Profile
                 </a>
               )}
-              {worker.socials.instagram && (
-                <a href={worker.socials.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-[#1241a1] transition-colors">
+              {socials.instagram && (
+                <a href={socials.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-[#1241a1] transition-colors">
                   <div className="size-8 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center">
                     <Instagram className="w-4 h-4" />
                   </div>
                   Instagram Showcase
                 </a>
               )}
-              {worker.socials.twitter && (
-                <a href={worker.socials.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-[#1241a1] transition-colors">
+              {socials.twitter && (
+                <a href={socials.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-[#1241a1] transition-colors">
                   <div className="size-8 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center">
                     <Twitter className="w-4 h-4" />
                   </div>
@@ -237,7 +214,7 @@ export default function WorkerProfilePage() {
           <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-sm">
             <h4 className="text-lg font-black dark:text-white mb-4">About Professional</h4>
             <p className="text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-              {worker.bio}
+              {bio}
             </p>
           </div>
 
@@ -272,7 +249,7 @@ export default function WorkerProfilePage() {
                <h4 className="text-lg font-black dark:text-white">Professional Qualifications</h4>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {worker.qualifications.map((q, idx) => (
+              {qualifications.map((q, idx) => (
                 <div key={idx} className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl">
                   <CheckCircle2 className="w-4 h-4 text-[#1241a1]" />
                   <span className="text-sm font-bold dark:text-white">{q}</span>
@@ -305,18 +282,18 @@ export default function WorkerProfilePage() {
       {/* ── Booking Modal (Simplified) ── */}
       {showBook && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-md animate-in zoom-in-95 duration-200 overflow-hidden">
-             <div className="p-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
+          <form onSubmit={handleBookSubmit} className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-md animate-in zoom-in-95 duration-200 overflow-hidden">
+             <div className="p-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-900">
               <h3 className="font-black text-xs uppercase tracking-widest text-[#1241a1]">Service Request</h3>
-              <button onClick={() => setShowBook(false)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+              <button type="button" onClick={() => setShowBook(false)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
                 <X className="w-5 h-5 text-slate-400" />
               </button>
             </div>
             
             <div className="p-8 space-y-4">
               <div className="flex items-center gap-4 mb-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl">
-                <div className={`size-12 rounded-xl flex items-center justify-center text-white font-black ${worker.color}`}>
-                   {worker.initials}
+                <div className={`size-12 rounded-xl flex items-center justify-center text-white font-black ${worker.color || 'bg-[#1241a1]'}`}>
+                   {worker.initials || 'W'}
                 </div>
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Provider</p>
@@ -326,19 +303,38 @@ export default function WorkerProfilePage() {
 
               <div className="space-y-2">
                 <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 leading-none">Preferred Date</label>
-                <input type="date" className="w-full bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none border-none dark:text-white" />
+                <input 
+                  type="date" 
+                  required
+                  value={bookingForm.date}
+                  onChange={e => setBookingForm(f => ({ ...f, date: e.target.value }))}
+                  className="w-full bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none border-none dark:text-white" 
+                />
               </div>
               <div className="space-y-2">
                 <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 leading-none">Service Description</label>
-                <textarea placeholder="Tell us what you need..." rows={3} className="w-full bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none border-none dark:text-white resize-none" />
+                <textarea 
+                  placeholder="Tell us what you need..." 
+                  rows={3} 
+                  required
+                  value={bookingForm.description}
+                  onChange={e => setBookingForm(f => ({ ...f, description: e.target.value }))}
+                  className="w-full bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none border-none dark:text-white resize-none" 
+                />
               </div>
             </div>
 
             <div className="p-8 pt-0 flex gap-4">
-               <button onClick={() => setShowBook(false)} className="flex-1 py-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-black text-[11px] uppercase tracking-widest rounded-2xl transition-all">Cancel</button>
-               <button onClick={() => setShowBook(false)} className="flex-1 py-4 bg-[#1241a1] text-white font-black text-[11px] uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-[#1241a1]/20">Confirm</button>
+               <button type="button" onClick={() => setShowBook(false)} className="flex-1 py-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-black text-[11px] uppercase tracking-widest rounded-2xl transition-all">Cancel</button>
+               <button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="flex-1 py-4 bg-[#1241a1] text-white font-black text-[11px] uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-[#1241a1]/20 disabled:opacity-50"
+               >
+                 {isSubmitting ? 'Sending...' : 'Confirm'}
+               </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
     </div>

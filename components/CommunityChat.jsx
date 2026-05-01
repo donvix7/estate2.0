@@ -33,27 +33,27 @@ const MOCK_DMS = [
 // Organize messages by channel/DM ID
 const INITIAL_MESSAGES = {
   1: [
-    { id: 1001, sender: 'System Admin', avatar: 'SA', text: 'Welcome to the general community chat portal!', timestamp: '09:00 AM', isMe: false },
-    { id: 1002, sender: 'John Doe (A-101)', avatar: 'JD', text: 'Looks great! Is this live for all residents?', timestamp: '09:15 AM', isMe: false },
-    { id: 1003, sender: 'System Admin', avatar: 'SA', text: 'Yes, we are rolling it out today.', timestamp: '09:16 AM', isMe: false },
+    { id: 1001, sender: 'System Admin', picture: 'SA', text: 'Welcome to the general community chat portal!', timestamp: '09:00 AM', isMe: false },
+    { id: 1002, sender: 'John Doe (A-101)', picture: 'JD', text: 'Looks great! Is this live for all residents?', timestamp: '09:15 AM', isMe: false },
+    { id: 1003, sender: 'System Admin', picture: 'SA', text: 'Yes, we are rolling it out today.', timestamp: '09:16 AM', isMe: false },
   ],
   2: [
-    { id: 2001, sender: 'Mike Johnson (Sec)', avatar: 'MJ', text: 'All units, please ensure perimeter doors are locked at 10 PM.', timestamp: '08:00 PM', isMe: false },
+    { id: 2001, sender: 'Mike Johnson (Sec)', picture: 'MJ', text: 'All units, please ensure perimeter doors are locked at 10 PM.', timestamp: '08:00 PM', isMe: false },
   ],
   3: [
-    { id: 3001, sender: 'Sarah Smith (Staff)', avatar: 'SS', text: 'Maintenance schedule for next week is uploaded.', timestamp: '10:00 AM', isMe: false },
+    { id: 3001, sender: 'Sarah Smith (Staff)', picture: 'SS', text: 'Maintenance schedule for next week is uploaded.', timestamp: '10:00 AM', isMe: false },
   ],
   4: [
-    { id: 4001, sender: 'System Admin', avatar: 'SA', text: 'Elevator 2 in Block B is currently under maintenance.', timestamp: '11:00 AM', isMe: false },
+    { id: 4001, sender: 'System Admin', picture: 'SA', text: 'Elevator 2 in Block B is currently under maintenance.', timestamp: '11:00 AM', isMe: false },
   ],
   101: [
-    { id: 5001, sender: 'System Admin', avatar: 'SA', text: 'Hello, how can I help you today?', timestamp: '09:00 AM', isMe: false },
+    { id: 5001, sender: 'System Admin', picture: 'SA', text: 'Hello, how can I help you today?', timestamp: '09:00 AM', isMe: false },
   ],
   102: [
-    { id: 6001, sender: 'Sarah Smith (Staff)', avatar: 'SS', text: 'Did you need assistance with the portal?', timestamp: '09:30 AM', isMe: false },
+    { id: 6001, sender: 'Sarah Smith (Staff)', picture: 'SS', text: 'Did you need assistance with the portal?', timestamp: '09:30 AM', isMe: false },
   ],
   103: [
-    { id: 7001, sender: 'Mike Johnson (Sec)', avatar: 'MJ', text: 'Your guest pass has been approved.', timestamp: '02:00 PM', isMe: false },
+    { id: 7001, sender: 'Mike Johnson (Sec)', picture: 'MJ', text: 'Your guest pass has been approved.', timestamp: '02:00 PM', isMe: false },
   ],
 };
 
@@ -92,7 +92,7 @@ export default function CommunityChat({
     const newMessage = {
       id: Date.now(),
       sender: currentUserName,
-      avatar: currentUserAvatar,
+      picture: currentUserAvatar,
       text: messageText,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       isMe: true, // Mark it as sent by current user
@@ -288,7 +288,7 @@ export default function CommunityChat({
               <div className={`flex max-w-[85%] sm:max-w-[75%] ${msg.isMe ? 'flex-row-reverse' : 'flex-row'} gap-2`}>
                  {!msg.isMe && (
                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 flex items-center justify-center text-xs font-bold shrink-0 mt-auto mb-1 mx-2 shadow-sm ">
-                     {msg.avatar}
+                     {msg.picture}
                    </div>
                  )}
                  

@@ -9,21 +9,21 @@ export default function UsersPage() {
   const router = useRouter();
 
   return (
-    <div className="animate-fade-in p-6 md:p-10 max-w-7xl mx-auto space-y-6">
+    <div className="animate-in fade-in duration-700 max-w-7xl mx-auto space-y-8 pb-12">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 rounded-lg">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 px-4 md:px-0">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white font-heading">People Management</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
-            Manage Residents, Staff & Security personnel for the estate.
+          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">People Management</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1.5 text-sm font-medium">
+            Centralized directory for Residents, Estate Staff & Security personnel.
           </p>
         </div>
         <button
           onClick={() => router.push('/dashboard/admin/users/add')}
-          className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+          className="px-6 py-2.5 bg-[#1241a1] text-white text-[11px] font-black uppercase tracking-widest rounded-xl hover:brightness-110 transition-all shadow-xl shadow-[#1241a1]/20 flex items-center gap-2 active:scale-95"
         >
           <Plus className="w-5 h-5" />
-          Add New
+          Add New Profile
         </button>
       </div>        
          

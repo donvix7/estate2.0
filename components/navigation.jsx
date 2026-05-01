@@ -18,6 +18,7 @@ import {
   Zap,
   BarChart3,
   Lock,
+  Building2,
 } from 'lucide-react'
 
 const Navigation = () => {
@@ -153,7 +154,7 @@ const Navigation = () => {
                     className="flex items-center gap-3 cursor-pointer group"
                 >
                     <div className="size-10 bg-[#1241a1] rounded-lg flex items-center justify-center text-white shadow-lg shadow-[#1241a1]/20 group-hover:scale-105 transition-transform">
-                        <span className="material-symbols-outlined text-2xl">domain</span>
+                        <Building2 className="size-6" />
                     </div>
                     <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">EstatePro</h2>
                 </div>
@@ -206,7 +207,7 @@ const Navigation = () => {
                         <div className="flex items-center justify-between mb-8">
                             <div className="flex items-center gap-3">
                                 <div className="size-10 bg-[#1241a1] rounded-lg flex items-center justify-center text-white shadow-md">
-                                    <span className="material-symbols-outlined text-xl">domain</span>
+                                    <Building2 className="size-5" />
                                 </div>
                                 <span className="font-bold text-xl text-slate-900 dark:text-white">EstatePro</span>
                             </div>

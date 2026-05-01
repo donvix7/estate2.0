@@ -1,73 +1,47 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { Building, ChevronRight, Eye, Flame, Headset, HeartPulse, HelpCircle, Loader2, Phone, Plus, Send, ShieldAlert, User, UserPlus, Users, X } from 'lucide-react'
+import { getResidentData, getUserById } from '@/lib/service'
+import { updateEmergencyContacts, sendEmergencyAlert } from '@/lib/action'
+import { toast } from 'react-toastify'
 
 const ESTATE_SERVICES = [
   {
     id: 'security',
     name: 'Security & Patrol',
     description: 'On-site professional security team for immediate threats, suspicious activity, or unauthorized access.',
-    image: '/emergency_security.png',
+    icon: ShieldAlert,
     badge: 'Available 24/7',
     badgeClass: 'bg-red-600 text-white',
     phone: 'tel:+2348000000001',
+    color: 'text-red-600 bg-red-50',
   },
   {
     id: 'medical',
     name: 'Medical Response',
     description: 'Certified paramedic team located at the main gatehouse. Equipped for basic life support and rapid transport.',
-    image: '/emergency_medical.png',
+    icon: HeartPulse,
     badge: 'Response < 5 Mins',
     badgeClass: 'bg-red-600 text-white',
     phone: 'tel:+2348000000002',
+    color: 'text-rose-600 bg-rose-50',
   },
   {
     id: 'fire',
     name: 'Fire & Maintenance',
     description: 'Urgent fire safety response and critical infrastructure repair — gas leaks, burst pipes, electrical hazards.',
-    image: '/emergency_fire.png',
+    icon: Flame,
     badge: 'Critical Infrastructure',
     badgeClass: 'bg-[#1241a1] text-white',
     phone: 'tel:+2348000000003',
+    color: 'text-[#1241a1] bg-blue-50',
   },
 ]
 
-const INITIAL_PERSONAL_CONTACTS = [
-  { 
-    id: 1,
-    name: 'Marcus Wright',
-    relation: 'Brother',
-    initials: 'MW',
-    color: 'bg-blue-500',
-    phone: 'tel:+2348000000004' 
-  },
-  { 
-    id: 2,
-    name: 'Sarah Jenkins',
-    relation: 'Neighbor (Unit 42B)',
-    initials: 'SJ',
-    color: 'bg-emerald-500',
-    phone: 'tel:+2348000000005' 
-  },
-  { 
-    id: 3,
-    name: 'David Chen',
-    relation: 'Spouse',
-    initials: 'DC',
-    color: 'bg-violet-500',
-    phone: 'tel:+2348000000006' 
-  },
-  { 
-    id: 4,
-    name: 'Elena Rossi',
-    relation: 'Close Friend',
-    initials: 'ER',
-    color: 'bg-rose-500',
-    phone: 'tel:+2348000000007' 
-  },
-]
+
 
 export default function EmergencyPage() {
   const [showAddContact, setShowAddContact] = useState(false)
@@ -77,13 +51,34 @@ export default function EmergencyPage() {
   const [isEditing, setIsEditing] = useState(false)
   const [isSubmittingReport, setIsSubmittingReport] = useState(false)
   
-  const [contacts, setContacts] = useState(INITIAL_PERSONAL_CONTACTS)
+  const [contacts, setContacts] = useState([])
   const [newContact, setNewContact] = useState({ name: '', phone: '', relation: '' })
   const [editContact, setEditContact] = useState({ name: '', phone: '', relation: '' })
   const [reportData, setReportData] = useState({ category: 'Security', subject: '', description: '' })
+  const [residentData, setResidentData] = useState(null)
 
-  const handleAddContact = () => {
-    if (!newContact.name || !newContact.phone) return
+  useEffect(() => {
+    const loadData = async () => {
+      //setIsLoading(true);
+      try {
+        const data = await getResidentData();
+        if (data) {
+          setResidentData(data);
+          setContacts(data.contacts || []);
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+       // setIsLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+//const INITIAL_PERSONAL_CONTACTS = []
+
+  const handleAddContact = async () => {
+    if (!newContact.name || !newContact.phone || !residentData?.id) return
     
     const colors = ['bg-blue-500', 'bg-emerald-500', 'bg-violet-500', 'bg-rose-500', 'bg-amber-500']
     const randomColor = colors[Math.floor(Math.random() * colors.length)]
@@ -97,32 +92,52 @@ export default function EmergencyPage() {
       phone: `tel:${newContact.phone}`
     }
 
-    setContacts([...contacts, contact])
-    setNewContact({ name: '', phone: '', relation: '' })
-    setShowAddContact(false)
+    try {
+      const updatedContacts = [...contacts, contact]
+      await updateEmergencyContacts(residentData.id, updatedContacts)
+      setContacts(updatedContacts)
+      setNewContact({ name: '', phone: '', relation: '' })
+      setShowAddContact(false)
+    } catch (error) {
+      console.error('Failed to add contact:', error)
+    }
   }
 
-  const handleUpdateContact = () => {
-    if (!editContact.name || !editContact.phone) return
+  const handleUpdateContact = async () => {
+    if (!editContact.name || !editContact.phone || !residentData?.id) return
 
     const initials = editContact.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
     const phone = editContact.phone.startsWith('tel:') ? editContact.phone : `tel:${editContact.phone}`
 
-    setContacts(contacts.map(c => 
+    const updatedContacts = contacts.map(c => 
       c.id === selectedContact.id 
         ? { ...selectedContact, ...editContact, initials, phone } 
         : c
-    ))
-    
-    setIsEditing(false)
-    setShowDetailModal(false)
-    setSelectedContact(null)
+    )
+
+    try {
+      await updateEmergencyContacts(residentData.id, updatedContacts)
+      setContacts(updatedContacts)
+      setIsEditing(false)
+      setShowDetailModal(false)
+      setSelectedContact(null)
+    } catch (error) {
+      console.error('Failed to update contact:', error)
+    }
   }
 
-  const deleteContact = (id) => {
-    setContacts(contacts.filter(c => c.id !== id))
-    setShowDetailModal(false)
-    setSelectedContact(null)
+  const deleteContact = async (id) => {
+    if (!residentData?.id) return
+    const updatedContacts = contacts.filter(c => c.id !== id)
+    
+    try {
+      await updateEmergencyContacts(residentData.id, updatedContacts)
+      setContacts(updatedContacts)
+      setShowDetailModal(false)
+      setSelectedContact(null)
+    } catch (error) {
+      console.error('Failed to delete contact:', error)
+    }
   }
 
   const openContactDetails = (contact) => {
@@ -136,39 +151,64 @@ export default function EmergencyPage() {
     setShowDetailModal(true)
   }
 
-  const handleReportSubmit = () => {
-    if (!reportData.subject || !reportData.description) {
-      return
-    }
+  const handleReportSubmit = async () => {
+    if (!reportData.subject || !reportData.description) return
 
     setIsSubmittingReport(true)
-    
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const alert = {
+        userId: residentData?.id,
+        name: residentData?.name,
+        residentId: residentData?.id,
+        residentName: residentData?.name,
+        unit: residentData?.unitNumber || residentData?.unit,
+        ...reportData,
+        timestamp: new Date().toISOString(),
+        status: 'pending'
+      }
+      
+      await sendEmergencyAlert(alert)
       setIsSubmittingReport(false)
       setShowReportModal(false)
       setReportData({ category: 'Security', subject: '', description: '' })
-      // We assume toast is available via parent/layout or standard import if added
-      // Since it's a client component page, we should ensure toast is imported
-    }, 1500)
+      toast.success('Incident report submitted to Security Command.')
+    } catch (error) {
+      console.error('Failed to submit report:', error)
+      setIsSubmittingReport(false)
+      toast.error('Failed to send report. Please call security directly.')
+    }
   }
 
   return (
     <div className="animate-in fade-in duration-700">
+       <div className="flex items-center gap-2 text-[10px] uppercase font-black tracking-widest text-slate-400 mb-4">
+            <Link href="/dashboard/resident" className="hover:text-[#1241a1] transition-colors">Dashboard</Link>
+            <ChevronRight className="size-3" />
+            <span className="text-[#1241a1]">Emergency Portal</span>
+          </div>
 
       {/* ── Header ── */}
       <header className="py-6 lg:py-10">
-        <div className="max-w-6xl">
-          <div className="flex items-center gap-2 text-[10px] uppercase font-black tracking-widest text-slate-400 mb-4">
-            <Link href="/dashboard/resident" className="hover:text-[#1241a1] transition-colors">Dashboard</Link>
-            <span className="material-symbols-outlined text-[10px]">chevron_right</span>
-            <span className="text-[#1241a1]">Emergency Portal</span>
-          </div>
+       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+         <div>
           <h2 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">Emergency Support</h2>
           <p className="mt-3 text-slate-500 dark:text-slate-400 text-base font-bold max-w-2xl leading-relaxed">
             Immediate assistance for safety, medical, and maintenance needs. Quick access to professional services and your trusted personal circle.
           </p>
-        </div>
+         </div>
+         <div 
+           onClick={() => {
+             setShowReportModal(true);
+           }}
+           className="shrink-0 relative group cursor-pointer z-9999 pointer-events-auto"
+         >
+           <div className="relative bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase tracking-[0.2em] px-10 py-5 rounded-2xl transition-all active:scale-95 flex items-center gap-3 border-b-4 border-red-800">
+             <div className="size-3 bg-white rounded-full animate-ping"></div>
+             Panic SOS Report
+           </div>
+         </div>
+       </div>
+        
       </header>
 
       <div className="pb-16 max-w-6xl space-y-14">
@@ -176,7 +216,7 @@ export default function EmergencyPage() {
         {/* ── Estate Emergency Services ── */}
         <section>
           <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#1241a1]">security</span>
+            <ShieldAlert className="size-6 text-[#1241a1]" />
             Estate Emergency Services
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -185,15 +225,10 @@ export default function EmergencyPage() {
                 key={service.id}
                 className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm flex flex-col hover:shadow-md transition-shadow"
               >
-                {/* Image */}
-                <div className="h-48 relative group overflow-hidden bg-slate-200 dark:bg-slate-800">
-                  <Image
-                    src={service.image}
-                    alt={service.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+                {/* Icon Container */}
+                <div className={`h-48 relative group overflow-hidden flex items-center justify-center ${service.color}`}>
+                  <service.icon className="size-20 transition-transform duration-500 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/10 to-transparent flex items-end p-4">
                     <span className={`px-3 py-1 text-[10px] font-black uppercase rounded-full ${service.badgeClass}`}>
                       {service.badge}
                     </span>
@@ -208,7 +243,7 @@ export default function EmergencyPage() {
                     href={service.phone}
                     className="w-full bg-[#1241a1] hover:bg-[#1241a1]/90 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95"
                   >
-                    <span className="material-symbols-outlined text-lg">call</span>
+                    <Phone className="size-5" />
                     Call Now
                   </a>
                 </div>
@@ -221,14 +256,14 @@ export default function EmergencyPage() {
         <section>
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-2xl font-bold flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#1241a1]">groups</span>
+              <Users className="size-6 text-[#1241a1]" />
               Personal Emergency Contacts
             </h3>
             <button
               onClick={() => setShowAddContact(true)}
               className="flex items-center gap-2 text-sm font-bold text-[#1241a1] hover:bg-[#1241a1]/10 px-4 py-2 rounded-xl transition-colors"
             >
-              <span className="material-symbols-outlined text-lg">add</span>
+              <Plus className="size-5" />
               Add Contact
             </button>
           </div>
@@ -239,9 +274,16 @@ export default function EmergencyPage() {
                 key={contact.id}
                 className="bg-white dark:bg-slate-900 p-4 rounded-3xl shadow-sm flex items-center gap-4 hover:shadow-md transition-all group relative overflow-hidden"
               >
-                {/* Avatar */}
-                <div className={`size-12 rounded-2xl flex items-center justify-center shrink-0 text-white font-black text-xs border-2 border-white/20 shadow-lg ${contact.color}`}>
-                  {contact.initials}
+                {/* Avatar / Picture */}
+                <div className={`size-12 rounded-2xl flex items-center justify-center shrink-0 text-white font-black text-xs border-2 border-white/20 shadow-lg overflow-hidden ${contact.color || 'bg-[#1241a1]'}`}>
+                  {contact.picture ? (
+                    <div 
+                      className="size-full bg-cover bg-center" 
+                      style={{ backgroundImage: `url(${contact.picture})` }}
+                    />
+                  ) : (
+                    contact.initials || <User className="size-6" />
+                  )}
                 </div>
                 <div className="flex-1 overflow-hidden">
                   <h5 className="text-xs font-black dark:text-white truncate uppercase tracking-tight">{contact.name}</h5>
@@ -249,41 +291,32 @@ export default function EmergencyPage() {
                 </div>
                 <div className="flex items-center gap-1">
                   <a href={contact.phone} className="p-2 text-[#1241a1] hover:bg-[#1241a1]/10 rounded-xl transition-colors">
-                    <span className="material-symbols-outlined text-xl">call</span>
+                    <Phone className="size-5" />
                   </a>
                   <button 
                     onClick={() => openContactDetails(contact)}
                     className="p-2 text-slate-400 hover:text-[#1241a1] hover:bg-[#1241a1]/10 rounded-xl transition-colors"
                   >
-                    <span className="material-symbols-outlined text-xl">visibility</span>
+                    <Eye className="size-5" />
                   </button>
                 </div>
               </div>
             ))}
 
-            {/* Add New placeholder */}
-            <button
-              onClick={() => setShowAddContact(true)}
-              className="bg-white dark:bg-slate-900 p-4 rounded-xl flex items-center gap-4 hover:bg-[#1241a1]/5 transition-all group"
-            >
-              <div className="size-12 rounded-full flex items-center justify-center shrink-0 bg-slate-100 dark:bg-slate-800 group-hover:bg-[#1241a1]/10 transition-colors">
-                <span className="material-symbols-outlined text-slate-400 group-hover:text-[#1241a1] transition-colors">person_add</span>
-              </div>
-              <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 group-hover:text-[#1241a1] transition-colors">Add Contact</p>
-            </button>
+            
           </div>
         </section>
 
         {/* ── Estate Support ── */}
         <section>
           <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#1241a1]">support_agent</span>
+            <HelpCircle className="size-6 text-[#1241a1]" />
             Estate Support
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
-                icon: 'corporate_fare',
+                icon: Building,
                 title: 'Management Office',
                 desc: 'Contact for billing inquiries, lease renewals, or non-urgent administrative assistance.',
                 actions: [
@@ -293,7 +326,7 @@ export default function EmergencyPage() {
                 phone: 'tel:+2348000000008',
               },
               {
-                icon: 'help_center',
+                icon: Headset,
                 title: 'Resident Help Desk',
                 desc: 'Support for portal access, digital keys, and general estate amenities information.',
                 actions: [
@@ -308,7 +341,7 @@ export default function EmergencyPage() {
                 className="flex items-start gap-5 p-6 bg-white dark:bg-slate-900 rounded-xl shadow-sm"
               >
                 <div className="p-3 bg-[#1241a1]/10 rounded-xl text-[#1241a1] shrink-0">
-                  <span className="material-symbols-outlined text-3xl">{card.icon}</span>
+                  <card.icon className="size-8" />
                 </div>
                 <div>
                   <h4 className="text-lg font-bold mb-1">{card.title}</h4>
@@ -334,24 +367,7 @@ export default function EmergencyPage() {
           </div>
         </section>
 
-        {/* ── Report Incident Banner ── */}
-        <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-red-600/20">
-          <div className="flex items-center gap-4">
-            <div className="size-12 bg-white/10 rounded-xl flex items-center justify-center">
-              <span className="material-symbols-outlined text-white text-2xl">emergency</span>
-            </div>
-            <div>
-              <h4 className="text-white font-black text-lg">Report an Incident</h4>
-              <p className="text-red-200 text-sm font-bold mt-0.5 leading-none">Immediately alert estate management and security team.</p>
-            </div>
-          </div>
-          <button 
-            onClick={() => setShowReportModal(true)}
-            className="shrink-0 bg-white text-red-600 font-black text-[11px] uppercase tracking-widest px-8 py-4 rounded-2xl hover:bg-white/90 transition-all shadow-xl active:scale-95"
-          >
-            Report Now
-          </button>
-        </div>
+        
       </div>
 
       {/* ── Footer ── */}
@@ -368,7 +384,7 @@ export default function EmergencyPage() {
             <div className="flex items-center justify-between p-6">
               <h3 className="font-bold text-lg">Add Emergency Contact</h3>
               <button onClick={() => setShowAddContact(false)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-                <span className="material-symbols-outlined text-slate-400">close</span>
+                <X className="size-5 text-slate-400" />
               </button>
             </div>
             <div className="p-6 space-y-5">
@@ -411,10 +427,10 @@ export default function EmergencyPage() {
       {showDetailModal && selectedContact && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md animate-in zoom-in-95 duration-200 overflow-hidden">
-            <div className="p-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
+            <div className="p-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-900">
               <h3 className="font-black text-xs uppercase tracking-widest text-[#1241a1]">Contact Profile</h3>
               <button onClick={() => setShowDetailModal(false)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-                <span className="material-symbols-outlined text-slate-400">close</span>
+                <X className="size-5 text-slate-400" />
               </button>
             </div>
 
@@ -428,7 +444,7 @@ export default function EmergencyPage() {
                     <h4 className="text-xl font-black dark:text-white uppercase tracking-tight">{selectedContact.name}</h4>
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">{selectedContact.relation}</p>
                     <p className="text-sm font-bold text-[#1241a1] mt-4 flex items-center justify-center gap-2">
-                        <span className="material-symbols-outlined text-lg">call</span>
+                        <Phone className="size-4" />
                         {selectedContact.phone.replace('tel:', '')}
                     </p>
                   </div>
@@ -460,7 +476,7 @@ export default function EmergencyPage() {
                 <>
                   <a href={selectedContact.phone} className="w-full">
                     <button className="w-full py-4 mb-4 bg-[#1241a1] hover:brightness-110 text-white font-black text-[11px] uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-[#1241a1]/20 flex items-center justify-center gap-3">
-                      <span className="material-symbols-outlined text-lg">call</span>
+                      <Phone className="size-5" />
                       Place Emergency Call
                     </button>
                   </a>
@@ -499,14 +515,15 @@ export default function EmergencyPage() {
           </div>
         </div>
       )}
+      
       {/* ── Report Incident Modal ── */}
       {showReportModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-10000 flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-lg animate-in zoom-in-95 duration-200 overflow-hidden">
-            <div className="p-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
+            <div className="p-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-900">
               <div className="flex items-center gap-3">
                 <div className="size-10 bg-red-500/10 rounded-xl flex items-center justify-center">
-                  <span className="material-symbols-outlined text-red-600">emergency_home</span>
+                  <ShieldAlert className="size-6 text-red-600" />
                 </div>
                 <div>
                   <h3 className="font-black text-xs uppercase tracking-widest text-slate-900 dark:text-white">File Incident Report</h3>
@@ -518,7 +535,7 @@ export default function EmergencyPage() {
                 className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
                 disabled={isSubmittingReport}
               >
-                <span className="material-symbols-outlined text-slate-400">close</span>
+                <X className="size-5 text-slate-400" />
               </button>
             </div>
 
@@ -577,12 +594,12 @@ export default function EmergencyPage() {
               >
                 {isSubmittingReport ? (
                   <>
-                    <span className="material-symbols-outlined text-lg animate-spin">progress_activity</span>
+                    <Loader2 className="size-5 animate-spin" />
                     Sending Report...
                   </>
                 ) : (
                   <>
-                    <span className="material-symbols-outlined text-lg">send</span>
+                    <Send className="size-5" />
                     Submit Report
                   </>
                 )}

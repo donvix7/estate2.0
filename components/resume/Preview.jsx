@@ -97,7 +97,7 @@ export default function ResumePreview({ data, template }) {
 
           {!personal.fullName && !personal.summary && experience.length === 0 && education.length === 0 && skills.length === 0 && (
             <div className="h-full flex flex-col items-center justify-center text-slate-300 space-y-4">
-               <div className="size-20 border-4 border-dashed border-slate-200 rounded-2xl" />
+               <div className="size-20 border-4 border-dashed border-slate-900 rounded-2xl" />
                <p className="font-bold text-sm">Start typing to see the magic happen!</p>
             </div>
           )}

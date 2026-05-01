@@ -66,7 +66,7 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
             <div className="text-xs text-gray-500 mt-0.5">{item.unit}</div>
           </td>
           <td className="px-6 py-4">
-            <div className="font-bold text-gray-900 dark:text-white">₦{item.amount.toLocaleString()}</div>
+            <div className="font-bold text-gray-900 dark:text-white">${item.amount.toLocaleString()}</div>
           </td>
           <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
             <div>Issued: {new Date(item.dateIssued).toLocaleDateString()}</div>
@@ -100,7 +100,7 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
             <div className="text-xs text-gray-500 mt-0.5">{item.unit}</div>
         </td>
         <td className="px-6 py-4">
-          <div className="font-bold text-gray-900 dark:text-white">₦{item.amount.toLocaleString()}</div>
+          <div className="font-bold text-gray-900 dark:text-white">${item.amount.toLocaleString()}</div>
         </td>
         <td className="px-6 py-4">
           <div className="text-sm text-gray-900 dark:text-gray-300 font-medium">{item.method}</div>
@@ -114,12 +114,66 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
   };
 
   return (
-    <CleanTable 
-      headers={headers}
-      data={items}
-      renderRow={renderRow}
-      onRowClick={onRowClick}
-      emptyState={`No ${type} found matching your criteria.`}
-    />
+    <>
+      {/* Desktop Table */}
+      <div className="hidden md:block">
+        <CleanTable 
+          headers={headers}
+          data={items}
+          renderRow={renderRow}
+          onRowClick={onRowClick}
+          emptyState={`No ${type} found matching your criteria.`}
+        />
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden flex flex-col gap-4">
+        {items.length === 0 ? (
+          <div className="p-8 text-center text-gray-500 italic">
+            No {type} found matching your criteria.
+          </div>
+        ) : (
+          items.map((item, index) => (
+            <div 
+              key={item.id}
+              onClick={onRowClick ? () => onRowClick(item) : undefined}
+              className={`bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-900 space-y-4 active:scale-[0.98] transition-all ${onRowClick ? 'cursor-pointer' : ''}`}
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm ${
+                    isInvoice ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
+                  }`}>
+                    {isInvoice ? <FileText className="w-5 h-5" /> : (item.type?.includes('Payment') ? <ArrowDownRight className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />)}
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">{item.id}</h4>
+                    <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">{isInvoice ? item.description : item.method}</p>
+                  </div>
+                </div>
+                <div className="shrink-0">
+                  {getStatusBadge(item.status)}
+                </div>
+              </div>
+
+              <div className="flex items-end justify-between pt-2 border-t border-slate-50 dark:border-slate-900/50">
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Resident</p>
+                  <p className="text-xs font-bold text-slate-700 dark:text-slate-200">{item.residentName}</p>
+                  <p className="text-[10px] text-slate-500 font-medium italic">{item.unit}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{isInvoice ? 'Due Date' : 'Transaction Date'}</p>
+                  <p className="text-sm font-black text-slate-900 dark:text-white">${item.amount.toLocaleString()}</p>
+                  <p className="text-[10px] text-slate-500 font-medium">
+                    {new Date(isInvoice ? item.dueDate : item.date).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </>
   );
 }

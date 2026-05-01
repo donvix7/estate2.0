@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { 
@@ -19,25 +19,20 @@ import {
   BookOpen,
   Shirt,
   Footprints,
-  Glasses
+  Glasses,
+  AlertCircle,
+  CheckCircle2
 } from 'lucide-react'
 import ItemDetailModal from '@/components/modals/ItemDetailModal'
+import { getLostAndFound } from '@/lib/service'
 
-const CATEGORIES = ['All Items', 'Pets', 'Electronics', 'Keys', 'Documents', 'Clothing', 'Accessories']
+const CATEGORIES = ['All Items', 'Pet', 'Electronics', 'Keys', 'Documents', 'Clothing', 'Accessories']
 
-const ITEMS = [
-  { id: 1, name: 'Golden Retriever', category: 'Pets', icon: Dog, status: 'lost', location: 'Central Park East', date: 'Oct 24, 2024', image: '/lf_dog.png', description: 'Friendly Golden Retriever wearing a blue collar. Answers to "Max". Last seen near the children playground.' },
-  { id: 2, name: 'iPhone 14 Pro - Black', category: 'Electronics', icon: Smartphone, status: 'found', location: 'Gym Locker Room', date: 'Oct 23, 2024', image: '/lf_phone.png', description: 'Found a black iPhone 14 Pro in the gym locker room. It has a cracked screen protector and a Clear MagSafe case.' },
-  { id: 3, name: 'House Keys — 3 Keys', category: 'Keys', icon: Key, status: 'found', location: 'Visitor Parking Area', date: 'Oct 22, 2024', image: '/lf_keys.png', description: 'Set of 3 keys on a red keychain. Includes a car remote for a Toyota.' },
-  { id: 4, name: 'Brown Leather Wallet', category: 'Accessories', icon: Wallet, status: 'lost', location: 'Clubhouse Café', date: 'Oct 21, 2024', image: null, description: 'Bifold brown leather wallet. Contains a driver license and some loyalty cards. No cash inside.' },
-  { id: 5, name: 'Amazon Kindle Paperwhite', category: 'Electronics', icon: BookOpen, status: 'found', location: 'Poolside Lounge', date: 'Oct 20, 2024', image: null, description: 'Kindle Paperwhite found on a sun lounger. It has a fabric cover with a floral pattern.' },
-  { id: 6, name: 'Blue North Face Jacket', category: 'Clothing', icon: Shirt, status: 'lost', location: 'Basketball Court', date: 'Oct 19, 2024', image: null, description: 'Dark blue North Face puffer jacket, size Large. Left on the benches near the basketball court.' },
-  { id: 7, name: 'Nike Runners (Size 10)', category: 'Clothing', icon: Footprints, status: 'found', location: 'Tennis Court 2', date: 'Oct 18, 2024', image: null, description: 'Grey Nike running shoes, size 10. Found near the entrance of Tennis Court 2.' },
-  { id: 8, name: 'Reading Glasses — RayBan', category: 'Accessories', icon: Glasses, status: 'lost', location: 'Main Lobby', date: 'Oct 17, 2024', image: null, description: 'RayBan reading glasses with a black frame. Lost somewhere between the main lobby and the elevator.' },
-]
+const ICON_MAP = { Dog, Smartphone, Key, Wallet, BookOpen, Shirt, Footprints, Glasses }
+
 
 const CATEGORY_COLORS = {
-  Pets: 'text-amber-500',
+  Pet: 'text-amber-500',
   Electronics: 'text-sky-500',
   Keys: 'text-yellow-500',
   Documents: 'text-emerald-500',
@@ -46,7 +41,7 @@ const CATEGORY_COLORS = {
 }
 
 const ITEM_BG = {
-  Pets: 'from-amber-500/20 to-amber-100/10',
+  Pet: 'from-amber-500/20 to-amber-100/10',
   Electronics: 'from-sky-500/20 to-sky-100/10',
   Keys: 'from-yellow-500/20 to-yellow-100/10',
   Documents: 'from-emerald-500/20 to-emerald-100/10',
@@ -54,40 +49,80 @@ const ITEM_BG = {
   Accessories: 'from-rose-500/20 to-rose-100/10',
 }
 
-const ITEMS_PER_PAGE = 8
 
 export default function LostAndFoundPage() {
+  const [items, setItems] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const [activeFilter, setActiveFilter] = useState('All Items')
   const [activeTab, setActiveTab] = useState('all') // all | active | resolved
   const [search, setSearch] = useState('')
   const [selectedItem, setSelectedItem] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
+  const [imageErrors, setImageErrors] = useState({})
+  
+  const handleImageError = (id) => {
+    setImageErrors(prev => ({ ...prev, [id]: true }))
+  }
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      setIsLoading(true)
+      try {
+        const data = await getLostAndFound({
+          page: currentPage,
+          type: activeTab,
+          category: activeFilter,
+          search: search
+        })
+        
+        // Map string icons to components
+        const docs = Array.isArray(data.docs) ? data.docs : (Array.isArray(data) ? data : []);
+        const mappedData = docs.map(item => {
+          let imageUrl = item.image;
+          if (imageUrl && imageUrl.startsWith('/uploads/')) {
+            const baseUrl = process.env.NEXT_PUBLIC_DB_URL || 'http://localhost:5000';
+            imageUrl = `${baseUrl}${imageUrl}`;
+          }
+
+          return {
+            ...item,
+            image: imageUrl,
+            iconComponent: ICON_MAP[item.icon] || Tag
+          };
+        })
+        setItems(mappedData)
+        setTotalPages(data.totalPages || 1)
+        setTotalItems(data.totalDocs || mappedData.length)
+        setCurrentPage(data.page || 1)
+      } catch (err) {
+        console.error('Fetch error:', err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchItems()
+  }, [activeFilter, activeTab, search, currentPage])
 
   // Support Deep Linking
-  React.useEffect(() => {
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const itemId = params.get('item')
     if (itemId) {
-      const item = ITEMS.find(i => i.id === parseInt(itemId))
+      const item = items.find(i => (i._id || i.id)?.toString() === itemId)
       if (item) setSelectedItem(item)
     }
-  }, [])
+  }, [items])
 
   // Reset page when filters change
-  React.useEffect(() => {
-    setCurrentPage(1)
-  }, [activeFilter, activeTab, search])
+  useEffect(() => {
+  }, [])
 
-  const filtered = ITEMS.filter(item => {
-    const matchesTab = activeTab === 'all' || (activeTab === 'active' && item.status !== 'resolved') || (activeTab === 'resolved' && item.status === 'resolved')
-    const matchesCategory = activeFilter === 'All Items' || item.category === activeFilter
-    const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase()) || item.location.toLowerCase().includes(search.toLowerCase())
-    return matchesTab && matchesCategory && matchesSearch
-  })
+  // The items are already filtered by the server
+  const displayItems = items;
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
-  const currentItems = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
-
+  
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
       {/* ... Header & Filters unchanged ... */}
@@ -148,7 +183,7 @@ export default function LostAndFoundPage() {
         </div>
       </div>
 
-      {filtered.length === 0 ? (
+      {items.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
           <div className="size-16 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400">
             <SearchX size={32} />
@@ -159,32 +194,45 @@ export default function LostAndFoundPage() {
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {currentItems.map(item => (
+            {items.filter(item => {
+              const matchesTab = activeTab === 'all' || (activeTab === 'active' && item.status !== 'resolved') || (activeTab === 'resolved' && item.status === 'resolved')
+              const matchesCategory = activeFilter === 'All Items' || item.category === activeFilter
+              const name = (item.name || item.itemName || '').toString()
+              const location = (item.location || '').toString()
+              const matchesSearch = name.toLowerCase().includes(search.toLowerCase()) || 
+                                    location.toLowerCase().includes(search.toLowerCase())
+              return matchesTab && matchesCategory && matchesSearch
+            }).map((item, index) => (
               <div
-                key={item.id}
+                key={item._id || item.id || index}
                 className="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
               >
                 <div className="relative h-48 overflow-hidden bg-slate-100 dark:bg-slate-800" onClick={() => setSelectedItem(item)}>
-                  {item.image ? (
-                    <Image
+                  {item.image && !imageErrors[item._id || item.id] ? (
+                    <img
                       src={item.image}
                       alt={item.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+                      onError={() => handleImageError(item._id || item.id)}
                     />
-                  ) : (
-                    <div className={`absolute inset-0 bg-linear-to-br ${ITEM_BG[item.category] || 'from-slate-500/20 to-slate-100/10'} flex items-center justify-center cursor-pointer`}>
-                      <item.icon className={`size-12 opacity-40 ${CATEGORY_COLORS[item.category] || 'text-slate-500'}`} />
-                    </div>
-                  )}
-                  <div className={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${item.status === 'lost' ? 'bg-red-500 text-white shadow-lg' : 'bg-emerald-500 text-white shadow-lg'}`}>
-                    {item.status}
+                  ) : null}
+                  <div className={`absolute inset-0 bg-linear-to-br ${ITEM_BG[item.category] || 'from-slate-500/20 to-slate-100/10'} ${item.image && !imageErrors[item._id || item.id] ? 'hidden' : 'flex'} items-center justify-center cursor-pointer`}>
+                    <item.iconComponent className={`size-12 opacity-40 ${CATEGORY_COLORS[item.category] || 'text-slate-500'}`} />
+                  </div>
+                  <div className={`absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-white backdrop-blur-md shadow-xl border border-white/20 transition-all duration-300 group-hover:scale-110
+                    ${(item.status || item.type) === 'lost' ? 'bg-rose-500/90 shadow-rose-500/20' : 
+                      (item.status || item.type) === 'resolved' ? 'bg-blue-500/90 shadow-blue-500/20' : 
+                      'bg-emerald-500/90 shadow-emerald-500/20'}`}>
+                    {(item.status || item.type) === 'lost' ? <AlertCircle size={12} strokeWidth={3} /> : 
+                     (item.status || item.type) === 'resolved' ? <CheckCircle2 size={12} strokeWidth={3} /> : 
+                     <Search size={12} strokeWidth={3} />}
+                    {item.status || item.type}
                   </div>
                 </div>
 
                 <div className="p-5">
                   <div className="flex items-center gap-2 mb-2">
-                    <item.icon size={16} className={`${CATEGORY_COLORS[item.category] || 'text-[#1241a1]'}`} />
+                    <item.iconComponent size={16} className={`${CATEGORY_COLORS[item.category] || 'text-[#1241a1]'}`} />
                     <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{item.category}</span>
                   </div>
                   <h3 className="text-base font-bold leading-tight mb-4 text-slate-900 dark:text-white truncate">{item.name}</h3>
@@ -211,7 +259,7 @@ export default function LostAndFoundPage() {
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 pb-12">
             <p className="text-sm text-slate-500">
-              Showing <span className="font-bold text-slate-700 dark:text-slate-300">{currentItems.length}</span> of <span className="font-bold text-slate-700 dark:text-slate-300">{filtered.length}</span> items
+              Showing <span className="font-bold text-slate-700 dark:text-slate-300">{items.length}</span> of <span className="font-bold text-slate-700 dark:text-slate-300">{totalItems}</span> items
             </p>
             {totalPages > 1 && (
               <div className="flex items-center gap-2">

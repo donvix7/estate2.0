@@ -9,6 +9,8 @@ import {
   Camera, 
   Send 
 } from 'lucide-react'
+import { toast } from 'react-toastify'
+import { submitLostAndFound } from '@/lib/action'
 
 const CATEGORIES = ['Electronics', 'Clothing', 'Personal Accessories', 'Keys / Wallets', 'Pets', 'Others']
 
@@ -23,22 +25,67 @@ export default function ReportItemPage() {
   const [previews, setPreviews] = useState([])
   const [submitting, setSubmitting] = useState(false)
 
+  const compressImage = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = (event) => {
+        const img = new window.Image()
+        img.src = event.target.result
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          const MAX_WIDTH = 600 // Reduced from 800
+          const MAX_HEIGHT = 600 // Reduced from 800
+          let width = img.width
+          let height = img.height
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width
+              width = MAX_WIDTH
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height
+              height = MAX_HEIGHT
+            }
+          }
+
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0, width, height)
+          // Quality 0.4 to stay under 100kb with Base64 overhead
+          resolve(canvas.toDataURL('image/jpeg', 0.4))
+        }
+      }
+    })
+  }
+
   const [form, setForm] = useState({
-    itemName: '',
+    name: '',
     category: 'Electronics',
-    date: '',
+    date: new Date().toISOString().split('T')[0],
     location: '',
     description: '',
+    image: '',
   })
 
   const handleChange = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
-  const handleFiles = (files) => {
-    const urls = Array.from(files)
-      .filter(f => f.type.startsWith('image/'))
-      .slice(0, 5)
-      .map(f => URL.createObjectURL(f))
+  const handleFiles = async (files) => {
+    const selectedFiles = Array.from(files).filter(f => f.type.startsWith('image/'))
+    const urls = selectedFiles.slice(0, 5).map(f => URL.createObjectURL(f))
     setPreviews(prev => [...prev, ...urls].slice(0, 5))
+
+    if (selectedFiles[0]) {
+      try {
+        const compressed = await compressImage(selectedFiles[0])
+        setForm(prev => ({ ...prev, image: compressed }))
+      } catch (err) {
+        console.error('Compression error:', err)
+      }
+    }
   }
 
   const handleDrop = (e) => {
@@ -50,9 +97,29 @@ export default function ReportItemPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSubmitting(true)
-    await new Promise(r => setTimeout(r, 1200)) // simulate API
-    setSubmitting(false)
-    router.push('/dashboard/resident/lost_and_found')
+    
+    const reportData = {
+      ...form,
+      id: Math.random().toString(36).substr(2, 9),
+      status: reportType, // 'lost' or 'found'
+      icon: form.category === 'Pets' ? 'Dog' : 
+            form.category === 'Electronics' ? 'Smartphone' : 
+            form.category === 'Keys / Wallets' ? 'Key' : 
+            form.category === 'Clothing' ? 'Shirt' : 
+            form.category === 'Accessories' ? 'Glasses' : 'Tag',
+      timestamp: new Date().toISOString()
+    }
+
+    try {
+      await submitLostAndFound(reportData)
+      toast.success('Report submitted successfully!')
+      router.push('/dashboard/resident/lost_and_found')
+    } catch (error) {
+      console.error('Submission error:', error)
+      toast.error('Failed to submit report. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -103,9 +170,9 @@ export default function ReportItemPage() {
             <div className="sm:col-span-2 space-y-2">
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">Item Name</label>
               <input
-                name="itemName"
+                name="name"
                 type="text"
-                value={form.itemName}
+                value={form.name}
                 onChange={handleChange}
                 placeholder="e.g. Silver Bracelet, Black Wallet"
                 required
@@ -261,7 +328,7 @@ export default function ReportItemPage() {
             {/* Submit */}
             <button
               type="submit"
-              disabled={submitting || !form.itemName}
+              disabled={submitting || !form.name}
               className="w-full bg-[#1241a1] hover:bg-[#1241a1]/90 text-white font-bold py-5 rounded-xl text-lg shadow-lg shadow-[#1241a1]/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
             >
               {submitting ? (

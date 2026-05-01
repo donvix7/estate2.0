@@ -1,0 +1,1982 @@
+{
+  "announcements": [
+    {
+      "id": "1",
+      "title": "Scheduled Database Migration",
+      "message": "We will be performing a critical database migration to improve query speeds across all regional servers...",
+      "type": "Maintenance",
+      "timestamp": "2023-10-24T10:00:00Z",
+      "author": "Systems Admin",
+      "readBy": []
+    },
+    {
+      "id": "2",
+      "title": "Updated 2FA Protocols",
+      "message": "Mandatory biometric authentication is now available for all enterprise accounts to enhance security...",
+      "type": "Security",
+      "timestamp": "2023-10-22T08:30:00Z",
+      "author": "Security Team",
+      "readBy": [
+        "RES-001"
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Annual Developers Meetup 2024",
+      "message": "Registration is now open for our flagship annual community event. Join us for a weekend of networking...",
+      "type": "Community",
+      "timestamp": "2023-10-20T14:15:00Z",
+      "author": "Community Lead",
+      "readBy": []
+    },
+    {
+      "id": "4",
+      "title": "Legacy API Deprecation Notice",
+      "message": "The v1.0 API will be officially deprecated by end of Q4. Please update your integration to v2.5...",
+      "type": "Maintenance",
+      "timestamp": "2023-10-18T11:00:00Z",
+      "author": "API Team",
+      "readBy": []
+    },
+    {
+      "id": "5",
+      "title": "Bi-weekly Security Audit Results",
+      "message": "Our latest independent audit confirms 99.9% compliance with GDPR and HIPAA standards...",
+      "type": "Security",
+      "timestamp": "2023-10-15T09:45:00Z",
+      "author": "Audit Dept",
+      "readBy": []
+    },
+    {
+      "id": "6",
+      "title": "Scheduled Database Migration",
+      "message": " We will be performing a critical database migration to improve query speeds across all regional servers...",
+      "type": "Maintenance",
+      "timestamp": "2023-10-24T10:00:00Z",
+      "author": "Systems Admin",
+      "readBy": []
+    },
+    {
+      "id": "7",
+      "title": " Updated 2FA Protocols",
+      "message": "Mandatory biometric authentication is now available for all enterprise accounts to enhance security...",
+      "type": "Security",
+      "timestamp": "2023-10-22T08:30:00Z",
+      "author": "Security Team",
+      "readBy": []
+    },
+    {
+      "id": "8",
+      "title": "Annual Developers Meetup 2024",
+      "message": "Registration is now open for our flagship annual community event. Join us for a weekend of networking...",
+      "type": "Community",
+      "timestamp": "2023-10-20T14:15:00Z",
+      "author": "Community Lead",
+      "readBy": []
+    },
+    {
+      "id": "9",
+      "title": "Legacy API Deprecation Notice",
+      "message": "The v1.0 API will be officially deprecated by end of Q4. Please update your integration to v2.5...",
+      "type": "Maintenance",
+      "timestamp": "2023-10-18T11:00:00Z",
+      "author": "API Team",
+      "readBy": []
+    },
+    {
+      "id": "10",
+      "title": "Bi-weekly Security Audit Results",
+      "message": "Our latest independent audit confirms 99.9% compliance with GDPR and HIPAA standards...",
+      "type": "Security",
+      "timestamp": "2023-10-15T09:45:00Z",
+      "author": "Audit Dept",
+      "readBy": []
+    },
+    {
+      "title": "help",
+      "message": "testin",
+      "type": "security",
+      "priority": "normal",
+      "timestamp": "2026-04-09T21:43:57.535Z",
+      "author": "Senior Administrator",
+      "id": "itrCfgJdED8",
+      "readBy": []
+    }
+  ],
+  "service_requests": [
+    {
+      "id": "#SR-9421",
+      "category": "AC repair",
+      "icon": "Cloud",
+      "desc": "Living room HVAC making resonance noise",
+      "status": "Active",
+      "statusColor": "bg-blue-500",
+      "iconColor": "text-blue-500",
+      "residentId": "RES-005"
+    },
+    {
+      "id": "#SR-9388",
+      "category": "Plumbing",
+      "icon": "Droplets",
+      "desc": "Kitchen mixer needs seal replacement",
+      "status": "Scheduled",
+      "statusColor": "bg-slate-400",
+      "iconColor": "text-slate-400",
+      "residentId": "RES-005"
+    },
+    {
+      "id": "HTRkcnB7PhA",
+      "category": "electrical",
+      "icon": "Bolt",
+      "desc": "test",
+      "date": "2026-04-08",
+      "status": "Scheduled",
+      "statusColor": "bg-slate-400",
+      "iconColor": "text-slate-500",
+      "workerId": "3",
+      "workerName": "Amara Nwosu"
+    },
+    {
+      "id": "Q4tHWtfi_fM",
+      "category": "gardening",
+      "icon": "Briefcase",
+      "desc": "none",
+      "date": "2026-04-08",
+      "status": "Scheduled",
+      "statusColor": "bg-slate-400",
+      "iconColor": "text-slate-500",
+      "workerId": "6",
+      "workerName": "Victor Okafor"
+    },
+    {
+      "id": "8T4VKbO4MMY",
+      "category": "plumbing",
+      "icon": "Droplets",
+      "desc": "just help",
+      "date": "2026-04-20",
+      "status": "Scheduled",
+      "statusColor": "bg-slate-400",
+      "iconColor": "text-blue-500",
+      "workerId": "1",
+      "workerName": "John Miller"
+    },
+    {
+      "id": "_bM5qi3V1wo",
+      "category": "plumbing",
+      "icon": "Droplets",
+      "desc": "help",
+      "date": "2026-04-20",
+      "status": "Scheduled",
+      "statusColor": "bg-slate-400",
+      "iconColor": "text-blue-500",
+      "workerId": "1",
+      "workerName": "John Miller"
+    },
+    {
+      "id": "8_JCnhmXx_k",
+      "category": "plumbing",
+      "icon": "Droplets",
+      "desc": "test",
+      "date": "2026-04-20",
+      "status": "Scheduled",
+      "statusColor": "bg-slate-400",
+      "iconColor": "text-blue-500",
+      "workerId": "1",
+      "workerName": "John Miller",
+      "residentId": "RES-005"
+    },
+    {
+      "id": "t6oO2g61T0E",
+      "category": "plumbing",
+      "icon": "Droplets",
+      "desc": "testing",
+      "date": "2026-04-20",
+      "status": "Scheduled",
+      "statusColor": "bg-slate-400",
+      "iconColor": "text-blue-500",
+      "workerId": "2",
+      "workerName": "Sarah Chen",
+      "residentId": "RES-005"
+    },
+    {
+      "id": "oYyiXOIKpCk",
+      "category": "plumbing",
+      "icon": "Droplets",
+      "desc": "something",
+      "date": "2026-04-22",
+      "status": "Scheduled",
+      "statusColor": "bg-slate-400",
+      "iconColor": "text-blue-500",
+      "workerId": "7",
+      "workerName": "Elena Rodriguez",
+      "residentId": "RES-005"
+    }
+  ],
+  "maintenance_requests": [
+    {
+      "id": "#MN-1024",
+      "issue": "HVAC Repair",
+      "subtitle": "Heating not turning on",
+      "location": "Block A – Apt 101",
+      "priority": "High",
+      "status": "In Progress",
+      "date": "Oct 24, 2024",
+      "timeline": [
+        {
+          "label": "Reported",
+          "time": "Oct 24, 2024 • 09:12 AM",
+          "done": true
+        },
+        {
+          "label": "Scheduled",
+          "time": "Oct 24, 2024 • 11:30 AM",
+          "done": true
+        },
+        {
+          "label": "In Progress",
+          "time": "Started 45 mins ago",
+          "done": false,
+          "current": true
+        }
+      ],
+      "residentId": "RES-005",
+      "technician": {
+        "name": "Robert Chen",
+        "title": "Senior HVAC Specialist",
+        "initials": "RC",
+        "color": "bg-sky-600"
+      }
+    },
+    {
+      "id": "#MN-1025",
+      "issue": "Leaky Faucet",
+      "subtitle": "Kitchen sink water drip",
+      "location": "Block B – Apt 204",
+      "priority": "Medium",
+      "status": "Completed",
+      "date": "Oct 22, 2024",
+      "timeline": [
+        {
+          "label": "Reported",
+          "time": "Oct 22, 2024 • 08:00 AM",
+          "done": true,
+          "current": false
+        },
+        {
+          "label": "Scheduled",
+          "time": "Oct 22, 2024 • 10:00 AM",
+          "done": true,
+          "current": false
+        },
+        {
+          "label": "Completed",
+          "time": "Apr 7, 2026, 6:44 PM",
+          "done": true,
+          "current": true
+        }
+      ],
+      "technician": {
+        "name": "Grace Eze",
+        "title": "Plumbing Specialist",
+        "initials": "GE",
+        "color": "bg-emerald-600"
+      },
+      "residentId": "RES-005"
+    },
+    {
+      "id": "#MN-1026",
+      "issue": "Electrical Outage",
+      "subtitle": "Master bedroom outlets",
+      "location": "Block C – Apt 307",
+      "priority": "Urgent",
+      "status": "Completed",
+      "date": "Oct 21, 2024",
+      "timeline": [
+        {
+          "label": "Reported",
+          "time": "Oct 21, 2024 • 07:45 AM",
+          "done": true,
+          "current": false
+        },
+        {
+          "label": "Pending",
+          "time": "Awaiting assignment",
+          "done": true,
+          "current": false
+        },
+        {
+          "label": "Completed",
+          "time": "Apr 21, 2026, 1:15 PM",
+          "done": true,
+          "current": true
+        }
+      ],
+      "technician": null,
+      "residentId": "RES-001"
+    },
+    {
+      "id": "#MN-1027",
+      "issue": "Pest Control",
+      "subtitle": "Seasonal treatment",
+      "location": "Block D – Apt 412",
+      "priority": "Low",
+      "status": "Completed",
+      "date": "Oct 18, 2024",
+      "timeline": [
+        {
+          "label": "Reported",
+          "time": "Oct 18, 2024 • 09:00 AM",
+          "done": true
+        },
+        {
+          "label": "Scheduled",
+          "time": "Oct 18, 2024 • 11:00 AM",
+          "done": true
+        },
+        {
+          "label": "Completed",
+          "time": "Oct 18, 2024 • 03:30 PM",
+          "done": true
+        }
+      ],
+      "technician": {
+        "name": "Victor Okafor",
+        "title": "Pest Control Expert",
+        "initials": "VO",
+        "color": "bg-amber-600"
+      },
+      "residentId": "RES-004"
+    },
+    {
+      "id": "eQSqX2317WI",
+      "issue": "General Maintenance",
+      "subtitle": "none",
+      "desc": "none",
+      "location": "Block A – Apt 101",
+      "priority": "Medium",
+      "status": "Pending",
+      "date": "2026-04-08",
+      "timeline": [
+        {
+          "label": "Reported",
+          "time": "Apr 7, 2026, 6:17 PM",
+          "done": true
+        },
+        {
+          "label": "Pending",
+          "time": "Awaiting assignment",
+          "done": false,
+          "current": true
+        }
+      ],
+      "technician": null,
+      "residentId": "RES-004"
+    },
+    {
+      "id": "QacnFHVKnJo",
+      "issue": "Electrical",
+      "subtitle": "something",
+      "desc": "something",
+      "location": "Block A – Apt 101",
+      "priority": "High",
+      "status": "Pending",
+      "date": "2026-04-12",
+      "timeline": [
+        {
+          "label": "Reported",
+          "time": "Apr 12, 2026, 4:17 PM",
+          "done": true
+        },
+        {
+          "label": "Pending",
+          "time": "Awaiting assignment",
+          "done": false,
+          "current": true
+        }
+      ],
+      "technician": null,
+      "residentId": "RES-002"
+    },
+    {
+      "id": "WxB9aPBrppk",
+      "issue": "Electrical",
+      "subtitle": "no light",
+      "desc": "no light",
+      "location": "Block A – Apt 101",
+      "priority": "High",
+      "status": "Pending",
+      "date": "2026-04-21",
+      "timeline": [
+        {
+          "label": "Reported",
+          "time": "Apr 21, 2026, 1:15 PM",
+          "done": true
+        },
+        {
+          "label": "Pending",
+          "time": "Awaiting assignment",
+          "done": false,
+          "current": true
+        }
+      ],
+      "technician": null
+    }
+  ],
+  "pass_history": [
+    {
+      "id": "8Jeb9JJtkys",
+      "visitorName": "james sinclare",
+      "phone": "08069216066",
+      "purpose": "Delivery / Courier",
+      "vehicleMake": "",
+      "vehicleColor": "",
+      "vehicleNumber": "",
+      "expectedArrival": "2026-04-07T12:12",
+      "expectedDeparture": "2026-04-07T14:12",
+      "residentName": "John Doe",
+      "unitNumber": "A-101",
+      "passCode": "HN813F",
+      "pin": "5172",
+      "timestamp": "2026-04-07T11:43:21.645Z",
+      "status": "scanned",
+      "securityVerified": true,
+      "scannedAt": "2026-04-09T22:22:53.205Z"
+    },
+    {
+      "id": "SwDHBePqwIY",
+      "visitorName": "Dolores Nwachi",
+      "phone": "08069216066",
+      "purpose": "Professional Meeting",
+      "vehicleMake": "",
+      "vehicleColor": "",
+      "vehicleNumber": "",
+      "expectedArrival": "2026-04-09T22:56",
+      "expectedDeparture": "2026-04-10T00:56",
+      "residentName": "John Doe",
+      "unitNumber": "A-101",
+      "passCode": "N0V90Z",
+      "pin": "6144",
+      "timestamp": "2026-04-09T22:26:40.454Z",
+      "status": "scanned",
+      "securityVerified": true,
+      "scannedAt": "2026-04-09T22:38:30.680Z"
+    },
+    {
+      "id": "-7hB1nj6Yss",
+      "visitorName": "james clark",
+      "phone": "08069216066",
+      "purpose": "Maintenance / Service",
+      "vehicleMake": "",
+      "vehicleColor": "",
+      "vehicleNumber": "",
+      "expectedArrival": "2026-04-10T17:44",
+      "expectedDeparture": "2026-04-10T19:44",
+      "residentName": "John Doe",
+      "unitNumber": "A-101",
+      "passCode": "VDROAC",
+      "pin": "5782",
+      "timestamp": "2026-04-10T17:15:35.923Z",
+      "status": "scanned",
+      "securityVerified": true,
+      "scannedAt": "2026-04-10T20:49:49.300Z"
+    },
+    {
+      "id": "VdLK9ntQ9YU",
+      "visitorName": "tech guy",
+      "phone": "+1 234 567 8903",
+      "purpose": "Personal Guest",
+      "vehicleMake": "",
+      "vehicleColor": "",
+      "vehicleNumber": "",
+      "expectedArrival": "2026-04-10T21:19",
+      "expectedDeparture": "2026-04-10T23:19",
+      "residentName": "John Doe",
+      "unitNumber": "A-101",
+      "passCode": "JQ4FLD",
+      "pin": "5195",
+      "timestamp": "2026-04-10T20:49:31.145Z",
+      "status": "pending",
+      "securityVerified": false
+    },
+    {
+      "id": "GFDCXMJKZj0",
+      "visitorName": "Dolores Nwachi",
+      "phone": "08069216066",
+      "purpose": "Personal Guest",
+      "vehicleMake": "",
+      "vehicleColor": "",
+      "vehicleNumber": "",
+      "expectedArrival": "2026-04-12T15:45",
+      "expectedDeparture": "2026-04-12T17:45",
+      "residentName": "John Doe",
+      "unitNumber": "A-101",
+      "passCode": "HO9Z7S",
+      "pin": "8860",
+      "timestamp": "2026-04-12T15:16:23.299Z",
+      "status": "pending",
+      "securityVerified": false
+    }
+  ],
+  "blacklist": [],
+  "entry_exit_logs": [
+    {
+      "id": "EJ1fWw1U0b8",
+      "type": "entry",
+      "visitor": "james sinclare",
+      "passCode": "HN813F",
+      "timestamp": "2026-04-07T11:43:21.709Z",
+      "verifiedBy": "System"
+    },
+    {
+      "id": "PX6bU4nag9M",
+      "type": "exit",
+      "visitor": "james sinclare",
+      "passCode": "HN813F",
+      "timestamp": "2026-04-07T11:46:42.554Z",
+      "verifiedBy": "Security"
+    },
+    {
+      "id": "VG9-wWUqhj0",
+      "type": "entry",
+      "visitor": "Dolores Nwachi",
+      "passCode": "N0V90Z",
+      "timestamp": "2026-04-09T22:26:40.505Z",
+      "verifiedBy": "System"
+    },
+    {
+      "id": "qZiV01C5Xmw",
+      "type": "entry",
+      "visitor": "james clark",
+      "passCode": "VDROAC",
+      "timestamp": "2026-04-10T17:15:35.957Z",
+      "verifiedBy": "System"
+    },
+    {
+      "id": "590C5rqECKI",
+      "type": "entry",
+      "visitor": "tech guy",
+      "passCode": "JQ4FLD",
+      "timestamp": "2026-04-10T20:49:31.231Z",
+      "verifiedBy": "System"
+    },
+    {
+      "id": "oA5ltDqX8nY",
+      "type": "entry",
+      "visitor": "Dolores Nwachi",
+      "passCode": "HO9Z7S",
+      "timestamp": "2026-04-12T15:16:23.342Z",
+      "verifiedBy": "System"
+    },
+    {
+      "id": "u1QEeo-uz24",
+      "type": "exit",
+      "visitor": "Dolores Nwachi",
+      "passCode": "HO9Z7S",
+      "timestamp": "2026-04-12T15:16:44.964Z",
+      "verifiedBy": "Security"
+    }
+  ],
+  "work": [],
+  "lost_and_found": [
+    {
+      "id": "1",
+      "name": "Golden Retriever",
+      "category": "Pets",
+      "icon": "Dog",
+      "status": "lost",
+      "location": "Central Park East",
+      "date": "Oct 24, 2024",
+      "image": "/lf_dog.png",
+      "description": "Friendly Golden Retriever wearing a blue collar. Answers to \"Max\". Last seen near the children playground.",
+      "resolved": true,
+      "foundBy": {
+        "id": "RES-005",
+        "name": "Daniel Nwachi",
+        "email": "donvix7@gmail.com",
+        "type": "resident",
+        "building": "Tower A"
+      },
+      "claimedBy": null,
+      "resolvedAt": "2026-04-21T15:12:07.428Z"
+    },
+    {
+      "id": "2",
+      "name": "iPhone 14 Pro - Black",
+      "category": "Electronics",
+      "icon": "Smartphone",
+      "status": "found",
+      "location": "Gym Locker Room",
+      "date": "Oct 23, 2024",
+      "image": "/lf_phone.png",
+      "description": "Found a black iPhone 14 Pro in the gym locker room. It has a cracked screen protector and a Clear MagSafe case.",
+      "resolved": true,
+      "foundBy": {
+        "id": "ADM-001",
+        "name": "Daniel",
+        "email": "admin@donvix7.com",
+        "type": "admin",
+        "role": "Admin"
+      },
+      "claimedBy": null,
+      "resolvedAt": "2026-04-21T19:46:35.664Z"
+    },
+    {
+      "id": "3",
+      "name": "House Keys — 3 Keys",
+      "category": "Keys",
+      "icon": "Key",
+      "status": "found",
+      "location": "Visitor Parking Area",
+      "date": "Oct 22, 2024",
+      "image": "/lf_keys.png",
+      "description": "Set of 3 keys on a red keychain. Includes a car remote for a Toyota.",
+      "resolved": true,
+      "foundBy": {
+        "id": "RES-005",
+        "name": "Daniel Nwachi",
+        "email": "donvix7@gmail.com",
+        "type": "resident",
+        "building": "Tower A"
+      },
+      "claimedBy": {
+        "id": "ADM-001",
+        "name": "Daniel",
+        "email": "admin@donvix7.com",
+        "type": "admin",
+        "role": "Admin"
+      },
+      "ownerID": null,
+      "resolvedAt": "2026-04-22T15:58:44.094Z"
+    },
+    {
+      "id": "4",
+      "name": "Brown Leather Wallet",
+      "category": "Accessories",
+      "icon": "Wallet",
+      "status": "lost",
+      "location": "Clubhouse Café",
+      "date": "Oct 21, 2024",
+      "image": null,
+      "description": "Bifold brown leather wallet. Contains a driver license and some loyalty cards. No cash inside.",
+      "foundBy": "RES-001",
+      "claimedBy": null,
+      "ownerID": null,
+      "resolved": true,
+      "residentId": "RES-005",
+      "resolvedAt": "2026-04-21T15:22:35.923Z"
+    },
+    {
+      "id": "5",
+      "name": "Amazon Kindle Paperwhite",
+      "category": "Electronics",
+      "icon": "BookOpen",
+      "status": "found",
+      "location": "Poolside Lounge",
+      "date": "Oct 20, 2024",
+      "image": null,
+      "description": "Kindle Paperwhite found on a sun lounger. It has a fabric cover with a floral pattern.",
+      "foundBy": null,
+      "claimedBy": null,
+      "ownerID": null,
+      "resolved": false,
+      "residentId": "RES-003",
+      "resolvedAt": "2026-04-21T15:22:35.923Z"
+    },
+    {
+      "id": "6",
+      "name": "Blue North Face Jacket",
+      "category": "Clothing",
+      "icon": "Shirt",
+      "status": "lost",
+      "location": "Basketball Court",
+      "date": "Oct 19, 2024",
+      "image": null,
+      "description": "Dark blue North Face puffer jacket, size Large. Left on the benches near the basketball court.",
+      "foundBy": "RES-001",
+      "claimedBy": null,
+      "ownerID": null,
+      "resolved": true,
+      "residentId": "RES-002",
+      "resolvedAt": "2026-04-21T15:22:35.923Z"
+    },
+    {
+      "id": "7",
+      "name": "Nike Runners (Size 10)",
+      "category": "Clothing",
+      "icon": "Footprints",
+      "status": "found",
+      "location": "Tennis Court 2",
+      "date": "Oct 18, 2024",
+      "image": null,
+      "description": "Grey Nike running shoes, size 10. Found near the entrance of Tennis Court 2.",
+      "foundBy": {
+        "id": "ADM-001",
+        "name": "Daniel",
+        "email": "admin@donvix7.com",
+        "type": "admin",
+        "role": "Admin"
+      },
+      "claimedBy": null,
+      "ownerID": null,
+      "resolved": true,
+      "residentId": "RES-002",
+      "resolvedAt": "2026-04-21T19:51:51.934Z"
+    },
+    {
+      "id": "8",
+      "name": "Reading Glasses — RayBan",
+      "category": "Accessories",
+      "icon": "Glasses",
+      "status": "lost",
+      "location": "Main Lobby",
+      "date": "Oct 17, 2024",
+      "image": null,
+      "description": "RayBan reading glasses with a black frame. Lost somewhere between the main lobby and the elevator.",
+      "foundBy": "RES-001",
+      "claimedBy": null,
+      "ownerID": null,
+      "resolved": true,
+      "residentId": "RES-001",
+      "resolvedAt": "2026-04-21T15:22:35.923Z"
+    },
+    {
+      "itemName": "test item",
+      "category": "Electronics",
+      "date": "2026-04-07",
+      "location": "HALIFAX",
+      "description": "la test lost item",
+      "id": "ZTxwDdfi4wc",
+      "status": "lost",
+      "icon": "Tag",
+      "timestamp": "2026-04-07T16:01:38.410Z",
+      "foundBy": null,
+      "claimedBy": null,
+      "resolved": false,
+      "ownerID": null,
+      "residentId": "RES-002",
+      "resolvedAt": "2026-04-21T15:22:35.923Z"
+    },
+    {
+      "name": "Gloria 2",
+      "category": "Personal Accessories",
+      "date": "2026-04-07",
+      "location": "New York, NY",
+      "description": "test ",
+      "image": "",
+      "id": "8QcPPtC4Yn4",
+      "status": "lost",
+      "icon": "Tag",
+      "timestamp": "2026-04-07T16:01:38.410Z",
+      "foundBy": null,
+      "claimedBy": null,
+      "ownerID": null,
+      "resolved": false,
+      "residentId": "RES-002",
+      "resolvedAt": "2026-04-21T15:22:35.923Z"
+    },
+    {
+      "name": "Gloria",
+      "category": "Pets",
+      "date": "2026-04-07",
+      "location": "New York, NY",
+      "description": "test",
+      "image": "data:image/jpeg;base64,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",
+      "id": "f2BgMYgpUzk",
+      "status": "found",
+      "icon": "Dog",
+      "timestamp": "2026-04-07T16:15:16.943Z",
+      "foundBy": null,
+      "claimedBy": null,
+      "ownerID": null,
+      "resolved": false,
+      "residentId": "RES-002",
+      "resolvedAt": "2026-04-21T15:22:35.923Z"
+    },
+    {
+      "name": "Gloria",
+      "category": "Keys / Wallets",
+      "date": "2026-04-22",
+      "location": "HALIFAX",
+      "description": "test",
+      "image": "",
+      "id": "tDbldOfb3nY",
+      "status": "found",
+      "icon": "Key",
+      "timestamp": "2026-04-22T16:09:33.499Z",
+      "residentId": "ADM-001",
+      "ownerId": null,
+      "founderId": "ADM-001"
+    }
+  ],
+  "workers": [
+    {
+      "id": "1",
+      "name": "John Miller",
+      "title": "Master Plumber • 12 yrs exp.",
+      "category": "plumbing",
+      "rating": 4.9,
+      "jobs": "150+",
+      "rate": "₦25,000/hr",
+      "verified": true,
+      "skills": [
+        "Emergency Repair",
+        "Pipe Fitting"
+      ],
+      "image": "/sw_plumber1.png"
+    },
+    {
+      "id": "2",
+      "name": "Sarah Chen",
+      "title": "Leak Detection Specialist",
+      "category": "plumbing",
+      "rating": 4.8,
+      "jobs": "89",
+      "rate": "₦30,000/hr",
+      "verified": true,
+      "skills": [
+        "Smart Homes",
+        "Solar Heating"
+      ],
+      "image": null,
+      "initials": "SC",
+      "color": "bg-sky-500"
+    },
+    {
+      "id": "3",
+      "name": "Amara Nwosu",
+      "title": "Commercial Electrician",
+      "category": "electrical",
+      "rating": 5,
+      "jobs": "210+",
+      "rate": "₦35,000/hr",
+      "verified": true,
+      "skills": [
+        "Solar Panels",
+        "Smart Wiring"
+      ],
+      "image": "",
+      "initials": "AN",
+      "color": "bg-emerald-500"
+    },
+    {
+      "id": "4",
+      "name": "Robert Smith",
+      "title": "Master Carpenter",
+      "category": "carpentry",
+      "rating": 4.9,
+      "jobs": "175",
+      "rate": "₦20,000/hr",
+      "verified": true,
+      "skills": [
+        "Custom Furniture",
+        "Flooring"
+      ],
+      "image": "",
+      "initials": "RS",
+      "color": "bg-amber-600"
+    },
+    {
+      "id": "5",
+      "name": "Grace Eze",
+      "title": "Deep Clean Specialist",
+      "category": "cleaning",
+      "rating": 4.8,
+      "jobs": "320+",
+      "rate": "₦15,000/hr",
+      "verified": true,
+      "skills": [
+        "Post-Construction",
+        "Steam Clean"
+      ],
+      "image": "",
+      "initials": "GE",
+      "color": "bg-violet-500"
+    },
+    {
+      "id": "6",
+      "name": "Victor Okafor",
+      "title": "Landscape Gardener",
+      "category": "gardening",
+      "rating": 4.7,
+      "jobs": "98",
+      "rate": "₦18,000/hr",
+      "verified": false,
+      "skills": [
+        "Lawn Care",
+        "Irrigation"
+      ],
+      "image": "",
+      "initials": "VO",
+      "color": "bg-blue-600"
+    },
+    {
+      "id": "7",
+      "name": "Elena Rodriguez",
+      "title": "Residential Maintenance",
+      "category": "plumbing",
+      "rating": 4.7,
+      "jobs": "45",
+      "rate": "₦22,000/hr",
+      "verified": false,
+      "skills": [
+        "Renovations",
+        "Drainage"
+      ],
+      "image": null,
+      "initials": "ER",
+      "color": "bg-rose-500"
+    },
+    {
+      "id": "8",
+      "name": "James Taylor",
+      "title": "Appliance Technician",
+      "category": "electrical",
+      "rating": 4.5,
+      "jobs": "64",
+      "rate": "₦20,000/hr",
+      "verified": false,
+      "skills": [
+        "Washing Machines",
+        "Dishwashers"
+      ],
+      "image": null,
+      "initials": "JT",
+      "color": "bg-violet-500"
+    }
+  ],
+  "active_bills": [
+    {
+      "id": "estate_dues",
+      "name": "Estate Dues",
+      "icon": "Building2",
+      "iconColor": "text-[#1241a1]",
+      "gradientFrom": "from-[#1241a1]/20",
+      "amount": 75,
+      "due": "Due Nov 01",
+      "dueClass": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+      "residentId": "RES-005"
+    },
+    {
+      "id": "electricity",
+      "name": "Electricity Bill",
+      "icon": "Zap",
+      "iconColor": "text-yellow-500",
+      "gradientFrom": "from-yellow-500/20",
+      "amount": 45,
+      "due": "Due Oct 31",
+      "dueClass": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+      "residentId": "RES-005"
+    },
+    {
+      "id": "security",
+      "name": "Security Levy",
+      "icon": "Shield",
+      "iconColor": "text-blue-500",
+      "gradientFrom": "from-blue-500/20",
+      "amount": 30,
+      "due": "Due Nov 05",
+      "dueClass": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+      "residentId": "RES-005"
+    }
+  ],
+  "recent_transactions": [
+    {
+      "date": "Oct 22, 2024",
+      "description": "Estate Dues — Payment #TRX108",
+      "amount": "$75.00",
+      "status": "Completed",
+      "statusClass": "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
+      "id": "EstateDues_Oct24",
+      "residentId": "RES-005"
+    },
+    {
+      "date": "Oct 18, 2024",
+      "description": "Electricity Bill — Payment #TRX105",
+      "amount": "$45.00",
+      "status": "Completed",
+      "statusClass": "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
+      "id": "ElectricityBill_Oct24",
+      "residentId": "RES-005"
+    },
+    {
+      "date": "Oct 12, 2024",
+      "description": "Security Levy — Payment #TRX102",
+      "amount": "$30.00",
+      "status": "Completed",
+      "statusClass": "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
+      "id": "SecurityLevy_Oct24",
+      "residentId": "RES-005"
+    },
+    {
+      "date": "Oct 01, 2024",
+      "description": "Water Bill — Payment #TRX982",
+      "amount": "$15.00",
+      "status": "Completed",
+      "statusClass": "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
+      "id": "chnlW7E5_6w",
+      "residentId": "RES-005"
+    },
+    {
+      "date": "Sep 28, 2024",
+      "description": "Electricity Bill — Payment #TRX961",
+      "amount": "$45.00",
+      "status": "Completed",
+      "statusClass": "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
+      "id": "LclBO3LSuwI",
+      "residentId": "RES-005"
+    },
+    {
+      "date": "Sep 01, 2024",
+      "description": "Service Fee — Monthly #SRV-SEP",
+      "amount": "₦45,000.00",
+      "status": "Completed",
+      "statusClass": "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
+      "id": "W33wga7KAMM",
+      "residentId": "RES-005"
+    },
+    {
+      "date": "Aug 20, 2024",
+      "description": "Late Fee Adjustment",
+      "amount": "−₦1,500.00",
+      "amountClass": "text-rose-600",
+      "status": "Reversed",
+      "statusClass": "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+      "id": "Y9JN5DD69Eo",
+      "residentId": "RES-005"
+    }
+  ],
+  "emmergency": [],
+  "invites": [
+    {
+      "id": "1",
+      "name": "John Smith",
+      "email": "john@example.com",
+      "role": "Tenant",
+      "status": "Pending",
+      "date": "2024-10-01",
+      "residentId": "RES-005"
+    },
+    {
+      "id": "2",
+      "name": "Alice Johnson",
+      "email": "alice@example.com",
+      "role": "Tenant",
+      "status": "Sent",
+      "date": "2024-10-02",
+      "residentId": "RES-005"
+    }
+  ],
+  "security_logs": [
+    {
+      "id": "1",
+      "action": "Gate Entry: Vehicle #GH-9021",
+      "visitorName": "Officer Mike",
+      "timestamp": "2024-10-07T14:30:00Z",
+      "urgent": false
+    },
+    {
+      "id": "2",
+      "action": "Unauthorized Access Attempt: North Perimeter",
+      "visitorName": "System Alert",
+      "timestamp": "2024-10-07T15:15:00Z",
+      "urgent": true
+    },
+    {
+      "id": "3",
+      "action": "Patrol Completed: Zone C",
+      "visitorName": "Officer Sarah",
+      "timestamp": "2024-10-07T16:00:00Z",
+      "urgent": false
+    }
+  ],
+  "admin": [
+    {
+      "id": "ADM-001",
+      "name": "Daniel",
+      "email": "admin@donvix7.com",
+      "phone": "+1 234 567 8901",
+      "type": "admin",
+      "status": "active",
+      "role": "Admin",
+      "department": "admin",
+      "picture": null,
+      "password": "zxcvbnm"
+    }
+  ],
+  "users": [
+    {
+      "id": "STF-001",
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "phone": "+1 234 567 8901",
+      "type": "staff",
+      "status": "active",
+      "role": "Facility Manager",
+      "department": "Management",
+      "picture": null
+    },
+    {
+      "id": "SEC-001",
+      "name": "Mike Johnson",
+      "email": "mike.j@example.com",
+      "phone": "+1 234 567 8902",
+      "type": "security",
+      "status": "active",
+      "shift": "Morning (6 AM - 2 PM)",
+      "badgeNumber": "SEC-001",
+      "picture": null
+    },
+    {
+      "id": "RES-001",
+      "name": "John Doe",
+      "email": "example4@gmail.com",
+      "phone": "+1 234 567 8903",
+      "type": "resident",
+      "status": "active",
+      "role": "Tenant",
+      "unit": "A-101",
+      "picture": null,
+      "password": "password123",
+      "contacts": [
+        {
+          "id": 1,
+          "name": "Emergency",
+          "phone": "08069216066",
+          "relation": "Primary"
+        }
+      ]
+    },
+    {
+      "id": "RES-003",
+      "name": "Jane Smith",
+      "email": "example@gmail.com",
+      "phone": "+1 234 567 8904",
+      "type": "resident",
+      "status": "active",
+      "role": "Owner",
+      "unit": "Apt 102",
+      "picture": null,
+      "password": "123456",
+      "contacts": [
+        {
+          "id": 1,
+          "name": "Marcus Wright",
+          "relation": "Brother",
+          "phone": "2348000000004"
+        },
+        {
+          "id": 2,
+          "name": "Sarah Jenkins",
+          "relation": "Neighbor (Unit 42B)",
+          "phone": "2348000000004"
+        },
+        {
+          "id": 3,
+          "name": "David Chen",
+          "relation": "Spouse",
+          "phone": "2348000000004"
+        },
+        {
+          "id": 4,
+          "name": "Elena Rossi",
+          "relation": "Close Friend",
+          "phone": "2348000000004"
+        }
+      ]
+    },
+    {
+      "id": "RES-005",
+      "name": "Daniel Nwachi",
+      "email": "donvix7@gmail.com",
+      "phone": "+1 234 567 8904",
+      "unit": "A-101",
+      "building": "Tower A",
+      "type": "resident",
+      "status": "active",
+      "role": "Owner",
+      "picture": null,
+      "password": "zxcvbnm",
+      "contacts": [
+        {
+          "id": 1776688468159,
+          "name": "my wife",
+          "phone": "tel:09034772889",
+          "relation": "spouse",
+          "initials": "MW",
+          "color": "bg-amber-500"
+        }
+      ]
+    }
+  ],
+  "scan_history": [
+    {
+      "name": "Marcus Rashford",
+      "type": "Visitor",
+      "target": "House 42B",
+      "status": "Authorized",
+      "statusColor": "text-emerald-500 bg-emerald-500/10",
+      "picture": "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?q=80&w=100&auto=format&fit=crop",
+      "time": "14:23:45",
+      "id": "PWrmNsXTeXg"
+    },
+    {
+      "name": "Sarah Mitchell",
+      "type": "Resident",
+      "target": "Apt 109",
+      "status": "Authorized",
+      "statusColor": "text-emerald-500 bg-emerald-500/10",
+      "picture": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop",
+      "time": "14:15:22",
+      "id": "7dVluHKQSbQ"
+    },
+    {
+      "name": "james sinclare",
+      "type": "Manual Verification",
+      "target": "A-101",
+      "status": "Authorized",
+      "statusColor": "text-emerald-500 bg-emerald-500/10",
+      "time": "23:22:53",
+      "timestamp": "2026-04-09T22:22:53.294Z",
+      "id": "c-ANYoZqda4"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:23:45",
+      "qrCode": "https://www.xen...",
+      "timestamp": "2026-04-09T22:23:45.511Z",
+      "id": "Isz-7hMqFu8"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:23:58",
+      "qrCode": "https://www.xen...",
+      "timestamp": "2026-04-09T22:23:58.690Z",
+      "id": "km-DueNgG6E"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:24:20",
+      "qrCode": "https://www.xen...",
+      "timestamp": "2026-04-09T22:24:20.258Z",
+      "id": "R0b_CeInrcs"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:24:20",
+      "qrCode": "https://www.xen...",
+      "timestamp": "2026-04-09T22:24:20.274Z",
+      "id": "DgImZlGna0g"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:27:47",
+      "qrCode": "{\"passId\":\"1775...",
+      "timestamp": "2026-04-09T22:27:47.689Z",
+      "id": "3hAPgJIwjSE"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:27:47",
+      "qrCode": "{\"passId\":\"1775...",
+      "timestamp": "2026-04-09T22:27:47.908Z",
+      "id": "EHoABdShRKY"
+    },
+    {
+      "name": "6144",
+      "type": "Security Alert",
+      "target": "Restricted Access",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:28:05",
+      "timestamp": "2026-04-09T22:28:05.584Z",
+      "id": "Hj1qG26DMVU"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:30:35",
+      "qrCode": "{\"passId\":\"1775...",
+      "timestamp": "2026-04-09T22:30:35.566Z",
+      "id": "Y45JdrGWE0g"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:30:48",
+      "qrCode": "{\"passId\":\"1775...",
+      "timestamp": "2026-04-09T22:30:48.105Z",
+      "id": "_3TVXLtpU_E"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:36:55",
+      "qrCode": "{\"passId\":\"1775...",
+      "timestamp": "2026-04-09T22:36:55.509Z",
+      "id": "5C4bfX0pED8"
+    },
+    {
+      "name": "N0V90Z",
+      "type": "Security Alert",
+      "target": "Restricted Access",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:36:58",
+      "timestamp": "2026-04-09T22:36:58.445Z",
+      "id": "8RSCz7pO9PU"
+    },
+    {
+      "name": "NOV902",
+      "type": "Security Alert",
+      "target": "Restricted Access",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:38:04",
+      "timestamp": "2026-04-09T22:38:04.208Z",
+      "id": "RkHmUlkwwMY"
+    },
+    {
+      "name": "Dolores Nwachi",
+      "type": "Manual Verification",
+      "target": "A-101",
+      "status": "Authorized",
+      "statusColor": "text-emerald-500 bg-emerald-500/10",
+      "time": "23:38:30",
+      "timestamp": "2026-04-09T22:38:30.712Z",
+      "id": "IUsNIYT8X6M"
+    },
+    {
+      "name": "donvix73@gmail.com",
+      "type": "Security Alert",
+      "target": "Restricted Access",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:46:04",
+      "timestamp": "2026-04-09T22:46:04.560Z",
+      "id": "Lmvzx5GJHpU"
+    },
+    {
+      "name": "NOV902",
+      "type": "Security Alert",
+      "target": "Restricted Access",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:46:45",
+      "timestamp": "2026-04-09T22:46:45.365Z",
+      "id": "c3cJlc03tDY"
+    },
+    {
+      "name": "NOV902",
+      "type": "Security Alert",
+      "target": "Restricted Access",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "23:51:39",
+      "timestamp": "2026-04-09T22:51:39.667Z",
+      "id": "aqOJinloku8"
+    },
+    {
+      "name": "NOV902",
+      "type": "Security Alert",
+      "target": "Restricted Access",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "00:21:43",
+      "timestamp": "2026-04-09T23:21:43.851Z",
+      "id": "iEMH4U5HFqk"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "18:16:23",
+      "qrCode": "{\"passId\":\"1775...",
+      "timestamp": "2026-04-10T17:16:23.054Z",
+      "id": "9tNFCjCzERs"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "18:23:05",
+      "qrCode": "{\"passId\":\"1775...",
+      "timestamp": "2026-04-10T17:23:05.660Z",
+      "id": "jB5scPWZiZc"
+    },
+    {
+      "name": "james clark",
+      "type": "Manual Verification",
+      "target": "A-101",
+      "status": "Authorized",
+      "statusColor": "text-emerald-500 bg-emerald-500/10",
+      "time": "21:49:49",
+      "timestamp": "2026-04-10T20:49:49.325Z",
+      "id": "-Bn446Ac5WA"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "21:50:37",
+      "qrCode": "{\"passId\":\"1775...",
+      "timestamp": "2026-04-10T20:50:38.109Z",
+      "id": "w1Wu3-lNJj4"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "21:52:27",
+      "qrCode": "{\"passId\":\"1775...",
+      "timestamp": "2026-04-10T20:52:27.405Z",
+      "id": "u6JLH-00Vz8"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "21:52:42",
+      "qrCode": "{\"passId\":\"1775...",
+      "timestamp": "2026-04-10T20:52:43.124Z",
+      "id": "42HjlUUcdqQ"
+    },
+    {
+      "name": "Invalid/Flagged QR",
+      "type": "Security Alert",
+      "target": "Access Denied",
+      "status": "Denied",
+      "statusColor": "text-red-500 bg-red-500/10",
+      "time": "21:52:43",
+      "qrCode": "{\"passId\":\"1775...",
+      "timestamp": "2026-04-10T20:52:43.171Z",
+      "id": "M5JZc0EAhQ4"
+    }
+  ],
+  "admin_security_logs": [
+    {
+      "date": "Mar 08, 2025",
+      "time": "14:24:08",
+      "type": "Perimeter Breach",
+      "typeId": "security",
+      "icon": "ShieldAlert",
+      "iconColor": "bg-rose-500/10 text-rose-500",
+      "location": "North Fence Sector 4",
+      "sub": "Node #882",
+      "severity": "High",
+      "status": "In Progress",
+      "id": "dqWtKDvAMKY"
+    },
+    {
+      "date": "Mar 08, 2025",
+      "time": "14:15:22",
+      "type": "Visitor Arrival",
+      "typeId": "visitor",
+      "icon": "UserCheck",
+      "iconColor": "bg-[#1241a1]/10 text-[#1241a1]",
+      "location": "Main Gate Alpha",
+      "sub": "Guest Pass #1029",
+      "severity": "Low",
+      "status": "Resolved",
+      "id": "aVFvho0Bt84"
+    },
+    {
+      "date": "Mar 08, 2025",
+      "time": "13:58:10",
+      "type": "Gate Entry Failed",
+      "typeId": "security",
+      "icon": "ShieldCheck",
+      "iconColor": "bg-amber-500/10 text-amber-500",
+      "location": "South Service Gate",
+      "sub": "License Plate AB-990",
+      "severity": "Medium",
+      "status": "Pending Review",
+      "id": "xJPqT8CNl4A"
+    },
+    {
+      "date": "Mar 08, 2025",
+      "time": "13:42:00",
+      "type": "System Health Check",
+      "typeId": "system",
+      "icon": "CheckCircle2",
+      "iconColor": "bg-emerald-500/10 text-emerald-500",
+      "location": "Command Center",
+      "sub": "Auto-generated",
+      "severity": "Low",
+      "status": "Resolved",
+      "id": "ADCuWxxh74Y"
+    },
+    {
+      "date": "Mar 08, 2025",
+      "time": "13:30:15",
+      "type": "Panic Button Alert",
+      "typeId": "emergency",
+      "icon": "AlertOctagon",
+      "iconColor": "bg-rose-500/10 text-rose-500",
+      "location": "Block B – Unit 09",
+      "sub": "Unit Occupant",
+      "severity": "High",
+      "status": "In Progress",
+      "id": "g5MWodE3RnA"
+    },
+    {
+      "type": "Maintenance Entry",
+      "location": "test",
+      "severity": "Medium",
+      "sub": "",
+      "date": "Apr 07, 2026",
+      "time": "21:48:24",
+      "typeId": "system",
+      "icon": "CheckCircle2",
+      "iconColor": "bg-emerald-500/10 text-emerald-500",
+      "status": "Pending Review",
+      "id": "7FP_dEKlacg"
+    },
+    {
+      "date": "Apr 21, 2026",
+      "time": "16:11:29",
+      "type": "Found Item Claimed",
+      "typeId": "lost_found",
+      "icon": "Tag",
+      "iconColor": "bg-emerald-500/10 text-emerald-500",
+      "location": "Visitor Parking Area",
+      "sub": "House Keys — 3 Keys claimed by Daniel Nwachi",
+      "severity": "Low",
+      "status": "Resolved",
+      "id": "l48o8-iie20"
+    },
+    {
+      "date": "Apr 21, 2026",
+      "time": "16:12:07",
+      "type": "Lost Item Found",
+      "typeId": "lost_found",
+      "icon": "CheckCircle2",
+      "iconColor": "bg-emerald-500/10 text-emerald-500",
+      "location": "Central Park East",
+      "sub": "Golden Retriever reported found by Daniel Nwachi",
+      "severity": "Low",
+      "status": "Resolved",
+      "id": "zcFOy5O0aYU"
+    },
+    {
+      "date": "Apr 21, 2026",
+      "time": "20:46:35",
+      "type": "Found Item Claimed",
+      "typeId": "lost_found",
+      "icon": "Tag",
+      "iconColor": "bg-emerald-500/10 text-emerald-500",
+      "location": "Gym Locker Room",
+      "sub": "iPhone 14 Pro - Black claimed by Daniel",
+      "severity": "Low",
+      "status": "Resolved",
+      "id": "cQnjVIG_o9o"
+    },
+    {
+      "date": "Apr 21, 2026",
+      "time": "20:51:51",
+      "type": "Found Item Claimed",
+      "typeId": "lost_found",
+      "icon": "Tag",
+      "iconColor": "bg-emerald-500/10 text-emerald-500",
+      "location": "Tennis Court 2",
+      "sub": "Nike Runners (Size 10) claimed by Daniel",
+      "severity": "Low",
+      "status": "Resolved",
+      "id": "1TpQ6c7qZ8Q"
+    },
+    {
+      "date": "Apr 22, 2026",
+      "time": "16:58:44",
+      "type": "Found Item Claimed",
+      "typeId": "lost_found",
+      "icon": "Tag",
+      "iconColor": "bg-emerald-500/10 text-emerald-500",
+      "location": "Visitor Parking Area",
+      "sub": "House Keys — 3 Keys claimed by Daniel",
+      "severity": "Low",
+      "status": "Resolved",
+      "id": "AYmehxbFGMU"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "INV-001",
+      "residentName": "John Doe",
+      "description": "Monthly Service Fee",
+      "amount": 45000,
+      "status": "paid",
+      "dateIssued": "2024-10-01",
+      "dueDate": "2024-10-15",
+      "paymentDate": "2024-10-10"
+    },
+    {
+      "id": "INV-002",
+      "residentName": "Jane Smith",
+      "description": "Electricity Bill",
+      "amount": 12500,
+      "status": "pending",
+      "dateIssued": "2024-10-05",
+      "dueDate": "2024-10-20",
+      "paymentDate": null
+    }
+  ],
+  "transactions": [
+    {
+      "id": "TRX-001",
+      "residentName": "John Doe",
+      "description": "Monthly Service Fee",
+      "amount": 45000,
+      "type": "Payment",
+      "status": "completed",
+      "date": "2024-10-10",
+      "reference": "REF-123456",
+      "residentId": "RES-001"
+    },
+    {
+      "id": "TRX-002",
+      "residentName": "Jane Smith",
+      "description": "Electricity Bill",
+      "amount": 12500,
+      "type": "Part-Payment",
+      "status": "pending",
+      "date": "2024-10-15",
+      "reference": "REF-123457",
+      "residentId": "RES-005"
+    },
+    {
+      "id": "TRX-003",
+      "residentName": "Jane Smith",
+      "description": "Electricity Bill",
+      "amount": 12500,
+      "type": "Part-Payment",
+      "status": "pending",
+      "date": "2024-10-15",
+      "reference": "REF-123457"
+    }
+  ],
+  "emergencies": [
+    {
+      "id": "EMG-001",
+      "residentName": "John Doe",
+      "description": "Medical Emergency",
+      "amount": 45000,
+      "type": "Payment",
+      "status": "completed",
+      "date": "2024-10-10",
+      "reference": "REF-123456"
+    },
+    {
+      "id": "EMG-002",
+      "residentName": "Jane Smith",
+      "description": "Electricity Bill",
+      "amount": 12500,
+      "type": "Part-Payment",
+      "status": "pending",
+      "date": "2024-10-15",
+      "reference": "REF-123457"
+    },
+    {
+      "id": "EMG-003",
+      "residentName": "Jane Smith",
+      "description": "Electricity Bill",
+      "amount": 12500,
+      "type": "Part-Payment",
+      "status": "pending",
+      "date": "2024-10-15",
+      "reference": "REF-123457"
+    }
+  ],
+  "sessions": [
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776077602912_q0ng0vm7b",
+      "createdAt": "2026-04-13T10:53:22.912Z",
+      "expiresAt": "2026-04-14T10:53:22.914Z",
+      "id": "LcGRL3nOE8k"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776077605455_pw7frzdw4",
+      "createdAt": "2026-04-13T10:53:25.455Z",
+      "expiresAt": "2026-04-14T10:53:25.455Z",
+      "id": "tjsW0N1Kw-k"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776077795117_9eyu84nhc",
+      "createdAt": "2026-04-13T10:56:35.117Z",
+      "expiresAt": "2026-04-14T10:56:35.118Z",
+      "id": "31FEjBvwZ_Q"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776077832477_jl88q1xq9",
+      "createdAt": "2026-04-13T10:57:12.477Z",
+      "expiresAt": "2026-04-14T10:57:12.477Z",
+      "id": "Kze2OiztEls"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776078081572_n94m7v1hv",
+      "createdAt": "2026-04-13T11:01:21.572Z",
+      "expiresAt": "2026-04-14T11:01:21.572Z",
+      "id": "WmL6I-pF4m8"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776078145574_6c8z840v9",
+      "createdAt": "2026-04-13T11:02:25.574Z",
+      "expiresAt": "2026-04-14T11:02:25.575Z",
+      "id": "g-OfiSW2Ux0"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776079276456_4p7xbt3mp",
+      "createdAt": "2026-04-13T11:21:16.456Z",
+      "expiresAt": "2026-04-14T11:21:16.457Z",
+      "id": "mQ8AaGGQN-k"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776079536298_cbn9uhxj3",
+      "createdAt": "2026-04-13T11:25:36.298Z",
+      "expiresAt": "2026-04-14T11:25:36.299Z",
+      "id": "0JDcXjhHT8c"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776081086491_0lo4b7cy0",
+      "createdAt": "2026-04-13T11:51:26.491Z",
+      "expiresAt": "2026-04-14T11:51:26.491Z",
+      "id": "4i8NckqJu9w"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776081817556_73rn7hn0g",
+      "createdAt": "2026-04-13T12:03:37.556Z",
+      "expiresAt": "2026-04-14T12:03:37.556Z",
+      "id": "ZInKdYqb3Uk"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "id": "ok9bOnUn3wE",
+      "createdAt": "2026-04-13T12:50:38.898Z",
+      "expiresAt": "2026-04-14T12:50:38.898Z"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "id": "FOqJwixA3KY",
+      "createdAt": "2026-04-13T12:53:29.051Z",
+      "expiresAt": "2026-04-14T12:53:29.051Z"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776085089336_k59k2qdjj",
+      "createdAt": "2026-04-13T12:58:09.336Z",
+      "expiresAt": "2026-04-14T12:58:09.336Z",
+      "id": "lgHmj24X5Og"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776085228824_bc98dctha",
+      "createdAt": "2026-04-13T13:00:28.824Z",
+      "expiresAt": "2026-04-14T13:00:28.824Z",
+      "id": "kxXrIicZU2Q"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776085870106_tpxvkt5px",
+      "createdAt": "2026-04-13T13:11:10.106Z",
+      "expiresAt": "2026-04-14T13:11:10.106Z",
+      "id": "XiobywkhIfo"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776165494069_vhffbp68r",
+      "createdAt": "2026-04-14T11:18:14.069Z",
+      "expiresAt": "2026-04-15T11:18:14.069Z",
+      "id": "XrM90Gm7Gp4"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776211789449_9zspy50fe",
+      "createdAt": "2026-04-15T00:09:49.449Z",
+      "expiresAt": "2026-04-16T00:09:49.449Z",
+      "id": "uKPBxwIor8E"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776635987619_4wbkslvcx",
+      "createdAt": "2026-04-19T21:59:47.619Z",
+      "expiresAt": "2026-04-20T21:59:47.619Z",
+      "id": "DhHA8gS4S_A"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776679460966_ben67304t",
+      "createdAt": "2026-04-20T10:04:20.966Z",
+      "expiresAt": "2026-04-21T10:04:20.966Z",
+      "id": "Aj6PoXR4eBg"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776695785432_ki3zxry2j",
+      "createdAt": "2026-04-20T14:36:25.432Z",
+      "expiresAt": "2026-04-21T14:36:25.432Z",
+      "id": "OlUsqAtIbh8"
+    },
+    {
+      "userId": "RES-001",
+      "userType": "resident",
+      "userName": "John Doe",
+      "userEmail": "example4@gmail.com",
+      "sessionId": "session_1776770859501_wrw4ongbk",
+      "createdAt": "2026-04-21T11:27:39.501Z",
+      "expiresAt": "2026-04-22T11:27:39.501Z",
+      "id": "Wfs0md7NXjg"
+    },
+    {
+      "userId": "ADM-001",
+      "userType": "admin",
+      "userName": "Daniel",
+      "userEmail": "admin@donvix7.com",
+      "sessionId": "session_1776777861929_30sbdb5yp",
+      "createdAt": "2026-04-21T13:24:21.929Z",
+      "expiresAt": "2026-04-22T13:24:21.929Z",
+      "id": "DvueJv3hMDg"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776781175631_hetd5tai0",
+      "createdAt": "2026-04-21T14:19:35.631Z",
+      "expiresAt": "2026-04-22T14:19:35.631Z",
+      "id": "OSyVSIx2omY"
+    },
+    {
+      "userId": "ADM-001",
+      "userType": "admin",
+      "userName": "Daniel",
+      "userEmail": "admin@donvix7.com",
+      "sessionId": "session_1776784377779_mk27wcw6f",
+      "createdAt": "2026-04-21T15:12:57.779Z",
+      "expiresAt": "2026-04-22T15:12:57.779Z",
+      "id": "hhged-QErZU"
+    },
+    {
+      "userId": "RES-005",
+      "userType": "resident",
+      "userName": "Daniel Nwachi",
+      "userEmail": "donvix7@gmail.com",
+      "sessionId": "session_1776874266273_w03lpmm4c",
+      "createdAt": "2026-04-22T16:11:06.273Z",
+      "expiresAt": "2026-04-23T16:11:06.273Z",
+      "id": "oDA9r0IJbZc"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

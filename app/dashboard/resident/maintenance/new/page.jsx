@@ -3,6 +3,19 @@
 import React, { useState, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify';
+import { 
+  ChevronRight, 
+  Info, 
+  Calendar, 
+  Upload, 
+  Plus, 
+  X, 
+  Image as ImageIcon, 
+  ShieldCheck, 
+  ArrowRight 
+} from 'lucide-react';
+import { submitMaintenanceRequest } from '@/lib/action';
 
 const CATEGORIES = [
   'Select category',
@@ -61,11 +74,45 @@ export default function NewMaintenanceRequestPage() {
   const removePreview = (i) => setPreviews(prev => prev.filter((_, idx) => idx !== i))
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    if (e) e.preventDefault()
+    if (!form.category || !form.description) {
+      toast.error('Please fill in all required fields')
+      return
+    }
+
     setSubmitting(true)
-    await new Promise(r => setTimeout(r, 1400))
-    setSubmitting(false)
-    router.push('/dashboard/resident/maintenance')
+    
+    // Map form to db.json schema
+    const payload = {
+      id: `#MN-${Math.floor(1000 + Math.random() * 9000)}`,
+      issue: form.category,
+      subtitle: form.description.length > 50 ? form.description.substring(0, 50) + '...' : form.description,
+      desc: form.description,
+      location: 'Block A – Apt 101', // Should ideally come from user profile/session
+      priority: form.urgency.charAt(0).toUpperCase() + form.urgency.slice(1),
+      status: 'Pending',
+      date: form.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      timeline: [
+        { label: 'Reported', time: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }), done: true },
+        { label: 'Pending', time: 'Awaiting assignment', done: false, current: true }
+      ],
+      technician: null
+    }
+
+    try {
+      const res = await submitMaintenanceRequest(payload)
+      if (res && (res.id || res.success)) {
+        toast.success('Maintenance request submitted successfully')
+        router.push('/dashboard/resident/maintenance')
+      } else {
+        toast.error('Failed to submit maintenance request')
+      }
+    } catch (err) {
+      console.error(err)
+      toast.error('An error occurred during submission')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -75,9 +122,9 @@ export default function NewMaintenanceRequestPage() {
       <div className="mb-10">
         <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-2">
           <Link href="/dashboard/resident" className="hover:text-[#1241a1] transition-colors">Dashboard</Link>
-          <span className="material-symbols-outlined text-sm">chevron_right</span>
+          <ChevronRight className="size-4" />
           <Link href="/dashboard/resident/maintenance" className="hover:text-[#1241a1] transition-colors">Maintenance</Link>
-          <span className="material-symbols-outlined text-sm">chevron_right</span>
+          <ChevronRight className="size-4" />
           <span className="text-[#1241a1] font-semibold">New Request</span>
         </div>
         <h2 className="text-3xl font-extrabold tracking-tight">New Maintenance Request</h2>
@@ -94,7 +141,7 @@ export default function NewMaintenanceRequestPage() {
 
           <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm space-y-5">
             <h3 className="text-base font-bold flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#1241a1]">info</span>
+              <Info className="size-5 text-[#1241a1]" />
               Request Details
             </h3>
 
@@ -145,7 +192,7 @@ export default function NewMaintenanceRequestPage() {
 
           <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm space-y-5">
             <h3 className="text-base font-bold flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#1241a1]">calendar_month</span>
+              <Calendar className="size-5 text-[#1241a1]" />
               Preferred Service Time
             </h3>
 
@@ -179,7 +226,7 @@ export default function NewMaintenanceRequestPage() {
 
           <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm flex flex-col flex-1">
             <h3 className="text-base font-bold flex items-center gap-2 mb-1">
-              <span className="material-symbols-outlined text-[#1241a1]">upload_file</span>
+              <Upload className="size-5 text-[#1241a1]" />
               Photos &amp; Videos
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">
@@ -206,7 +253,7 @@ export default function NewMaintenanceRequestPage() {
                 onChange={e => handleFiles(e.target.files)}
               />
               <div className="size-16 rounded-full bg-[#1241a1]/10 flex items-center justify-center text-[#1241a1] mb-4 group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-3xl">add_photo_alternate</span>
+                <Plus className="size-10" />
               </div>
               <p className="text-sm font-bold">Drag and drop files here</p>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">or click to browse from your device</p>
@@ -228,13 +275,13 @@ export default function NewMaintenanceRequestPage() {
                       onClick={() => removePreview(i)}
                       className="absolute top-1.5 right-1.5 size-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                      <span className="material-symbols-outlined text-[11px]">close</span>
+                      <X className="size-3" />
                     </button>
                   </div>
                 ))}
                 {Array.from({ length: Math.max(0, 3 - previews.length) }).map((_, i) => (
                   <div key={`empty-${i}`} className="aspect-square rounded-xl flex items-center justify-center text-slate-300 dark:text-slate-700">
-                    <span className="material-symbols-outlined">image</span>
+                    <ImageIcon className="size-6" />
                   </div>
                 ))}
               </div>
@@ -244,7 +291,7 @@ export default function NewMaintenanceRequestPage() {
               <div className="mt-4 grid grid-cols-3 gap-3">
                 {[0, 1, 2].map(i => (
                   <div key={i} className="aspect-square rounded-xl flex items-center justify-center text-slate-300 dark:text-slate-700">
-                    <span className="material-symbols-outlined">image</span>
+                    <ImageIcon className="size-6" />
                   </div>
                 ))}
               </div>
@@ -253,7 +300,7 @@ export default function NewMaintenanceRequestPage() {
 
           <div className="bg-[#1241a1]/5 dark:bg-[#1241a1]/10 p-5 rounded-2xl">
             <h4 className="text-sm font-bold flex items-center gap-2 text-[#1241a1] mb-2">
-              <span className="material-symbols-outlined text-sm">verified_user</span>
+              <ShieldCheck className="size-4" />
               Service Guarantee
             </h4>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -288,7 +335,7 @@ export default function NewMaintenanceRequestPage() {
           ) : (
             <>
               <span>Create Maintenance Ticket</span>
-              <span className="material-symbols-outlined text-sm">arrow_forward</span>
+              <ArrowRight className="size-4" />
             </>
           )}
         </button>

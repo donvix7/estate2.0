@@ -4,16 +4,17 @@ import React from 'react'
 import { WalletCard } from '@/components/resident/WalletCard'
 import PaystackPayment from '@/components/payment'
 import Link from 'next/link'
+import { ChevronRight, Lock, ShieldCheck, ShieldAlert, CreditCard } from 'lucide-react'
 
 // Outstanding bills — shared with the bills overview page
 export const OUTSTANDING_BILLS = [
-  { description: 'Monthly Service Charge', subtitle: 'Residential Unit - Block A', period: 'Oct 2024', amount: 45000 },
-  { description: 'Security & Patrol Fee', subtitle: 'Quarterly Contribution', period: 'Q4 2024', amount: 12000 },
-  { description: 'Utility Surcharge', subtitle: 'Common Area Lighting', period: 'Oct 2024', amount: 3500 },
+  { description: 'Monthly Service Charge', subtitle: 'Residential Unit - Block A', period: 'Oct 2024', amount: 45.00 },
+  { description: 'Security & Patrol Fee', subtitle: 'Quarterly Contribution', period: 'Q4 2024', amount: 12.00 },
+  { description: 'Utility Surcharge', subtitle: 'Common Area Lighting', period: 'Oct 2024', amount: 3.50 },
 ]
 const TOTAL = OUTSTANDING_BILLS.reduce((sum, b) => sum + b.amount, 0)
 
-const formatNGN = (n) => `₦${n.toLocaleString('en-NG', { minimumFractionDigits: 2 })}`
+const formatUSD = (n) => `$${n.toLocaleString('en-US', { minimumFractionDigits: 2 })}`
 
 export default function CheckoutPage() {
   return (
@@ -23,14 +24,14 @@ export default function CheckoutPage() {
       <div className="px-6 lg:px-10 pt-8 pb-6 max-w-7xl mx-auto">
         <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-4">
           <Link href="/dashboard/resident" className="hover:text-[#1241a1] transition-colors">Dashboard</Link>
-          <span className="material-symbols-outlined text-sm">chevron_right</span>
+          <ChevronRight className="size-4" />
           <Link href="/dashboard/resident/finance" className="hover:text-[#1241a1] transition-colors">Bills &amp; Invoices</Link>
-          <span className="material-symbols-outlined text-sm">chevron_right</span>
+          <ChevronRight className="size-4" />
           <span className="text-[#1241a1] font-semibold">Checkout</span>
         </div>
         <h1 className="text-3xl lg:text-4xl font-black tracking-tight mb-2">Complete Your Payment</h1>
         <p className="text-slate-500 dark:text-slate-400 flex items-center gap-2 text-sm">
-          <span className="material-symbols-outlined text-green-500 text-base">lock</span>
+          <Lock className="size-4 text-green-500" />
           Encrypted and secure transaction. Your data is protected.
         </p>
       </div>
@@ -69,18 +70,18 @@ export default function CheckoutPage() {
                           <p className="text-xs text-slate-500 mt-0.5">{bill.subtitle}</p>
                         </td>
                         <td className="px-6 py-5 text-sm text-slate-500">{bill.period}</td>
-                        <td className="px-6 py-5 text-right font-semibold text-sm">{formatNGN(bill.amount)}</td>
+                        <td className="px-6 py-5 text-right font-semibold text-sm">{formatUSD(bill.amount)}</td>
                       </tr>
                     ))}
                   </tbody>
                   <tfoot>
                     <tr className="bg-slate-50 dark:bg-slate-800/30">
                       <td className="px-6 py-4 text-right text-sm font-medium text-slate-500" colSpan={2}>Subtotal</td>
-                      <td className="px-6 py-4 text-right font-semibold text-sm">{formatNGN(TOTAL)}</td>
+                      <td className="px-6 py-4 text-right font-semibold text-sm">{formatUSD(TOTAL)}</td>
                     </tr>
                     <tr className="bg-slate-50 dark:bg-slate-800/30">
                       <td className="px-6 py-6 text-right font-bold text-lg" colSpan={2}>Total Due</td>
-                      <td className="px-6 py-6 text-right font-black text-2xl text-[#1241a1]">{formatNGN(TOTAL)}</td>
+                      <td className="px-6 py-6 text-right font-black text-2xl text-[#1241a1]">{formatUSD(TOTAL)}</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -90,13 +91,13 @@ export default function CheckoutPage() {
             {/* Security Badges */}
             <div className="flex flex-wrap gap-4 items-center justify-center lg:justify-start px-1">
               {[
-                { icon: 'verified_user', label: 'SSL Secure Checkout' },
-                { icon: 'shield', label: 'PCI-DSS Compliant' },
-                { icon: 'credit_score', label: 'Fraud Protection' },
+                { icon: ShieldCheck, label: 'SSL Secure Checkout' },
+                { icon: ShieldAlert, label: 'PCI-DSS Compliant' },
+                { icon: CreditCard, label: 'Fraud Protection' },
               ].map((badge, i, arr) => (
                 <React.Fragment key={badge.label}>
                   <div className="flex items-center gap-2 text-slate-500 text-sm">
-                    <span className="material-symbols-outlined text-lg">{badge.icon}</span>
+                    <badge.icon className="size-5" />
                     <span>{badge.label}</span>
                   </div>
                   {i < arr.length - 1 && <div className="h-4 w-px hidden sm:block" />}

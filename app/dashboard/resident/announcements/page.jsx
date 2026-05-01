@@ -1,80 +1,63 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { Megaphone, Plus, Search, Calendar, Shield, Wrench, Info, Users } from 'lucide-react';
+import { Megaphone, Plus, Search, Calendar, Shield, Wrench, Info, Users, ChevronRight, ChevronLeft, BellRing } from 'lucide-react';
 import { api } from '@/services/api';
 import ViewAnnouncementModal from '@/components/admin/ViewAnnouncementModal';
+import { getAnnouncements, getResidentData } from '@/lib/service';
+import { readAnnouncement } from '@/lib/action';
 
-const dummyAnnouncements = [
-  { 
-    id: '1', 
-    title: 'Scheduled Database Migration', 
-    message: 'We will be performing a critical database migration to improve query speeds across all regional servers...', 
-    type: 'Maintenance', 
-    timestamp: '2023-10-24T10:00:00Z',
-    author: 'Systems Admin'
-  },
-  { 
-    id: '2', 
-    title: 'Updated 2FA Protocols', 
-    message: 'Mandatory biometric authentication is now available for all enterprise accounts to enhance security...', 
-    type: 'Security', 
-    timestamp: '2023-10-22T08:30:00Z',
-    author: 'Security Team'
-  },
-  { 
-    id: '3', 
-    title: 'Annual Developers Meetup 2024', 
-    message: 'Registration is now open for our flagship annual community event. Join us for a weekend of networking...', 
-    type: 'Community', 
-    timestamp: '2023-10-20T14:15:00Z',
-    author: 'Community Lead'
-  },
-  { 
-    id: '4', 
-    title: 'Legacy API Deprecation Notice', 
-    message: 'The v1.0 API will be officially deprecated by end of Q4. Please update your integration to v2.5...', 
-    type: 'Maintenance', 
-    timestamp: '2023-10-18T11:00:00Z',
-    author: 'API Team'
-  },
-  { 
-    id: '5', 
-    title: 'Bi-weekly Security Audit Results', 
-    message: 'Our latest independent audit confirms 99.9% compliance with GDPR and HIPAA standards...', 
-    type: 'Security', 
-    timestamp: '2023-10-15T09:45:00Z',
-    author: 'Audit Dept'
-  }
-];
 
 export default function AnnouncementsPage() {
-  const [announcements, setAnnouncements] = useState(dummyAnnouncements);
+  const [announcements, setAnnouncements] = useState([]);
+  const [userId, setUserId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
   
   // Modal state
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
   useEffect(() => {
-    // loadAnnouncements();
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const [annData, resData] = await Promise.all([
+          getAnnouncements(),
+          getResidentData()
+        ]);
+        setAnnouncements(annData);
+        if (resData) setUserId(resData?._id || resData?.id);
+      } catch (error) {
+        console.error('Failed to load data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, activeTab]);
+
   const loadAnnouncements = async () => {
-    setIsLoading(true);
     try {
-      const data = await api.getAnnouncements();
+      const data = await getAnnouncements();
       setAnnouncements(data);
     } catch (error) {
       console.error('Failed to load announcements:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const handleReadMore = (ann) => {
+  const handleReadMore = async (ann) => {
+    if (userId) {
+      await readAnnouncement(ann._id, userId);
+      loadAnnouncements(); // Refresh list to update stay status
+    }
     setSelectedAnnouncement(ann);
     setIsViewModalOpen(true);
   };
@@ -92,36 +75,18 @@ export default function AnnouncementsPage() {
     }
   };
 
-  const filteredAnnouncements = announcements
+  const filteredAnnouncements = (Array.isArray(announcements?.docs) ? announcements.docs : [])
     .filter(ann => 
       (activeTab === 'All' || ann.type?.toLowerCase() === activeTab.toLowerCase()) &&
       (ann.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
        ann.message.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
+  const totalPages = announcements?.totalPages;
+
   return (
     <div className="flex-1 flex flex-col min-w-0 overflow-hidden animate-in fade-in duration-700">
-      {/* Top Navigation / Search Header */}
-      <header className="h-16 bg-white/50 dark:bg-background-dark/50 backdrop-blur-md flex items-center justify-between px-8">
-        <div className="flex-1 max-w-xl">
-          <div className="relative group">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
-            <input 
-              className="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-primary/10 border-none rounded-lg focus:ring-2 focus:ring-primary/50 text-sm transition-all outline-none" 
-              placeholder="Search announcements, tags, or authors..." 
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <button className="p-2 rounded-lg hover:bg-primary/10 text-slate-500 relative transition-colors">
-            <span className="material-symbols-outlined">notifications</span>
-            <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-background-dark"></span>
-          </button>
-        </div>
-      </header>
+      
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-8 space-y-6">
@@ -155,7 +120,7 @@ export default function AnnouncementsPage() {
             <table className="w-full hidden md:table">
               <thead>
                 <tr className="text-left bg-slate-50 dark:bg-primary/5">
-                  {['Announcement', 'Category', 'Date', 'Action'].map((header) => (
+                  {['Announcement', 'Category', 'Date','status', ''].map((header) => (
                     <th key={header} className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">{header}</th>
                   ))}
                 </tr>
@@ -174,14 +139,14 @@ export default function AnnouncementsPage() {
                   <tr>
                     <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
                       <div className="flex flex-col items-center gap-3">
-                        <span className="material-symbols-outlined text-4xl opacity-20">campaign</span>
+                        <BellRing className="size-12 opacity-20" />
                         <p className="text-sm font-medium">No announcements found matching your criteria.</p>
                       </div>
                     </td>
                   </tr>
                 ) : (
-                  filteredAnnouncements.map((ann) => (
-                    <tr key={ann.id} className="hover:bg-primary/5 transition-colors group">
+                  announcements?.docs.map((ann) => (
+                    <tr key={ann._id || ann.id} className="hover:bg-primary/5 transition-colors group">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 rounded-lg bg-primary/10 shrink-0 flex items-center justify-center">
@@ -206,12 +171,15 @@ export default function AnnouncementsPage() {
                           {new Date(ann.timestamp || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </span>
                       </td>
+                      <td className={`px-6 py-4 whitespace-nowrap  text-slate-500`}>
+                        {ann.readBy?.includes(userId) ? 'Read' : 'Unread'}
+                      </td>
                       <td className="px-6 py-4 text-right">
                         <button 
                           onClick={() => handleReadMore(ann)}
-                          className="text-primary text-xs font-bold hover:underline"
+                          className="text-primary text-xs font-bold hover:underline hover:cursor-pointer hover:text-blue-500"
                         >
-                          Read More
+                          View
                         </button>
                       </td>
                     </tr>
@@ -232,13 +200,13 @@ export default function AnnouncementsPage() {
               ) : filteredAnnouncements.length === 0 ? (
                 <div className="px-6 py-12 text-center text-slate-400">
                   <div className="flex flex-col items-center gap-3">
-                    <span className="material-symbols-outlined text-4xl opacity-20">campaign</span>
+                    <BellRing className="size-12 opacity-20" />
                     <p className="text-sm font-medium">No announcements found.</p>
                   </div>
                 </div>
               ) : (
-                filteredAnnouncements.map((ann) => (
-                  <div key={ann.id} className="p-4 space-y-4 hover:bg-primary/5 transition-colors">
+                announcements?.docs.map((ann) => (
+                  <div key={ann._id || ann.id} className="p-4 space-y-4 hover:bg-primary/5 transition-colors">
                     <div className="flex items-start gap-3">
                       <div className="w-10 h-10 rounded-lg bg-primary/10 shrink-0 flex items-center justify-center">
                         {ann.type?.toLowerCase() === 'maintenance' ? <Wrench className="w-4 h-4 text-primary" /> : 
@@ -255,9 +223,12 @@ export default function AnnouncementsPage() {
                             {new Date(ann.timestamp || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                           </span>
                         </div>
+                       
                         <h4 className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{ann.title}</h4>
                       </div>
+                 
                     </div>
+                    
                     <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">{ann.message}</p>
                     <div className="flex justify-end pt-1">
                       <button 
@@ -265,7 +236,7 @@ export default function AnnouncementsPage() {
                         className="text-primary text-xs font-bold flex items-center gap-1"
                       >
                         Read More
-                        <span className="material-symbols-outlined text-sm">chevron_right</span>
+                        <ChevronRight className="size-4" />
                       </button>
                     </div>
                   </div>
@@ -273,22 +244,44 @@ export default function AnnouncementsPage() {
               )}
             </div>
           </div>
-          {/* Pagination Footer */}
           {!isLoading && filteredAnnouncements.length > 0 && (
-            <div className="px-6 py-4 bg-slate-50 dark:bg-primary/5 flex items-center justify-between">
-              <p className="text-xs text-slate-500">
-                Showing <span className="font-bold text-slate-900 dark:text-white">1 to {filteredAnnouncements.length}</span> of {announcements.length} announcements
+            <div className="px-6 py-4 bg-slate-50 dark:bg-primary/5 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100 dark:border-slate-900">
+              <p className="text-sm text-slate-500">
+                Showing <span className="font-bold text-slate-700 dark:text-slate-300">{announcements?.pagingCounter} to {announcements?.docs.length}</span> of <span className="font-bold text-slate-700 dark:text-slate-300">{announcements?.totalDocs}</span> announcements
               </p>
-              <div className="flex items-center gap-1">
-                <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-primary/10 disabled:opacity-30" disabled>
-                  <span className="material-symbols-outlined text-sm">chevron_left</span>
-                </button>
-                <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-xs font-bold">1</button>
-                <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-primary/10 text-xs font-bold" disabled>2</button>
-                <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-primary/10 disabled:opacity-30" disabled>
-                  <span className="material-symbols-outlined text-sm">chevron_right</span>
-                </button>
-              </div>
+              {totalPages > 1 && (
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="size-10 flex items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+                  
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                    <button 
+                      key={p}
+                      onClick={() => setCurrentPage(p)}
+                      className={`size-10 flex items-center justify-center rounded-xl text-sm font-bold transition-all ${
+                        currentPage === p 
+                          ? 'bg-[#1241a1] text-white shadow-xl shadow-[#1241a1]/20' 
+                          : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+
+                  <button 
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="size-10 flex items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -299,6 +292,7 @@ export default function AnnouncementsPage() {
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}
         announcement={selectedAnnouncement}
+        isAdmin={false}
       />
     </div>
   );

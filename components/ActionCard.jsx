@@ -1,23 +1,17 @@
-import Link from 'next/link'
-import React from 'react'
+import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
 
-function ActionCard({ icon, title, desc, href, bgColor }) {
+export default 
+function ActionCard({ icon: Icon, title, desc, href = '#' }) {
   return (
-    <Link href={href}>
-      <div className={`${bgColor} p-8 rounded-2xl text-white relative overflow-hidden group shadow-xl hover:-translate-y-2 transition-all duration-500`}>
-        <div className="relative z-10">
-          <span className="material-symbols-outlined text-4xl mb-6 block opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-all">{icon}</span>
-          <h4 className="text-xl font-black mb-2 uppercase tracking-tight">{title}</h4>
-          <p className="text-white/70 text-sm font-medium leading-relaxed mb-6">{desc}</p>
-          <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] bg-white/10 backdrop-blur-md px-5 py-2.5 rounded-xl hover:bg-white/20 transition-all">
-            Access Portal
-            <span className="material-symbols-outlined text-sm">arrow_outward</span>
-          </span>
-        </div>
-        <span className="material-symbols-outlined absolute -right-6 -bottom-6 text-white/5 text-[10rem] group-hover:scale-110 group-hover:-rotate-12 transition-all duration-700 pointer-events-none">{icon}</span>
+    <Link href={href} className="group p-5 bg-white dark:bg-slate-900 rounded-xl hover:border-[#1241a1] transition-all cursor-pointer text-left">
+      <div className="bg-[#1241a1]/10 text-[#1241a1] p-3 rounded-lg w-fit mb-4 group-hover:bg-[#1241a1] group-hover:text-white transition-colors">
+        <Icon className="size-6" />
       </div>
+      <h4 className="font-bold mb-1 text-sm">{title}</h4>
+      <p className="text-xs text-slate-500 dark:text-slate-400">{desc}</p>
     </Link>
   )
 }
 
-export default ActionCard
+

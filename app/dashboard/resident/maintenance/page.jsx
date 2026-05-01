@@ -1,68 +1,24 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-
-const REQUESTS = [
-  {
-    id: '#MN-1024',
-    issue: 'HVAC Repair',
-    subtitle: 'Heating not turning on',
-    location: 'Block A – Apt 101',
-    priority: 'High',
-    status: 'In Progress',
-    date: 'Oct 24, 2024',
-    timeline: [
-      { label: 'Reported',    time: 'Oct 24, 2024 • 09:12 AM', done: true },
-      { label: 'Scheduled',   time: 'Oct 24, 2024 • 11:30 AM', done: true },
-      { label: 'In Progress', time: 'Started 45 mins ago',       done: false, current: true },
-    ],
-    technician: { name: 'Robert Chen', title: 'Senior HVAC Specialist', initials: 'RC', color: 'bg-sky-600' },
-  },
-  {
-    id: '#MN-1025',
-    issue: 'Leaky Faucet',
-    subtitle: 'Kitchen sink water drip',
-    location: 'Block B – Apt 204',
-    priority: 'Medium',
-    status: 'Scheduled',
-    date: 'Oct 22, 2024',
-    timeline: [
-      { label: 'Reported',  time: 'Oct 22, 2024 • 08:00 AM', done: true },
-      { label: 'Scheduled', time: 'Oct 22, 2024 • 10:00 AM', done: false, current: true },
-    ],
-    technician: { name: 'Grace Eze', title: 'Plumbing Specialist', initials: 'GE', color: 'bg-emerald-600' },
-  },
-  {
-    id: '#MN-1026',
-    issue: 'Electrical Outage',
-    subtitle: 'Master bedroom outlets',
-    location: 'Block C – Apt 307',
-    priority: 'Urgent',
-    status: 'Pending',
-    date: 'Oct 21, 2024',
-    timeline: [
-      { label: 'Reported', time: 'Oct 21, 2024 • 07:45 AM', done: true },
-      { label: 'Pending',  time: 'Awaiting assignment',       done: false, current: true },
-    ],
-    technician: null,
-  },
-  {
-    id: '#MN-1027',
-    issue: 'Pest Control',
-    subtitle: 'Seasonal treatment',
-    location: 'Block D – Apt 412',
-    priority: 'Low',
-    status: 'Completed',
-    date: 'Oct 18, 2024',
-    timeline: [
-      { label: 'Reported',  time: 'Oct 18, 2024 • 09:00 AM', done: true },
-      { label: 'Scheduled', time: 'Oct 18, 2024 • 11:00 AM', done: true },
-      { label: 'Completed', time: 'Oct 18, 2024 • 03:30 PM', done: true },
-    ],
-    technician: { name: 'Victor Okafor', title: 'Pest Control Expert', initials: 'VO', color: 'bg-amber-600' },
-  },
-]
+import { 
+  ChevronRight, 
+  Plus, 
+  Search, 
+  MoreHorizontal, 
+  MapPin, 
+  Calendar, 
+  MessageSquare, 
+  Phone, 
+  Clock 
+} from 'lucide-react'
+import { 
+  getResidentsMaintenanceRequests, 
+  getServiceRequests 
+} from '@/lib/service'
+import { updateMaintenanceRequest } from '@/lib/action'
+import { toast } from 'react-toastify'
 
 const PRIORITY_STYLES = {
   High:   'bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400',
@@ -92,10 +48,12 @@ const TAB_FILTERS = {
 }
 
 export default function MaintenanceOverviewPage() {
-  const [selected, setSelected] = useState(REQUESTS[0])
+  const [requests, setRequests] = useState([])
+  const [selected, setSelected] = useState(null)
   const [tab, setTab] = useState('all')
   const [search, setSearch] = useState('')
   const [contactType, setContactType] = useState(null)
+  const [isUpdating, setIsUpdating] = useState(false)
   const detailRef = useRef(null)
 
   const handleSelect = (req) => {
@@ -107,38 +65,115 @@ export default function MaintenanceOverviewPage() {
     }
   }
 
-  const visible = REQUESTS.filter(r =>
+  useEffect(() => {
+    const fetchAllRequests = async () => {
+      const [maintData, serviceData] = await Promise.all([
+        getResidentsMaintenanceRequests(),
+        getServiceRequests()
+      ])
+
+      // Normalize service requests to match maintenance schema
+      const normalizedServices = (serviceData || []).map(s => ({
+        ...s,
+        issue: s.category || 'Service Request',
+        location: 'Estate Unit',
+        date: s.date || 'Today',
+        priority: 'Medium', // Default for worker bookings
+        technician: s.workerName ? {
+          name: s.workerName,
+          initials: s.workerName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2),
+          color: 'bg-[#1241a1]',
+          title: s.category || 'Professional Provider'
+        } : null
+      }))
+
+      const combined = [...(maintData || []), ...normalizedServices]
+      
+      // Sort by ID or Date if available (simple ID sort here for consistency)
+      combined.sort((a, b) => b.id.localeCompare(a.id))
+
+      setRequests(combined)
+      if (combined.length > 0 && !selected) {
+        setSelected(combined[0])
+      }
+    }
+    fetchAllRequests()
+  }, [])
+
+  const handleMarkComplete = async () => {
+    if (!selected || isUpdating) return
+    setIsUpdating(true)
+
+    const updatedRequest = {
+      ...selected,
+      status: 'Completed',
+      timeline: [
+        ...(selected.timeline || []),
+        {
+          label: 'Completed',
+          time: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }),
+          done: true
+        }
+      ]
+    }
+
+    // Mark previous timeline steps as done
+    updatedRequest.timeline = updatedRequest.timeline.map((step, i) => ({
+      ...step,
+      done: true,
+      current: i === updatedRequest.timeline.length - 1
+    }))
+
+    try {
+      const res = await updateMaintenanceRequest(updatedRequest)
+      if (res && (res.id || res.success)) {
+        toast.success('Maintenance request marked as completed')
+        // Update local state
+        setRequests(prev => prev.map(r => r.id === selected.id ? updatedRequest : r))
+        setSelected(updatedRequest)
+      } else {
+        toast.error('Failed to update maintenance request')
+      }
+    } catch (err) {
+      console.error(err)
+      toast.error('An error occurred while updating')
+    } finally {
+      setIsUpdating(false)
+    }
+  }
+
+  const visible = requests.filter(r =>
     TAB_FILTERS[tab](r) &&
-    (r.issue.toLowerCase().includes(search.toLowerCase()) ||
-     r.location.toLowerCase().includes(search.toLowerCase()) ||
-     r.id.toLowerCase().includes(search.toLowerCase()))
+    ((r.issue || r.category || '').toLowerCase().includes(search.toLowerCase()) ||
+     (r.location || r.desc || '').toLowerCase().includes(search.toLowerCase()) ||
+     (r.id || '').toLowerCase().includes(search.toLowerCase()))
   )
 
   return (
     <div className="flex flex-col lg:flex-row -m-4 lg:-m-8 min-h-[calc(100vh-4rem)]">
 
       {/* ── Left: Requests List ── */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto p-6 gap-6 bg-slate-50 dark:bg-background-dark">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto p-6 gap-6 bg-slate-50 dark:bg-transparent">
 
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-1">
               <Link href="/dashboard/resident" className="hover:text-[#1241a1] transition-colors">Dashboard</Link>
-              <span className="material-symbols-outlined text-sm">chevron_right</span>
+              <ChevronRight className="size-4" />
               <span className="text-[#1241a1] font-semibold">Maintenance</span>
             </div>
             <h2 className="text-2xl font-black tracking-tight">Maintenance Overview</h2>
             <p className="text-slate-500 dark:text-slate-400 text-sm">Manage and track all your property repair requests</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex bg-slate-200 dark:bg-slate-800 p-1 rounded-lg gap-0.5">
+            <div className="flex bg-slate-100 dark:bg-slate-800/50 p-1 rounded-lg gap-0.5">
               {[['all', 'All'], ['active', 'Active'], ['history', 'History']].map(([id, label]) => (
                 <button
                   key={id}
                   onClick={() => setTab(id)}
                   className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${
                     tab === id
-                      ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white'
+                      ? 'bg-white dark:bg-slate-900 shadow-sm text-slate-900 dark:text-white'
                       : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white'
                   }`}
                 >
@@ -150,14 +185,14 @@ export default function MaintenanceOverviewPage() {
               href="/dashboard/resident/maintenance/new"
               className="bg-[#1241a1] hover:bg-[#1241a1]/90 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-colors shadow-lg shadow-[#1241a1]/20"
             >
-              <span className="material-symbols-outlined text-base">add</span>
+              <Plus className="size-4" />
               New Request
             </Link>
           </div>
         </div>
 
-        <div className="relative max-w-md">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+        <div className="relative max-w-md group">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 size-5 group-focus-within:text-[#1241a1] transition-colors" />
           <input
             type="text"
             value={search}
@@ -194,13 +229,13 @@ export default function MaintenanceOverviewPage() {
                   <td className="px-4 py-4 text-sm font-medium text-slate-900 dark:text-white whitespace-nowrap">{req.id}</td>
                   <td className="px-4 py-4">
                     <div className="flex flex-col">
-                      <span className="text-sm font-bold text-slate-900 dark:text-white">{req.issue}</span>
-                      <span className="text-xs text-slate-500 dark:text-slate-400">{req.subtitle}</span>
+                      <span className="text-sm font-bold text-slate-900 dark:text-white">{req.issue || req.category || 'Service Request'}</span>
+                      <span className="text-xs text-slate-500 dark:text-slate-400">{req.subtitle || req.desc}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">{req.location}</td>
+                  <td className="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">{req.location || 'Estate Unit'}</td>
                   <td className="px-4 py-4 text-center">
-                    <span className={`px-2 py-1 text-[10px] font-bold rounded-full ${PRIORITY_STYLES[req.priority] || ''}`}>{req.priority}</span>
+                    <span className={`px-2 py-1 text-[10px] font-bold rounded-full ${PRIORITY_STYLES[req.priority] || 'bg-slate-100 text-slate-400'}`}>{req.priority || 'Medium'}</span>
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center justify-between gap-2">
@@ -226,27 +261,27 @@ export default function MaintenanceOverviewPage() {
           <div className="p-6 flex flex-col gap-7">
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between">
-                <span className={`px-2 py-1 text-[10px] font-bold rounded-md ${STATUS_BADGE[selected.status] || ''}`}>{selected.status}</span>
+                <span className={`px-2 py-1 text-[10px] font-bold rounded-md ${STATUS_BADGE[selected.status] || 'bg-slate-100 text-slate-400'}`}>{selected.status}</span>
                 <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-                  <span className="material-symbols-outlined">more_horiz</span>
+                  <MoreHorizontal className="size-5" />
                 </button>
               </div>
-              <h3 className="text-lg font-bold leading-snug">{selected.id}: {selected.issue}</h3>
+              <h3 className="text-lg font-bold leading-snug">{selected.id}: {selected.issue || selected.category}</h3>
               <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-                <span className="material-symbols-outlined text-base">location_on</span>
-                {selected.location}
+                <MapPin className="size-4" />
+                {selected.location || 'Estate Unit'}
               </div>
               <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-                <span className="material-symbols-outlined text-base">calendar_today</span>
-                Submitted {selected.date}
+                <Calendar className="size-4" />
+                Submitted {selected.date || 'Today'}
               </div>
             </div>
 
             <div className="flex flex-col gap-4">
               <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Status Timeline</h4>
               <div className="flex flex-col pl-2">
-                {selected.timeline.map((step, i) => {
-                  const isLast = i === selected.timeline.length - 1
+                {(selected.timeline || []).length > 0 ? selected.timeline.map((step, i) => {
+                  const isLast = i === (selected.timeline || []).length - 1
                   return (
                     <div key={step.label} className="relative flex items-start gap-4 pb-6">
                       {!isLast && <div className="absolute left-[7px] top-4 bottom-0 w-px bg-slate-200 dark:bg-slate-800" />}
@@ -255,11 +290,19 @@ export default function MaintenanceOverviewPage() {
                       }`} />
                       <div className="flex flex-col">
                         <p className="text-xs font-bold">{step.label}</p>
-                        <p className="text-[10px] text-slate-500 dark:text-slate-400">{step.time}</p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400">{step.time || 'Status updated'}</p>
                       </div>
                     </div>
                   )
-                })}
+                }) : (
+                  <div className="relative flex items-start gap-4 pb-6">
+                    <div className="z-10 size-4 rounded-full shrink-0 mt-0.5 bg-[#1241a1] shadow-[0_0_0_4px_rgba(18,65,161,0.2)]" />
+                    <div className="flex flex-col">
+                      <p className="text-xs font-bold">{selected.status || 'Request Received'}</p>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400">Processing maintenance request...</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -281,13 +324,13 @@ export default function MaintenanceOverviewPage() {
                       onClick={() => setContactType('message')}
                       className="flex-1 bg-white dark:bg-slate-700 text-xs font-bold py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors flex items-center justify-center gap-1.5"
                     >
-                      <span className="material-symbols-outlined text-sm">chat</span> Message
+                      <MessageSquare className="size-4" /> Message
                     </button>
                     <button 
                       onClick={() => setContactType('call')}
                       className="flex-1 bg-white dark:bg-slate-700 text-xs font-bold py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors flex items-center justify-center gap-1.5"
                     >
-                      <span className="material-symbols-outlined text-sm">call</span> Call
+                      <Phone className="size-4" /> Call
                     </button>
                   </div>
                 </div>
@@ -295,7 +338,7 @@ export default function MaintenanceOverviewPage() {
             ) : (
               <div className="bg-amber-50 dark:bg-amber-500/10 rounded-xl p-4">
                 <p className="text-xs font-bold text-amber-700 dark:text-amber-400 flex items-center gap-2">
-                  <span className="material-symbols-outlined text-sm">schedule</span>
+                  <Clock className="size-4" />
                   Awaiting technician assignment
                 </p>
               </div>
@@ -304,16 +347,27 @@ export default function MaintenanceOverviewPage() {
             <div className="flex flex-col gap-3">
               <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Photos &amp; Files</h4>
               <div className="grid grid-cols-3 gap-2">
-                <div className="aspect-square bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center text-slate-400 cursor-pointer">
-                  <span className="material-symbols-outlined">add</span>
+                <div className="aspect-square bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                  <Plus className="size-6" />
                 </div>
               </div>
             </div>
 
             <div className="pt-4 flex flex-col gap-2">
               {selected.status !== 'Completed' && (
-                <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition-colors text-sm">
-                  Mark as Completed
+                <button 
+                  onClick={handleMarkComplete}
+                  disabled={isUpdating}
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {isUpdating ? (
+                    <>
+                      <span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Updating…
+                    </>
+                  ) : (
+                    'Mark as Completed'
+                  )}
                 </button>
               )}
               <Link
@@ -322,7 +376,7 @@ export default function MaintenanceOverviewPage() {
               >
                 New Request
               </Link>
-              <button className="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-3 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-sm">
+              <button className="w-full bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-bold py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-sm">
                 Reassign Technician
               </button>
             </div>
@@ -333,7 +387,7 @@ export default function MaintenanceOverviewPage() {
       {/* Contact Modal */}
       {contactType && selected?.technician && (
         <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className=" dark:bg-slate-900 w-full max-w-sm rounded-3xl p-8 shadow-2xl animate-in zoom-in-95 duration-300">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl p-8 shadow-2xl animate-in zoom-in-95 duration-300">
             <div className="flex flex-col items-center text-center gap-6">
               <div className={`size-20 rounded-2xl flex items-center justify-center text-white font-black text-2xl ${selected.technician.color} shadow-lg`}>
                 {selected.technician.initials}

@@ -1,8 +1,34 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { getResidentData, updateResidentProfile } from '@/lib/service';
+import { getResidentData } from '@/lib/service';
+import { updateProfile } from '@/lib/action';
 import { toast } from 'react-toastify';
+import { 
+  Camera, 
+  Mail, 
+  Phone, 
+  Building2, 
+  ShieldCheck, 
+  History, 
+  UserPlus, 
+  Droplets, 
+  Wallet, 
+  BellRing, 
+  Download,
+  ChevronRight,
+  ShieldAlert,
+  Users,
+  HelpCircle,
+  Plus,
+  Eye,
+  Building,
+  Headset,
+  Send,
+  Loader2,
+  X,
+  User
+} from 'lucide-react';
 
 export default function ProfilePage() {
   const [residentData, setResidentData] = useState(null)
@@ -49,7 +75,7 @@ export default function ProfilePage() {
   const handleSaveProfile = async () => {
     try {
       setSaveStatus('saving');
-      const result = await updateResidentProfile(residentData?.id || 1, editForm);
+      const result = await updateProfile({ id: residentData?.id || 1, ...editForm });
       
       if (result.success) {
         setResidentData(result.data);
@@ -87,12 +113,18 @@ export default function ProfilePage() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#1241a1]/5 rounded-full -mr-32 -mt-32 transition-transform duration-700 group-hover:scale-110"></div>
         <div className="relative flex flex-col md:flex-row gap-8 items-center">
           <div className="relative">
-            <div 
-              className="h-32 w-32 rounded-3xl bg-cover bg-center ring-4 ring-[#1241a1]/10 shadow-xl" 
-              style={{ backgroundImage: `url(${residentData?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop'})` }}
-            ></div>
+            {residentData?.picture ? (
+              <div 
+                className="h-32 w-32 rounded-3xl bg-cover bg-center ring-4 ring-[#1241a1]/10 shadow-xl" 
+                style={{ backgroundImage: `url(${residentData.picture})` }}
+              ></div>
+            ) : (
+              <div className="h-32 w-32 rounded-3xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center ring-4 ring-[#1241a1]/10 shadow-xl">
+                <User className="size-16 text-[#1241a1]/20" />
+              </div>
+            )}
             <button className="absolute bottom-[-10px] right-[-10px] p-2.5 bg-white dark:bg-slate-800 text-[#1241a1] rounded-2xl shadow-xl hover:scale-105 transition-transform border-4 border-slate-50 dark:border-background-dark">
-              <span className="material-symbols-outlined text-sm">photo_camera</span>
+              <Camera className="size-4" />
             </button>
           </div>
           
@@ -102,11 +134,11 @@ export default function ProfilePage() {
             </h2>
             <div className="flex flex-col md:flex-row gap-2 md:gap-6">
               <p className="text-slate-500 dark:text-slate-400 flex items-center justify-center md:justify-start gap-2 text-sm font-medium">
-                <span className="material-symbols-outlined text-base">mail</span> 
+                <Mail className="size-4" /> 
                 {residentData?.email || 'alex.rivers@email.com'}
               </p>
               <p className="text-slate-500 dark:text-slate-400 flex items-center justify-center md:justify-start gap-2 text-sm font-medium">
-                <span className="material-symbols-outlined text-base">phone</span> 
+                <Phone className="size-4" /> 
                 {residentData?.phone || '+1 (555) 012-3456'}
               </p>
             </div>
@@ -149,7 +181,9 @@ export default function ProfilePage() {
           {/* Property Information */}
           <section className="bg-white dark:bg-slate-900/50 rounded-3xl border-none p-8 shadow-sm">
             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#1241a1] mb-8 flex items-center gap-3">
-              <span className="p-2 rounded-xl bg-[#1241a1]/10 material-symbols-outlined text-lg">apartment</span>
+              <div className="p-2 rounded-xl bg-[#1241a1]/10 text-[#1241a1]">
+                <Building2 className="size-5" />
+              </div>
               Property Info
             </h3>
             
@@ -160,7 +194,7 @@ export default function ProfilePage() {
                 { label: 'Residency Type', value: 'Owner-Occupied' },
                 { label: 'Move-in Date', value: 'October 12, 2021' }
               ].map((item, idx) => (
-                <div key={idx} className={`flex flex-col gap-1.5 ${idx !== 3 ? 'border-b border-slate-50 dark:border-slate-800/50 pb-5' : ''}`}>
+                <div key={idx} className={`flex flex-col gap-1.5 ${idx !== 3 ? 'border-b border-slate-50 dark:border-slate-900/50 pb-5' : ''}`}>
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{item.label}</span>
                   {isEditing && item.name ? (
                      <input 
@@ -180,7 +214,9 @@ export default function ProfilePage() {
           {/* Security & Privacy Settings */}
           <section className="bg-white dark:bg-slate-900/50 rounded-3xl border-none p-8 shadow-sm">
             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#1241a1] mb-8 flex items-center gap-3">
-              <span className="p-2 rounded-xl bg-[#1241a1]/10 material-symbols-outlined text-lg">security</span>
+              <div className="p-2 rounded-xl bg-[#1241a1]/10 text-[#1241a1]">
+                <ShieldCheck className="size-5" />
+              </div>
               Security & Privacy
             </h3>
             
@@ -209,7 +245,9 @@ export default function ProfilePage() {
           <section className="bg-white dark:bg-slate-900/50 rounded-3xl border-none p-8 shadow-sm h-full">
             <div className="flex items-center justify-between mb-10">
               <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#1241a1] flex items-center gap-3">
-                <span className="p-2 rounded-xl bg-[#1241a1]/10 material-symbols-outlined text-lg">history</span>
+                <div className="p-2 rounded-xl bg-[#1241a1]/10 text-[#1241a1]">
+                  <History className="size-5" />
+                </div>
                 Recent Activity
               </h3>
               <button className="text-[11px] font-black uppercase tracking-widest text-slate-400 hover:text-[#1241a1] transition-colors">View All</button>
@@ -217,16 +255,16 @@ export default function ProfilePage() {
             
             <div className="space-y-10 relative before:absolute before:inset-0 before:ml-6 before:-translate-x-px before:h-full before:w-0.5 before:bg-linear-to-b before:from-slate-100 before:via-slate-200 before:to-transparent dark:before:from-slate-800 dark:before:via-slate-800">
               {[
-                { icon: 'person_add', title: 'Visitor Entry Registered', time: '2h ago', desc: 'Guest: John Smith (Delivery Service)', status: 'Approved', statusType: 'success' },
-                { icon: 'plumbing', title: 'Maintenance Ticket Update', time: 'Yesterday, 14:30', desc: "Leaking tap request #MR-9021 status changed to 'In Progress'", comment: 'Technician scheduled for visit tomorrow at 10 AM', iconType: 'warning' },
-                { icon: 'account_balance_wallet', title: 'Service Charge Paid', time: '3 days ago', desc: 'Payment of $450.00 confirmed for Oct 2023', action: 'Download Receipt' },
-                { icon: 'campaign', title: 'Estate Announcement', time: '1 week ago', desc: 'Annual fire safety drill scheduled for November 15th.' }
+                { icon: UserPlus, title: 'Visitor Entry Registered', time: '2h ago', desc: 'Guest: John Smith (Delivery Service)', status: 'Approved', statusType: 'success' },
+                { icon: Droplets, title: 'Maintenance Ticket Update', time: 'Yesterday, 14:30', desc: "Leaking tap request #MR-9021 status changed to 'In Progress'", comment: 'Technician scheduled for visit tomorrow at 10 AM', iconType: 'warning' },
+                { icon: Wallet, title: 'Service Charge Paid', time: '3 days ago', desc: 'Payment of $450.00 confirmed for Oct 2023', action: 'Download Receipt' },
+                { icon: BellRing, title: 'Estate Announcement', time: '1 week ago', desc: 'Annual fire safety drill scheduled for November 15th.' }
               ].map((activity, idx) => (
                 <div key={idx} className="relative flex items-start gap-8 group">
                   <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ring-8 ring-white dark:ring-slate-900 shadow-lg z-10 transition-transform group-hover:scale-110 ${
                     activity.iconType === 'warning' ? 'bg-amber-500/10 text-amber-500' : 'bg-[#1241a1]/10 text-[#1241a1]'
                   }`}>
-                    <span className="material-symbols-outlined">{activity.icon}</span>
+                    <activity.icon className="size-6" />
                   </div>
                   
                   <div className="flex-1 pt-1">
@@ -250,13 +288,18 @@ export default function ProfilePage() {
                     
                     {activity.action && (
                       <button className="mt-4 text-[11px] font-black uppercase tracking-widest text-[#1241a1] flex items-center gap-2 hover:underline">
-                        <span className="material-symbols-outlined text-xs">download</span> 
+                        <Download className="size-3.5" /> 
                         {activity.action}
                       </button>
                     )}
                   </div>
                 </div>
               ))}
+            </div>
+            {/*Emmergency contact*/}
+            <div>
+              
+
             </div>
           </section>
         </div>

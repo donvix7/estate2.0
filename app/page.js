@@ -5,6 +5,28 @@ import { useRouter} from 'next/navigation'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/Footer'
 import { 
+  BadgeCheck,
+  MapPin,
+  Check,
+  Siren,
+  ShieldCheck,
+  Smile,
+  Gauge,
+  Smartphone as Phone,
+  LogIn,
+  LogOut,
+  AlertCircle,
+  Receipt,
+  BellRing,
+  Megaphone,
+  Key,
+  EyeIcon,
+  StepForward,
+  Star,
+  Search,
+  LayoutDashboard,
+  Calendar,
+  Settings,
   Shield, 
   QrCode, 
   Bell, 
@@ -35,24 +57,10 @@ import {
   Signal,
   Battery,
   UserPlus,
-  FileText,
-  Smartphone as Phone,
-  LogIn,
-  LogOut,
-  AlertCircle,
-  Receipt,
-  BellRing,
-  Megaphone,
-  Key,
-  EyeIcon,
-  StepForward,
-  Star
+  FileText
 } from 'lucide-react'
 import FAQ from '@/components/faq'
 import HeroWithCarousel from '@/components/Hero'
-
-// Add Google Material Icons import
-import '@material-symbols/font-400'
 
 // MVP Features based on your requirements
 const MVP_FEATURES = [
@@ -348,7 +356,7 @@ const PaymentsDemo = () => (
         <div className="flex justify-between items-center mb-6">
           <div>
             <p className="text-sm text-gray-600 mb-1">Total Amount Due</p>
-            <p className="text-3xl font-bold text-gray-900">₦85,000</p>
+            <p className="text-3xl font-bold text-gray-900">$85.00</p>
             <p className="text-sm text-gray-500 mt-1">Monthly Estate Dues</p>
           </div>
           <div className="text-right">
@@ -371,8 +379,8 @@ const PaymentsDemo = () => (
             <div className="h-full bg-linear-to-r from-gray-500 to-gray-600 w-4/5"></div>
           </div>
           <div className="flex justify-between text-xs text-gray-500">
-            <span>₦0</span>
-            <span>₦100,000</span>
+            <span>$0</span>
+            <span>$100.00</span>
           </div>
         </div>
       </div>
@@ -410,7 +418,7 @@ const PaymentsDemo = () => (
       {/* Paystack Pay Button */}
       <button className="w-full py-4 bg-linear-to-r from-[#00A859] to-[#00C853] text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-3">
         <Lock className="w-5 h-5" />
-        <span>Pay ₦85,000 Securely with Paystack</span>
+        <span>Pay $85.00 Securely with Paystack</span>
       </button>
 
       {/* Security Badge */}
@@ -428,9 +436,9 @@ const PaymentsDemo = () => (
           </button>
         </div>
         {[
-          { date:'Jun 15, 2024', amount:'₦85,000', status:'Paid', method:'Card'},
-          { date:'May 15, 2024', amount:'₦85,000', status:'Paid', method:'Transfer'},
-          { date:'Apr 15, 2024', amount:'₦80,000', status:'Partial', method:'USSD'}
+          { date:'Jun 15, 2024', amount:'$85.00', status:'Paid', method:'Card'},
+          { date:'May 15, 2024', amount:'$85.00', status:'Paid', method:'Transfer'},
+          { date:'Apr 15, 2024', amount:'$80.00', status:'Partial', method:'USSD'}
         ].map((txn, i) => (
           <div key={i} className="flex items-center justify-between p-3 hover:bg-gray-50 transition-colors">
             <div>
@@ -569,37 +577,37 @@ const features = [
   {
     title: "10x Property Management",
     description: "Automate manual tasks and streamline operations. Reclaim hours of your week with our intuitive management dashboard.",
-    icon: "speed",
+    icon: <Gauge className="size-6" />,
     image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800"
   },
   {
     title: "Ironclad Security",
     description: "Prevent unauthorized entry with digital visitor passes, instant panic alerts, and real-time security logs.",
-    icon: "security",
+    icon: <ShieldCheck className="size-6" />,
     image: "https://images.unsplash.com/photo-1557989938-349f481cfaa2?auto=format&fit=crop&q=80&w=800"
   },
   {
     title: "Effortless Payments",
     description: "Achieve 98%+ collection rates with automated billing, seamless online payments, and instant digital receipts.",
-    icon: "payments",
+    icon: <CreditCard className="size-6" />,
     image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=800"
   },
   {
     title: "Delightful Living",
     description: "Give residents a VIP experience with instant amenity bookings, easy communication, and fast maintenance resolutions.",
-    icon: "sentiment_very_satisfied",
+    icon: <Smile className="size-6" />,
     image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800"
   },
   {
     title: "Instant Communication",
     description: "Broadcast important announcements instantly to all residents. No more ignored mass emails or paper notices.",
-    icon: "campaign",
+    icon: <Megaphone className="size-6" />,
     image: "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=800"
   },
   {
     title: "Data-Driven Decisions",
     description: "Gain complete visibility into your estate's performance with real-time analytics and comprehensive reporting.",
-    icon: "analytics",
+    icon: <BarChart3 className="size-6" />,
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"
   },
 ]
@@ -692,7 +700,7 @@ export default function HomePage() {
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div className="space-y-8 max-w-2xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#1241a1]/10 rounded-full text-[#1241a1] dark:text-blue-400 text-xs font-bold uppercase tracking-wider">
-                  <span className="material-symbols-outlined text-[14px]">verified</span>
+                  <BadgeCheck className="size-3.5" />
                   Next Generation Management
                 </div>
                 
@@ -710,7 +718,7 @@ export default function HomePage() {
                     className="px-8 py-4 bg-[#1241a1] hover:bg-[#1241a1]/90 text-white rounded-xl text-lg font-bold transition-all shadow-xl shadow-[#1241a1]/25 hover:-translate-y-1 active:scale-95 flex items-center gap-2"
                   >
                     Get Started Now
-                    <span className="material-symbols-outlined">arrow_forward</span>
+                    <ArrowRight className="size-5" />
                   </button>
                   <button 
                     onClick={handleLearnMore}
@@ -740,9 +748,9 @@ export default function HomePage() {
                   <img 
                     src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2000&auto=format&fit=crop" 
                     alt="Luxury Estate" 
-                    className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700" 
+                    className="w-full aspect-[4/3] object-cover transition-transform duration-500 ease-out group-hover:scale-105" 
                   />
-                  <div className="absolute bottom-6 left-6 right-6 p-6 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-2xl shadow-xl">
+                  <div className="absolute bottom-6 left-6 right-6 p-6 bg-white/20 dark:bg-slate-900/20 backdrop-blur-sm rounded-2xl shadow-xl">
                     <div className="flex justify-between items-center mb-4">
                       <span className="font-bold text-lg dark:text-white">Real-time Security Feed</span>
                       <span className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-widest animate-pulse">
@@ -751,18 +759,18 @@ export default function HomePage() {
                       </span>
                     </div>
                     <div className="space-y-3">
-                      <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
-                        <span className="material-symbols-outlined text-[#1241a1] text-xl">qr_code_2</span>
+                      <div className="flex items-center gap-3 p-3 bg-slate-200/20 dark:bg-slate-900/20 backdrop-blur-sm rounded-xl">
+                        <QrCode className="size-5 text-[#1241a1]" />
                         <div className="flex-1">
-                          <p className="text-xs font-bold dark:text-white">QR Access Authorized</p>
-                          <p className="text-[10px] text-slate-500">Visitor: John Doe • Unit 402 • 10:24 AM</p>
+                          <p className="text-xs font-bold text-blue-50 dark:text-white">QR Access Authorized</p>
+                          <p className="text-[10px] text-blue-100">Visitor: John Doe • Unit 402 • 10:24 AM</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3 p-3 bg-emerald-50/50 dark:bg-emerald-500/5 rounded-xl">
-                        <span className="material-symbols-outlined text-emerald-500 text-xl">notifications_active</span>
+                      <div className="flex items-center gap-3 p-3 bg-emerald-700/50 dark:bg-emerald-900/5 rounded-xl">
+                        <BellRing className="size-5 text-emerald-500" />
                         <div className="flex-1">
-                          <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">Patrol Check-in Successful</p>
-                          <p className="text-[10px] text-emerald-600/70 dark:text-emerald-400/70">Zone B • Guard: Mike Ross • Just now</p>
+                          <p className="text-xs font-bold text-emerald-50 dark:text-white">Patrol Check-in Successful</p>
+                          <p className="text-[10px] text-emerald-100 dark:text-white">Zone B • Guard: Mike Ross • Just now</p>
                         </div>
                       </div>
                     </div>
@@ -798,14 +806,14 @@ export default function HomePage() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
-                { icon: 'shield_person', title: 'Seamless Access', desc: 'Secure QR-based visitor management system with instant resident notifications.' },
-                { icon: 'payments', title: 'Smart Billing', desc: 'Automated estate dues collection with real-time tracking and digital receipts.' },
-                { icon: 'emergency_home', title: 'Panic Response', desc: 'One-tap emergency alerts that notify security and neighbors within seconds.' },
-                { icon: 'groups', title: 'Community Portal', desc: 'A central hub for announcements, bookings, and interactive resident engagement.' }
+                { icon: <ShieldCheck className="size-6" />, title: 'Seamless Access', desc: 'Secure QR-based visitor management system with instant resident notifications.' },
+                { icon: <CreditCard className="size-6" />, title: 'Smart Billing', desc: 'Automated estate dues collection with real-time tracking and digital receipts.' },
+                { icon: <Siren className="size-6" />, title: 'Panic Response', desc: 'One-tap emergency alerts that notify security and neighbors within seconds.' },
+                { icon: <Users className="size-6" />, title: 'Community Portal', desc: 'A central hub for announcements, bookings, and interactive resident engagement.' }
               ].map((feature, i) => (
                 <div key={i} className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-900/50 hover:shadow-2xl hover:shadow-[#1241a1]/5 hover:-translate-y-2 transition-all group">
                   <div className="size-16 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-[#1241a1] shadow-lg mb-8 group-hover:scale-110 transition-transform">
-                    <span className="material-symbols-outlined text-3xl">{feature.icon}</span>
+                    {feature.icon}
                   </div>
                   <h4 className="text-xl font-bold mb-4 dark:text-white">{feature.title}</h4>
                   <p className="text-slate-500 text-sm leading-relaxed">{feature.desc}</p>
@@ -825,7 +833,7 @@ export default function HomePage() {
               </div>
               <button className="flex items-center gap-2 font-bold text-[#1241a1] hover:gap-3 transition-all px-6 py-3 bg-white dark:bg-slate-800 rounded-xl shadow-lg">
                 View All Estates
-                <span className="material-symbols-outlined">east</span>
+                <ArrowRight className="size-5" />
               </button>
             </div>
 
@@ -837,44 +845,30 @@ export default function HomePage() {
               ].map((estate, i) => (
                 <div key={i} className="group cursor-pointer">
                   <div className="relative aspect-4/5 rounded-3xl overflow-hidden shadow-2xl group/img">
-                    <img src={estate.img} alt={estate.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <img src={estate.img} alt={estate.name} className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100" />
                     <div className="absolute top-6 right-6">
-                      <div className="size-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
-                        <span className="material-symbols-outlined">favorite</span>
+                      <div className="size-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
+                        <Heart className="size-6 shadow-sm" />
                       </div>
+                    
+                    </div>
+                    <div className='absolute inset-0 p-8 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out translate-y-4 group-hover:translate-y-0'>
+                      <h4 className="text-2xl font-bold text-slate-200 mb-2">{estate.name}</h4>
+                      <p className="text-slate-100 flex items-center gap-1.5 text-sm">
+                        <MapPin className="size-4" />
+                        {estate.location}
+                      </p>  
                     </div>
                   </div>
-                  <h4 className="text-2xl font-bold dark:text-white mb-2">{estate.name}</h4>
-                  <p className="text-slate-500 flex items-center gap-1.5 text-sm">
-                    <span className="material-symbols-outlined text-base">location_on</span>
-                    {estate.location}
-                  </p>
+                 
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="py-24 bg-[#1241a1] relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-1/3 h-full bg-white/5 skew-x-[-20deg] translate-x-1/2" />
-          <div className="max-w-7xl mx-auto px-6 relative z-10">
-            <div className="grid md:grid-cols-4 gap-12 text-center">
-              {[
-                { label: 'Happy Residents', value: '10K+' },
-                { label: 'Licensed Estates', value: '500+' },
-                { label: 'Emergency Alerts', value: '2k+' },
-                { label: 'Collection Rate', value: '98%' }
-              ].map((stat, i) => (
-                <div key={i}>
-                  <p className="text-5xl font-black text-white mb-3 tracking-tighter">{stat.value}</p>
-                  <p className="text-blue-200/60 font-medium uppercase tracking-[0.2em] text-[10px]">{stat.label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+       
 
         {/* Mobile App Promo */}
         <section className="py-24 lg:py-40 bg-white dark:bg-[#111621] overflow-hidden">
@@ -894,7 +888,7 @@ export default function HomePage() {
                     {['Generate instant visitor QR codes', 'Receive real-time security alerts', 'Pay estate dues in one-tap', 'Book amenities & track maintenance'].map((item, i) => (
                       <div key={i} className="flex items-center gap-4 group">
                         <div className="size-6 bg-emerald-500 rounded-full flex items-center justify-center text-white">
-                          <span className="material-symbols-outlined text-sm font-bold">check</span>
+                          <Check className="size-3.5 stroke-[3]" />
                         </div>
                         <span className="font-semibold text-slate-700 dark:text-slate-300 group-hover:translate-x-1 transition-transform">{item}</span>
                       </div>
@@ -903,14 +897,14 @@ export default function HomePage() {
 
                   <div className="flex flex-wrap gap-4 pt-4">
                     <button className="flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-2xl hover:bg-black transition-all shadow-xl active:scale-95">
-                      <span className="material-symbols-outlined text-3xl">phone_iphone</span>
+                      <Smartphone className="size-8" />
                       <div className="text-left">
                         <p className="text-[10px] uppercase font-bold opacity-60 leading-none mb-1">Download on the</p>
                         <p className="text-lg font-bold leading-none">App Store</p>
                       </div>
                     </button>
                     <button className="flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-2xl hover:bg-black transition-all shadow-xl active:scale-95">
-                      <span className="material-symbols-outlined text-3xl">play_store</span>
+                      <Play className="size-8" />
                       <div className="text-left">
                         <p className="text-[10px] uppercase font-bold opacity-60 leading-none mb-1">Get it on</p>
                         <p className="text-lg font-bold leading-none">Google Play</p>
@@ -922,7 +916,7 @@ export default function HomePage() {
                 <div className="relative">
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[120%] bg-[#1241a1]/20 blur-[120px] rounded-full pointer-events-none" />
                   <div className="relative flex justify-center perspective-[1000px]">
-                    <div className="relative z-10 w-[280px] aspect-[9/19] bg-slate-900 rounded-[3rem] p-3 shadow-2xl skew-y-[-6deg] rotate-3 hover:translate-y-[-20px] transition-transform duration-700">
+                    <div className="relative z-10 w-[280px] aspect-[9/19] bg-slate-900 rounded-[3rem] p-3 shadow-2xl skew-y-[-6deg] rotate-3 transition-transform duration-500 ease-out hover:translate-y-[-20px]">
                       <div className="w-full h-full bg-slate-800 rounded-[2.5rem] overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1000" alt="Mobile App" className="w-full h-full object-cover opacity-80" />
                         <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-transparent to-transparent" />
@@ -934,7 +928,7 @@ export default function HomePage() {
                         </div>
                       </div>
                     </div>
-                    <div className="absolute -bottom-10 right-0 z-20 w-[280px] aspect-[9/19] bg-slate-900 rounded-[3rem] p-3 shadow-2xl skew-y-6 rotate-[-3deg] hidden lg:block hover:translate-y-[-20px] transition-transform duration-700">
+                    <div className="absolute -bottom-10 right-0 z-20 w-[280px] aspect-[9/19] bg-slate-900 rounded-[3rem] p-3 shadow-2xl skew-y-6 rotate-[-3deg] hidden lg:block transition-transform duration-500 ease-out hover:translate-y-[-20px]">
                       <div className="w-full h-full bg-slate-800 rounded-[2.5rem] overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1000" alt="Mobile App" className="w-full h-full object-cover opacity-80" />
                         <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-transparent to-transparent" />

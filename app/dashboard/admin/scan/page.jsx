@@ -3,9 +3,28 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { Html5Qrcode } from 'html5-qrcode';
+import { 
+  Clock, 
+  VideoOff, 
+  Pause, 
+  Play, 
+  RefreshCcw, 
+  Radio, 
+  Keyboard, 
+  Ticket, 
+  Car, 
+  XOctagon, 
+  CheckCircle2, 
+  QrCode, 
+  User,
+  Lock
+} from 'lucide-react';
+import { getScanHistory } from '@/lib/service';
+import { validatePass, addToScanHistory } from '@/lib/action';
 
 export default function QRScanPage() {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [hasMounted, setHasMounted] = useState(false);
   const [isScannerActive, setIsScannerActive] = useState(false);
   const [cameras, setCameras] = useState([]);
   const [currentCameraIndex, setCurrentCameraIndex] = useState(0);
@@ -15,15 +34,19 @@ export default function QRScanPage() {
   
   // Functional State
   const [passCode, setPassCode] = useState('');
+  const [pin, setPin] = useState('');
   const [licensePlate, setLicensePlate] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentResult, setCurrentResult] = useState(null);
-  const [scanHistory, setScanHistory] = useState([
-    { name: 'Marcus Rashford', type: 'Visitor', target: 'House 42B', status: 'Authorized', statusColor: 'text-emerald-500 bg-emerald-500/10', avatar: 'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?q=80&w=100&auto=format&fit=crop', time: '14:23:45' },
-    { name: 'Sarah Mitchell', type: 'Resident', target: 'Apt 109', status: 'Authorized', statusColor: 'text-emerald-500 bg-emerald-500/10', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop', time: '14:15:22' }
-  ]);
+  const [scanHistory, setScanHistory] = useState([]);
 
   useEffect(() => {
+    setHasMounted(true);
+    const fetchScanHistory = async () => {
+      const history = await getScanHistory();
+      setScanHistory(history);
+    }
+    fetchScanHistory();
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
@@ -113,6 +136,7 @@ export default function QRScanPage() {
     }
   };
 
+
   const onScanSuccess = async (decodedText, decodedResult) => {
     console.log(`Scan success: ${decodedText}`);
     processQRCode(decodedText);
@@ -160,99 +184,165 @@ export default function QRScanPage() {
     }
   };
 
-  const processQRCode = (qrData) => {
+  const processQRCode = async (qrData) => {
+    
+    console.log("Processing Scanned Data:", qrData);
+    
     setIsProcessing(true);
+    
+    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    
+    // Attempt to parse PIN and actual code from QR payload if it's JSON
+    
+    let extractedPin = '';
+    let codeToVerify = qrData; 
 
-    setTimeout(() => {
-      let qrInfo = { code: qrData, type: 'Unknown' };
-      try {
-        const parsed = JSON.parse(qrData);
-        qrInfo = { ...qrInfo, ...parsed };
-      } catch {
-        qrInfo.code = qrData;
-      }
-
-      const isDenied = qrData.toLowerCase().includes('ban') || 
-                       qrData.toLowerCase().includes('expired') ||
-                       qrData.includes('123');
+    try {
       
-      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+      const parsed = JSON.parse(qrData);
+      
+      console.log("Parsed QR Payload:", parsed);
+     
+      // Prioritize explicit passCode or id from the object
+      if (parsed.passCode) codeToVerify = parsed.passCode;
+      else if (parsed.id) codeToVerify = parsed.id;
+      
+      if (parsed.pin) extractedPin = parsed.pin;
+    
+    } catch (e) {
+      // Not JSON, continue with raw data
+    }
 
-      const result = {
-        status: isDenied ? 'denied' : 'authorized',
-        timestamp,
-        zone: 'Zone 1 - Main North',
-        name: qrInfo.name || qrInfo.code.substring(0, 12) + (qrInfo.code.length > 12 ? '...' : ''),
-        type: qrInfo.type || 'Visitor/QR Scan',
-        rawData: qrData
-      };
+    try {
+      const response = await validatePass(codeToVerify, extractedPin);
+      
+      if (!response.success) {
+        setCurrentResult({
+          status: 'denied',
+          timestamp,
+          zone: 'Zone 1 - Main North',
+          name: qrData.substring(0, 12),
+          type: 'Security Alert',
+          rawData: qrData
+        });
 
-      setCurrentResult(result);
-      setIsProcessing(false);
+        await addToScanHistory({
+          name: 'Invalid/Flagged QR',
+          type: 'Security Alert',
+          target: 'Access Denied',
+          status: 'Denied',
+          statusColor: 'text-red-500 bg-red-500/10',
+          time: timestamp,
+          qrCode: qrData.substring(0, 15) + '...'
+        });
 
-      const historyItem = {
-        name: isDenied ? 'Unknown / Flagged' : (qrInfo.name || 'QR Scan Entry'),
-        type: isDenied ? 'Security Alert' : 'QR Verification',
-        target: isDenied ? 'Access Denied' : 'QR Entry Granted',
-        status: isDenied ? 'Denied' : 'Authorized',
-        statusColor: isDenied ? 'text-red-500 bg-red-500/10' : 'text-emerald-500 bg-emerald-500/10',
-        time: timestamp,
-        qrCode: qrData.substring(0, 15) + '...'
-      };
+        toast.error(response.message || 'ACCESS DENIED: Invalid or expired QR code');
 
-      setScanHistory(prev => [historyItem, ...prev.slice(0, 9)]);
-
-      if (isDenied) {
-        toast.error('ACCESS DENIED: Invalid or expired QR code');
       } else {
-        toast.success('ACCESS GRANTED: QR code verified');
+
+        const pass = response.data;
+        setCurrentResult({
+          status: 'authorized',
+          timestamp,
+          zone: 'Zone 1 - Main North',
+          name: pass.visitorName || 'Authorized User',
+          type: pass.purpose || 'Visitor/Pass',
+          rawData: qrData
+        });
+
+        await addToScanHistory({
+          name: pass.visitorName || 'QR Scan Entry',
+          type: 'QR Verification',
+          target: pass.unitNumber || 'Main Estate',
+          status: 'Authorized',
+          statusColor: 'text-emerald-500 bg-emerald-500/10',
+          time: timestamp,
+          qrCode: qrData.substring(0, 15) + '...'
+        });
+
+        toast.success(`ACCESS GRANTED: Welcome, ${pass.visitorName}`);
+        
       }
-    }, 1200);
+      
+      const history = await getScanHistory();
+      setScanHistory(history);
+    } catch (err) {
+      console.error("Scan error:", err);
+      toast.error("System error during verification");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const formatTime = (date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
   };
 
-  const handleManualVerify = () => {
+  const handleManualVerify = async () => {
     if (!passCode && !licensePlate) {
       toast.warning('Please enter a Pass Code or License Plate');
       return;
     }
 
     setIsProcessing(true);
-    setTimeout(() => {
-      const isDenied = passCode.toUpperCase().includes('EX') || licensePlate.toUpperCase().includes('BAN');
-      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-      const result = {
-        status: isDenied ? 'denied' : 'authorized',
-        timestamp,
-        zone: 'Zone 1 - Main North',
-        name: passCode || licensePlate,
-        type: passCode ? 'Visitor/Pass' : 'Vehicle Scan'
-      };
-      setCurrentResult(result);
-      setIsProcessing(false);
+    const code = passCode || licensePlate;
+    const vPin = pin; // Use entered pin
+    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
 
-      const historyItem = {
-        name: isDenied ? 'Unknown / Flagged' : (passCode || licensePlate),
-        type: isDenied ? 'Security Alert' : 'Manual Verification',
-        target: isDenied ? 'Restricted Access' : 'Verified Entry',
-        status: isDenied ? 'Denied' : 'Authorized',
-        statusColor: isDenied ? 'text-red-500 bg-red-500/10' : 'text-emerald-500 bg-emerald-500/10',
-        time: timestamp
-      };
+    try {
+      const response = await validatePass(code, vPin);
+      
+      if (!response.success) {
+        setCurrentResult({
+          status: 'denied',
+          timestamp,
+          zone: 'Zone 1 - Main North',
+          name: code,
+          type: passCode ? 'Pass Verification' : 'Vehicle Scan'
+        });
 
-      setScanHistory(prev => [historyItem, ...prev.slice(0, 9)]);
+        await addToScanHistory({
+          name: code,
+          type: 'Security Alert',
+          target: 'Restricted Access',
+          status: 'Denied',
+          statusColor: 'text-red-500 bg-red-500/10',
+          time: timestamp
+        });
 
-      if (isDenied) {
-        toast.error('ACCESS DENIED: Credentials invalid or expired');
+        toast.error(response.message || 'ACCESS DENIED: Credentials invalid or expired');
       } else {
-        toast.success('ACCESS GRANTED: Welcome to EstatePro');
+        const pass = response.data;
+        setCurrentResult({
+          status: 'authorized',
+          timestamp,
+          zone: 'Zone 1 - Main North',
+          name: pass.visitorName || code,
+          type: passCode ? 'Manual/Pass' : 'Vehicle/Verified'
+        });
+
+        await addToScanHistory({
+          name: pass.visitorName || code,
+          type: 'Manual Verification',
+          target: pass.unitNumber || 'Resident Unit',
+          status: 'Authorized',
+          statusColor: 'text-emerald-500 bg-emerald-500/10',
+          time: timestamp
+        });
+
+        toast.success(`ACCESS GRANTED: Welcome to EstatePro`);
         setPassCode('');
+        setPin('');
         setLicensePlate('');
       }
-    }, 1200);
+
+      const history = await getScanHistory();
+      setScanHistory(history);
+    } catch (err) {
+      toast.error('Verification failed');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -266,8 +356,10 @@ export default function QRScanPage() {
         </div>
         <div className="flex items-center gap-6">
           <div className="hidden md:flex items-center gap-2 text-slate-400">
-            <span className="material-symbols-outlined text-sm">schedule</span>
-            <p className="text-xs font-bold uppercase tracking-widest leading-none">{formatTime(currentTime)}</p>
+            <Clock className="size-4" />
+            <p suppressHydrationWarning className="text-xs font-bold uppercase tracking-widest leading-none">
+              {hasMounted ? formatTime(currentTime) : '--:--:--'}
+            </p>
           </div>
         </div>
       </header>
@@ -280,8 +372,8 @@ export default function QRScanPage() {
             {!isScannerActive && (
               <div className="absolute inset-0 bg-slate-900/90 flex items-center justify-center">
                 <div className="text-center">
-                  <span className="material-symbols-outlined text-white/50 text-[100px]">videocam_off</span>
-                  <p className="text-white/50 text-sm font-bold mt-2">Scanner Paused</p>
+                  <VideoOff className="size-20 text-white/50 mb-3 mx-auto" />
+                  <p className="text-white/50 text-sm font-bold">Scanner Paused</p>
                 </div>
               </div>
             )}
@@ -305,16 +397,16 @@ export default function QRScanPage() {
 
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-4 z-20">
               <button onClick={toggleScanner} className="bg-black/60 hover:bg-black/80 backdrop-blur-xl p-4 rounded-2xl text-white transition-all active:scale-90">
-                <span className="material-symbols-outlined">{isScannerActive ? 'pause' : 'play_arrow'}</span>
+                {isScannerActive ? <Pause className="size-6" /> : <Play className="size-6" />}
               </button>
               <button onClick={switchCamera} className="bg-black/60 hover:bg-black/80 backdrop-blur-xl p-4 rounded-2xl text-white transition-all active:scale-90">
-                <span className="material-symbols-outlined">flip_camera_ios</span>
+                <RefreshCcw className="size-6" />
               </button>
             </div>
 
             <div className="absolute top-8 left-8 flex flex-col gap-2 z-10">
               <span className="bg-black/40 backdrop-blur-md px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-white flex items-center gap-3">
-                <span className="material-symbols-outlined text-base text-[#1241a1]">sensors</span> 
+                <Radio className="size-4 text-[#1241a1]" /> 
                 {cameras[currentCameraIndex]?.label || "CAM_01_NORTH_GATE"}
               </span>
             </div>
@@ -322,7 +414,9 @@ export default function QRScanPage() {
 
           <div className="bg-white dark:bg-slate-900 border-none rounded-4xl p-8 shadow-sm">
             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#1241a1] mb-6 flex items-center gap-3">
-              <span className="p-2 rounded-xl bg-[#1241a1]/10 material-symbols-outlined text-lg">keyboard</span>
+              <div className="p-2 rounded-xl bg-[#1241a1]/10">
+                <Keyboard className="size-5" />
+              </div>
               Manual Verification
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -330,14 +424,21 @@ export default function QRScanPage() {
                 <label className="text-[10px] uppercase font-black text-slate-400 tracking-widest leading-none block">Pass Code / REF</label>
                 <div className="relative">
                   <input value={passCode} onChange={(e) => setPassCode(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-800/50 border-none rounded-2xl text-sm font-bold px-5 py-3.5 focus:ring-2 focus:ring-[#1241a1] transition-all outline-none dark:text-white" placeholder="VIS-9928" type="text" />
-                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-base">confirmation_number</span>
+                  <Ticket className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 size-4" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase font-black text-slate-400 tracking-widest leading-none block">PIN</label>
+                <div className="relative">
+                  <input value={pin} onChange={(e) => setPin(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-800/50 border-none rounded-2xl text-sm font-bold px-5 py-3.5 focus:ring-2 focus:ring-[#1241a1] transition-all outline-none dark:text-white" placeholder="****" type="password" />
+                  <Lock className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 size-4" />
                 </div>
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] uppercase font-black text-slate-400 tracking-widest leading-none block">License Plate</label>
                 <div className="relative">
                   <input value={licensePlate} onChange={(e) => setLicensePlate(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-800/50 border-none rounded-2xl text-sm font-bold px-5 py-3.5 focus:ring-2 focus:ring-[#1241a1] transition-all outline-none dark:text-white" placeholder="KAA 123X" type="text" />
-                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-base">directions_car</span>
+                  <Car className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 size-4" />
                 </div>
               </div>
               <div className="flex items-end">
@@ -353,9 +454,11 @@ export default function QRScanPage() {
           {currentResult ? (
             <div className={`bg-white dark:bg-slate-900 border-none rounded-4xl p-10 text-center space-y-6 shadow-sm relative overflow-hidden animate-in zoom-in duration-300 before:absolute before:top-0 before:left-0 before:right-0 before:h-2 ${currentResult.status === 'denied' ? 'before:bg-red-500' : 'before:bg-emerald-500'}`}>
               <div className={`mx-auto size-24 rounded-full flex items-center justify-center shadow-lg ${currentResult.status === 'denied' ? 'bg-red-500/10 shadow-red-500/5' : 'bg-emerald-500/10 shadow-emerald-500/5'}`}>
-                <span className={`material-symbols-outlined text-6xl ${currentResult.status === 'denied' ? 'text-red-500' : 'text-emerald-500'}`}>
-                  {currentResult.status === 'denied' ? 'cancel' : 'check_circle'}
-                </span>
+                {currentResult.status === 'denied' ? (
+                  <XOctagon className="size-14 text-red-500" />
+                ) : (
+                  <CheckCircle2 className="size-14 text-emerald-500" />
+                )}
               </div>
               <div>
                 <h2 className={`text-3xl font-black tracking-tighter uppercase ${currentResult.status === 'denied' ? 'text-red-500' : 'text-emerald-500'}`}>
@@ -378,7 +481,7 @@ export default function QRScanPage() {
           ) : (
             <div className="bg-white dark:bg-slate-900 border-none rounded-4xl p-10 text-center space-y-6 shadow-sm flex flex-col items-center justify-center min-h-[300px]">
               <div className="size-20 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                <span className="material-symbols-outlined text-4xl text-slate-300 animate-pulse">qr_code_2</span>
+                <QrCode className="size-10 text-slate-300 animate-pulse" />
               </div>
               <div>
                 <h3 className="text-lg font-black text-slate-400 tracking-tight uppercase">Ready to Scan</h3>
@@ -395,8 +498,8 @@ export default function QRScanPage() {
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {scanHistory.map((entry, idx) => (
                 <div key={idx} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/30 transition-all cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50 group">
-                  <div className="size-12 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-slate-400">person</span>
+                  <div className="size-12 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-400">
+                    <User className="size-6" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-black dark:text-white truncate group-hover:text-[#1241a1] transition-colors leading-tight">{entry.name}</p>

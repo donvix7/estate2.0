@@ -9,6 +9,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { FilterBar } from '@/components/ui/FilterBar';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
 import { toast } from 'react-toastify';
+import { getInvoices, getTransactions } from '@/lib/service';
 
 export default function FinancePage() {
   const [invoices, setInvoices] = useState([]);
@@ -24,12 +25,10 @@ export default function FinancePage() {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const [invData, txnData] = await Promise.all([
-        api.getInvoices(),
-        api.getTransactions()
-      ]);
-      setInvoices(invData);
-      setTransactions(txnData);
+      const invData = await getInvoices();
+      const txnData = await getTransactions();
+      setInvoices(invData.docs || []);
+      setTransactions(txnData.docs || []);
     } catch (error) {
       console.error('Failed to load finance data:', error);
     } finally {
@@ -78,7 +77,7 @@ export default function FinancePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <StatsCard 
           title="Total Revenue" 
-          value={`₦${totalRevenue.toLocaleString()}`} 
+          value={`$${totalRevenue.toLocaleString()}`} 
           icon={Wallet} 
           color="green" 
         />

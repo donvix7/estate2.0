@@ -1,13 +1,43 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Calendar } from 'lucide-react'
-import { api } from '@/services/api'
+import { 
+  Calendar, 
+  Home, 
+  Wrench, 
+  Receipt, 
+  ShieldAlert, 
+  UserCheck, 
+  Construction, 
+  Megaphone, 
+  UserPlus, 
+  Map, 
+  Download, 
+  Search, 
+  AlertTriangle, 
+  CheckCircle2,
+  Tag
+} from 'lucide-react'
+import { 
+  getUserData, 
+  getAnnouncements, 
+  getSecurityLogs, 
+  getPendingInvites, 
+  getStaffMembers, 
+  getResidents,
+  getWorkers,
+  getInvoices,
+  getAdminSecurityLogs,
+  getLostAndFound,
+  getAdminData,
+  getEstateData,
+  getAllProfiles
+} from '@/lib/service'
 import ActionCard from '@/components/ActionCard'
 import VisitorItem from '@/components/VisitorItem'
 import MetricCard from '@/components/MetricCard'
+import { useRouter } from 'next/navigation'
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -21,102 +51,69 @@ export default function AdminDashboard() {
   
   // UI State
   const [isLoading, setIsLoading] = useState(true)
-  const metrics = [
-    {
-
-          icon:"home" ,
-          label:"Total Residents" ,
-          value:"1,240" ,
-          trend:"+2.5%" ,
-          trendColor:"text-green-500" ,
-          bgColor:"bg-blue-100 dark:bg-blue-900/30" ,
-          iconColor:"text-blue-600" ,
-    },
-    {
-       
-          icon:"engineering" ,
-          label:"Workers" ,
-          value:staffMembers.length || 42,
-          trend:"Stable" ,
-          trendColor:"text-slate-400" ,
-          bgColor:"bg-amber-100 dark:bg-amber-900/30" ,
-          iconColor:"text-amber-500" ,
-    
-    },
-    {
-       
-          icon:"receipt_long" ,
-          label:"Pending Invoices" ,
-          value:pendingInvites.length || 15 ,
-          trend:"-5%" ,
-          trendColor:"text-rose-500" ,
-          bgColor:"bg-rose-100 dark:bg-rose-900/30" ,
-          iconColor:"text-rose-500" 
-    
-    },
-    {
-       
-          icon:"gpp_maybe" ,
-          label:"Security Alert" ,
-          value:securityLogs.length > 0 ? securityLogs.filter(l => l.urgent).length || 2 : 2,
-          trend:"Low" ,
-          trendColor:"text-emerald-500" ,
-          bgColor:"bg-blue-100 dark:bg-blue-900/30" ,
-          iconColor:"text-blue-500" 
-    
-    }
-  ]
+ 
   const quickLinks = [
     {
-          icon:"badge" , 
+          icon: UserCheck , 
           title:"Staff Hub" , 
           desc:"Assign shifts, track performance & payroll." , 
           href:"/dashboard/admin/service_workers" , 
           bgColor:"bg-[#1241a1]" 
     },
     {
-          icon:"construction" , 
+          icon: Construction , 
           title:"Maintenance" , 
           desc:"Track work orders and contractor performance." , 
           href:"/dashboard/admin/maintenance" , 
           bgColor:"bg-amber-500" 
     },
     {
-          icon:"receipt_long" , 
+          icon: Receipt , 
           title:"Finance" , 
           desc:"Manage invoices, payments, and budgets." , 
           href:"/dashboard/admin/finance" , 
           bgColor:"bg-rose-500" 
     }
-    
   ]
-  const mobileQuickLinks = [{
-          icon: 'campaign',
+  const mobileQuickLinks = [
+    {
+          icon: <Megaphone className="size-6" />,
           title: 'Broadcast',
           desc: 'Send announcements to all residents',
           href: '/dashboard/admin/broadcast',
           bgColor: 'bg-[#1241a1]'
-        },
-        {
-          icon: 'person_add',
+    },
+    {
+          icon: <UserPlus className="size-6" />,
           title: 'Residents',
           desc: 'Manage resident information',
           href: '/dashboard/admin/residents',
           bgColor: 'bg-[#1241a1]'
-        },
-        {
-          icon: 'map',
+    },
+    {
+          icon: <Map className="size-6" />,
           title: 'Estate Map',
           desc: 'View estate map',
           href: '/dashboard/admin/estate-map',
           bgColor: 'bg-[#1241a1]'
-        }
-        ]
+    }
+  ]
         const recentVisitors = [
           {name:"Sarah Jenkins",role:"Unit 402 - Friend",status:"In",img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop "},
           {name:"Michael Chen",role:"Unit 115 - Contractor",status:"Out",img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop "},
           {name:"David Wilson",role:"Unit 809 - Delivery",status:"In",img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop "}
         ]
+       // const[announcements,setAnnouncements] = useState([])
+        //const[securityLogs,setSecurityLogs] = useState([])
+        //const[pendingInvites,setPendingInvites] = useState([])
+        //const[staffMembers,setStaffMembers] = useState([])
+
+        const [residents,setResidents] = useState([])
+        const [workers,setWorkers] = useState([])
+        const [invoices,setInvoices] = useState([])
+        const [lostAndFound, setLostAndFound] = useState([])
+        const [estate,setEstate] = useState([])
+
   // Load Initial Data
   useEffect(() => {
     const loadData = async () => {
@@ -125,22 +122,37 @@ export default function AdminDashboard() {
         const [
           user, 
           anns, 
-          logs, 
           invites, 
-          staff
+          staff,
+          res,
+          work,
+          inv,
+          adminLogs,
+          lfData,
+          estateData
         ] = await Promise.all([
-          api.getUserData(),
-          api.getAnnouncements(),
-          api.getSecurityLogs(),
-          api.getPendingInvites(),
-          api.getStaffMembers()
+          getAdminData(),
+          getAnnouncements(),
+          getPendingInvites(),
+          getStaffMembers(),
+          getAllProfiles(),
+          getWorkers(),
+          getInvoices(),
+          getAdminSecurityLogs(),
+          getLostAndFound(),
+          getEstateData()
         ]);
 
+        setEstate(estateData);
         setUserData(user);
         setAnnouncements(anns || []);
-        setSecurityLogs(logs || []);
         setPendingInvites(invites || []);
         setStaffMembers(staff || []);
+        setResidents(res.docs || []);
+        setWorkers(work || []);
+        setInvoices((inv.docs || []).filter(invoice => invoice.status === "pending"));
+        setSecurityLogs(adminLogs.docs || []);
+        setLostAndFound(lfData.docs || []);
       } catch (error) {
         console.error('Failed to load admin data:', error);
       } finally {
@@ -154,21 +166,68 @@ export default function AdminDashboard() {
     return (
       <div className="min-h-screen bg-white dark:bg-slate-950 flex items-center justify-center">
         <div className="space-y-4 text-center">
-           <div className="w-16 h-16 border-4 border-slate-200 dark:border-slate-800 border-t-[#1241a1] rounded-full animate-spin mx-auto"></div>
+           <div className="w-16 h-16 border-4 border-slate-900 dark:border-slate-900 border-t-[#1241a1] rounded-full animate-spin mx-auto"></div>
            <p className="text-slate-400 font-bold tracking-widest uppercase text-xs">Loading Admin Intel...</p>
         </div>
       </div>
     );
   }
+   const metrics = [
+    {
+          icon: <Home className="size-5" /> ,
+          label:"Total Residents" ,
+          value:residents.length ,
+          trend:"+2.5%" ,
+          trendColor:"text-green-500" ,
+          bgColor:"bg-blue-100 dark:bg-blue-900/30" ,
+          iconColor:"text-blue-600" ,
+    },
+    {
+          icon: <Wrench className="size-5" /> ,
+          label:"Workers" ,
+          value:workers.length,
+          trend:"Stable" ,
+          trendColor:"text-slate-400" ,
+          bgColor:"bg-amber-100 dark:bg-amber-900/30" ,
+          iconColor:"text-amber-500" ,
+    },
+    {
+          icon: <Receipt className="size-5" /> ,
+          label:"Pending Invoices" ,
+          value:invoices.length ,
+          trend:"-5%" ,
+          trendColor:"text-rose-500" ,
+          bgColor:"bg-rose-100 dark:bg-rose-900/30" ,
+          iconColor:"text-rose-500" 
+    },
+    {
+          icon: <ShieldAlert className="size-5" /> ,
+          label:"Security Alert" ,
+          value: securityLogs.filter(l => l.severity === 'High').length,
+          trend: securityLogs.filter(l => l.severity === 'High').length > 0 ? "High Alert" : "Low",
+          trendColor: securityLogs.filter(l => l.severity === 'High').length > 0 ? "text-rose-500" : "text-emerald-500",
+          bgColor:"bg-blue-100 dark:bg-blue-900/30" ,
+          iconColor:"text-blue-500" 
+    },
+    {
+      icon: <Tag className="size-5" />,
+      label: "Lost & Found",
+      value: lostAndFound.filter(item => !item.resolved).length,
+      trend: lostAndFound.filter(item => !item.resolved).length > 0 ? "Review Required" : "All Clear",
+      trendColor: lostAndFound.filter(item => !item.resolved).length > 0 ? "text-amber-500" : "text-emerald-500",
+      bgColor: "bg-emerald-100 dark:bg-emerald-900/30",
+      iconColor: "text-emerald-600"
+    }
+  ]
 
   return (
-    <div className="flex flex-col gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="flex flex-col gap-5 lg:gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       
       {/* Header & Welcome */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-lg lg:text-3xl font-bold lg:font-black tracking-tight text-slate-900 dark:text-white leading-tight">Estate Overview</h1>
-          <p className="text-slate-500 font-medium text-sm lg:text-base">Monitoring status for {userData?.estateName || 'Green Valley Estates'}</p>
+          <p className="text-slate-500 font-medium text-sm lg:text-base">Monitoring status for {userData?.estateID || estate?.name}</p>
         </div>
         <div className="hidden lg:flex items-center gap-3">
           <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm">
@@ -176,7 +235,7 @@ export default function AdminDashboard() {
             {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - Next Week
           </button>
           <button className="flex items-center gap-2 px-4 py-2 bg-[#1241a1] text-white rounded-xl text-sm font-black hover:bg-blue-700 transition-all shadow-lg shadow-[#1241a1]/20">
-            <span className="material-symbols-outlined text-lg">download</span>
+            <Download className="size-4" />
             Export Report
           </button>
         </div>
@@ -186,7 +245,7 @@ export default function AdminDashboard() {
       <div className="lg:hidden">
         <label className="relative flex flex-col w-full group">
           <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-            <span className="material-symbols-outlined text-slate-400 group-focus-within:text-[#1241a1] transition-colors">search</span>
+            <Search className="size-5 text-slate-400 group-focus-within:text-[#1241a1] transition-colors" />
           </div>
           <input 
             className="form-input block w-full rounded-xl border-none bg-slate-200 dark:bg-slate-800 py-3 pl-11 pr-4 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 focus:ring-2 focus:ring-[#1241a1] focus:bg-white dark:focus:bg-slate-900 transition-all text-sm" 
@@ -197,7 +256,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Metrics Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 lg:gap-6">
        {metrics.map((metric, index) => (
          <MetricCard 
            key={index} 
@@ -219,7 +278,7 @@ export default function AdminDashboard() {
             {mobileQuickLinks.map((link, index) => (
           <Link href={link.href} key={index} className="flex flex-col items-center gap-2 group ">
             <div className={`size-14 rounded-full ${link.bgColor} hover:bg-slate-100 hover:text-[#1241a1] dark:hover:bg-slate-800 flex items-center justify-center text-white shadow-lg shadow-[#1241a1]/20 group-active:scale-95 transition-transform`}>
-              <span className="material-symbols-outlined">{link.icon}</span>
+              {link.icon}
             </div>
             <span className="text-[10px] font-semibold uppercase text-center text-slate-600 dark:text-slate-400">{link.title}</span>
           </Link>
@@ -244,25 +303,38 @@ export default function AdminDashboard() {
           </div>
           <div className="flex flex-col gap-3 p-4">
             {securityLogs.length > 0 ? (
-              securityLogs.slice(0, 3).map((log, idx) => (
-                <div key={log.id || idx} className="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-xl hover:shadow-md transition-shadow">
-                  <div className={`size-10 rounded-lg flex items-center justify-center ${log.urgent ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' : 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'}`}>
-                    <span className="material-symbols-outlined">{log.urgent ? 'warning' : 'check_circle'}</span>
+              <div className="space-y-3">
+                {securityLogs.slice(0, 5).map((log, idx) => (
+                  <div key={log.id || idx} className="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-xl hover:shadow-md transition-shadow">
+                    <div className={`size-10 rounded-lg flex items-center justify-center ${
+                      log.typeId === 'lost_found' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' :
+                      log.severity === 'High' ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' : 
+                      'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
+                    }`}>
+                      {log.typeId === 'lost_found' ? (
+                        log.icon === 'CheckCircle2' ? <CheckCircle2 className="size-5" /> : <Tag className="size-5" />
+                      ) : (
+                        log.severity === 'High' ? <AlertTriangle className="size-5" /> : <ShieldAlert className="size-5" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">{log.type}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{log.location} • {log.time}</p>
+                    </div>
+                    <div className="text-right">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${log.status === 'Completed' || log.status === 'Resolved' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}`}>
+                        {log.status}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">{log.action || 'Patrol Completed: Zone A'}</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">{log.visitorName || 'Officer Johnson'} • {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                  </div>
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
-              // Fallback template items if no logs
-              <>
-                <div className="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-xl">
-                  
-                  <h3 className="text-slate-900 dark:text-white text-lg font-bold mb-4">No Security Logs</h3>
-                </div>
-              </>
+              <div className="flex flex-col items-center justify-center p-8 text-center bg-slate-50 dark:bg-slate-800/20 rounded-2xl">
+                <ShieldAlert className="size-12 text-slate-300 dark:text-slate-700 mb-3" />
+                <h3 className="text-slate-900 dark:text-white text-base font-bold">No Recent Logs</h3>
+                <p className="text-xs text-slate-500">All systems are currently reported as secure.</p>
+              </div>
             )}
           </div>
         </div>

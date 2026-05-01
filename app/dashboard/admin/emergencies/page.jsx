@@ -28,14 +28,21 @@ import { api } from '@/services/api';
 import ResolveEmergencyModal from '@/components/admin/ResolveEmergencyModal';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
 import ResourceItem from '@/components/ResourceItem';
+import { getEmergencies } from '@/lib/service';
+import AnnouncementModal from '@/components/admin/AnnouncementModal';
+import { toast } from 'react-toastify';
 
 export default function EmergenciesPage() {
   const [emergencies, setEmergencies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  
+  const [paginatedEmergencies, setPaginatedEmergencies] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [limit, setLimit] = useState(10);
   // Modal State
   const [selectedEmergency, setSelectedEmergency] = useState(null);
+  const [isBroadcastModalOpen, setIsBroadcastModalOpen] = useState(false);
 
   const resources = [
     {name:"Patrol Alpha", status:"Active • South Gate", color:"text-emerald-500 bg-emerald-500/10", icon:<Shield className="w-4 h-4" />},
@@ -49,9 +56,11 @@ export default function EmergenciesPage() {
   const loadEmergencies = async () => {
     setIsLoading(true);
     try {
-      const data = await api.getEmergencies();
-      // Sort by date descending
-      setEmergencies(data.sort((a, b) => new Date(b.date) - new Date(a.date)));
+      const data = await getEmergencies();
+      setEmergencies(data.docs);
+      setTotalPages(data.totalPages);
+      setCurrentPage(data.page);
+      setPaginatedEmergencies(data);
     } catch (error) {
       console.error('Failed to load emergencies:', error);
     } finally {
@@ -89,9 +98,12 @@ export default function EmergenciesPage() {
   return (
     <div className="flex-1 flex flex-col min-w-0 animate-in fade-in duration-700">
       {/* Action Buttons & Overview */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6 lg:mb-8">
         <div className="xl:col-span-2 flex flex-wrap gap-4">
-          <button className="flex-1 min-w-[200px] h-16 bg-red-500 text-white rounded-xl font-bold flex items-center justify-center gap-3 shadow-lg shadow-red-500/20 hover:brightness-110 transition-all active:scale-95">
+          <button 
+            onClick={() => setIsBroadcastModalOpen(true)}
+            className="flex-1 min-w-[200px] h-16 bg-red-500 text-white rounded-xl font-bold flex items-center justify-center gap-3 shadow-lg shadow-red-500/20 hover:brightness-110 transition-all active:scale-95"
+          >
             <Radio className="w-6 h-6" />
             Broadcast Estate Alert
           </button>
@@ -123,7 +135,7 @@ export default function EmergenciesPage() {
       </div>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-1 gap-8">
+      <div className="grid grid-cols-1 gap-6 lg:gap-8">
         {/* Left Column: Real-time Feed */}
         <div className="lg:col-span-4 space-y-6">
           <div className="flex items-center justify-between">
@@ -261,6 +273,16 @@ export default function EmergenciesPage() {
             }}
          />
       )}
+
+      {/* Broadcast Modal */}
+      <AnnouncementModal 
+        isOpen={isBroadcastModalOpen}
+        onClose={() => setIsBroadcastModalOpen(false)}
+        onAnnouncementCreated={(newAnn) => {
+          setIsBroadcastModalOpen(false);
+          toast.success('Emergency alert broadcasted successfully!');
+        }}
+      />
     </div>
   );
 }

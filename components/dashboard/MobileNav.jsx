@@ -24,7 +24,7 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
         <div className="flex items-center justify-between h-16 px-4">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push('/')}>
             <div className="bg-[#1241a1] rounded-lg p-1.5 text-white">
-              <span className="material-symbols-outlined text-xl text-white">apartment</span>
+              <Building2 className="size-5" />
             </div>
             <div>
               <span className="font-bold text-sm tracking-tight block leading-none">Elite Towers</span>
@@ -57,13 +57,13 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
       {isMenuOpen && (
         <div className="fixed inset-0 z-100 bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-md animate-fade-in" onClick={() => setIsMenuOpen(false)}>
           <div 
-            className="fixed inset-y-0 right-0 w-[280px] bg-slate-50 dark:bg-slate-900 shadow-2xl flex flex-col z-110 animate-slide-in-right"
+            className="fixed inset-y-0 right-0 w-[280px] bg-white dark:bg-slate-900 shadow-2xl flex flex-col z-110 animate-slide-in-right"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
                 <div className="bg-[#1241a1] rounded-lg p-1.5 text-white">
-                  <span className="material-symbols-outlined text-xl text-white">apartment</span>
+                  <Building2 className="size-5" />
                 </div>
                 <span className="font-bold text-lg tracking-tight">Elite Towers</span>
               </div>
@@ -104,9 +104,11 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <span className={`material-symbols-outlined text-xl ${isActive ? 'text-white' : 'text-slate-400'}`}>
-                        {typeof link.icon === 'string' ? link.icon : 'dashboard'}
-                      </span>
+                      {link.icon ? (
+                        <link.icon className={`size-5 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                      ) : (
+                        <Building2 className={`size-5 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                      )}
                       <span className="font-bold text-sm">{link.label}</span>
                     </div>
                     {link.badge > 0 && (
