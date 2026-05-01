@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
   Receipt, 
   Search, 
@@ -54,23 +54,52 @@ const getStatusConfig = (status) => {
   }
 }
 
-export default async function InvoiceList() {
-
-    const invoices = await getInvoices();
-
+export default function InvoiceList() {
+  const [invoices, setInvoices] = useState({ docs: [] });
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  const filteredInvoices = invoices.docs.filter(inv => {
-    const matchesSearch = inv.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          inv.id.toLowerCase().includes(searchTerm.toLowerCase());
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      try {
+        const data = await getInvoices();
+        // Handle both paginated (docs) and direct array responses
+        if (data && Array.isArray(data)) {
+          setInvoices({ docs: data });
+        } else if (data && data.docs) {
+          setInvoices(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch invoices:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchInvoices();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="p-12 flex flex-col items-center justify-center space-y-4">
+        <div className="size-10 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>
+        <p className="text-gray-500 font-medium">Loading invoices...</p>
+      </div>
+    );
+  }
+
+  const invoiceDocs = invoices.docs || [];
+
+  const filteredInvoices = invoiceDocs.filter(inv => {
+    const matchesSearch = (inv.title?.toLowerCase() || '').includes(searchTerm.toLowerCase()) || 
+                          (inv.id?.toLowerCase() || '').includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || inv.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
-  const totalOutstanding = invoices.docs
+  const totalOutstanding = invoiceDocs
     .filter(inv => inv.status !== 'paid')
-    .reduce((sum, inv) => sum + inv.amount, 0);
+    .reduce((sum, inv) => sum + (inv.amount || 0), 0);
 
   return (
     <div className="space-y-6">
@@ -83,7 +112,7 @@ export default async function InvoiceList() {
                 </div>
                 <h3 className="text-gray-500 dark:text-gray-400 font-medium text-sm">Total Invoices</h3>
             </div>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{MOCK_INVOICES.length}</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">{invoiceDocs.length}</p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)] relative overflow-hidden">
