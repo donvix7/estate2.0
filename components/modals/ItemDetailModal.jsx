@@ -11,7 +11,8 @@ import {
   Share2, 
   AlertCircle,
   CheckCircle2,
-  Info
+  Info,
+  Search
 } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { updateLostAndFoundAction } from '@/lib/action'

@@ -98,11 +98,6 @@ export default function AdminDashboard() {
           bgColor: 'bg-[#1241a1]'
     }
   ]
-        const recentVisitors = [
-          {name:"Sarah Jenkins",role:"Unit 402 - Friend",status:"In",img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop "},
-          {name:"Michael Chen",role:"Unit 115 - Contractor",status:"Out",img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop "},
-          {name:"David Wilson",role:"Unit 809 - Delivery",status:"In",img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop "}
-        ]
        // const[announcements,setAnnouncements] = useState([])
         //const[securityLogs,setSecurityLogs] = useState([])
         //const[pendingInvites,setPendingInvites] = useState([])
@@ -319,11 +314,11 @@ export default function AdminDashboard() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">{log.type}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">{log.location} • {log.time}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{log.location} • {new Date(log.createdAt).toLocaleString()}</p>
                     </div>
                     <div className="text-right">
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${log.status === 'Completed' || log.status === 'Resolved' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}`}>
-                        {log.status}
+                        {log.verifiedBy}
                       </span>
                     </div>
                   </div>
@@ -346,8 +341,8 @@ export default function AdminDashboard() {
           <div className="hidden lg:block bg-white dark:bg-slate-900 rounded-2xl shadow-sm p-8">
             <h3 className="font-black text-lg uppercase tracking-tight text-slate-900 dark:text-white mb-8">Access Logs</h3>
             <div className="space-y-6">
-              {recentVisitors.map((visitor, index) => (
-                <VisitorItem key={index} name={visitor.name} role={visitor.role} status={visitor.status} img={visitor.img} />
+              {securityLogs.map((log, index) => (
+                <VisitorItem key={index} name={log.visitor} role={log.type} status={log.verifiedBy} img={log.img} />
               ))}
             </div>
           </div>

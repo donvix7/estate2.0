@@ -38,12 +38,10 @@ export default function FinancePage() {
 
   const filteredData = activeTab === 'invoices' 
     ? invoices.filter(inv => {
-        return inv.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
-               inv.residentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-               inv.description.toLowerCase().includes(searchTerm.toLowerCase());
+        return inv.description.toLowerCase().includes(searchTerm.toLowerCase());
       })
     : transactions.filter(txn => {
-        return txn.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        return txn.reference.toLowerCase().includes(searchTerm.toLowerCase()) || 
                txn.residentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                txn.reference.toLowerCase().includes(searchTerm.toLowerCase());
       });

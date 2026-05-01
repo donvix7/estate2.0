@@ -100,14 +100,12 @@ export default function ReportItemPage() {
     
     const reportData = {
       ...form,
-      id: Math.random().toString(36).substr(2, 9),
       status: reportType, // 'lost' or 'found'
       icon: form.category === 'Pets' ? 'Dog' : 
             form.category === 'Electronics' ? 'Smartphone' : 
             form.category === 'Keys / Wallets' ? 'Key' : 
             form.category === 'Clothing' ? 'Shirt' : 
             form.category === 'Accessories' ? 'Glasses' : 'Tag',
-      timestamp: new Date().toISOString()
     }
 
     try {

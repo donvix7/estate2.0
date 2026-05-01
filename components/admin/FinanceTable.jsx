@@ -10,7 +10,7 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
   
   const headers = isInvoice 
     ? ['Invoice Details', 'Resident', 'Amount', 'Dates', 'Status']
-    : ['Transaction Details', 'Resident', 'Amount', 'Method', 'Status'];
+    : ['Transaction Details', 'Resident', 'Amount', 'Date', 'Status'];
 
   const getStatusBadge = (status) => {
     switch (status.toLowerCase()) {
@@ -56,13 +56,13 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
                 <FileText className="w-5 h-5" />
               </div>
               <div>
-                <div className="font-semibold text-gray-900 dark:text-white">{item.id}</div>
+                <div className="font-semibold text-gray-900 dark:text-white">{item._id}</div>
                 <div className="text-xs text-gray-500 mt-0.5 truncate max-w-[150px]" title={item.description}>{item.description}</div>
               </div>
             </div>
           </td>
           <td className="px-6 py-4">
-            <div className="font-medium text-gray-900 dark:text-white">{item.residentName}</div>
+            <div className="font-medium text-gray-900 dark:text-white">{item.residentID}</div>
             <div className="text-xs text-gray-500 mt-0.5">{item.unit}</div>
           </td>
           <td className="px-6 py-4">
@@ -86,24 +86,26 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
       <>
         <td className="px-6 py-4">
           <div className="flex items-center space-x-3">
+            
             <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
                {item.type.includes('Payment') ? <ArrowDownRight className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
             </div>
+
             <div>
-              <div className="font-semibold text-gray-900 dark:text-white">{item.id}</div>
-              <div className="text-xs text-gray-500 mt-0.5">{new Date(item.date).toLocaleString()}</div>
+              <div className="font-semibold text-gray-900 dark:text-white">{item._id}</div>
+              <div className="font-semibold text-gray-900 dark:text-white">{item.description}</div>
+
             </div>
           </div>
         </td>
         <td className="px-6 py-4">
-            <div className="font-medium text-gray-900 dark:text-white">{item.residentName}</div>
-            <div className="text-xs text-gray-500 mt-0.5">{item.unit}</div>
+            <div className="font-medium text-gray-900 dark:text-white">{item.residentID}</div>
         </td>
         <td className="px-6 py-4">
           <div className="font-bold text-gray-900 dark:text-white">${item.amount.toLocaleString()}</div>
         </td>
         <td className="px-6 py-4">
-          <div className="text-sm text-gray-900 dark:text-gray-300 font-medium">{item.method}</div>
+              <div className="text-xs text-gray-500 mt-0.5">{new Date(item.createdAt).toLocaleString()}</div>
           <div className="text-xs text-gray-500 mt-0.5">Ref: {item.reference}</div>
         </td>
         <td className="px-6 py-4">
@@ -135,7 +137,7 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
         ) : (
           items.map((item, index) => (
             <div 
-              key={item.id}
+              key={item._id || item.id || index}
               onClick={onRowClick ? () => onRowClick(item) : undefined}
               className={`bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-900 space-y-4 active:scale-[0.98] transition-all ${onRowClick ? 'cursor-pointer' : ''}`}
             >
@@ -159,7 +161,7 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
               <div className="flex items-end justify-between pt-2 border-t border-slate-50 dark:border-slate-900/50">
                 <div className="space-y-1">
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Resident</p>
-                  <p className="text-xs font-bold text-slate-700 dark:text-slate-200">{item.residentName}</p>
+                  <p className="text-xs font-bold text-slate-700 dark:text-slate-200">{item.residentID}</p>
                   <p className="text-[10px] text-slate-500 font-medium italic">{item.unit}</p>
                 </div>
                 <div className="text-right">

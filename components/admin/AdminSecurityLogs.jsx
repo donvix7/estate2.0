@@ -71,7 +71,7 @@ export default function ActivityPage() {
 
   const fetchLogs = async () => {
     const logs = await getAdminSecurityLogs()
-    setLogs(logs)
+    setLogs(logs.docs)
   }
 
   useEffect(() => {
@@ -278,7 +278,7 @@ export default function ActivityPage() {
           <table className="w-full text-left border-collapse">
             <thead className="bg-slate-50 dark:bg-slate-800/50">
               <tr>
-                {['Timestamp', 'Incident Type', 'Location', 'Severity', 'Status', ''].map(h => (
+                {['Timestamp', 'Incident Type', 'Visitor', 'Verified By', 'Resident ID', ''].map(h => (
                   <th key={h} className="px-6 py-4 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{h}</th>
                 ))}
               </tr>
@@ -293,7 +293,7 @@ export default function ActivityPage() {
                   className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors cursor-pointer"
                 >
                   <td className="px-6 py-4">
-                    <div className="text-sm font-semibold">{log.date}</div>
+                    <div className="text-sm font-semibold">{new Date(log.createdAt).toLocaleDateString()}</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">{log.time}</div>
                   </td>
                   <td className="px-6 py-4">
@@ -308,16 +308,16 @@ export default function ActivityPage() {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm">{log.location}</div>
+                    <div className="text-sm">{log.visitor}</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">{log.sub}</div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${SEVERITY_STYLES[log.severity]}`}>{log.severity}</span>
+                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${SEVERITY_STYLES[log.verifiedBy]}`}>{log.verifiedBy}</span>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
                       <span className={`size-2 rounded-full shrink-0 ${STATUS_DOT[log.status] || 'bg-slate-400'}`} />
-                      <span className="text-sm whitespace-nowrap">{log.status}</span>
+                      <span className="text-sm whitespace-nowrap">{log.residentID}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">

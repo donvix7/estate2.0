@@ -44,7 +44,7 @@ export default function QRScanPage() {
     setHasMounted(true);
     const fetchScanHistory = async () => {
       const history = await getScanHistory();
-      setScanHistory(history);
+      setScanHistory(history?.docs || []);
     }
     fetchScanHistory();
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -265,7 +265,7 @@ export default function QRScanPage() {
       }
       
       const history = await getScanHistory();
-      setScanHistory(history);
+      setScanHistory(history?.docs || []);
     } catch (err) {
       console.error("Scan error:", err);
       toast.error("System error during verification");
@@ -337,7 +337,7 @@ export default function QRScanPage() {
       }
 
       const history = await getScanHistory();
-      setScanHistory(history);
+      setScanHistory(history?.docs || []);
     } catch (err) {
       toast.error('Verification failed');
     } finally {
@@ -496,22 +496,40 @@ export default function QRScanPage() {
               <button className="text-[#1241a1] text-[10px] font-black uppercase tracking-widest hover:underline">View All</button>
             </div>
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              {scanHistory.map((entry, idx) => (
-                <div key={idx} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/30 transition-all cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50 group">
-                  <div className="size-12 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-400">
-                    <User className="size-6" />
+              {scanHistory && scanHistory.length > 0 ? (
+                scanHistory.map((entry, idx) => (
+                  <div key={idx} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/30 transition-all cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50 group">
+                    <div className={`size-12 rounded-xl flex items-center justify-center ${entry.status === 'denied' || entry.status === 'Denied' ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
+                      {entry.status === 'denied' || entry.status === 'Denied' ? <XOctagon className="size-6" /> : <CheckCircle2 className="size-6" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-black dark:text-white truncate group-hover:text-[#1241a1] transition-colors leading-tight">
+                        {entry.name || entry.visitorName || 'Unknown Visitor'}
+                      </p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        {entry.type || 'Verification'} • {entry.target || entry.visitorID || 'Main Gate'}
+                      </p>
+                      {entry.qrCode && <p className="text-[8px] text-slate-400 truncate opacity-60">ID: {entry.qrCode}</p>}
+                    </div>
+                    <div className="text-right">
+                      <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1.5 rounded-lg block mb-1 ${entry.status === 'denied' || entry.status === 'Denied' ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
+                        {entry.status}
+                      </span>
+                      <time className="text-[9px] font-bold text-slate-400 italic block">
+                        {entry.createdAt ? new Date(entry.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : entry.time}
+                      </time>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-black dark:text-white truncate group-hover:text-[#1241a1] transition-colors leading-tight">{entry.name}</p>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{entry.type} • {entry.target}</p>
-                    {entry.qrCode && <p className="text-[8px] text-slate-400 truncate">QR: {entry.qrCode}</p>}
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <div className="size-16 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-4">
+                    <QrCode className="size-8 text-slate-300" />
                   </div>
-                  <div className="text-right">
-                    <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1.5 rounded-lg block mb-1 ${entry.statusColor}`}>{entry.status}</span>
-                    <time className="text-[9px] font-bold text-slate-400 italic block">{entry.time}</time>
-                  </div>
+                  <p className="text-sm font-bold text-slate-500">No scans yet</p>
+                  <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Verification logs will appear here</p>
                 </div>
-              ))}
+              )}
             </div>
             <div className="p-4 bg-slate-50 dark:bg-slate-800/50">
               <button className="w-full text-center text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-[#1241a1] transition-colors leading-none">
