@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import ServiceCard from '@/components/ServiceCard'
+import { LoadingState } from '@/components/ui/LoadingState'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 import {
   getAnnouncements,
@@ -181,28 +183,23 @@ export default function ResidentDashboard() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-slate-50 dark:bg-[#111621] flex flex-col items-center justify-center">
-        <div className="size-16 border-4 border-[#1241a1]/20 border-t-[#1241a1] rounded-full animate-spin"></div>
-        <p className="mt-6 text-slate-400 font-bold tracking-widest uppercase text-xs">Loading Portal...</p>
-      </div>
-    );
+    return <LoadingState message="Loading Resident Portal..." />;
   }
 
   if (error) {
     return (
       <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-        <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-2xl shadow-2xl p-8 flex flex-col items-center text-center animate-in zoom-in-95 duration-300">
+        <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-md p-8 flex flex-col items-center text-center animate-in zoom-in-95 duration-300">
           <div className="size-20 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-6">
             <AlertTriangle className="size-10 text-red-600 dark:text-red-500" />
           </div>
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Unexpected Error</h3>
+          <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">Unexpected Error</h3>
           <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 leading-relaxed">
             {error}
           </p>
           <button 
             onClick={handleRefresh}
-            className="w-full bg-[#1241a1] hover:bg-[#1241a1]/90 text-white font-bold py-4 rounded-xl shadow-lg shadow-[#1241a1]/20 transition-all active:scale-95 flex items-center justify-center gap-2"
+            className="w-full bg-[#1241a1] hover:bg-[#1241a1]/90 text-white font-semibold py-4 rounded-md transition-all active:scale-95 flex items-center justify-center gap-2"
           >
             Try Again
           </button>
@@ -214,21 +211,21 @@ export default function ResidentDashboard() {
   return (
     <div className="flex flex-col gap-10 lg:gap-12 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-7xl mx-auto w-full pb-24 lg:pb-0">
       
-      {/* Mobile Header Greeting */}
-      <section className="lg:hidden pt-4">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Hello, {residentData?.name?.split(' ')[0] || 'Sarah'}!</h2>
-          <p className="text-slate-500 dark:text-slate-400">Welcome back to your resident dashboard.</p>
-        </div>
-      </section>
+      {/* Header Greeting */}
+      <PageHeader 
+        title={`Hello, ${residentData?.name?.split(' ')[0] || 'Sarah'}!`}
+        description="Welcome back to your resident dashboard."
+        icon={User}
+        iconColor="blue"
+      />
 
       {/* Visitor Code Button (Mobile Only) */}
       <section className="lg:hidden">
         <Link href="/dashboard/resident/visitors">
-          <button className="w-full bg-[#1241a1] hover:bg-[#1241a1]/90 text-white rounded-xl py-4 px-6 flex items-center justify-between shadow-lg shadow-[#1241a1]/20 transition-all active:scale-[0.98]">
+          <button className="w-full bg-[#1241a1] hover:bg-[#1241a1]/90 text-white rounded-md py-4 px-6 flex items-center justify-between transition-all active:scale-[0.98]">
             <div className="flex items-center gap-3">
               <QrCode className="size-6" />
-              <span className="font-bold text-lg">Generate Visitor Code</span>
+              <span className="font-semibold text-lg">Generate Visitor Code</span>
             </div>
             <ChevronRight className="size-5" />
           </button>
@@ -239,23 +236,23 @@ export default function ResidentDashboard() {
       <section className="lg:hidden">
         <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 px-1">Status Overview</h3>
         <div className="grid gap-3">
-          <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-xl flex gap-3 items-start">
+          <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-md flex gap-3 items-start">
             <AlertTriangle className="size-6 text-amber-600 dark:text-amber-400" />
             <div>
-              <p className="font-bold text-amber-900 dark:text-amber-100 text-sm">Security Alert</p>
+              <p className="font-semibold text-amber-900 dark:text-amber-100 text-sm">Security Alert</p>
               <p className="text-amber-800 dark:text-amber-300 text-xs text-left">Scheduled maintenance on perimeter sensors today at 2:00 PM.</p>
             </div>
           </div>
-          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl flex justify-between items-center shadow-sm">
+          <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-md flex justify-between items-center">
             <div className="flex gap-3 items-center">
               <CreditCard className="size-5 text-[#1241a1]" />
               <div className="text-left">
-                <p className="font-bold text-sm">Service Charge Due</p>
+                <p className="font-semibold text-sm">Service Charge Due</p>
                 <p className="text-slate-500 dark:text-slate-400 text-xs">Due in 3 days • $120.00</p>
               </div>
             </div>
             <Link href="/dashboard/resident/finance">
-              <button className="text-[#1241a1] font-bold text-sm px-4 py-1.5 rounded-lg bg-[#1241a1]/10 hover:bg-[#1241a1]/20 transition-colors">Pay</button>
+              <button className="text-[#1241a1] font-semibold text-sm px-4 py-1.5 rounded-md bg-[#1241a1]/10 hover:bg-[#1241a1]/20 transition-colors">Pay</button>
             </Link>
           </div>
         </div>
@@ -282,10 +279,10 @@ export default function ResidentDashboard() {
       {/* Quick Map (Mobile Only) */}
       <section className="lg:hidden">
         <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 px-1">Quick Map</h3>
-        <div className="w-full h-40 rounded-xl overflow-hidden relative">
+        <div className="w-full h-40 rounded-md overflow-hidden relative">
           <img className="w-full h-full object-cover" alt="Estate Map Preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBphQarF0qA8nu5MYG1955V6OP0uaO2HSU6m59wuK3VSlPNGpg0OHXggsVUR28HGFECPPXS5UVgYJvgKiEzd0R-Wzh3xBkdIZ3E_TLzPkVs0cWNlNvpj1jKZ7NR3OrqVr3PvtyvcJQIOvYMwzlBqHyFotliCm3qQtjG5bxfaeBCpVqN4FGKbVELeV4OSQcdNQbIiYREZlpxSenxUQ_lK2gkzMKfZTAn0jj4tAPcE3-iq3ttlRUa1zWF5x03YArh8YuSxvK_BOPzqxw" />
-          <div className="absolute bottom-3 left-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-1 rounded-lg shadow-sm">
-            <p className="text-[10px] font-bold">{residentData?.estateName || 'Green Valley Estates'}</p>
+          <div className="absolute bottom-3 left-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-1 rounded-md">
+            <p className="text-[10px] font-semibold">{residentData?.estateName || 'Green Valley Estates'}</p>
           </div>
         </div>
       </section>
@@ -293,7 +290,7 @@ export default function ResidentDashboard() {
       {/* Original Desktop/Tablet Sections */}
       <section className="hidden lg:block">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-bold">Quick Actions</h3>
+          <h3 className="text-lg font-semibold">Quick Actions</h3>
           <Link href="#" className="text-[#1241a1] text-sm font-semibold hover:underline">View all actions</Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -311,14 +308,14 @@ export default function ResidentDashboard() {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-12">
           {/* Billing Summary */}
           <div className="lg:col-span-1 flex flex-col gap-4">
-            <div className="bg-white dark:bg-slate-900 rounded-xl p-6 h-full shadow-sm">
+            <div className="bg-slate-100 dark:bg-slate-800/30 rounded-md p-6 h-full">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="font-bold">Billing Summary</h3>
+                <h3 className="font-semibold">Billing Summary</h3>
                 <MoreHorizontal className="size-5 text-slate-400 cursor-pointer" />
               </div>
               <div className="mb-6 text-left">
-                <p className="text-sm text-slate-500 dark:text-slate-400">Total Outstanding</p>
-                <h2 className="text-3xl font-black mt-1 text-[#1241a1]">${outstandingServices.length * 225}.00</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Total Outstanding</p>
+                <h2 className="text-3xl font-semibold mt-1 text-[#1241a1]">${outstandingServices.length * 225}.00</h2>
               </div>
               <div className="space-y-4 text-left">
                 {outstandingServices.map((service) => (
@@ -334,7 +331,7 @@ export default function ResidentDashboard() {
                 )}
               </div>
               <Link href="/dashboard/resident/finance">
-                <button className="w-full mt-6 bg-[#1241a1] text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-[#1241a1]/20 hover:bg-[#1241a1]/90 transition-all active:scale-[0.98]">
+                <button className="w-full mt-6 bg-[#1241a1] text-white py-3 rounded-md font-semibold text-sm hover:bg-[#1241a1]/90 transition-all active:scale-[0.98]">
                   Pay Now
                 </button>
               </Link>
@@ -343,9 +340,9 @@ export default function ResidentDashboard() {
 
           {/* Recent Announcements */}
           <div className="lg:col-span-1.5 flex flex-col gap-4">
-            <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm">
+            <div className="bg-slate-100 dark:bg-slate-800/30 rounded-md p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="font-bold">Recent Announcements</h3>
+                <h3 className="font-semibold">Recent Announcements</h3>
                 <Link href="/dashboard/resident/announcements" className="text-xs font-semibold text-[#1241a1] px-3 py-1 rounded-full bg-[#1241a1]/10 hover:bg-[#1241a1]/20 transition-colors">
                   View All
                 </Link>
@@ -382,12 +379,12 @@ export default function ResidentDashboard() {
       {/* Service Request Progress (Desktop/Mobile) */}
       <section className="lg:mt-12">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold">Active Service Requests</h3>
-          <Link href="/dashboard/resident/maintenance" className="text-[#1241a1] text-xs font-bold lg:hidden">View All</Link>
+          <h3 className="text-lg font-semibold">Active Service Requests</h3>
+          <Link href="/dashboard/resident/maintenance" className="text-[#1241a1] text-xs font-semibold lg:hidden">View All</Link>
         </div>
         
         {/* Desktop Table */}
-        <div className="hidden lg:block bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm">
+        <div className="hidden lg:block bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-transparent">

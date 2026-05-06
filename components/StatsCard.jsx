@@ -14,14 +14,13 @@ export default function StatsCard({ title, value, icon: Icon, color = 'blue', su
   const colorClasses = COLORS[color] || COLORS.blue;
 
   return (
-    <div className=" relative flex justify-between gap-4 dark:bg-slate-900/80 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)] backdrop-blur rounded-3xl p-6 hover:scale-105 transition-all border-none">
-     
+    <div className="group relative flex justify-between gap-4 dark:bg-slate-800/30 bg-slate-100 rounded-md p-6 hover:bg-white dark:hover:bg-slate-800/50 transition-all border-none">
       <div className="pr-20 mb-2">
-        <p className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1 ">{title}</p>
-        <p className="text-gray-900 dark:text-white font-bold text-2xl mt-2">{value}</p>
-      {subtext && <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">{subtext}</p>}
+        <p className="text-slate-500 dark:text-slate-400 text-sm font-semibold mb-1 ">{title}</p>
+        <p className="text-slate-900 dark:text-white font-semibold text-2xl mt-2 tracking-tight">{value}</p>
+      {subtext && <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-semibold">{subtext}</p>}
       </div>
-     <div className={ `absolute top-4 right-4 p-3 rounded-xl h-12 block ${colorClasses}`}>
+     <div className={ `absolute top-4 right-4 p-3 rounded-md h-12 block transition-colors group-hover:bg-[#1241a1] group-hover:text-white ${colorClasses}`}>
         <Icon className="w-6 h-6" />
       </div>
     </div>

@@ -8,6 +8,8 @@ import ServiceWorkersTable from '@/components/admin/ServiceWorkersTable';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { FilterBar } from '@/components/ui/FilterBar';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
+import { LoadingState } from '@/components/ui/LoadingState';
+import { getWorkers } from '@/lib/service';
 
 export default function ServiceWorkersPage() {
   const [workers, setWorkers] = useState([]);
@@ -23,8 +25,8 @@ export default function ServiceWorkersPage() {
   const loadWorkers = async () => {
     setIsLoading(true);
     try {
-      const data = await api.getStaffMembers();
-      setWorkers(data);
+      const data = await getWorkers();
+      setWorkers(data.docs);
     } catch (error) {
       console.error('Failed to load service workers:', error);
     } finally {
@@ -50,7 +52,7 @@ export default function ServiceWorkersPage() {
         iconColor="blue"
       >
         <button 
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium shadow-[0_4px_24px_rgba(59,130,246,0.25)] transition-all active:scale-95 border-none"
+          className="flex items-center gap-2 bg-[#1241a1] hover:brightness-110 text-white px-5 py-2.5 rounded-md font-semibold transition-all active:scale-95 border-none"
           onClick={() => router.push('/dashboard/admin/service_workers/add')}
         >
           <Plus className="w-5 h-5" />
@@ -66,17 +68,23 @@ export default function ServiceWorkersPage() {
       />
 
       {/* Data Section */}
-      <DataStateLayout 
-        isLoading={isLoading} 
-        error={null} 
-        hasData={filteredWorkers.length > 0}
-        emptyStateMessage="No service workers match your current filters."
-      >
-        <ServiceWorkersTable 
-          workers={filteredWorkers}
-          searchTerm={searchTerm} 
-        />
-      </DataStateLayout>
+      {isLoading ? (
+        <div className="py-20">
+          <LoadingState message="Syncing Service Workforce..." />
+        </div>
+      ) : (
+        <DataStateLayout 
+          isLoading={false} 
+          error={null} 
+          hasData={filteredWorkers.length > 0}
+          emptyStateMessage="No service workers match your current filters."
+        >
+          <ServiceWorkersTable 
+            workers={filteredWorkers}
+            searchTerm={searchTerm} 
+          />
+        </DataStateLayout>
+      )}
     </div>
   );
 }

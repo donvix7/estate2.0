@@ -32,12 +32,15 @@ import {
   getLostAndFound,
   getAdminData,
   getEstateData,
-  getAllProfiles
+  getAllProfiles,
+  getAllServiceRequests,
+  getVisitors
 } from '@/lib/service'
 import ActionCard from '@/components/ActionCard'
 import VisitorItem from '@/components/VisitorItem'
 import MetricCard from '@/components/MetricCard'
 import { useRouter } from 'next/navigation'
+import { LoadingState } from '@/components/ui/LoadingState'
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -64,7 +67,7 @@ export default function AdminDashboard() {
           icon: Construction , 
           title:"Maintenance" , 
           desc:"Track work orders and contractor performance." , 
-          href:"/dashboard/admin/maintenance" , 
+          href:"/dashboard/admin/service-request" , 
           bgColor:"bg-amber-500" 
     },
     {
@@ -108,6 +111,8 @@ export default function AdminDashboard() {
         const [invoices,setInvoices] = useState([])
         const [lostAndFound, setLostAndFound] = useState([])
         const [estate,setEstate] = useState([])
+        const [serviceRequests,setServiceRequests] = useState([])
+        const [visitors, setVisitors] = useState([])
 
   // Load Initial Data
   useEffect(() => {
@@ -120,34 +125,40 @@ export default function AdminDashboard() {
           invites, 
           staff,
           res,
-          work,
+          requests,
           inv,
           adminLogs,
           lfData,
-          estateData
+          estateData,
+          visitorData
         ] = await Promise.all([
           getAdminData(),
           getAnnouncements(),
           getPendingInvites(),
           getStaffMembers(),
           getAllProfiles(),
-          getWorkers(),
+          getAllServiceRequests(),
           getInvoices(),
           getAdminSecurityLogs(),
           getLostAndFound(),
-          getEstateData()
+          getEstateData(),
+          getVisitors()
         ]);
 
-        setEstate(estateData);
         setUserData(user);
         setAnnouncements(anns || []);
         setPendingInvites(invites || []);
-        setStaffMembers(staff || []);
-        setResidents(res.docs || []);
-        setWorkers(work || []);
-        setInvoices((inv.docs || []).filter(invoice => invoice.status === "pending"));
-        setSecurityLogs(adminLogs.docs || []);
-        setLostAndFound(lfData.docs || []);
+        setStaffMembers(staff?.docs || staff || []);
+        setWorkers(staff?.docs || staff || []);
+        setResidents(res?.docs || res || []);
+        setServiceRequests(requests?.docs || requests || []);
+        setInvoices((inv?.docs || []).filter(invoice => invoice.status?.toLowerCase() === "unpaid"));
+        setSecurityLogs((adminLogs?.docs || []).filter(log => log.status === "unverified"));
+        setEstate(estateData);
+
+        setLostAndFound(lfData?.docs || lfData || []);
+
+        setVisitors(visitorData?.docs || visitorData || []);
       } catch (error) {
         console.error('Failed to load admin data:', error);
       } finally {
@@ -158,14 +169,7 @@ export default function AdminDashboard() {
   }, []);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-slate-950 flex items-center justify-center">
-        <div className="space-y-4 text-center">
-           <div className="w-16 h-16 border-4 border-slate-900 dark:border-slate-900 border-t-[#1241a1] rounded-full animate-spin mx-auto"></div>
-           <p className="text-slate-400 font-bold tracking-widest uppercase text-xs">Loading Admin Intel...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState message="Loading Admin Intel..." />;
   }
    const metrics = [
     {
@@ -179,10 +183,10 @@ export default function AdminDashboard() {
     },
     {
           icon: <Wrench className="size-5" /> ,
-          label:"Workers" ,
-          value:workers.length,
-          trend:"Stable" ,
-          trendColor:"text-slate-400" ,
+          label:"Service Requests" ,
+          value:serviceRequests.filter(l => l.status?.toLowerCase() === 'pending').length,
+          trend:"New" ,
+          trendColor:"text-amber-500" ,
           bgColor:"bg-amber-100 dark:bg-amber-900/30" ,
           iconColor:"text-amber-500" ,
     },
@@ -198,7 +202,7 @@ export default function AdminDashboard() {
     {
           icon: <ShieldAlert className="size-5" /> ,
           label:"Security Alert" ,
-          value: securityLogs.filter(l => l.severity === 'High').length,
+          value: securityLogs.length,
           trend: securityLogs.filter(l => l.severity === 'High').length > 0 ? "High Alert" : "Low",
           trendColor: securityLogs.filter(l => l.severity === 'High').length > 0 ? "text-rose-500" : "text-emerald-500",
           bgColor:"bg-blue-100 dark:bg-blue-900/30" ,
@@ -221,15 +225,15 @@ export default function AdminDashboard() {
       {/* Header & Welcome */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-lg lg:text-3xl font-bold lg:font-black tracking-tight text-slate-900 dark:text-white leading-tight">Estate Overview</h1>
+          <h1 className="text-lg lg:text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">Estate Overview</h1>
           <p className="text-slate-500 font-medium text-sm lg:text-base">Monitoring status for {userData?.estateID || estate?.name}</p>
         </div>
         <div className="hidden lg:flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm">
+          <button className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-900 rounded-md text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all">
             <Calendar className="w-4 h-4" />
             {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - Next Week
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-[#1241a1] text-white rounded-xl text-sm font-black hover:bg-blue-700 transition-all shadow-lg shadow-[#1241a1]/20">
+          <button className="flex items-center gap-2 px-4 py-2 bg-[#1241a1] text-white rounded-md text-sm font-semibold hover:bg-blue-700 transition-all">
             <Download className="size-4" />
             Export Report
           </button>
@@ -243,7 +247,7 @@ export default function AdminDashboard() {
             <Search className="size-5 text-slate-400 group-focus-within:text-[#1241a1] transition-colors" />
           </div>
           <input 
-            className="form-input block w-full rounded-xl border-none bg-slate-200 dark:bg-slate-800 py-3 pl-11 pr-4 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 focus:ring-2 focus:ring-[#1241a1] focus:bg-white dark:focus:bg-slate-900 transition-all text-sm" 
+            className="form-input block w-full rounded-md border-none bg-slate-100 dark:bg-slate-800 py-3 pl-11 pr-4 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 focus:ring-2 focus:ring-[#1241a1]/20 focus:bg-white dark:focus:bg-slate-900 transition-all text-sm outline-none" 
             placeholder="Search residents, logs, or invoices..." 
             type="text"
           />
@@ -268,20 +272,17 @@ export default function AdminDashboard() {
 
       {/* Quick Actions (Mobile Only as per template) */}
       <section className="lg:hidden">
-        <h3 className="text-slate-900 dark:text-white text-lg font-bold mb-4">Quick Actions</h3>
+        <h3 className="text-slate-900 dark:text-white text-lg font-semibold mb-4">Quick Actions</h3>
         <div className="grid grid-cols-3 gap-4">
             {mobileQuickLinks.map((link, index) => (
           <Link href={link.href} key={index} className="flex flex-col items-center gap-2 group ">
-            <div className={`size-14 rounded-full ${link.bgColor} hover:bg-slate-100 hover:text-[#1241a1] dark:hover:bg-slate-800 flex items-center justify-center text-white shadow-lg shadow-[#1241a1]/20 group-active:scale-95 transition-transform`}>
+            <div className={`size-14 rounded-full ${link.bgColor} hover:bg-slate-100 hover:text-[#1241a1] dark:hover:bg-slate-800 flex items-center justify-center text-white group-active:scale-95 transition-all`}>
               {link.icon}
             </div>
             <span className="text-[10px] font-semibold uppercase text-center text-slate-600 dark:text-slate-400">{link.title}</span>
           </Link>
         ))}
         </div>
-      
-        
-        
       </section>
 
      
@@ -289,9 +290,9 @@ export default function AdminDashboard() {
       {/* Feed Section */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Active Security Alerts */}
-        <div className="xl:col-span-2 bg-white dark:bg-slate-900 rounded-2xl shadow-sm overflow-hidden">
+        <div className="xl:col-span-2 bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden">
           <div className="p-6 flex items-center justify-between">
-            <h3 className="font-bold text-lg text-slate-900 dark:text-white">Recent Security Logs</h3>
+            <h3 className="font-semibold text-lg text-slate-900 dark:text-white">Recent Security Logs</h3>
             <Link href="/dashboard/admin/security">
               <button className="text-sm font-semibold text-[#1241a1]">See all</button>
             </Link>
@@ -300,7 +301,7 @@ export default function AdminDashboard() {
             {securityLogs.length > 0 ? (
               <div className="space-y-3">
                 {securityLogs.slice(0, 5).map((log, idx) => (
-                  <div key={log.id || idx} className="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-xl hover:shadow-md transition-shadow">
+                  <div key={log.id || idx} className="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-md transition-all">
                     <div className={`size-10 rounded-lg flex items-center justify-center ${
                       log.typeId === 'lost_found' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' :
                       log.severity === 'High' ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' : 
@@ -317,7 +318,7 @@ export default function AdminDashboard() {
                       <p className="text-xs text-slate-500 dark:text-slate-400">{log.location} • {new Date(log.createdAt).toLocaleString()}</p>
                     </div>
                     <div className="text-right">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${log.status === 'Completed' || log.status === 'Resolved' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}`}>
+                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${log.status === 'Completed' || log.status === 'Resolved' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}`}>
                         {log.verifiedBy}
                       </span>
                     </div>
@@ -325,9 +326,9 @@ export default function AdminDashboard() {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center p-8 text-center bg-slate-50 dark:bg-slate-800/20 rounded-2xl">
+              <div className="flex flex-col items-center justify-center p-8 text-center bg-white dark:bg-slate-800/20 rounded-md">
                 <ShieldAlert className="size-12 text-slate-300 dark:text-slate-700 mb-3" />
-                <h3 className="text-slate-900 dark:text-white text-base font-bold">No Recent Logs</h3>
+                <h3 className="text-slate-900 dark:text-white text-base font-semibold">No Recent Logs</h3>
                 <p className="text-xs text-slate-500">All systems are currently reported as secure.</p>
               </div>
             )}
@@ -338,12 +339,16 @@ export default function AdminDashboard() {
         <div className="space-y-6">
          
 
-          <div className="hidden lg:block bg-white dark:bg-slate-900 rounded-2xl shadow-sm p-8">
-            <h3 className="font-black text-lg uppercase tracking-tight text-slate-900 dark:text-white mb-8">Access Logs</h3>
+          <div className="hidden lg:block bg-slate-100 dark:bg-slate-800/30 rounded-md p-8">
+            <h3 className="font-semibold text-lg uppercase tracking-tight text-slate-900 dark:text-white mb-8">Access Logs</h3>
             <div className="space-y-6">
-              {securityLogs.map((log, index) => (
-                <VisitorItem key={index} name={log.visitor} role={log.type} status={log.verifiedBy} img={log.img} />
-              ))}
+              {visitors.length > 0 ? (
+                visitors.slice(0, 5).map((visitor, index) => (
+                  <VisitorItem key={index} name={visitor.name || visitor.visitor} role={visitor.type || 'Visitor'} status={visitor.status || 'Verified'} img={visitor.img || visitor.image} />
+                ))
+              ) : (
+                <div className="text-center py-4 text-slate-500 text-sm">No recent visitors</div>
+              )}
             </div>
           </div>
         </div>
@@ -364,7 +369,7 @@ export default function AdminDashboard() {
       </div>
 
       <footer className="mt-8 py-8 text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">© 2024 EstateAdmin Portal • Service Status: <span className="text-emerald-500 font-bold uppercase">Optimal</span></p>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-400">© 2024 EstateAdmin Portal • Service Status: <span className="text-emerald-500 font-semibold uppercase">Optimal</span></p>
       </footer>
     </div>
   )

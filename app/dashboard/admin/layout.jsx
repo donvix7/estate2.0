@@ -19,7 +19,8 @@ import {
   Scan,
   Search,
   Menu,
-  Logs
+  Logs,
+  Wrench
 } from 'lucide-react';
 import { getAdminData } from '@/lib/service'
 
@@ -30,6 +31,7 @@ export default function AdminLayout({ children }) {
     { href: '/dashboard/admin/scan', label: 'QR Scanner', icon: Scan },
     { href: '/dashboard/admin/users', label: 'Users', icon: Users },
     { href: '/dashboard/admin/security', label: 'Security Logs', icon: Shield },
+    { href: '/dashboard/admin/service-request', label: 'Service Requests', icon: Wrench },
     { href: '/dashboard/admin/finance', label: 'Finance', icon: Wallet },
     { href: '/dashboard/admin/announcements', label: 'Broadcast', icon: Megaphone },
     { href: '/dashboard/admin/lost_and_found', label: 'Lost & Found', icon: Search },

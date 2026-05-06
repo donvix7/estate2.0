@@ -57,10 +57,11 @@ export default function EmergenciesPage() {
     setIsLoading(true);
     try {
       const data = await getEmergencies();
-      setEmergencies(data.docs);
-      setTotalPages(data.totalPages);
-      setCurrentPage(data.page);
-      setPaginatedEmergencies(data);
+      const docs = data?.docs || [];
+      setEmergencies(docs);
+      setTotalPages(data?.totalPages || 1);
+      setCurrentPage(data?.page || 1);
+      setPaginatedEmergencies(data || { docs: [] });
     } catch (error) {
       console.error('Failed to load emergencies:', error);
     } finally {
@@ -68,11 +69,13 @@ export default function EmergenciesPage() {
     }
   };
 
-  const activeEmergencies = emergencies.filter(e => e.status === 'active');
+  const activeEmergencies = emergencies.filter(e => e.status === 'Pending');
   const securityCount = emergencies.filter(e => e.type?.toLowerCase() === 'security').length;
   const medicalCount = emergencies.filter(e => e.type?.toLowerCase() === 'medical').length;
+  const fireCount = emergencies.filter(e => e.type?.toLowerCase() === 'fire').length;
+  const otherCount = emergencies.filter(e => e.type?.toLowerCase() === 'other').length;
 
-  const filteredEmergencies = emergencies.filter(emg => {
+  const filteredEmergencies = (emergencies || []).filter(emg => {
     return emg.type?.toLowerCase().includes(searchTerm.toLowerCase()) || 
            emg.residentName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
            emg.unit?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -102,21 +105,21 @@ export default function EmergenciesPage() {
         <div className="xl:col-span-2 flex flex-wrap gap-4">
           <button 
             onClick={() => setIsBroadcastModalOpen(true)}
-            className="flex-1 min-w-[200px] h-16 bg-red-500 text-white rounded-xl font-bold flex items-center justify-center gap-3 shadow-lg shadow-red-500/20 hover:brightness-110 transition-all active:scale-95"
+            className="flex-1 min-w-[200px] h-16 bg-red-500 text-white rounded-xl font-bold flex items-center justify-center gap-3 shadow-lg shadow-red-500/20 hover:brightness-110 transition-all active:scale-95 "
           >
             <Radio className="w-6 h-6" />
-            Broadcast Estate Alert
+            Broadcast Alert
           </button>
           <button className="flex-1 min-w-[200px] h-16 bg-amber-500 text-white rounded-xl font-bold flex items-center justify-center gap-3 shadow-lg shadow-amber-500/20 hover:brightness-110 transition-all active:scale-95">
             <Lock className="w-6 h-6" />
             Initiate Lockdown
           </button>
-          <button className="flex-1 min-w-[200px] h-16 bg-primary text-white rounded-xl font-bold flex items-center justify-center gap-3 shadow-lg shadow-primary/20 hover:brightness-110 transition-all active:scale-95">
+          <button className="flex-1 min-w-[200px] h-16 bg-primary dark:text-white rounded-xl font-bold flex items-center justify-center gap-3 shadow-lg shadow-primary/20 hover:brightness-110 transition-all active:scale-95">
             <PhoneCall className="w-6 h-6" />
             Contact Services
           </button>
         </div>
-        <div className="bg-white dark:bg-primary/5 rounded-xl p-4 flex justify-between items-center shadow-sm">
+        <div className="bg-white dark:bg-primary/5 rounded-xl p-4 flex justify-between items-center ">
           <div>
             <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black">Active Alerts</p>
             <p className="text-3xl font-black text-red-500">{activeEmergencies.length < 10 ? `0${activeEmergencies.length}` : activeEmergencies.length}</p>
@@ -130,6 +133,11 @@ export default function EmergenciesPage() {
               <p className="text-[10px] text-slate-500 uppercase font-bold">Medical</p>
               <p className="font-black text-lg">{medicalCount}</p>
             </div>
+            <div className="text-center px-2">
+              <p className="text-[10px] text-slate-500 uppercase font-bold">Fire</p>
+              <p className="font-black text-lg">{fireCount}</p>
+            </div>
+          
           </div>
         </div>
       </div>
@@ -154,7 +162,7 @@ export default function EmergenciesPage() {
             <input 
               type="text"
               placeholder="Filter incidents..."
-              className="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-primary/5 border-none rounded-xl text-xs focus:ring-2 focus:ring-primary/20 transition-all"
+              className="w-full pl-9 pr-4 py-2.5 bg-slate-100 dark:bg-primary/10 border-none rounded-xl text-xs focus:ring-0 transition-all outline-none"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -168,8 +176,8 @@ export default function EmergenciesPage() {
             >
               {filteredEmergencies.map((emg) => (
                 <div 
-                  key={emg.id} 
-                  onClick={() => emg.status === 'active' && setSelectedEmergency(emg)}
+                  key={emg._id || emg.id} 
+                  onClick={() => setSelectedEmergency(emg)}
                   className={`p-4 rounded-xl transition-all shadow-sm flex flex-col cursor-pointer hover:translate-x-1 ${getAlertStyle(emg.type, emg.status)}`}
                 >
                   <div className="flex justify-between items-start mb-2">
@@ -178,7 +186,7 @@ export default function EmergenciesPage() {
                     } text-white`}>
                       {emg.type || 'Emergency'}
                     </span>
-                    <span className="text-[10px] text-slate-500 font-bold">{getTimeAgo(emg.date)}</span>
+                    <span className="text-[10px] text-slate-500 font-bold">{getTimeAgo(new Date(emg.createdAt).getTime())}</span>
                   </div>
                   <h4 className="font-black text-sm">{emg.residentName} - Unit {emg.unit}</h4>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">{emg.description}</p>
@@ -187,11 +195,22 @@ export default function EmergenciesPage() {
                       <Navigation className="w-3 h-3" />
                       Sector {emg.unit?.charAt(0) || 'A'}
                     </div>
-                    <span className={`text-[10px] font-black uppercase tracking-widest ${
+                   <div className="flex flex-col items-center gap-4">
+                     <span className={`text-[10px] font-black uppercase tracking-widest ${
                       emg.status === 'active' ? 'text-red-500' : 'text-emerald-500'
                     }`}>
                       {emg.status}
                     </span>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedEmergency(emg);
+                      }}
+                      className="flex-1 w-fit px-4 py-2 bg-amber-500 text-white text-xs rounded-md flex items-center justify-center gap-3 hover:brightness-110 transition-all active:scale-95"
+                    >
+                      View Details
+                    </button>
+                   </div>
                   </div>
                 </div>
               ))}

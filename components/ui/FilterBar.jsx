@@ -11,7 +11,7 @@ export function FilterBar({
   children
 }) {
   return (
-    <div className="bg-white/90 dark:bg-slate-900/80 rounded-3xl shadow-md p-4 mb-6 flex flex-col sm:flex-row gap-4 border-none items-center justify-between">
+    <div className="bg-slate-100 dark:bg-slate-800/30 rounded-md p-4 mb-6 flex flex-col sm:flex-row gap-4 border-none items-center justify-between">
       
       {/* Optional Left Action Area (Tabs, Toggles) */}
       {children && (
@@ -28,9 +28,9 @@ export function FilterBar({
             placeholder={placeholder}
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full pl-11 pr-4 py-2.5 rounded-xl bg-gray-50 dark:bg-gray-900/50 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all border-none shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)]"
+            className="w-full pl-11 pr-4 py-2.5 rounded-md bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1241a1]/20 transition-all border-none outline-none font-semibold"
           />
-          <Search className="w-5 h-5 text-gray-400 absolute left-4 top-3" />
+          <Search className="w-5 h-5 text-slate-400 absolute left-4 top-3" />
         </div>
       )}
 
@@ -40,7 +40,7 @@ export function FilterBar({
           <select
             value={statusFilter}
             onChange={(e) => onStatusChange(e.target.value)}
-            className="w-full appearance-none px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-gray-900/50 border-none text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)]"
+            className="w-full appearance-none px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 border-none text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1241a1]/20 transition-all cursor-pointer outline-none font-semibold"
           >
             {statusOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -48,7 +48,7 @@ export function FilterBar({
               </option>
             ))}
           </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
             </svg>

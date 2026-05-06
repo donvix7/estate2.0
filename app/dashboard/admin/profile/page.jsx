@@ -75,32 +75,32 @@ export default function AdminProfilePage() {
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700 pb-12">
       {/* Profile Header Card */}
-      <div className="bg-white dark:bg-slate-900 border-none p-8 md:p-10 shadow-sm overflow-hidden relative group rounded-4xl">
+      <div className="bg-slate-100 dark:bg-slate-800/30 p-8 md:p-10 overflow-hidden relative group rounded-md">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#1241a1]/5 rounded-full -mr-32 -mt-32 transition-transform duration-700 group-hover:scale-110"></div>
         <div className="relative flex flex-col md:flex-row gap-8 items-center">
           <div className="relative">
             <div 
-              className="h-32 w-32 rounded-3xl bg-cover bg-center ring-4 ring-[#1241a1]/10 shadow-xl flex items-center justify-center bg-slate-100 dark:bg-slate-800" 
+              className="h-32 w-32 rounded-full bg-cover bg-center flex items-center justify-center bg-white dark:bg-slate-800" 
               style={adminData?.avatar ? { backgroundImage: `url(${adminData?.avatar})` } : {}}
             >
               {!adminData?.avatar && <User className="size-12 text-slate-300" />}
             </div>
-            <button className="absolute bottom-[-10px] right-[-10px] p-2.5 bg-white dark:bg-slate-800 text-[#1241a1] rounded-2xl shadow-xl hover:scale-105 transition-transform border-4 border-slate-50 dark:border-background-dark">
+            <button className="absolute bottom-[-10px] right-[-10px] p-2.5 bg-white dark:bg-slate-800 text-[#1241a1] rounded-2xl shadow-xl hover:scale-105 transition-transform">
               <Camera className="size-4" />
             </button>
           </div>
           
           <div className="flex-1 text-center md:text-left">
-            <h2 className="text-3xl font-black dark:text-white mb-2 tracking-tight flex items-center justify-center md:justify-start gap-3">
+            <h2 className="text-3xl font-bold dark:text-white mb-2 tracking-tight flex items-center justify-center md:justify-start gap-3">
               {adminData?.name}
               {adminData?.estateID && (
-                <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 px-2 py-1 rounded-lg font-black tracking-widest uppercase">
+                <span className="text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-500 px-2 py-1 rounded-md font-semibold tracking-widest uppercase">
                   {adminData.estateID}
                 </span>
               )}
             </h2>
             <div className="flex flex-col md:flex-row gap-2 md:gap-6">
-              <p className="text-slate-500 dark:text-slate-400 flex items-center justify-center md:justify-start gap-2 text-sm font-bold uppercase tracking-widest">
+              <p className="text-slate-500 dark:text-slate-400 flex items-center justify-center md:justify-start gap-2 text-sm font-semibold uppercase tracking-widest">
                 <BadgeCheck className="size-4" /> 
                 {adminData?.role}
               </p>
@@ -114,7 +114,7 @@ export default function AdminProfilePage() {
               {!isEditing ? (
                 <button 
                   onClick={handleEditProfile}
-                  className="px-6 py-2.5 bg-[#1241a1] text-white text-[11px] font-black uppercase tracking-widest rounded-xl hover:brightness-110 transition-all shadow-xl shadow-[#1241a1]/20 active:scale-95"
+                  className="px-6 py-2.5 bg-[#1241a1] text-white text-[11px] font-semibold uppercase tracking-widest rounded-md hover:brightness-110 transition-all active:scale-95 border-none"
                 >
                   Edit Profile
                 </button>
@@ -122,19 +122,19 @@ export default function AdminProfilePage() {
                 <div className="flex gap-3">
                    <button 
                     onClick={handleSaveProfile}
-                    className="px-6 py-2.5 bg-[#1241a1] text-white text-[11px] font-black uppercase tracking-widest rounded-xl hover:brightness-110 transition-all shadow-xl shadow-[#1241a1]/20 active:scale-95"
+                    className="px-6 py-2.5 bg-[#1241a1] text-white text-[11px] font-semibold uppercase tracking-widest rounded-md hover:brightness-110 transition-all active:scale-95 border-none"
                   >
                     {saveStatus === 'saving' ? 'Saving...' : 'Save Changes'}
                   </button>
                    <button 
                     onClick={handleCancelEdit}
-                    className="px-6 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[11px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all active:scale-95"
+                    className="px-6 py-2.5 bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[11px] font-semibold uppercase tracking-widest rounded-md hover:bg-slate-300 dark:hover:bg-slate-700 transition-all active:scale-95 border-none"
                   >
                     Cancel
                   </button>
                 </div>
               )}
-              <button className="px-6 py-2.5 bg-white dark:bg-slate-800 border-none text-slate-700 dark:text-slate-200 text-[11px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm">
+              <button className="px-6 py-2.5 bg-white dark:bg-slate-800 border-none text-slate-700 dark:text-slate-200 text-[11px] font-semibold uppercase tracking-widest rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                 Change Password
               </button>
             </div>
@@ -146,8 +146,8 @@ export default function AdminProfilePage() {
         {/* Left: Info Sections */}
         <div className="lg:col-span-1 space-y-8">
           {/* Admin Information */}
-          <section className="bg-white dark:bg-slate-900 border-none p-8 shadow-sm rounded-4xl">
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#1241a1] mb-8 flex items-center gap-3">
+          <section className="bg-slate-100 dark:bg-slate-800/30 p-8 rounded-md">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1241a1] mb-8 flex items-center gap-3">
               <div className="p-2 rounded-xl bg-[#1241a1]/10 text-[#1241a1]">
                 <ShieldCheck className="size-5" />
               </div>
@@ -161,17 +161,17 @@ export default function AdminProfilePage() {
                 { label: 'Access Level', value: adminData?.accessLevel, name: 'accessLevel' },
                 { label: 'Joining Date', value: adminData?.joiningDate, name: 'joiningDate' }
               ].map((item, idx) => (
-                <div key={idx} className={`flex flex-col gap-1.5 ${idx !== 3 ? 'border-b border-slate-50 dark:border-slate-900/50 pb-5' : ''}`}>
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{item.label}</span>
+                <div key={idx} className={`flex flex-col gap-1.5 ${idx !== 3 ? 'pb-5' : ''}`}>
+                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">{item.label}</span>
                   {isEditing && item.name ? (
                      <input 
                         name={item.name}
                         value={editForm[item.name] || ''}
                         onChange={handleInputChange}
-                        className="bg-slate-50 dark:bg-slate-800/50 border-none rounded-lg p-2 text-sm font-bold focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-slate-900 dark:text-white"
+                        className="bg-white dark:bg-slate-900 border-none rounded-lg p-2 text-sm font-semibold focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-slate-900 dark:text-white"
                      />
                   ) : (
-                    <span className="text-sm font-black text-slate-900 dark:text-slate-200">{item.value}</span>
+                    <span className="text-sm font-semibold text-slate-900 dark:text-slate-200">{item.value}</span>
                   )}
                 </div>
               ))}
@@ -179,8 +179,8 @@ export default function AdminProfilePage() {
           </section>
 
           {/* System Settings */}
-          <section className="bg-white dark:bg-slate-900 border-none p-8 shadow-sm rounded-4xl">
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#1241a1] mb-8 flex items-center gap-3">
+          <section className="bg-slate-100 dark:bg-slate-800/30 p-8 rounded-md">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1241a1] mb-8 flex items-center gap-3">
               <div className="p-2 rounded-xl bg-[#1241a1]/10 text-[#1241a1]">
                 <Settings2 className="size-5" />
               </div>
@@ -195,10 +195,10 @@ export default function AdminProfilePage() {
               ].map((setting, idx) => (
                 <div key={idx} className="flex items-center justify-between group cursor-pointer">
                   <div className="flex flex-col">
-                    <span className="text-[13px] font-black text-slate-900 dark:text-white group-hover:text-[#1241a1] transition-colors">{setting.title}</span>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">{setting.desc}</span>
+                    <span className="text-[13px] font-semibold text-slate-900 dark:text-white group-hover:text-[#1241a1] transition-colors">{setting.title}</span>
+                    <span className="text-[10px] font-medium text-slate-500 uppercase tracking-tight">{setting.desc}</span>
                   </div>
-                  <div className={`w-10 h-5 rounded-full relative transition-colors ${setting.active ? 'bg-[#1241a1]' : 'bg-slate-200 dark:bg-slate-700'}`}>
+                  <div className={`w-10 h-5 rounded-full relative transition-colors ${setting.active ? 'bg-[#1241a1]' : 'bg-slate-300 dark:bg-slate-700'}`}>
                     <div className={`absolute top-1 h-3 w-3 bg-white rounded-full transition-all ${setting.active ? 'right-1' : 'left-1'}`}></div>
                   </div>
                 </div>
@@ -209,18 +209,18 @@ export default function AdminProfilePage() {
 
         {/* Right: Activity Timeline */}
         <div className="lg:col-span-2">
-          <section className="bg-white dark:bg-slate-900 border-none p-8 shadow-sm h-full rounded-4xl">
+          <section className="bg-slate-100 dark:bg-slate-800/30 p-8 h-full rounded-md">
             <div className="flex items-center justify-between mb-10">
-              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#1241a1] flex items-center gap-3">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1241a1] flex items-center gap-3">
                 <div className="p-2 rounded-xl bg-[#1241a1]/10 text-[#1241a1]">
                   <History className="size-5" />
                 </div>
                 Administrative Logs
               </h3>
-              <button className="text-[11px] font-black uppercase tracking-widest text-[#1241a1] hover:underline">View Full Audit</button>
+              <button className="text-[11px] font-semibold uppercase tracking-widest text-[#1241a1] hover:underline">View Full Audit</button>
             </div>
             
-            <div className="space-y-10 relative before:absolute before:inset-0 before:ml-6 before:-translate-x-px before:h-full before:w-0.5 before:bg-linear-to-b before:from-slate-100 before:via-slate-200 before:to-transparent dark:before:from-slate-800 dark:before:via-slate-800">
+            <div className="space-y-10 relative before:absolute before:inset-0 before:ml-6 before:-translate-x-px before:h-full before:w-0.5 before:bg-linear-to-b before:from-white before:via-white/50 before:to-transparent dark:before:from-slate-800 dark:before:via-slate-800">
               {[
                 { icon: ShieldCheck, title: 'System Approval', time: '45m ago', desc: 'Approved visitor registration for Block A - House 42B', status: 'Completed', statusColor: 'emerald' },
                 { icon: ShieldAlert, title: 'Emergency Coordination', time: '2h ago', desc: 'Coordinated response for Medical Alert #9012 at West Gate', iconType: 'emergency' },
@@ -228,7 +228,7 @@ export default function AdminProfilePage() {
                 { icon: UserPlus, title: 'New Staff Onboarding', time: '3 days ago', desc: 'Approved access for 2 new service worker profiles', status: 'Verified', statusColor: 'blue' }
               ].map((activity, idx) => (
                 <div key={idx} className="relative flex items-start gap-8 group">
-                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ring-8 ring-white dark:ring-slate-900 shadow-lg z-10 transition-transform group-hover:scale-110 ${
+                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-lg z-10 transition-transform group-hover:scale-110 ${
                     activity.iconType === 'emergency' ? 'bg-red-500/10 text-red-500' : 'bg-[#1241a1]/10 text-[#1241a1]'
                   }`}>
                     <activity.icon className="size-6" />
@@ -236,13 +236,13 @@ export default function AdminProfilePage() {
                   
                   <div className="flex-1 pt-1 text-left">
                     <div className="flex items-center justify-between mb-1">
-                      <p className="text-sm font-black dark:text-white uppercase tracking-tight">{activity.title}</p>
-                      <time className="text-[10px] font-bold text-slate-400 italic">{activity.time}</time>
+                      <p className="text-sm font-semibold dark:text-white uppercase tracking-tight">{activity.title}</p>
+                      <time className="text-[10px] font-medium text-slate-400 italic">{activity.time}</time>
                     </div>
                     <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">{activity.desc}</p>
                     
                     {activity.status && (
-                      <span className={`mt-3 inline-flex items-center px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${
+                      <span className={`mt-3 inline-flex items-center px-3 py-1 rounded-md text-[9px] font-semibold uppercase tracking-widest ${
                         activity.statusColor === 'emerald' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-[#1241a1]/10 text-[#1241a1]'
                       }`}>
                         {activity.status}

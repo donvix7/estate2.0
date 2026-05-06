@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { ShieldCheck, Plus, Users } from 'lucide-react'
 import AddStaffForm from '@/components/resident/AddStaffForm'
 import { BackButton } from '@/components/ui/BackButton'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 export default function ResidentStaffPage() {
   const [showAddForm, setShowAddForm] = useState(false)
@@ -10,23 +11,23 @@ export default function ResidentStaffPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-        <BackButton fallbackRoute="/dashboard/resident" label="Back to Dashboard" />
-        {/* Header Section */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white font-heading">Domestic Staff</h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage registration for your maids, drivers, and other household staff.</p>
-            </div>
-            {!showAddForm && (
-                <button 
-                    onClick={() => setShowAddForm(true)}
-                    className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-lg shadow-blue-500/20 active:scale-[0.98]"
-                >
-                    <Plus className="w-5 h-5" />
-                    Add New Staff
-                </button>
-            )}
-        </div>
+        <PageHeader 
+          title="Domestic Staff" 
+          description="Manage registration for your maids, drivers, and other household staff."
+          icon={Users}
+          iconColor="blue"
+        >
+          {!showAddForm && (
+            <button 
+                onClick={() => setShowAddForm(true)}
+                className="flex items-center justify-center gap-2 bg-[#1241a1] hover:brightness-110 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-lg shadow-[#1241a1]/20 active:scale-[0.98] border-none"
+            >
+                <Plus className="w-5 h-5" />
+                Add New Staff
+            </button>
+          )}
+          <BackButton fallbackRoute="/dashboard/resident" label="Back" />
+        </PageHeader>
 
         {/* Content Area */}
         {showAddForm ? (

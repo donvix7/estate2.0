@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { 
@@ -20,24 +20,21 @@ import {
   Info,
   Camera
 } from 'lucide-react';
+import { handleCreateUser } from '@/lib/action';
+import { getCurrentSession, getEstateData } from '@/lib/service';
 
-const mockAPI = {
-  async addProfile(profile) {
-    console.log('Adding profile:', profile);
-    return { success: true };
-  }
-};
+
 
 export default function AddUserPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const [estateId, setEstateId] = useState("unknown")
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     phone: '',
-    estateID: 'EST-001', // Defaulting to a placeholder as per example
+    estateID: '', // Defaulting to a placeholder as per example
     unit: '',
     role: '',
     department: '',
@@ -55,12 +52,22 @@ export default function AddUserPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+   useEffect(() => {
+    const fetchEstateId = async () => {
+      const estate = await getEstateData();
+      const estateId = estate?._id;
+        setEstateId(estateId);
+    };
+
+    fetchEstateId();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.password) {
-      toast.error('Missing required identity credentials');
-      return;
-    }
+
+
+
+
     
     // Exact payload structure as requested
     const payload = {
@@ -68,13 +75,13 @@ export default function AddUserPage() {
       password: formData.password,
       name: formData.name,
       phone: formData.phone,
-      estateID: formData.estateID,
+      estateID: estateId,
       unit: formData.unit
     };
     
     setIsSubmitting(true);
     try {
-      const result = await mockAPI.addProfile(payload);
+      const result = await handleCreateUser(payload);
       if (result.success) {
         toast.success('Profile created successfully');
         router.push('/dashboard/admin/users');
@@ -197,9 +204,8 @@ export default function AddUserPage() {
                       <input
                         type="text"
                         name="estateID"
-                        value={formData.estateID}
-                        onChange={handleInputChange}
-                        placeholder="EST-001"
+                        value={estateId}
+                        disabled
                         className="w-full px-4 py-3 rounded-lg border-none bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 focus:border-[#1241a1] outline-none transition-all font-medium"
                       />
                     </div>

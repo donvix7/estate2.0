@@ -16,6 +16,8 @@ import {
   ArrowRight 
 } from 'lucide-react';
 import { submitMaintenanceRequest } from '@/lib/action';
+import { getResidentData } from '@/lib/service';
+import { useEffect } from 'react';
 
 const CATEGORIES = [
   'Select category',
@@ -54,6 +56,15 @@ export default function NewMaintenanceRequestPage() {
   const [previews, setPreviews] = useState([])
   const [dragging, setDragging] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [residentData, setResidentData] = useState(null)
+
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await getResidentData();
+      if (data) setResidentData(data);
+    };
+    loadData();
+  }, []);
 
   const handleChange = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
@@ -82,21 +93,23 @@ export default function NewMaintenanceRequestPage() {
 
     setSubmitting(true)
     
-    // Map form to db.json schema
+    // Map form to requested schema
     const payload = {
-      id: `#MN-${Math.floor(1000 + Math.random() * 9000)}`,
-      issue: form.category,
-      subtitle: form.description.length > 50 ? form.description.substring(0, 50) + '...' : form.description,
-      desc: form.description,
-      location: 'Block A – Apt 101', // Should ideally come from user profile/session
+      title: form.category,
+      type: "maintenance",
+      category: form.category,
+      icon: `${form.category.toLowerCase().split(' ')[0]}_icon`,
+      status: "Pending",
       priority: form.urgency.charAt(0).toUpperCase() + form.urgency.slice(1),
-      status: 'Pending',
-      date: form.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      desc: form.description,
+      residentId: residentData?._id || residentData?.id || "RES-123",
+      serviceWorkerId: "",
       timeline: [
         { label: 'Reported', time: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }), done: true },
+        { label: 'Preferred Window', time: form.timeWindow, done: false },
         { label: 'Pending', time: 'Awaiting assignment', done: false, current: true }
       ],
-      technician: null
+      estateID: residentData?.estateID || "EST-001"
     }
 
     try {

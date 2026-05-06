@@ -10,6 +10,7 @@ import { FilterBar } from '@/components/ui/FilterBar';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
 import { toast } from 'react-toastify';
 import { getInvoices, getTransactions } from '@/lib/service';
+import { LoadingState } from '@/components/ui/LoadingState';
 
 export default function FinancePage() {
   const [invoices, setInvoices] = useState([]);
@@ -63,7 +64,7 @@ export default function FinancePage() {
         iconColor="green"
       >
         <button 
-          className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl font-medium shadow-[0_4px_24px_rgba(34,197,94,0.25)] transition-all active:scale-95 border-none"
+          className="flex items-center gap-2 bg-[#1241a1] hover:brightness-110 text-white px-5 py-2.5 rounded-md font-semibold transition-all active:scale-95 border-none"
           onClick={() => toast.info("Select a booking or service from the directory to issue an invoice.")}
         >
           <CopyPlus className="w-5 h-5" />
@@ -99,12 +100,12 @@ export default function FinancePage() {
         onSearchChange={setSearchTerm}
         placeholder={`Search ${activeTab}...`}
       >
-        <div className="flex p-1 bg-gray-100 dark:bg-gray-900/50 rounded-xl w-auto overflow-x-auto">
+        <div className="flex p-1 bg-slate-100 dark:bg-gray-900/50 rounded-md w-auto overflow-x-auto">
           <button
             onClick={() => setActiveTab('invoices')}
-            className={`flex-1 md:flex-none px-6 py-2.5 rounded-lg font-medium text-sm whitespace-nowrap transition-colors border-none ${
+            className={`flex-1 md:flex-none px-6 py-2.5 rounded-md font-semibold text-sm whitespace-nowrap transition-all border-none ${
               activeTab === 'invoices' 
-                ? 'bg-white dark:bg-slate-800 text-gray-900 dark:text-white shadow-md' 
+                ? 'bg-[#1241a1] text-white' 
                 : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >
@@ -112,9 +113,9 @@ export default function FinancePage() {
           </button>
           <button
             onClick={() => setActiveTab('transactions')}
-            className={`flex-1 md:flex-none px-6 py-2.5 rounded-lg font-medium text-sm whitespace-nowrap transition-colors border-none ${
+            className={`flex-1 md:flex-none px-6 py-2.5 rounded-md font-semibold text-sm whitespace-nowrap transition-all border-none ${
               activeTab === 'transactions' 
-                ? 'bg-white dark:bg-slate-800 text-gray-900 dark:text-white shadow-md' 
+                ? 'bg-[#1241a1] text-white' 
                 : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >
@@ -124,17 +125,23 @@ export default function FinancePage() {
       </FilterBar>
 
       {/* Data Section */}
-      <DataStateLayout 
-        isLoading={isLoading} 
-        error={null} 
-        hasData={filteredData.length > 0}
-        emptyStateMessage={`No ${activeTab} match your current filters.`}
-      >
-        <FinanceTable 
-          items={filteredData}
-          type={activeTab}
-        />
-      </DataStateLayout>
+      {isLoading ? (
+        <div className="py-20">
+          <LoadingState message="Processing Financial Data..." />
+        </div>
+      ) : (
+        <DataStateLayout 
+          isLoading={false} 
+          error={null} 
+          hasData={filteredData.length > 0}
+          emptyStateMessage={`No ${activeTab} match your current filters.`}
+        >
+          <FinanceTable 
+            items={filteredData}
+            type={activeTab}
+          />
+        </DataStateLayout>
+      )}
     </div>
   );
 }

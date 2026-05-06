@@ -43,12 +43,12 @@ export default function ServiceWorkersTable({ workers, onRowClick }) {
     <>
       <td className="px-6 py-4">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-700 dark:text-blue-400 font-bold text-lg shrink-0">
+          <div className="w-10 h-10 rounded-md bg-blue-50 dark:bg-blue-900/50 flex items-center justify-center text-blue-700 dark:text-blue-400 font-semibold text-lg shrink-0 transition-colors group-hover:bg-[#1241a1] group-hover:text-white">
             {worker.name.charAt(0)}
           </div>
           <div>
             <div className="font-semibold text-gray-900 dark:text-white">{worker.name}</div>
-            <div className="text-xs text-gray-500 font-mono mt-0.5">{worker.employeeId}</div>
+            <div className="text-xs text-gray-500 font-mono mt-0.5 font-medium">{worker.employeeId}</div>
           </div>
         </div>
       </td>
@@ -58,15 +58,15 @@ export default function ServiceWorkersTable({ workers, onRowClick }) {
           <Briefcase className="w-4 h-4 text-gray-400" />
           {worker.role}
         </div>
-        <div className="text-sm text-gray-500 mt-1">{worker.department}</div>
+        <div className="text-sm text-gray-500 mt-1">{worker.title}</div>
       </td>
       
       <td className="px-6 py-4 space-y-1">
-        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 font-medium">
           <Phone className="w-3.5 h-3.5" />
           {worker.phone}
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 font-medium">
           <Mail className="w-3.5 h-3.5" />
           <span className="truncate max-w-[150px]" title={worker.email}>{worker.email}</span>
         </div>
@@ -86,15 +86,15 @@ export default function ServiceWorkersTable({ workers, onRowClick }) {
   );
 
   const renderMobileItem = (worker) => (
-    <div className="flex flex-col gap-4">
+    <div className="group flex flex-col gap-4">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-700 dark:text-blue-400 font-bold text-xl shrink-0">
+          <div className="w-12 h-12 rounded-md bg-blue-50 dark:bg-blue-900/50 flex items-center justify-center text-blue-700 dark:text-blue-400 font-semibold text-xl shrink-0 transition-colors group-hover:bg-[#1241a1] group-hover:text-white">
             {worker.name.charAt(0)}
           </div>
           <div>
-            <h3 className="font-bold text-gray-900 dark:text-white text-base">{worker.name}</h3>
-            <p className="text-sm text-gray-500 flex items-center gap-1.5 mt-0.5">
+            <h3 className="font-semibold text-gray-900 dark:text-white text-base">{worker.name}</h3>
+            <p className="text-sm text-gray-500 font-medium flex items-center gap-1.5 mt-0.5">
               <Briefcase className="w-3.5 h-3.5" /> {worker.role}
             </p>
           </div>
@@ -104,18 +104,18 @@ export default function ServiceWorkersTable({ workers, onRowClick }) {
         </div>
       </div>
       
-      <div className="grid grid-cols-2 gap-y-3 gap-x-4 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg text-sm">
+      <div className="grid grid-cols-2 gap-y-3 gap-x-4 bg-slate-100 dark:bg-gray-800/50 p-3 rounded-md text-sm">
         <div>
-          <span className="text-gray-500 text-xs block mb-1">Department</span>
-          <span className="font-medium text-gray-900 dark:text-gray-100">{worker.department}</span>
+          <span className="text-gray-500 text-xs block mb-1 font-semibold">Department</span>
+          <span className="font-semibold text-gray-900 dark:text-gray-100">{worker.department}</span>
         </div>
         <div>
-          <span className="text-gray-500 text-xs block mb-1">Shift</span>
-          <span className="font-medium text-gray-900 dark:text-gray-100 truncate flex items-center gap-1" title={worker.shift}>
+          <span className="text-gray-500 text-xs block mb-1 font-semibold">Shift</span>
+          <span className="font-semibold text-gray-900 dark:text-gray-100 truncate flex items-center gap-1" title={worker.shift}>
              <Clock className="w-3.5 h-3.5" /> {worker.shift.split(' (')[0]}
           </span>
         </div>
-        <div className="col-span-2 space-y-1.5 pt-3 mt-1">
+        <div className="col-span-2 space-y-1.5 pt-3 mt-1 font-medium">
           <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
             <Phone className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">{worker.phone}</span>

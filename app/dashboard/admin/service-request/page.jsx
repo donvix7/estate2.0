@@ -1,14 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Wrench, Search } from 'lucide-react';
+import { Wrench, Users } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { api } from '@/services/api';
 import ServicesTable from '@/components/admin/ServicesTable';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { FilterBar } from '@/components/ui/FilterBar';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
+import { getAllServiceRequests } from '@/lib/service';
 
 export default function ServicesPage() {
+  const router = useRouter();
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,8 +24,8 @@ export default function ServicesPage() {
   const loadRequests = async () => {
     setIsLoading(true);
     try {
-      const data = await api.getServiceRequests();
-      setRequests(data);
+      const data = await getAllServiceRequests();
+      setRequests(data.docs);
     } catch (error) {
       console.error('Failed to load service requests:', error);
     } finally {
@@ -31,12 +34,15 @@ export default function ServicesPage() {
   };
 
   const filteredRequests = requests.filter(req => {
+    const searchStr = searchTerm.toLowerCase();
     const matchesSearch = 
-      req.residentName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      req.serviceType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      req.description.toLowerCase().includes(searchTerm.toLowerCase());
+      (req.residentName || '').toLowerCase().includes(searchStr) || 
+      (req.residentId || '').toLowerCase().includes(searchStr) || 
+      (req.type || req.category || '').toLowerCase().includes(searchStr) ||
+      (req.desc || req.description || '').toLowerCase().includes(searchStr);
     
-    const matchesStatus = statusFilter === 'all' || req.status === statusFilter;
+    const matchesStatus = statusFilter === 'all' || 
+      (req.status || 'pending').toLowerCase() === statusFilter.toLowerCase();
     
     return matchesSearch && matchesStatus;
   });
@@ -58,7 +64,15 @@ export default function ServicesPage() {
         description="Manage and track resident maintenance and service requests."
         icon={Wrench}
         iconColor="blue"
-      />
+      >
+        <button 
+          onClick={() => router.push('/dashboard/admin/service_workers')}
+          className="flex items-center gap-2 bg-[#1241a1] hover:brightness-110 text-white px-5 py-2.5 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-[#1241a1]/20 border-none"
+        >
+          <Users className="size-4" />
+          Service Workers
+        </button>
+      </PageHeader>
 
       {/* Toolbar */}
       <FilterBar 

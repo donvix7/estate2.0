@@ -24,6 +24,9 @@ import {
 } from 'lucide-react'
 import { WalletCard } from '@/components/resident/WalletCard'
 import { getActiveBills, getServiceRequests, getRecentTransactions, getResidentTransactions } from '@/lib/service'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { LoadingState } from '@/components/ui/LoadingState'
+import { BackButton } from '@/components/ui/BackButton'
 
 const ICONS = {
   Cloud,
@@ -45,6 +48,7 @@ export default function FinancePage() {
   const [recentTransactions, setRecentTransactions] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [isLoading, setIsLoading] = useState(true)
+  const [selectedTx, setSelectedTx] = useState(null)
   const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
@@ -73,14 +77,16 @@ export default function FinancePage() {
     loadData()
   }, [])
 
+  if (isLoading) {
+    return <LoadingState message="Auditing Financial Records..." />
+  }
+
   const totalPages = Math.ceil(recentTransactions.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedTransactions = recentTransactions.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   const TOTAL_OUTSTANDING = activeBills.reduce((s, b) => s + b.amount, 0)
   const formatNGN = (n) => `$${n.toLocaleString('en-US', { minimumFractionDigits: 2 })}`
-
-  const [selectedTx, setSelectedTx] = useState(null)
 
   const handleDownloadReport = () => {
     const headers = "Date,Description,Amount,Status\n"
@@ -106,32 +112,25 @@ export default function FinancePage() {
     <div className="min-h-screen bg-[#f6f6f8] dark:bg-[#111621]">
       <div className="max-w-6xl mx-auto px-6 lg:px-8 py-8 space-y-10">
 
-        {/* ── Header ── */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-3">
-              <Link href="/dashboard/resident" className="hover:text-[#1241a1] transition-colors">Dashboard</Link>
-              <ChevronRight className="size-4" />
-              <span className="text-[#1241a1] font-semibold">Bills &amp; Invoices</span>
-            </div>
-            <h2 className="text-3xl font-black tracking-tight">Bills &amp; Invoices</h2>
-            <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">Manage your property payments and view transaction history.</p>
-          </div>
-
-          {/* Outstanding summary + Pay All */}
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-xl flex items-center justify-between gap-8 shadow-sm min-w-[300px]">
+        <PageHeader 
+          title="Bills & Invoices" 
+          description="Manage your property payments and view transaction history."
+          icon={Receipt}
+          iconColor="blue"
+        >
+          <div className="bg-slate-100 dark:bg-slate-800/30 p-6 rounded-md flex items-center justify-between gap-8 min-w-[300px]">
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Total Outstanding</p>
-              <p className="text-3xl font-black text-slate-900 dark:text-white">{formatNGN(TOTAL_OUTSTANDING)}</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Total Outstanding</p>
+              <p className="text-3xl font-semibold text-slate-900 dark:text-white">{formatNGN(TOTAL_OUTSTANDING)}</p>
             </div>
             <Link
               href="/dashboard/resident/finance/checkout"
-              className="bg-[#1241a1] hover:bg-[#1241a1]/90 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg shadow-[#1241a1]/20 whitespace-nowrap"
+              className="bg-[#1241a1] hover:brightness-110 text-white px-6 py-2.5 rounded-md font-semibold text-sm transition-all whitespace-nowrap"
             >
               Pay All
             </Link>
           </div>
-        </div>
+        </PageHeader>
 
         {/* Wallet Card */}
         <WalletCard />
@@ -146,31 +145,30 @@ export default function FinancePage() {
             {activeBills.map(bill => (
               <div
                 key={bill.id}
-                className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden hover:shadow-md transition-all group"
+                className="bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden transition-all group"
               >
                 {/* Bill image / icon area */}
-                <div className="h-32 w-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center relative">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${bill.gradientFrom} to-transparent`} />
+                <div className="h-32 w-full bg-white dark:bg-slate-900 flex items-center justify-center relative">
                   {(() => {
                     const BillIcon = ICONS[bill.icon] || Building2
-                    return <BillIcon className={`size-10 relative z-10 ${bill.iconColor}`} />
+                    return <BillIcon className={`size-10 relative z-10 transition-colors group-hover:text-[#1241a1] ${bill.iconColor}`} />
                   })()}
                 </div>
                 <div className="p-5">
                   <div className="flex justify-between items-start mb-3">
-                    <h4 className="font-bold text-base">{bill.name}</h4>
-                    <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${bill.dueClass}`}>{bill.due}</span>
+                    <h4 className="font-semibold text-base">{bill.name}</h4>
+                    <span className={`px-2 py-1 rounded-full text-[10px] font-semibold uppercase ${bill.dueClass}`}>{bill.due}</span>
                   </div>
-                  <p className="text-2xl font-black mb-4">{formatNGN(bill.amount)}</p>
+                  <p className="text-2xl font-semibold mb-4">{formatNGN(bill.amount)}</p>
                   {bill.clickable ? (
                     <Link
                       href="/dashboard/resident/finance/checkout"
-                      className="block w-full text-center py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-[#1241a1] hover:text-white dark:hover:bg-[#1241a1] font-bold text-sm transition-all shadow-sm"
+                      className="block w-full text-center py-2.5 rounded-md bg-white dark:bg-slate-900 text-[#1241a1] hover:bg-[#1241a1] hover:text-white font-semibold text-sm transition-all"
                     >
                       Pay Now
                     </Link>
                   ) : (
-                    <div className="w-full text-center py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 font-bold text-sm border border-emerald-100 dark:border-emerald-800/50">
+                    <div className="w-full text-center py-2.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold text-sm">
                       Paid
                     </div>
                   )}
@@ -195,32 +193,32 @@ export default function FinancePage() {
               Download PDF Report
             </button>
           </div>
-          <div className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm">
+          <div className="bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden">
             {/* Desktop Table */}
             <table className="w-full text-left hidden md:table">
               <thead>
                 <tr className="bg-slate-50 dark:bg-slate-800/50">
                   {['Date', 'Description', 'Amount', 'Status', ''].map(h => (
-                    <th key={h} className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{h}</th>
+                    <th key={h} className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody className="divide-y-0">
                 {paginatedTransactions.map((tx, i) => (
-                  <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                  <tr key={i} className="group hover:bg-white dark:hover:bg-slate-800 transition-all">
                     
-                    <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">{tx.date}</td>
-                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{tx.description}</td>
-                    <td className={`px-6 py-4 text-sm font-bold ${tx.amountClass || ''}`}>{tx.amount}</td>
+                    <td className="px-6 py-4 text-sm font-semibold whitespace-nowrap">{tx.date}</td>
+                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">{tx.description}</td>
+                    <td className={`px-6 py-4 text-sm font-semibold ${tx.amountClass || ''}`}>{tx.amount}</td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${tx.statusClass}`}>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${tx.statusClass}`}>
                         {tx.status}
                       </span>
                     </td>
                     <td className="px-6 py-4">
                       <button 
                         onClick={() => setSelectedTx(tx)}
-                        className="text-slate-400 hover:text-[#1241a1] transition-colors"
+                        className="text-slate-400 group-hover:text-[#1241a1] transition-colors"
                       >
                         <Receipt className="size-5" />
                       </button>
@@ -233,21 +231,21 @@ export default function FinancePage() {
             {/* Mobile Card List */}
             <div className="md:hidden flex flex-col gap-4">
               {paginatedTransactions.map((tx, i) => (
-                <div key={i} className="p-4 flex flex-col gap-3 rounded-xl">
+                <div key={i} className="group p-4 flex flex-col gap-3 rounded-md hover:bg-white dark:hover:bg-slate-800 transition-all">
                   <div className="flex justify-between items-start">
                     <div className="flex flex-col">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{tx.date}</span>
-                      <span className="text-sm font-bold text-slate-900 dark:text-white mt-0.5">{tx.description}</span>
+                      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{tx.date}</span>
+                      <span className="text-sm font-semibold text-slate-900 dark:text-white mt-0.5">{tx.description}</span>
                     </div>
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${tx.statusClass}`}>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${tx.statusClass}`}>
                       {tx.status}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className={`text-lg font-black ${tx.amountClass || 'text-slate-900 dark:text-white'}`}>{tx.amount}</span>
+                    <span className={`text-lg font-semibold ${tx.amountClass || 'text-slate-900 dark:text-white'}`}>{tx.amount}</span>
                     <button 
                       onClick={() => setSelectedTx(tx)}
-                      className="flex items-center gap-2 text-[#1241a1] font-bold text-xs bg-[#1241a1]/5 px-3 py-1.5 rounded-lg"
+                      className="flex items-center gap-2 text-[#1241a1] font-semibold text-xs bg-white dark:bg-slate-900 px-3 py-1.5 rounded-md hover:bg-[#1241a1] hover:text-white transition-all"
                     >
                       <Receipt className="size-4" />
                       Receipt

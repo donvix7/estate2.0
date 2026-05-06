@@ -20,7 +20,7 @@ import {
   MessageSquare, 
   UserCircle 
 } from 'lucide-react';
-import { getAnnouncements, getCurrentSession, getUserById } from '@/lib/service'
+import { getAnnouncements, getCurrentSession, getResidentData, getUserById } from '@/lib/service'
 
 export default function ResidentLayout({ children }) {
   const pathname = usePathname();
@@ -63,36 +63,26 @@ export default function ResidentLayout({ children }) {
   ];
 
   const [userData, setUserData] = useState(null);
-  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const loadUserData = async () => {
-      const data = await getCurrentSession();
+      const data = await getResidentData();
       setUserData(data);
     };
 
     loadUserData();
-  
 
   }, []);
-  useEffect(() => {
-    const loadUser = async () => {
-      const user = await getUserById(userData?.userId);
-      setUser(user);
-    };
-    loadUser();
-  }, [userData]);
-
   return (
     <div className="min-h-screen bg-background-light dark:bg-gray-900 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 flex flex-col lg:flex-row">
       {/* Sidebar Navigation */}
-      <DashboardSidebar links={residentLinks} user={user} role="resident" estateName="Lekki Phase 1" />
+      <DashboardSidebar links={residentLinks} user={userData} role="resident" estateName={userData?.estateID} />
       
       <div className="flex flex-col flex-1 min-w-0 h-screen overflow-y-scroll">
         <div className="hidden lg:block">
-          <DashboardHeader userName={user?.name} estateName="Elite Towers" />
+          <DashboardHeader userName={userData?.name} estateName={userData?.estateID} />
         </div>
-        <DashboardMobileNav links={residentLinks} user={user} role="resident" estateName="Elite Towers" />
+        <DashboardMobileNav links={residentLinks} user={userData} role="resident" estateName={userData?.estateID} />
 
         {/* Page Content */}
         <main className="flex-1 overflow-y-auto p-3 lg:p-8 pb-32 lg:pb-8">

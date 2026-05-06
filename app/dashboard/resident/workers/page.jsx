@@ -23,6 +23,7 @@ import {
 import { getWorkers, getResidentData } from '@/lib/service';
 import { bookService } from '@/lib/action';
 import { toast } from 'react-toastify';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 const CATEGORIES = [
   { id: 'all',         label: 'All Services',  icon: Briefcase },
@@ -86,9 +87,10 @@ export default function WorkersDirectoryPage() {
       status: 'Scheduled',
       statusColor: 'bg-slate-400',
       iconColor: showBook.category === 'plumbing' ? 'text-blue-500' : 'text-slate-500',
-      workerId: showBook.id,
+      workerId: showBook.id || showBook._id,
       workerName: showBook.name,
-      residentId: residentData?.id || 'RES-005'
+      residentId: residentData?.id || residentData?._id || 'RES-005',
+      estateID: showBook.estateID || 'EST-001'
     }
 
     try {
@@ -116,24 +118,18 @@ export default function WorkersDirectoryPage() {
   return (
     <div className="flex flex-col gap-0 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
 
-      {/* ── Page Header ── */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-        <div>
-          <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-2">
-            <Link href="/dashboard/resident" className="hover:text-[#1241a1] transition-colors">Dashboard</Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-[#1241a1] font-semibold">Estate Services</span>
-          </div>
-          <h2 className="text-3xl font-black tracking-tight">Estate Services Directory</h2>
-          <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
-            Browse verified professionals for all your estate maintenance needs.
-          </p>
-        </div>
-        <button className="bg-[#1241a1] text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-[#1241a1]/90 transition-colors shadow-lg shadow-[#1241a1]/20 self-start md:self-auto">
-          <Plus className="w-5 h-5" />
+      {/* Page Header */}
+      <PageHeader 
+        title="Estate Services Directory" 
+        description="Browse verified professionals for all your estate maintenance needs."
+        icon={Briefcase}
+        iconColor="blue"
+      >
+        <button className="bg-[#1241a1] text-white px-5 py-2.5 rounded-md text-sm font-bold flex items-center gap-2 hover:bg-[#1241a1]/90 transition-colors shadow-lg shadow-[#1241a1]/20 whitespace-nowrap">
+          <Plus className="size-4" />
           Post a Job
         </button>
-      </div>
+      </PageHeader>
 
       {/* ── Category Tabs ── */}
       <div className="flex gap-2 overflow-x-auto pb-1 mb-6 scrollbar-hide">
@@ -144,7 +140,7 @@ export default function WorkersDirectoryPage() {
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
               activeCategory === cat.id
                 ? 'bg-[#1241a1] text-white shadow-lg shadow-[#1241a1]/20'
-                : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400'
+                : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 rounded-md'
             }`}
           >
             <cat.icon className="w-4 h-4" />
@@ -154,7 +150,7 @@ export default function WorkersDirectoryPage() {
       </div>
 
       {/* ── Search + Filters ── */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 mb-6 flex flex-col md:flex-row gap-4 shadow-sm">
+      <div className="bg-slate-100 dark:bg-slate-800/30 rounded-md p-4 mb-6 flex flex-col md:flex-row gap-4">
         <div className="flex-1 relative">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
           <input
@@ -162,7 +158,7 @@ export default function WorkersDirectoryPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search by name, skill, or keyword..."
-            className="w-full bg-slate-50 dark:bg-slate-800 rounded-xl py-2.5 pl-11 pr-4 text-sm focus:ring-2 focus:ring-[#1241a1]/30 outline-none transition-all"
+            className="w-full bg-white dark:bg-slate-900 rounded-md py-2.5 pl-11 pr-4 text-sm focus:ring-2 focus:ring-[#1241a1]/30 outline-none transition-all"
           />
         </div>
         <div className="flex items-center gap-2 flex-wrap">
@@ -174,10 +170,10 @@ export default function WorkersDirectoryPage() {
             <button
               key={f.key}
               onClick={() => toggleFilter(f.key)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all whitespace-nowrap ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-[11px] font-semibold uppercase tracking-widest transition-all whitespace-nowrap ${
                 filters[f.key]
                   ? 'bg-[#1241a1] text-white'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                  : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'
               }`}
             >
               <f.icon className="w-4 h-4" />
@@ -204,14 +200,14 @@ export default function WorkersDirectoryPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filtered.map(worker => (
+          {filtered.map((worker, index) => (
             <div
-              key={worker.id}
-              className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col"
+              key={worker.id || worker._id || `worker-${index}`}
+              className="bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden transition-all duration-300 group flex flex-col"
             >
               {/* Photo */}
               <Link 
-                href={`/dashboard/resident/workers/${worker.id}`}
+                href={`/dashboard/resident/workers/${worker.id || worker._id}`}
                 className="relative h-48 bg-slate-100 dark:bg-slate-800 cursor-pointer block overflow-hidden"
               >
                 {worker.image ? (
@@ -223,15 +219,15 @@ export default function WorkersDirectoryPage() {
                   />
                 ) : (
                   <div className={`absolute inset-0 flex items-center justify-center ${worker.color || 'bg-[#1241a1]'}`}>
-                    <span className="text-4xl font-black text-white/80">
+                    <span className="text-4xl font-semibold text-white/80">
                       {worker.initials || worker.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
                     </span>
                   </div>
                 )}
                 {/* Verified badge */}
                 {worker.verified && (
-                  <div className="absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-2 py-1 rounded-lg flex items-center gap-1 text-[10px] font-bold text-[#1241a1] uppercase tracking-wider z-10">
-                    <CheckCircle2 className="w-3 h-3 fill-[#1241a1] text-white" />
+                  <div className="absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-2 py-1 rounded-md flex items-center gap-1 text-[9px] font-bold text-[#1241a1] uppercase tracking-widest z-10">
+                    <CheckCircle2 className="size-3" />
                     Verified
                   </div>
                 )}
@@ -242,13 +238,19 @@ export default function WorkersDirectoryPage() {
               <div className="p-4 flex flex-col gap-3 flex-1">
                 <div>
                   <h3 className="font-bold text-base leading-tight">{worker.name}</h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{worker.title}</p>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{worker.title}</p>
+                    <span className="size-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
+                    <p className="text-xs font-bold text-[#1241a1]">{worker.jobs || 0} Jobs</p>
+                    <span className="size-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
+                    <p className="text-xs font-bold text-emerald-600">{worker.rate || '₦0/hr'}</p>
+                  </div>
                 </div>
 
                 {/* Skills */}
                 <div className="flex flex-wrap gap-1.5">
-                  {worker.skills.map(skill => (
-                    <span key={skill} className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded text-[10px] font-bold uppercase">
+                  {worker.skills.map((skill, sIdx) => (
+                    <span key={`${worker.id || worker._id}-${skill}-${sIdx}`} className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded text-[10px] font-bold uppercase">
                       {skill}
                     </span>
                   ))}
@@ -257,7 +259,7 @@ export default function WorkersDirectoryPage() {
 
                 <button
                   onClick={() => setShowBook(worker)}
-                  className="w-full bg-[#1241a1] hover:bg-[#1241a1]/90 text-white font-bold py-2.5 rounded-xl transition-colors text-sm active:scale-[0.98]"
+                  className="w-full bg-[#1241a1] hover:brightness-110 text-white font-semibold py-2.5 rounded-md transition-all text-[11px] uppercase tracking-widest active:scale-[0.98]"
                 >
                   Book Now
                 </button>
@@ -270,7 +272,7 @@ export default function WorkersDirectoryPage() {
       {/* ── Load More ── */}
       {filtered.length > 0 && (
         <div className="mt-12 flex justify-center pb-8">
-          <button className="px-8 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl font-semibold text-sm transition-colors">
+          <button className="px-8 py-3 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-md font-semibold text-[11px] uppercase tracking-widest transition-colors">
             Load More Professionals
           </button>
         </div>
@@ -322,11 +324,11 @@ export default function WorkersDirectoryPage() {
             </div>
 
             <div className="p-8 pt-0 flex gap-4">
-               <button type="button" onClick={() => setShowBook(null)} className="flex-1 py-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-black text-[11px] uppercase tracking-widest rounded-2xl transition-all">Cancel</button>
+               <button type="button" onClick={() => setShowBook(null)} className="flex-1 py-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-semibold text-[11px] uppercase tracking-widest rounded-md transition-all">Cancel</button>
                <button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="flex-1 py-4 bg-[#1241a1] text-white font-black text-[11px] uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-[#1241a1]/20 disabled:opacity-50"
+                className="flex-1 py-4 bg-[#1241a1] text-white font-semibold text-[11px] uppercase tracking-widest rounded-md transition-all shadow-xl shadow-[#1241a1]/20 disabled:opacity-50"
                >
                  {isSubmitting ? 'Sending...' : 'Confirm'}
                </button>

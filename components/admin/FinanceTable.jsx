@@ -52,25 +52,25 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
         <>
           <td className="px-6 py-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+              <div className="w-10 h-10 rounded-md bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 transition-colors group-hover:bg-[#1241a1] group-hover:text-white">
                 <FileText className="w-5 h-5" />
               </div>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-white">{item._id}</div>
-                <div className="text-xs text-gray-500 mt-0.5 truncate max-w-[150px]" title={item.description}>{item.description}</div>
+                <div className="text-xs text-gray-500 mt-0.5 truncate max-w-[150px] font-medium" title={item.description}>{item.description}</div>
               </div>
             </div>
           </td>
           <td className="px-6 py-4">
-            <div className="font-medium text-gray-900 dark:text-white">{item.residentID}</div>
-            <div className="text-xs text-gray-500 mt-0.5">{item.unit}</div>
+            <div className="font-semibold text-gray-900 dark:text-white">{item.residentID}</div>
+            <div className="text-xs text-gray-500 mt-0.5 font-medium">{item.unit}</div>
           </td>
           <td className="px-6 py-4">
             <div className="font-bold text-gray-900 dark:text-white">${item.amount.toLocaleString()}</div>
           </td>
-          <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+          <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 font-medium">
             <div>Issued: {new Date(item.dateIssued).toLocaleDateString()}</div>
-            <div className={item.status === 'overdue' ? 'text-red-500' : ''}>
+            <div className={item.status === 'overdue' ? 'text-red-500 font-semibold' : ''}>
               Due: {new Date(item.dueDate).toLocaleDateString()}
             </div>
           </td>
@@ -87,7 +87,7 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
         <td className="px-6 py-4">
           <div className="flex items-center space-x-3">
             
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+            <div className="w-10 h-10 rounded-md bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 transition-colors group-hover:bg-[#1241a1] group-hover:text-white">
                {item.type.includes('Payment') ? <ArrowDownRight className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
             </div>
 
@@ -99,12 +99,12 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
           </div>
         </td>
         <td className="px-6 py-4">
-            <div className="font-medium text-gray-900 dark:text-white">{item.residentID}</div>
+            <div className="font-semibold text-gray-900 dark:text-white">{item.residentID}</div>
         </td>
         <td className="px-6 py-4">
           <div className="font-bold text-gray-900 dark:text-white">${item.amount.toLocaleString()}</div>
         </td>
-        <td className="px-6 py-4">
+        <td className="px-6 py-4 font-medium">
               <div className="text-xs text-gray-500 mt-0.5">{new Date(item.createdAt).toLocaleString()}</div>
           <div className="text-xs text-gray-500 mt-0.5">Ref: {item.reference}</div>
         </td>
@@ -139,18 +139,18 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
             <div 
               key={item._id || item.id || index}
               onClick={onRowClick ? () => onRowClick(item) : undefined}
-              className={`bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-900 space-y-4 active:scale-[0.98] transition-all ${onRowClick ? 'cursor-pointer' : ''}`}
+              className={`group bg-slate-100 dark:bg-slate-800/30 rounded-md p-4 space-y-4 hover:bg-white dark:hover:bg-slate-800 transition-all ${onRowClick ? 'cursor-pointer' : ''}`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm ${
-                    isInvoice ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
+                  <div className={`w-10 h-10 rounded-md flex items-center justify-center shrink-0 transition-colors group-hover:bg-[#1241a1] group-hover:text-white ${
+                    isInvoice ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
                   }`}>
                     {isInvoice ? <FileText className="w-5 h-5" /> : (item.type?.includes('Payment') ? <ArrowDownRight className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />)}
                   </div>
                   <div className="min-w-0">
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">{item.id}</h4>
-                    <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">{isInvoice ? item.description : item.method}</p>
+                    <h4 className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1">{item.id}</h4>
+                    <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">{isInvoice ? item.description : item.method}</p>
                   </div>
                 </div>
                 <div className="shrink-0">
@@ -158,15 +158,15 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
                 </div>
               </div>
 
-              <div className="flex items-end justify-between pt-2 border-t border-slate-50 dark:border-slate-900/50">
+              <div className="flex items-end justify-between pt-2">
                 <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Resident</p>
-                  <p className="text-xs font-bold text-slate-700 dark:text-slate-200">{item.residentID}</p>
+                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Resident</p>
+                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">{item.residentID}</p>
                   <p className="text-[10px] text-slate-500 font-medium italic">{item.unit}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{isInvoice ? 'Due Date' : 'Transaction Date'}</p>
-                  <p className="text-sm font-black text-slate-900 dark:text-white">${item.amount.toLocaleString()}</p>
+                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1">{isInvoice ? 'Due Date' : 'Transaction Date'}</p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">${item.amount.toLocaleString()}</p>
                   <p className="text-[10px] text-slate-500 font-medium">
                     {new Date(isInvoice ? item.dueDate : item.date).toLocaleDateString()}
                   </p>

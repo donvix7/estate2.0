@@ -10,6 +10,7 @@ import { deleteProfile } from '@/lib/action';
 import { toast } from 'react-toastify';
 import MetricCard from '@/components/MetricCard';
 import Link from 'next/link';
+import { LoadingState } from '@/components/ui/LoadingState';
 
 
 
@@ -68,14 +69,20 @@ export default function ProfileList() {
   }, [profiles, searchTerm, statusFilter]);
 
   const handleProfileSelect = (profile) => {
-    router.push(`/dashboard/admin/users/${profile.id}`);
+    const profileId = profile.id || profile._id;
+    if (profileId) {
+      router.push(`/dashboard/admin/users/${profileId}`);
+    } else {
+      toast.error('Could not find profile ID');
+    }
   };
 
   const confirmDelete = async () => {
-    if (profileToDelete) {
+    const profileId = profileToDelete?.id || profileToDelete?._id;
+    if (profileId) {
       try {
-        await deleteProfile(profileToDelete.id);
-        setProfiles(prev => prev.filter(p => p.id !== profileToDelete.id));
+        await deleteProfile(profileId);
+        setProfiles(prev => prev.filter(p => (p.id || p._id) !== profileId));
         toast.success(`Profile for ${profileToDelete.name} deleted successfully`);
       } catch (error) {
         console.error('Error deleting profile:', error);
@@ -89,10 +96,17 @@ export default function ProfileList() {
   const handleAction = (e, action, profile) => {
     e.stopPropagation();
     setSelectedActionProfile(null);
+    const profileId = profile.id || profile._id;
+    
+    if (!profileId) {
+      toast.error('Action failed: Missing profile ID');
+      return;
+    }
+
     if (action === 'view') {
-      router.push(`/dashboard/admin/users/${profile.id}`);
+      router.push(`/dashboard/admin/users/${profileId}`);
     } else if (action === 'edit') {
-      router.push(`/dashboard/admin/users/${profile.id}?edit=true`);
+      router.push(`/dashboard/admin/users/${profileId}?edit=true`);
     } else if (action === 'delete') {
       setProfileToDelete(profile);
     }
@@ -154,11 +168,7 @@ export default function ProfileList() {
   };
 
   if (isLoading) {
-    return (
-      <div className="bg-white/90 dark:bg-slate-900/80 rounded-xl shadow-sm p-8 flex items-center justify-center">
-         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1241a1]"></div>
-      </div>
-    );
+    return <LoadingState message="Retrieving Personnel Directory..." />;
   }
   const menuOptions = [
     { label: 'View Details', action: 'view', icon: <Eye /> },
@@ -208,7 +218,7 @@ export default function ProfileList() {
         />
       </div>
 
-      <div className="bg-white/90 dark:bg-slate-900/80 rounded-xl shadow-sm p-6">
+      <div className="bg-slate-50 dark:bg-slate-800/30 rounded-xl p-6">
         {/* Search & Filters */}
         <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="flex-1">
@@ -262,7 +272,7 @@ export default function ProfileList() {
               <div 
                 key={profile.id || profile._id || index}
                 onClick={() => handleProfileSelect(profile)}
-                className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-50 dark:border-slate-800/50 cursor-pointer active:scale-[0.98] transition-all"
+                className="bg-slate-50 dark:bg-slate-800/30 rounded-2xl p-6 cursor-pointer active:scale-[0.98] transition-all"
               >
                 <div className="flex flex-col gap-5">
                   <div className="flex items-start justify-between">
@@ -271,10 +281,10 @@ export default function ProfileList() {
                         {profile.profileImage || <User className="w-6 h-6 text-slate-400" />}
                       </div>
                       <div>
-                        <span className="font-bold text-slate-900 dark:text-white block text-lg">
+                        <span className="font-semibold text-slate-900 dark:text-white block text-lg">
                           {profile.name}
                         </span>
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 block">
+                        <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-widest mt-0.5 block">
                           ID: {profile.id || profile._id || 'N/A'}
                         </span>
                       </div>
@@ -288,7 +298,7 @@ export default function ProfileList() {
                           <MoreHorizontal className="w-5 h-5" />
                         </button>
                       </div>
-                      <span className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${getStatusColor(profile.status)}`}>
+                      <span className={`px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-widest ${getStatusColor(profile.status)}`}>
                         {profile.status}
                       </span>
                     </div>
@@ -296,16 +306,16 @@ export default function ProfileList() {
                   
                   <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-50 dark:border-slate-800/50">
                     <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight mb-1">Contact</p>
-                      <p className="text-xs text-slate-900 dark:text-slate-200 font-bold truncate">{profile.phone || 'No Phone'}</p>
+                      <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-tight mb-1">Contact</p>
+                      <p className="text-xs text-slate-900 dark:text-slate-200 font-semibold truncate">{profile.phone || 'No Phone'}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight mb-1">Type</p>
-                      <p className="text-xs text-slate-900 dark:text-slate-200 font-bold">{getProfileTypeLabel(profile.type)}</p>
+                      <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-tight mb-1">Type</p>
+                      <p className="text-xs text-slate-900 dark:text-slate-200 font-semibold">{getProfileTypeLabel(profile.type)}</p>
                     </div>
                     <div className="col-span-2">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight mb-1">Role / Designation</p>
-                      <p className="text-xs font-bold text-[#1241a1] dark:text-blue-400">
+                      <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-tight mb-1">Role / Designation</p>
+                      <p className="text-xs font-semibold text-[#1241a1] dark:text-blue-400">
                         {profile.role || profile.occupation || profile.unit || 'No Detail Provided'}
                       </p>
                     </div>
@@ -341,10 +351,10 @@ export default function ProfileList() {
                       {profile.profileImage || <User className="w-5 h-5 text-slate-400" />}
                     </div>
                     <div>
-                      <span className="font-bold text-slate-900 dark:text-white block">
+                      <span className="font-semibold text-slate-900 dark:text-white block">
                         {profile.name}
                       </span>
-                      <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">
+                      <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-tight">
                         {profile.role || profile.occupation || 'No Role'}
                       </span>
                     </div>
@@ -365,7 +375,8 @@ export default function ProfileList() {
                 <td className="px-6 py-4 whitespace-nowrap text-right">
                   <Link 
                     href={`/dashboard/admin/users/${profile.id || profile._id}`}
-                    className="inline-flex items-center gap-2 px-4 py-1.5 text-[#1241a1] hover:text-white rounded-lg text-xs font-bold transition-all"
+                    onClick={(e) => e.stopPropagation()}
+                    className="inline-flex items-center gap-2 px-4 py-1.5 text-[#1241a1] hover:bg-[#1241a1] hover:text-white rounded-md text-xs font-semibold transition-all"
                   >
                     <Eye size={14} />
                     View 

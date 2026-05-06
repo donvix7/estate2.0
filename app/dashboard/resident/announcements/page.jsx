@@ -6,6 +6,7 @@ import { api } from '@/services/api';
 import ViewAnnouncementModal from '@/components/admin/ViewAnnouncementModal';
 import { getAnnouncements, getResidentData } from '@/lib/service';
 import { readAnnouncement } from '@/lib/action';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 
 export default function AnnouncementsPage() {
@@ -91,11 +92,12 @@ export default function AnnouncementsPage() {
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-8 space-y-6">
         {/* Page Title & Filters */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Announcements</h1>
-            <p className="text-slate-500 mt-1">Stay updated with the latest community news and system updates.</p>
-          </div>
+        <PageHeader 
+          title="Announcements" 
+          description="Stay updated with the latest community news and system updates."
+          icon={Megaphone}
+          iconColor="blue"
+        >
           <div className="flex items-center gap-2 bg-primary/5 p-1 rounded-xl">
             {['All', 'Maintenance', 'Security', 'Community'].map((tab) => (
               <button 
@@ -111,7 +113,7 @@ export default function AnnouncementsPage() {
               </button>
             ))}
           </div>
-        </div>
+        </PageHeader>
 
         {/* High-Density List Container */}
         <div className="bg-white dark:bg-slate-900/50 rounded-xl overflow-hidden shadow-sm">
