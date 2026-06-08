@@ -31,6 +31,7 @@ import ResourceItem from '@/components/ResourceItem';
 import { getEmergencies } from '@/lib/service';
 import AnnouncementModal from '@/components/admin/AnnouncementModal';
 import { toast } from 'react-toastify';
+import Pagination from '@/components/pagination';
 
 export default function EmergenciesPage() {
   const [emergencies, setEmergencies] = useState([]);
@@ -51,17 +52,17 @@ export default function EmergenciesPage() {
   ]
   useEffect(() => {
     loadEmergencies();
-  }, []);
+  }, [currentPage]);
 
   const loadEmergencies = async () => {
     setIsLoading(true);
     try {
-      const data = await getEmergencies();
-      const docs = data?.docs || [];
+      const data = await getEmergencies(currentPage);
+      const result = data.data || data;
+      const docs = result.docs || [];
       setEmergencies(docs);
-      setTotalPages(data?.totalPages || 1);
-      setCurrentPage(data?.page || 1);
-      setPaginatedEmergencies(data || { docs: [] });
+      setTotalPages(result.totalPages || 1);
+      setPaginatedEmergencies(result);
     } catch (error) {
       console.error('Failed to load emergencies:', error);
     } finally {
@@ -216,6 +217,12 @@ export default function EmergenciesPage() {
               ))}
             </DataStateLayout>
           </div>
+          
+          <Pagination 
+            page={currentPage}
+            totalPages={totalPages}
+            handlePageChange={(p) => setCurrentPage(p)}
+          />
         </div>
 
     

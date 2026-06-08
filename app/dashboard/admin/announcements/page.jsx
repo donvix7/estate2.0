@@ -9,6 +9,7 @@ import { readAnnouncement, removeAnnouncement } from '@/lib/action';
 import MetricCard from '@/components/MetricCard';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { PageHeader } from '@/components/ui/PageHeader';
+import Pagination from '@/components/pagination';
 
 
 export default function AnnouncementsPage() {
@@ -33,10 +34,10 @@ export default function AnnouncementsPage() {
   const loadAnnouncements = async () => {
     setIsLoading(true);
     try {
-      const data = await getAnnouncements();
-
-      setAnnouncements(data.docs || []);
-      setPaginatedAnnouncements(data || []);
+      const data = await getAnnouncements(currentPage);
+      const result = data.data || data;
+      setAnnouncements(result.docs || []);
+      setPaginatedAnnouncements(result);
     } catch (error) {
       console.error('Failed to load announcements:', error);
     } finally {
@@ -346,46 +347,12 @@ export default function AnnouncementsPage() {
               ))
             )}
           </div>
-          {!isLoading && filteredAnnouncements.length > 0 && (
-            <div className="px-6 py-4 bg-slate-100 dark:bg-slate-800/50 flex flex-col sm:flex-row items-center justify-between gap-4 ">
-              <p className="text-sm text-slate-500 font-medium">
-                Showing <span className="font-semibold text-slate-700 dark:text-slate-300">{paginatedAnnouncements.pagingCounter}</span> of <span className="font-semibold text-slate-700 dark:text-slate-300">{paginatedAnnouncements.totalDocs}</span> announcements
-              </p>
-              {totalPages > 1 && (
-                <div className="flex items-center gap-2">
-                  <button 
-                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                    disabled={currentPage === 1}
-                    className="size-10 flex items-center justify-center rounded-md hover:bg-white dark:hover:bg-slate-800 transition-colors text-slate-500 disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
-                  
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                    <button 
-                      key={p}
-                      onClick={() => setCurrentPage(p)}
-                      className={`size-10 flex items-center justify-center rounded-md text-sm font-semibold transition-all ${
-                        currentPage === p 
-                          ? 'bg-[#1241a1] text-white' 
-                          : 'text-slate-500 hover:bg-white dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      {p}
-                    </button>
-                  ))}
-
-                  <button 
-                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                    className="size-10 flex items-center justify-center rounded-md hover:bg-white dark:hover:bg-slate-800 transition-colors text-slate-500 disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    <ChevronRight size={20} />
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+         
+          <Pagination 
+            page={currentPage}
+            totalPages={paginatedAnnouncements.totalPages || 1}
+            handlePageChange={(p) => setCurrentPage(p)}
+          />
         </div>
       </div>
 

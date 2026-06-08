@@ -10,23 +10,28 @@ import { FilterBar } from '@/components/ui/FilterBar';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { getWorkers } from '@/lib/service';
+import Pagination from '@/components/pagination';
 
 export default function ServiceWorkersPage() {
   const [workers, setWorkers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const router = useRouter();
 
   useEffect(() => {
     loadWorkers();
-  }, []);
+  }, [page]);
 
   const loadWorkers = async () => {
     setIsLoading(true);
     try {
-      const data = await getWorkers();
-      setWorkers(data.docs);
+      const data = await getWorkers(page);
+      const result = data.data || data;
+      setWorkers(result.docs || []);
+      setTotalPages(result.totalPages || 1);
     } catch (error) {
       console.error('Failed to load service workers:', error);
     } finally {
@@ -82,9 +87,16 @@ export default function ServiceWorkersPage() {
           <ServiceWorkersTable 
             workers={filteredWorkers}
             searchTerm={searchTerm} 
+            onRowClick={(worker) => router.push(`/dashboard/admin/service_workers/${worker._id || worker.id}`)}
           />
         </DataStateLayout>
       )}
+
+      <Pagination 
+        page={page}
+        totalPages={totalPages}
+        handlePageChange={(p) => setPage(p)}
+      />
     </div>
   );
 }

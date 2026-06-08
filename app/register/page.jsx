@@ -17,56 +17,28 @@ import {
   Lock,
   Flag
 } from 'lucide-react'
+import { handleEstateRegistration, handleUserRegistration } from '@/lib/action'
+import AuthCarousel from '@/components/AuthCarousel'
 
-const CAROUSEL_IMAGES = [
-  { 
-    url: "https://images.unsplash.com/photo-1592595896551-12b371d546d5?q=80&w=2600&auto=format&fit=crop",
-    alt: "Community: Gated Community Street"
-  },
-  { 
-    url: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2600&auto=format&fit=crop",
-    alt: "Security: Concierge & Security"
-  },
-  { 
-    url: "https://images.unsplash.com/photo-1581578731117-e08f542e9466?q=80&w=2600&auto=format&fit=crop",
-    alt: "Service: Engineering & Maintenance"
-  },
-  { 
-    url: "https://images.unsplash.com/photo-1540497077202-7c8a3999166f?q=80&w=2600&auto=format&fit=crop",
-    alt: "Amenities: Premium Fitness Center"
-  }
-]
+
 
 export default function EstateRegistrationPage() {
   const [step, setStep] = useState(1)
-  const [formData, setFormData] = useState({
-    estateName: '',
-    estateType: 'apartment',
-    address: '',
-    city: '',
-    state: '',
-    pincode: '',
-    
-    adminName: '',
-    adminEmail: '',
-    adminPhone: '',
-    countryCode: '+234',
-    managementType: 'owner',
-    
-    totalUnits: '',
-    securityContacts: '',
-    amenities: [],
-    
-    username: '',
-    password: '',
-    confirmPassword: '',
-    termsAccepted: false
-  })
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [address, setAddress] = useState('')
+  const [city, setCity] = useState('')
+  const [state, setState] = useState('')  
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [termsAccepted, setTermsAccepted] = useState(false)
   
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const router = useRouter()
   
   const estateTypes = [
@@ -77,65 +49,51 @@ export default function EstateRegistrationPage() {
     { value: 'cooperative', label: 'Cooperative Housing' }
   ]
 
-  const managementTypes = [
-    { value: 'owner', label: 'Self-Managed by Owner' },
-    { value: 'association', label: 'Residents Association' },
-    { value: 'professional', label: 'Professional Management' }
-  ]
-
-  const amenitiesList = [
-    'Swimming Pool', 'Gymnasium', 'Club House', 'Children Play Area',
-    'Security 24/7', 'Power Backup', 'Garden/Park', 'Sports Complex', 'Visitor Parking'
-  ]
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }))
+    const val = type === 'checkbox' ? checked : value
+        switch (name) {
+        case 'firstName': setFirstName(val); break;
+        case 'lastName': setLastName(val); break;
+        case 'address': setAddress(val); break;
+        case 'city': setCity(val); break;
+        case 'state': setState(val); break;
+        case 'email': setEmail(val); break;
+        case 'phone': setPhone(val); break;
+        case 'password': setPassword(val); break;
+        case 'confirmPassword': setConfirmPassword(val); break;
+        case 'termsAccepted': setTermsAccepted(val); break;
+      }
     
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }))
     }
   }
 
-  const handleAmenityChange = (amenity) => {
-    setFormData(prev => ({
-      ...prev,
-      amenities: prev.amenities.includes(amenity)
-        ? prev.amenities.filter(a => a !== amenity)
-        : [...prev.amenities, amenity]
-    }))
-  }
+
 
   const validateStep = () => {
     const newErrors = {}
 
     if (step === 1) {
-      if (!formData.estateName.trim()) newErrors.estateName = 'Estate name is required'
-      if (!formData.address.trim()) newErrors.address = 'Address is required'
-      if (!formData.city.trim()) newErrors.city = 'City is required'
+      if (!firstName.trim()) newErrors.firstName = 'Estate name is required'
+      if (!lastName.trim()) newErrors.lastName = 'Estate name is required'
+      if (!address.trim()) newErrors.address = 'Address is required'
+      if (!city.trim()) newErrors.city = 'City is required'
     }
 
     if (step === 2) {
-      if (!formData.adminName.trim()) newErrors.adminName = 'Admin name is required'
-      if (!formData.adminEmail.trim()) newErrors.adminEmail = 'Email is required'
-      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.adminEmail)) newErrors.adminEmail = 'Invalid email format'
-      if (!formData.adminPhone.trim()) newErrors.adminPhone = 'Phone number is required'
+      if (!email.trim()) newErrors.email = 'Email is required'
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = 'Invalid email format'
+      if (!phone.trim()) newErrors.phone = 'Phone number is required'
     }
 
     if (step === 3) {
-      if (!formData.totalUnits || formData.totalUnits < 1) newErrors.totalUnits = 'Number of units is required'
-      if (!formData.securityContacts.trim()) newErrors.securityContacts = 'Security contact is required'
-    }
-
-    if (step === 4) {
-      if (!formData.username.trim()) newErrors.username = 'Username is required'
-      if (!formData.password) newErrors.password = 'Password is required'
-      else if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters'
-      if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match'
-      if (!formData.termsAccepted) newErrors.termsAccepted = 'You must accept the terms'
+      if (!password) newErrors.password = 'Password is required'
+      else if (password.length < 8) newErrors.password = 'Password must be at least 8 characters'
+      if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match'
+      if (!termsAccepted) newErrors.termsAccepted = 'You must accept the terms'
     }
 
     setErrors(newErrors)
@@ -158,19 +116,25 @@ export default function EstateRegistrationPage() {
     
     if (validateStep()) {
       setIsSubmitting(true)
+      
+      const formData = {
+        firstName,
+        lastName,
+        address,
+        city,
+        state,
+        phone, 
+        email,
+         password, 
+         confirmPassword, 
+         termsAccepted
+      }
+
       try {
-        const response = await fetch('/api/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData),
-        })
-
-        const data = await response.json()
-
-        if (!response.ok) {
-            throw new Error(data.error || 'Registration failed')
+        const response = await handleUserRegistration(formData)
+        if (!response.success) {
+          throw new Error(response.message)
         }
-        
         router.push('/login?registered=true')
       } catch (error) {
         console.error('Registration failed:', error)
@@ -182,10 +146,9 @@ export default function EstateRegistrationPage() {
   }
 
   const progressSteps = [
-    { number: 1, label: 'Estate Details', icon: <Building2 className="w-4 h-4" /> },
-    { number: 2, label: 'Management', icon: <User className="w-4 h-4" /> },
-    { number: 3, label: 'Configuration', icon: <Shield className="w-4 h-4" /> },
-    { number: 4, label: 'Account', icon: <Lock className="w-4 h-4" /> }
+    { number: 1, label: 'Personal Information', icon: <Building2 className="w-4 h-4" /> },
+    { number: 2, label: 'Contact Information', icon: <User className="w-4 h-4" /> },
+    { number: 3, label: 'Account Information', icon: <Shield className="w-4 h-4" /> }
   ]
 
   return (
@@ -230,13 +193,11 @@ export default function EstateRegistrationPage() {
                     {step === 1 && 'Tell us about your estate'}
                     {step === 2 && 'Who will manage this account?'}
                     {step === 3 && 'Configure your security'}
-                    {step === 4 && 'Create your admin account'}
                 </h1>
                 <p className="text-gray-500 mt-2 text-lg">
                     {step === 1 && 'We need some basic details to get you set up.'}
                     {step === 2 && 'Provide contact details for the primary administrator.'}
                     {step === 3 && 'Help us tailor the experience to your needs.'}
-                    {step === 4 && 'Secure your account with a strong password.'}
                 </p>
             </div>
 
@@ -260,36 +221,41 @@ export default function EstateRegistrationPage() {
                       <label className="text-sm font-medium text-gray-700">Estate Name <span className="text-red-500">*</span></label>
                       <input
                         type="text"
-                        name="estateName"
-                        value={formData.estateName}
+                        name="firstName"
+                        value={firstName}
                         onChange={handleChange}
                         className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                          errors.estateName ? ' border-red-500' : ' border-gray-200'
+                          errors.firstName ? ' border-red-500' : ' border-gray-200'
                         }`}
                         placeholder="e.g. Royal Gardens"
                       />
-                      {errors.estateName && <p className="text-red-600 text-xs">{errors.estateName}</p>}
+                      {errors.firstName && <p className="text-red-600 text-xs">{errors.firstName}</p>}
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Estate Type</label>
-                      <select
-                        name="estateType"
-                        value={formData.estateType}
+                      <label className="text-sm font-medium text-gray-700">Last Name <span className="text-red-500">*</span></label>
+                      <input
+                        type="text"
+                        name="lastName"
+                        value={lastName}
                         onChange={handleChange}
-                        className="w-full p-3.5 bg-white border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all text-gray-800"
-                      >
-                        {estateTypes.map(type => (
-                          <option key={type.value} value={type.value}>{type.label}</option>
-                        ))}
-                      </select>
+                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                          errors.lastName ? ' border-red-500' : ' border-gray-200'
+                        }`}
+                        placeholder="e.g. Royal Gardens"
+                      />
+                      {errors.lastName && <p className="text-red-600 text-xs">{errors.lastName}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+  
                     </div>
 
                     <div className="md:col-span-2 space-y-2">
                       <label className="text-sm font-medium text-gray-700">Address <span className="text-red-500">*</span></label>
                       <textarea
                         name="address"
-                        value={formData.address}
+                        value={address}
                         onChange={handleChange}
                         rows="3"
                         className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all resize-none placeholder:text-gray-400 text-gray-800 ${
@@ -307,7 +273,7 @@ export default function EstateRegistrationPage() {
                             <input
                                 type="text"
                                 name="city"
-                                value={formData.city}
+                                value={city}
                                 onChange={handleChange}
                                 className={`w-full pl-10 pr-4 py-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
                                 errors.city ? ' border-red-500' : ' border-gray-200'
@@ -323,7 +289,7 @@ export default function EstateRegistrationPage() {
                       <input
                         type="text"
                         name="state"
-                        value={formData.state}
+                        value={state}
                         onChange={handleChange}
                         className="w-full p-3.5 bg-white border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all text-gray-800"
                         placeholder="State"
@@ -333,168 +299,61 @@ export default function EstateRegistrationPage() {
                 </div>
               )}
 
-              {/* STEP 2: MANAGEMENT */}
+              {/* STEP 2: CONTACT */}
               {step === 2 && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Administrator Name <span className="text-red-500">*</span></label>
+                    <div className="md:col-span-2 space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Phone <span className="text-red-500">*</span></label>
                       <input
                         type="text"
-                        name="adminName"
-                        value={formData.adminName}
+                        name="phone"
+                        value={phone}
                         onChange={handleChange}
                         className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                          errors.adminName ? ' border-red-500' : ' border-gray-200'
+                          errors.phone ? ' border-red-500' : ' border-gray-200'
                         }`}
-                        placeholder="Full Name"
+                        placeholder="Phone Number"
                       />
-                      {errors.adminName && <p className="text-red-600 text-xs">{errors.adminName}</p>}
+                      {errors.phone && <p className="text-red-600 text-xs">{errors.phone}</p>}
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Management Type</label>
-                      <select
-                        name="managementType"
-                        value={formData.managementType}
-                        onChange={handleChange}
-                        className="w-full p-3.5 bg-white border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all text-gray-800"
-                      >
-                        {managementTypes.map(type => (
-                          <option key={type.value} value={type.value}>{type.label}</option>
-                        ))}
-                      </select>
-                    </div>
+                   
 
                     <div className="md:col-span-2 space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Official Email <span className="text-red-500">*</span></label>
+                      <label className="text-sm font-medium text-gray-700">Email <span className="text-red-500">*</span></label>
                       <input
                         type="email"
-                        name="adminEmail"
-                        value={formData.adminEmail}
+                        name="email"
+                        value={email}
                         onChange={handleChange}
                         className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                          errors.adminEmail ? ' border-red-500' : ' border-gray-200'
+                          errors.email ? ' border-red-500' : ' border-gray-200'
                         }`}
                         placeholder="admin@estate.com"
                       />
-                      {errors.adminEmail && <p className="text-red-600 text-xs">{errors.adminEmail}</p>}
+                      {errors.email && <p className="text-red-600 text-xs">{errors.email}</p>}
                     </div>
 
                     <div className="md:col-span-2 space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Phone Number <span className="text-red-500">*</span></label>
-                      <div className="flex">
-                        <select
-                          name="countryCode"
-                          value={formData.countryCode}
-                          onChange={handleChange}
-                          className="bg-white border-gray-200 border-r-0 rounded-l-xl px-3 focus:outline-none text-gray-800 text-sm font-medium shadow-sm focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all"
-                        >
-                          <option value="+234">NG (+234)</option>
-                          <option value="+1">US (+1)</option>
-                          <option value="+91">IN (+91)</option>
-                        </select>
-                        <input
-                          type="tel"
-                          name="adminPhone"
-                          value={formData.adminPhone}
-                          onChange={handleChange}
-                          className={`flex-1 p-3.5 bg-white   rounded-r-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                            errors.adminPhone ? ' border-red-500' : ' border-gray-200'
-                          }`}
-                          placeholder="801 234 5678"
-                        />
-                      </div>
-                      {errors.adminPhone && <p className="text-red-600 text-xs">{errors.adminPhone}</p>}
-                    </div>
+</div>
                   </div>
                 </div>
               )}
 
-              {/* STEP 3: CONFIGURATION */}
+
+
+              {/* STEP 3: ACCOUNT */}
               {step === 3 && (
                 <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Total Units/Homes <span className="text-red-500">*</span></label>
-                      <input
-                        type="number"
-                        name="totalUnits"
-                        value={formData.totalUnits}
-                        onChange={handleChange}
-                        min="1"
-                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                          errors.totalUnits ? ' border-red-500' : ' border-gray-200'
-                        }`}
-                        placeholder="e.g. 120"
-                      />
-                      {errors.totalUnits && <p className="text-red-600 text-xs">{errors.totalUnits}</p>}
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Security Desk Phone <span className="text-red-500">*</span></label>
-                      <input
-                        type="tel"
-                        name="securityContacts"
-                        value={formData.securityContacts}
-                        onChange={handleChange}
-                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                          errors.securityContacts ? ' border-red-500' : ' border-gray-200'
-                        }`}
-                        placeholder="Emergency contact"
-                      />
-                      {errors.securityContacts && <p className="text-red-600 text-xs">{errors.securityContacts}</p>}
-                    </div>
-                  </div>
-
-                  <div className="space-y-3 pt-4">
-                    <label className="text-sm font-medium text-gray-700">Amenities & Facilities</label>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {amenitiesList.map(amenity => (
-                        <button
-                          key={amenity}
-                          type="button"
-                          onClick={() => handleAmenityChange(amenity)}
-                          className={`p-3 text-sm font-medium transition-all rounded-xl   shadow-sm ${
-                            formData.amenities.includes(amenity)
-                            ? 'bg-gray-900 border-gray-900 text-white'
-                            : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50/50'
-                          }`}
-                        >
-                          {amenity}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* STEP 4: ACCOUNT */}
-              {step === 4 && (
-                <div className="space-y-6">
                   <div className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Username <span className="text-red-500">*</span></label>
-                      <input
-                        type="text"
-                        name="username"
-                        value={formData.username}
-                        onChange={handleChange}
-                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                          errors.username ? ' border-red-500' : ' border-gray-200'
-                        }`}
-                        placeholder="Choose a unique username"
-                      />
-                      {errors.username && <p className="text-red-600 text-xs">{errors.username}</p>}
-                    </div>
-
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-700">Password <span className="text-red-500">*</span></label>
                         <input
                           type="password"
                           name="password"
-                          value={formData.password}
+                          value={password}
                           onChange={handleChange}
                           className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
                             errors.password ? ' border-red-500' : ' border-gray-200'
@@ -509,7 +368,7 @@ export default function EstateRegistrationPage() {
                         <input
                           type="password"
                           name="confirmPassword"
-                          value={formData.confirmPassword}
+                          value={confirmPassword}
                           onChange={handleChange}
                           className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
                             errors.confirmPassword ? ' border-red-500' : ' border-gray-200'
@@ -525,7 +384,7 @@ export default function EstateRegistrationPage() {
                         <input
                           type="checkbox"
                           name="termsAccepted"
-                          checked={formData.termsAccepted}
+                          checked={termsAccepted}
                           onChange={handleChange}
                           className="mt-1 w-5 h-5 bg-white border-gray-300 text-gray-900 focus:ring-gray-900 rounded-md shadow-sm transition-all"
                         />
@@ -585,74 +444,32 @@ export default function EstateRegistrationPage() {
           </div>
       </div>
       {/* Left Side - Image & Branding (Matching Login) */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gray-900">
-        <div
-          key={currentImageIndex}
-          className="absolute inset-0 z-0"
-        >
-          <img 
-              src={CAROUSEL_IMAGES[currentImageIndex].url}
-              alt={CAROUSEL_IMAGES[currentImageIndex].alt}
-              className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="absolute inset-0 bg-linear-to-b from-transparent to-gray-900/90 z-10" />
-      
-        <div className="relative z-20 flex flex-col justify-between h-full p-12 text-white">
-          <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/10 backdrop-blur-md flex items-center justify-center rounded-sm border-white/20 shadow-lg">
-                <Shield className="w-6 h-6 text-white" />
-              </div>
-              <span className="font-bold text-xl tracking-tight">EstateSecure</span>
-          </div>
-
-          <div className="space-y-8">
-            <div className="max-w-md bg-white/5 backdrop-blur-sm p-8 rounded-lg border-white/10 shadow-2xl">
-              <h2 className="text-4xl font-bold mb-6 leading-tight">
-                Secure Living,<br />
-                Simplified Management.
-              </h2>
-              <p className="text-lg text-white/80 leading-relaxed mb-8 font-light">
-                Experience the next generation of community living. 
-                Advanced security, seamless payments, and instant communication 
-                all in one professional dashboard.
-              </p>
-              
-              <div className="flex items-center gap-6 text-sm text-white/70">
-                <div className="flex items-center gap-2">
-                  <div className="p-1 bg-emerald-500/20 rounded-full">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  </div>
-                  <span>Enterprise Security</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="p-1 bg-emerald-500/20 rounded-full">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  </div>
-                  <span>24/7 Monitoring</span>
-                </div>
-              </div>
+      <AuthCarousel>
+        <h2 className="text-4xl font-bold mb-6 leading-tight">
+          Secure Living,<br />
+          Simplified Management.
+        </h2>
+        <p className="text-lg text-white/80 leading-relaxed mb-8 font-light">
+          Experience the next generation of community living. 
+          Advanced security, seamless payments, and instant communication 
+          all in one professional dashboard.
+        </p>
+        
+        <div className="flex items-center gap-6 text-sm text-white/70">
+          <div className="flex items-center gap-2">
+            <div className="p-1 bg-emerald-500/20 rounded-full">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
             </div>
-
-            {/* Carousel Indicators */}
-            <div className="flex gap-2">
-              {CAROUSEL_IMAGES.map((_, idx) => (
-                <div 
-                  key={idx} 
-                  onClick={() => setCurrentImageIndex(idx)}
-                  className={`h-1 cursor-pointer transition-all duration-500 rounded-full ${
-                    idx === currentImageIndex ? 'w-8 bg-white' : 'w-2 bg-white/30 hover:bg-white/50'
-                  }`}
-                />
-              ))}
-            </div>
+            <span>Enterprise Security</span>
           </div>
-
-          <div className="text-sm text-white/40 font-medium">
-            © {new Date().getFullYear()} EstateSecure Inc. All rights reserved.
+          <div className="flex items-center gap-2">
+            <div className="p-1 bg-emerald-500/20 rounded-full">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            </div>
+            <span>24/7 Monitoring</span>
           </div>
         </div>
-      </div>
+      </AuthCarousel>
 
     </div>
   )

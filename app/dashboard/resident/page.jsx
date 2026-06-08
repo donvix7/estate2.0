@@ -157,7 +157,7 @@ export default function ResidentDashboard() {
           icon: iconMap[s.icon] || Wrench
         }));
 
-        setAnnouncements(announcementsData.docs || []);
+        setAnnouncements(announcementsData || []);
         setVisitors(visitorsData || []);
         setResidentData(residentDataResponse);
         setOutstandingServices(mappedServices);
@@ -387,7 +387,7 @@ export default function ResidentDashboard() {
         <div className="hidden lg:block bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-transparent">
+              <thead className="bg-slate-50 dark:bg-slate-800/50 ">
                 <tr>
                   {['Request ID', 'Category', 'Description', 'Status'].map((header) => (
                     <th key={header} className="px-6 py-4 font-semibold">{header}</th>
@@ -395,18 +395,30 @@ export default function ResidentDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {outstandingServices.map((request) => (
-                  <ServiceRow 
-                    key={request.id}
-                    id={request.id}
-                    category={request.category}
-                    icon={request.icon}
-                    iconColor={request.iconColor}
-                    desc={request.desc}
-                    status={request.status}
-                    statusColor={request.statusColor}
-                  />
-                ))}
+                {outstandingServices.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
+                      <div className="flex flex-col items-center justify-center gap-2">
+                        <Wrench className="size-8 text-slate-300 dark:text-slate-600 mb-2" />
+                        <p className="font-medium text-slate-600 dark:text-slate-300">No active requests</p>
+                        <p className="text-xs">You have no ongoing service requests at the moment.</p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  outstandingServices.map((request) => (
+                    <ServiceRow 
+                      key={request.id}
+                      id={request.id}
+                      category={request.category}
+                      icon={request.icon}
+                      iconColor={request.iconColor}
+                      desc={request.desc}
+                      status={request.status}
+                      statusColor={request.statusColor}
+                    />
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -414,12 +426,20 @@ export default function ResidentDashboard() {
 
         {/* Mobile Card List */}
         <div className="lg:hidden grid gap-4">
-          {outstandingServices.map((request) => (
-            <ServiceCard
-              key={request.id}
-              {...request}
-            />
-          ))}
+          {outstandingServices.length === 0 ? (
+            <div className="bg-slate-100 dark:bg-slate-800/30 rounded-md p-8 text-center flex flex-col items-center gap-2">
+              <Wrench className="size-8 text-slate-300 dark:text-slate-600 mb-1" />
+              <p className="font-medium text-slate-600 dark:text-slate-300 text-sm">No active requests</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">You have no ongoing service requests.</p>
+            </div>
+          ) : (
+            outstandingServices.map((request) => (
+              <ServiceCard
+                key={request.id}
+                {...request}
+              />
+            ))
+          )}
         </div>
       </section>
 

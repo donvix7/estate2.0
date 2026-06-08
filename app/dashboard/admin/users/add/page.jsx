@@ -20,7 +20,7 @@ import {
   Info,
   Camera
 } from 'lucide-react';
-import { handleCreateUser } from '@/lib/action';
+import { handleCreateUser, handleResidentRequest } from '@/lib/action';
 import { getCurrentSession, getEstateData } from '@/lib/service';
 
 
@@ -30,19 +30,9 @@ export default function AddUserPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [estateId, setEstateId] = useState("unknown")
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
+   
     phone: '',
     estateID: '', // Defaulting to a placeholder as per example
-    unit: '',
-    role: '',
-    department: '',
-    occupation: '',
-    emergencyContact: '',
-    badgeNumber: '',
-    shift: '',
-    salary: '',
     status: 'active',
     type: 'resident'
   });
@@ -76,15 +66,24 @@ export default function AddUserPage() {
       name: formData.name,
       phone: formData.phone,
       estateID: estateId,
-      unit: formData.unit
     };
+
     
     setIsSubmitting(true);
     try {
-      const result = await handleCreateUser(payload);
-      if (result.success) {
-        toast.success('Profile created successfully');
-        router.push('/dashboard/admin/users');
+      if (formData.type === 'resident') {
+        const result = await handleResidentRequest(payload);
+        if (result.success) {
+          toast.success('Profile created successfully');
+          router.push('/dashboard/admin/users');
+        }
+      }
+      if (formData.type === 'worker'|| formData.type === 'admin') {
+        const result = await handleCreateUser(payload);
+        if (result.success) {
+          toast.success('Profile created successfully');
+          router.push('/dashboard/admin/users');
+        }
       }
     } catch (error) {
       toast.error('Failed to create profile');
@@ -225,52 +224,7 @@ export default function AddUserPage() {
               </div>
               <div className="p-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {formData.type === 'resident' && (
-                    <>
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-0.5">Apartment Unit</label>
-                        <div className="relative">
-                          <Building2 className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                          <input
-                            type="text"
-                            name="unit"
-                            value={formData.unit}
-                            onChange={handleInputChange}
-                            placeholder="e.g. Block C, Unit 4"
-                            className="w-full pl-11 pr-4 py-3 rounded-lg border-none bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 focus:border-[#1241a1] outline-none transition-all font-medium"
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-0.5">Primary Occupation</label>
-                        <div className="relative">
-                          <Briefcase className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                          <input
-                            type="text"
-                            name="occupation"
-                            value={formData.occupation}
-                            onChange={handleInputChange}
-                            placeholder="Current Profession"
-                            className="w-full pl-11 pr-4 py-3 rounded-lg border-none bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 focus:border-[#1241a1] outline-none transition-all font-medium"
-                          />
-                        </div>
-                      </div>
-                      <div className="md:col-span-2 space-y-1.5">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-0.5">Emergency Contact Line</label>
-                        <div className="relative">
-                          <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                          <input
-                            type="tel"
-                            name="emergencyContact"
-                            value={formData.emergencyContact}
-                            onChange={handleInputChange}
-                            placeholder="Contact Name & Number"
-                            className="w-full pl-11 pr-4 py-3 rounded-lg border-none bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 focus:border-[#1241a1] outline-none transition-all font-medium"
-                          />
-                        </div>
-                      </div>
-                    </>
-                  )}
+                  
 
                   {formData.type === 'staff' && (
                     <>

@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { getScanHistory } from '@/lib/service';
 import { validatePass, addToScanHistory } from '@/lib/action';
+import Pagination from '@/components/pagination';
 
 export default function QRScanPage() {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -39,17 +40,21 @@ export default function QRScanPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentResult, setCurrentResult] = useState(null);
   const [scanHistory, setScanHistory] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     setHasMounted(true);
     const fetchScanHistory = async () => {
-      const history = await getScanHistory();
-      setScanHistory(history?.docs || []);
+      const data = await getScanHistory(page);
+      const result = data.data || data;
+      setScanHistory(result.docs || []);
+      setTotalPages(result.totalPages || 1);
     }
     fetchScanHistory();
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [page]);
 
   // Initialize Cameras and Scanner
   useEffect(() => {
@@ -531,6 +536,15 @@ export default function QRScanPage() {
                 </div>
               )}
             </div>
+            
+            <div className="px-6 border-t border-slate-50 dark:border-slate-800/50">
+              <Pagination 
+                page={page}
+                totalPages={totalPages}
+                handlePageChange={(p) => setPage(p)}
+              />
+            </div>
+
             <div className="p-4 bg-slate-50 dark:bg-slate-800/50">
               <button className="w-full text-center text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-[#1241a1] transition-colors leading-none">
                 Total Scans Session: {scanHistory.length}

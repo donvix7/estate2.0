@@ -7,6 +7,7 @@ import ViewAnnouncementModal from '@/components/admin/ViewAnnouncementModal';
 import { getAnnouncements, getResidentData } from '@/lib/service';
 import { readAnnouncement } from '@/lib/action';
 import { PageHeader } from '@/components/ui/PageHeader';
+import Pagination from '@/components/pagination';
 
 
 export default function AnnouncementsPage() {
@@ -23,15 +24,23 @@ export default function AnnouncementsPage() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const resData = await getResidentData();
+        if (resData) setUserId(resData?._id || resData?.id);
+      } catch (error) {
+        console.error('Failed to load user data:', error);
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const [annData, resData] = await Promise.all([
-          getAnnouncements(),
-          getResidentData()
-        ]);
+        const annData = await getAnnouncements(currentPage);
         setAnnouncements(annData);
-        if (resData) setUserId(resData?._id || resData?.id);
       } catch (error) {
         console.error('Failed to load data:', error);
       } finally {
@@ -39,7 +48,7 @@ export default function AnnouncementsPage() {
       }
     };
     fetchData();
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -47,7 +56,7 @@ export default function AnnouncementsPage() {
 
   const loadAnnouncements = async () => {
     try {
-      const data = await getAnnouncements();
+      const data = await getAnnouncements(currentPage);
       setAnnouncements(data);
     } catch (error) {
       console.error('Failed to load announcements:', error);
@@ -105,7 +114,7 @@ export default function AnnouncementsPage() {
                 onClick={() => setActiveTab(tab)}
                 className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-all ${
                   activeTab === tab 
-                    ? 'bg-primary text-white shadow-sm' 
+                    ? 'bg-blue-700 text-white shadow-sm' 
                     : 'text-slate-500 hover:bg-primary/10'
                 }`}
               >
@@ -247,46 +256,19 @@ export default function AnnouncementsPage() {
             </div>
           </div>
           {!isLoading && filteredAnnouncements.length > 0 && (
-            <div className="px-6 py-4 bg-slate-50 dark:bg-primary/5 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100 dark:border-slate-900">
+            <div className="px-6 py-4 bg-slate-50 dark:bg-primary/5 flex flex-col sm:flex-row items-center justify-between gap-4 ">
               <p className="text-sm text-slate-500">
-                Showing <span className="font-bold text-slate-700 dark:text-slate-300">{announcements?.pagingCounter} to {announcements?.docs.length}</span> of <span className="font-bold text-slate-700 dark:text-slate-300">{announcements?.totalDocs}</span> announcements
+                Showing <span className="font-bold text-slate-700 dark:text-slate-300">{announcements?.pagingCounter || 0} to {((announcements?.pagingCounter || 1) + (announcements?.docs?.length || 0) - 1)}</span> of <span className="font-bold text-slate-700 dark:text-slate-300">{announcements?.totalDocs || 0}</span> announcements
               </p>
-              {totalPages > 1 && (
-                <div className="flex items-center gap-2">
-                  <button 
-                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                    disabled={currentPage === 1}
-                    className="size-10 flex items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
-                  
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                    <button 
-                      key={p}
-                      onClick={() => setCurrentPage(p)}
-                      className={`size-10 flex items-center justify-center rounded-xl text-sm font-bold transition-all ${
-                        currentPage === p 
-                          ? 'bg-[#1241a1] text-white shadow-xl shadow-[#1241a1]/20' 
-                          : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      {p}
-                    </button>
-                  ))}
-
-                  <button 
-                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                    className="size-10 flex items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    <ChevronRight size={20} />
-                  </button>
-                </div>
-              )}
             </div>
           )}
         </div>
+
+        <Pagination 
+          page={currentPage}
+          totalPages={totalPages}
+          handlePageChange={setCurrentPage}
+        />
       </div>
 
       {/* View Detail Modal */}

@@ -137,16 +137,18 @@ export default function ProfilePage() {
           
           <div className="flex-1 text-center md:text-left">
             <h2 className="text-3xl font-semibold dark:text-white mb-2 tracking-tight">
-              {residentData?.name || 'Alex Rivers'}
+              
+              {`${residentData?.firstName || 'N/A'} ${residentData?.lastName || 'N/A'}`}
+
             </h2>
             <div className="flex flex-col md:flex-row gap-2 md:gap-6">
               <p className="text-slate-500 dark:text-slate-400 flex items-center justify-center md:justify-start gap-2 text-sm font-medium">
                 <Mail className="size-4" /> 
-                {residentData?.email || 'alex.rivers@email.com'}
+                {residentData?.email || 'N/A'}
               </p>
               <p className="text-slate-500 dark:text-slate-400 flex items-center justify-center md:justify-start gap-2 text-sm font-medium">
                 <Phone className="size-4" /> 
-                {residentData?.phone || '+1 (555) 012-3456'}
+                {residentData?.phone || 'N/A'}
               </p>
             </div>
             

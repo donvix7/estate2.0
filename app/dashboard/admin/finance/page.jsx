@@ -11,6 +11,7 @@ import { DataStateLayout } from '@/components/ui/DataStateLayout';
 import { toast } from 'react-toastify';
 import { getInvoices, getTransactions } from '@/lib/service';
 import { LoadingState } from '@/components/ui/LoadingState';
+import Pagination from '@/components/pagination';
 
 export default function FinancePage() {
   const [invoices, setInvoices] = useState([]);
@@ -18,18 +19,31 @@ export default function FinancePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('invoices'); // invoices | transactions
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [page, activeTab]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [activeTab]);
 
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const invData = await getInvoices();
-      const txnData = await getTransactions();
-      setInvoices(invData.docs || []);
-      setTransactions(txnData.docs || []);
+      if (activeTab === 'invoices') {
+        const invData = await getInvoices(page);
+        const result = invData.data || invData;
+        setInvoices(result.docs || []);
+        setTotalPages(result.totalPages || 1);
+      } else {
+        const txnData = await getTransactions(page);
+        const result = txnData.data || txnData;
+        setTransactions(result.docs || []);
+        setTotalPages(result.totalPages || 1);
+      }
     } catch (error) {
       console.error('Failed to load finance data:', error);
     } finally {
@@ -142,6 +156,12 @@ export default function FinancePage() {
           />
         </DataStateLayout>
       )}
+
+      <Pagination 
+        page={page}
+        totalPages={totalPages}
+        handlePageChange={(p) => setPage(p)}
+      />
     </div>
   );
 }

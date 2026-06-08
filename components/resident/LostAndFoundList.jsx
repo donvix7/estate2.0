@@ -10,6 +10,7 @@ import {
   AlertCircle, 
   Search 
 } from 'lucide-react'
+import Pagination from '@/components/pagination'
 
 const CATEGORY_COLORS = {
   Pet: 'text-amber-500',
@@ -76,7 +77,7 @@ export default function LostAndFoundList({
               <div className={`absolute inset-0 bg-linear-to-br ${ITEM_BG[item.category] || 'from-slate-500/20 to-slate-100/10'} ${item.image && !imageErrors[item._id || item.id] ? 'hidden' : 'flex'} items-center justify-center cursor-pointer`}>
                 {item.iconComponent && <item.iconComponent className={`size-12 opacity-40 ${CATEGORY_COLORS[item.category] || 'text-slate-500'}`} />}
               </div>
-              <div className={`absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[9px] font-bold uppercase tracking-widest text-white backdrop-blur-md shadow-xl border border-white/20 transition-all duration-300 group-hover:scale-110
+              <div className={`absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[9px] font-bold uppercase tracking-widest  backdrop-blur-md
                 ${(item.status || item.type) === 'lost' ? 'bg-rose-500/90 shadow-rose-500/20' : 
                   (item.status || item.type) === 'resolved' ? 'bg-[#1241a1]/90 shadow-blue-500/20' : 
                   'bg-emerald-500/90 shadow-emerald-500/20'}`}>
@@ -132,38 +133,17 @@ export default function LostAndFoundList({
         ))}
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 pb-12">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 pb-4">
         <p className="text-sm text-slate-500">
           Showing <span className="font-bold text-slate-700 dark:text-slate-300">{filteredItems.length}</span> of <span className="font-bold text-slate-700 dark:text-slate-300">{totalItems}</span> items
         </p>
-        {totalPages > 1 && (
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="size-10 flex items-center justify-center rounded-md bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-500 disabled:opacity-30 disabled:cursor-not-allowed"
-            >
-              <ChevronLeft size={18} />
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-              <button
-                key={p}
-                onClick={() => setCurrentPage(p)}
-                className={`size-10 flex items-center justify-center rounded-md text-[11px] font-bold uppercase tracking-widest transition-all ${p === currentPage ? 'bg-[#1241a1] text-white shadow-xl shadow-[#1241a1]/20' : 'bg-slate-100 dark:bg-slate-800/50 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700'}`}
-              >
-                {p}
-              </button>
-            ))}
-            <button 
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-              className="size-10 flex items-center justify-center rounded-md bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-500 disabled:opacity-30 disabled:cursor-not-allowed"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </div>
-        )}
       </div>
+      
+      <Pagination 
+        page={currentPage}
+        totalPages={totalPages}
+        handlePageChange={setCurrentPage}
+      />
     </>
   )
 }

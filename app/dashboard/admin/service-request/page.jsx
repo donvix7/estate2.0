@@ -9,6 +9,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { FilterBar } from '@/components/ui/FilterBar';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
 import { getAllServiceRequests } from '@/lib/service';
+import Pagination from '@/components/pagination';
 
 export default function ServicesPage() {
   const router = useRouter();
@@ -16,16 +17,20 @@ export default function ServicesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     loadRequests();
-  }, []);
+  }, [page]);
 
   const loadRequests = async () => {
     setIsLoading(true);
     try {
-      const data = await getAllServiceRequests();
-      setRequests(data.docs);
+      const data = await getAllServiceRequests(page);
+      const result = data.data || data;
+      setRequests(result.docs || []);
+      setTotalPages(result.totalPages || 1);
     } catch (error) {
       console.error('Failed to load service requests:', error);
     } finally {
@@ -101,6 +106,12 @@ export default function ServicesPage() {
           getStatusColor={getStatusColor}
         />
       </DataStateLayout>
+
+      <Pagination 
+        page={page}
+        totalPages={totalPages}
+        handlePageChange={(p) => setPage(p)}
+      />
     </div>
   );
 }

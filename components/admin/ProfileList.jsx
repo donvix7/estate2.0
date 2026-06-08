@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import MetricCard from '@/components/MetricCard';
 import Link from 'next/link';
 import { LoadingState } from '@/components/ui/LoadingState';
+import Pagination from '@/components/pagination';
 
 
 
@@ -25,14 +26,20 @@ export default function ProfileList() {
   const [selectedActionProfile, setSelectedActionProfile] = useState(null);
   const [actionMenuPos, setActionMenuPos] = useState({ top: 0, left: 0 });
   const [profileToDelete, setProfileToDelete] = useState(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalDocs, setTotalDocs] = useState(0);
 
   useEffect(() => {
     const loadProfiles = async () => {
       setIsLoading(true);
       try {
-        const data = await getAllProfiles();
-        setProfiles(data.docs);
-        setFilteredProfiles(data.docs);
+        const data = await getAllProfiles(page);
+        const result = data.data || data;
+        setProfiles(result.docs || []);
+        setFilteredProfiles(result.docs || []);
+        setTotalPages(result.totalPages || 1);
+        setTotalDocs(result.totalDocs || (result.docs ? result.docs.length : 0));
       } catch (error) {
         console.error('Error loading profiles:', error);
       } finally {
@@ -40,10 +47,8 @@ export default function ProfileList() {
       }
     };
 
-
     loadProfiles();
-
-  }, []);
+  }, [page]);
 
   useEffect(() => {
 
@@ -111,6 +116,9 @@ export default function ProfileList() {
       setProfileToDelete(profile);
     }
   };
+  const handlePageChange = (p) => {
+   setPage(p); 
+  }
 
   const handleOptionsClick = (e, profile) => {
     e.stopPropagation();
@@ -210,7 +218,7 @@ export default function ProfileList() {
         <MetricCard 
           icon={<ShieldCheck className="size-5" />} 
           label="Security" 
-          value={profiles.filter(p => p.type === 'security').length} 
+          value={totalDocs ? profiles.filter(p => p.type === 'security').length : 0} 
           trend="Active" 
           trendColor="text-blue-500" 
           bgColor="bg-indigo-100 dark:bg-indigo-900/30" 
@@ -386,6 +394,13 @@ export default function ProfileList() {
             )}
           />
         </div>
+        </div>
+
+        <Pagination 
+          page={page}
+          totalPages={totalPages}
+          handlePageChange={handlePageChange}
+        />
       </div>
 
       {/* Options Actions Modal */}
@@ -428,6 +443,5 @@ export default function ProfileList() {
         showCancel={true}
       />
       </div>
-    </div>
-  );
+    );
 }
