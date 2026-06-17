@@ -61,6 +61,7 @@ import {
 } from 'lucide-react'
 import FAQ from '@/components/faq'
 import HeroWithCarousel from '@/components/Hero'
+import Image from 'next/image'
 
 // MVP Features based on your requirements
 const MVP_FEATURES = [
@@ -728,27 +729,19 @@ export default function HomePage() {
                   </button>
                 </div>
 
-                <div className="flex items-center gap-4 pt-8">
-                  <div className="flex -space-x-3">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className="size-10 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden shadow-sm">
-                        <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" className="w-full h-full object-cover" />
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-sm font-medium text-slate-500">
-                    Trusted by <span className="font-bold text-slate-900 dark:text-white">10,000+ residents</span> and <span className="font-bold text-slate-900 dark:text-white">500+ estates</span>
-                  </p>
-                </div>
+             
               </div>
 
               <div className="relative group">
                 <div className="absolute -inset-4 bg-[#1241a1]/10 rounded-[2.5rem] blur-2xl group-hover:bg-[#1241a1]/15 transition-colors" />
                 <div className="relative rounded-[2rem] overflow-hidden shadow-2xl">
-                  <img 
-                    src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2000&auto=format&fit=crop" 
+                  <Image 
+                    src={"/estatelanding.jpg" }
+                    width={100}
+                    height={100}
+                    unoptimized
                     alt="Luxury Estate" 
-                    className="w-full aspect-[4/3] object-cover transition-transform duration-500 ease-out group-hover:scale-105" 
+                    className="w-full aspect-[1/1] object-cover transition-all duration-500 group-hover:scale-105" 
                   />
                   <div className="absolute bottom-6 left-6 right-6 p-6 bg-white/20 dark:bg-slate-900/20 backdrop-blur-sm rounded-2xl shadow-xl">
                     <div className="flex justify-between items-center mb-4">
@@ -781,25 +774,12 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Partners Section */}
-        <section className="py-12 bg-white/50 dark:bg-slate-900/30">
-          <div className="max-w-7xl mx-auto px-6">
-            <p className="text-center text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-10">Trusted by Modern Communities</p>
-            <div className="flex flex-wrap justify-center items-center gap-12 lg:gap-20 opacity-50 grayscale dark:invert transition-all">
-              <span className="text-2xl font-black tracking-tighter italic">LAKEFRONT</span>
-              <span className="text-2xl font-black tracking-tighter italic">SKYLINE</span>
-              <span className="text-2xl font-black tracking-tighter italic">PARKVIEW</span>
-              <span className="text-2xl font-black tracking-tighter italic">RIVERSIDE</span>
-              <span className="text-2xl font-black tracking-tighter italic">OAKWOOD</span>
-            </div>
-          </div>
-        </section>
+   
 
         {/* Features Section */}
         <section id="features" className="py-24 lg:py-32 bg-white dark:bg-[#111621]">
           <div className="max-w-7xl mx-auto px-6">
             <div className="max-w-3xl mx-auto text-center mb-20">
-              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-[#1241a1] mb-4">Core Ecosystem</h2>
               <h3 className="text-4xl lg:text-5xl font-black tracking-tight mb-6">Smart Solutions for Modern Estates</h3>
               <p className="text-lg text-slate-500 leading-relaxed">Everything you need to manage your community with precision and ease, all in one unified platform.</p>
             </div>
@@ -828,10 +808,9 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
               <div className="max-w-2xl">
-                <h2 className="text-xs font-black uppercase tracking-[0.3em] text-[#1241a1] mb-4">Portfolio</h2>
                 <h3 className="text-4xl lg:text-5xl font-black tracking-tight mb-0">Discover Premier Living</h3>
               </div>
-              <button className="flex items-center gap-2 font-bold text-[#1241a1] hover:gap-3 transition-all px-6 py-3 bg-white dark:bg-slate-800 rounded-xl shadow-lg">
+              <button className="flex items-center gap-2 font-bold text-[#1241a1] hover:gap-3 transition-all px-6 py-3 dark:bg-slate-800 rounded-xl">
                 View All Estates
                 <ArrowRight className="size-5" />
               </button>
@@ -839,13 +818,13 @@ export default function HomePage() {
 
             <div className="grid md:grid-cols-3 gap-8">
               {[
-                { name: 'The Azure Residences', location: 'Lekki Phase 1', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000' },
-                { name: 'Oakwood Heights', location: 'Victoria Island', img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1000' },
-                { name: 'Skyloft Gardens', location: 'Ikoyi, Lagos', img: 'https://images.unsplash.com/photo-1600607687940-477a128f198e?q=80&w=1000' }
+                { name: 'The Azure Residences', location: 'Lekki Phase 1', img: '/estatelanding 2.jpg' },
+                { name: 'Oakwood Heights', location: 'Victoria Island', img: '/estatelanding 3.jpg' },
+                { name: 'Skyloft Gardens', location: 'Ikoyi, Lagos', img: '/estatelanding 4.jpg' }
               ].map((estate, i) => (
                 <div key={i} className="group cursor-pointer">
                   <div className="relative aspect-4/5 rounded-3xl overflow-hidden shadow-2xl group/img">
-                    <img src={estate.img} alt={estate.name} className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110" />
+                    <Image width={100} height={100} unoptimized src={estate.img} alt={estate.name} className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110" />
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100" />
                     <div className="absolute top-6 right-6">
                       <div className="size-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
@@ -954,13 +933,13 @@ export default function HomePage() {
 
         {/* CTA Banner */}
         <section className="py-12 px-6">
-          <div className="max-w-7xl mx-auto bg-[#1241a1] rounded-[3rem] py-20 px-8 text-center relative overflow-hidden">
+          <div className="max-w-7xl mx-auto bg-[#1241a1]/70 rounded-[3rem] py-20 px-8 text-center relative overflow-hidden">
              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
              <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
              
-             <div className="relative z-10 space-y-8">
-               <h3 className="text-4xl lg:text-5xl font-black text-white tracking-tight">Ready to Transform your Estate?</h3>
-               <p className="text-blue-100/70 text-lg max-w-2xl mx-auto leading-relaxed">Join the hundreds of forward-thinking estates who have already upgraded to the next generation of property management.</p>
+             <div className="relative space-y-8">
+               <h3 className="text-4xl lg:text-5xl font-bold tracking-light">Ready to Transform your Estate?</h3>
+               <p className="text-blue-100/90 text-lg max-w-2xl mx-auto leading-relaxed">Join the hundreds of forward-thinking estates who have already upgraded to the next generation of property management.</p>
                <div className="flex flex-wrap justify-center gap-4 pt-4">
                  <button onClick={handleGetStarted} className="px-10 py-5 bg-white text-[#1241a1] rounded-2xl text-lg font-bold hover:bg-blue-50 transition-all shadow-xl hover:-translate-y-1 active:scale-95">
                    Request a Free Demo

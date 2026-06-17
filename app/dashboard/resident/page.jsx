@@ -213,7 +213,7 @@ export default function ResidentDashboard() {
       
       {/* Header Greeting */}
       <PageHeader 
-        title={`Hello, ${residentData?.name?.split(' ')[0] || 'Sarah'}!`}
+        title={`Hello, ${residentData?.firstName?.split(' ')[0] || 'Sarah'}!`}
         description="Welcome back to your resident dashboard."
         icon={User}
         iconColor="blue"

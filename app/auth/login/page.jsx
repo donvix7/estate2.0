@@ -44,7 +44,7 @@ export default function LoginPage() {
         if (userType === 'admin' || result.user?.type === 'admin') {
           router.push('/dashboard/admin')
         } else {
-          router.push('/dashboard/resident')
+          router.push('/auth/proceed')
         }
       } else {
         setError(result?.message || 'Login failed. Please check your credentials.')
@@ -180,8 +180,8 @@ export default function LoginPage() {
 
           <div className="mt-8 text-center pt-8">
             <p className="text-slate-500 dark:text-slate-400 text-sm">
-              New to the estate? 
-              <Link href="/register" className="text-[#1241a1] font-bold ml-1 hover:underline">Request Access</Link>
+              Dont have account? 
+              <Link href="/auth/signup" className="text-[#1241a1] font-bold ml-1 hover:underline">Sign up here</Link>
             </p>
           </div>
         </div>

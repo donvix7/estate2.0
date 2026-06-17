@@ -34,12 +34,12 @@ export default function AddUserPage() {
     phone: '',
     estateID: '', // Defaulting to a placeholder as per example
     status: 'active',
-    type: 'resident'
+    type: 'residents'
   });
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const {  value } = e.target;
+    setFormData(prev => ({ ...prev,phone: value }));
   };
 
    useEffect(() => {
@@ -55,15 +55,8 @@ export default function AddUserPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-
-
-
-    
     // Exact payload structure as requested
     const payload = {
-      email: formData.email,
-      password: formData.password,
-      name: formData.name,
       phone: formData.phone,
       estateID: estateId,
     };
@@ -71,15 +64,15 @@ export default function AddUserPage() {
     
     setIsSubmitting(true);
     try {
-      if (formData.type === 'resident') {
-        const result = await handleResidentRequest(payload);
+      if (formData.type === 'residents') {
+        const result = await handleResidentRequest(payload, formData.type);
         if (result.success) {
           toast.success('Profile created successfully');
           router.push('/dashboard/admin/users');
         }
       }
       if (formData.type === 'worker'|| formData.type === 'admin') {
-        const result = await handleCreateUser(payload);
+        const result = await handleCreateUser(payload,formData.type);
         if (result.success) {
           toast.success('Profile created successfully');
           router.push('/dashboard/admin/users');
@@ -120,7 +113,7 @@ export default function AddUserPage() {
             </button>
             <button
               onClick={handleSubmit}
-              disabled={!formData.name || isSubmitting}
+              disabled={!formData.phone || isSubmitting}
               className="px-6 py-2.5 bg-[#1241a1] text-white text-sm font-bold rounded-lg shadow-lg shadow-blue-900/20 hover:bg-blue-800 disabled:opacity-50 flex items-center gap-2 transition-all"
             >
               {isSubmitting ? (
@@ -146,45 +139,8 @@ export default function AddUserPage() {
               </div>
               <div className="p-8 space-y-6">
                 <div className="grid grid-cols-1 gap-6">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-0.5">Full Legal Name</label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="e.g. Jonathan Smith"
-                      className="w-full px-4 py-3 rounded-lg border-none bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 focus:border-[#1241a1] outline-none transition-all font-medium"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-0.5">Email Address</label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="jsmith@example.com"
-                        className="w-full px-4 py-3 rounded-lg border-none bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 focus:border-[#1241a1] outline-none transition-all font-medium"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-0.5">Access Password</label>
-                      <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="••••••••"
-                        className="w-full px-4 py-3 rounded-lg border-none bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 focus:border-[#1241a1] outline-none transition-all font-medium"
-                      />
-                    </div>
-                  </div>
+                 
+                  
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-1.5">
@@ -294,7 +250,7 @@ export default function AddUserPage() {
               <div className="space-y-4">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Classification</label>
                 <div className="grid grid-cols-1 gap-2">
-                  {['resident', 'staff', 'security'].map(type => (
+                  {['residents', 'staffs', 'securitys'].map(type => (
                     <button
                       key={type}
                       type="button"
@@ -305,9 +261,9 @@ export default function AddUserPage() {
                           : 'text-slate-500 hover:bg-slate-50'
                       }`}
                     >
-                      {type === 'resident' && <Building2 size={16} />}
-                      {type === 'staff' && <Users size={16} />}
-                      {type === 'security' && <Shield size={16} />}
+                      {type === 'residents' && <Building2 size={16} />}
+                      {type === 'staffs' && <Users size={16} />}
+                      {type === 'securitys' && <Shield size={16} />}
                       <span className="capitalize">{type}</span>
                     </button>
                   ))}
@@ -329,21 +285,7 @@ export default function AddUserPage() {
               </div>
             </div>
 
-            {/* Profile Media Card */}
-            <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm p-6">
-              <div className="flex flex-col items-center text-center space-y-4">
-                <div className="size-32 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-300 relative group cursor-pointer overflow-hidden border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-[#1241a1] transition-colors">
-                  <Camera size={32} />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-bold uppercase tracking-widest">
-                    Upload Photo
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">Profile Identity Photo</h4>
-                  <p className="text-xs text-slate-400">Used for ID verification & security badges.</p>
-                </div>
-              </div>
-            </div>
+          
 
             {/* Info Box */}
             <div className="bg-blue-50/50 dark:bg-blue-900/10 rounded-xl border border-blue-100/50 dark:border-blue-900/30 p-4 flex gap-3">

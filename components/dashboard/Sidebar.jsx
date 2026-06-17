@@ -5,16 +5,16 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Building2, Settings, HelpCircle, LogOut, ShieldAlert, User } from 'lucide-react';
 import { AlertModal } from '../ui/AlertModal';
+import { handleLogout } from '@/lib/action';
 
 export default function DashboardSidebar({ links, user, role, estateName }) {
   const pathname = usePathname();
   const router = useRouter();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('currentUser');
-    sessionStorage.removeItem('sessionId');
-    router.push('/login');
+  const handleUserLogout = async () => {
+    await handleLogout();
+    router.push('/auth/login');
   };
 
   return (
@@ -108,7 +108,7 @@ export default function DashboardSidebar({ links, user, role, estateName }) {
       <AlertModal 
         isOpen={showLogoutConfirm}
         onClose={() => setShowLogoutConfirm(false)}
-        onConfirm={handleLogout}
+        onConfirm={handleUserLogout}
         title="Confirm Logout"
         message="Are you sure you want to log out of your session?"
         confirmText="Logout"
