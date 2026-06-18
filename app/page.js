@@ -644,34 +644,6 @@ const testimonies = [
   },
 ]
 
-const StatsBar = () => {
-  const stats = [
-    { value:'500+', label:'Communities', icon: <Building className="w-4 h-4" />},
-    { value:'100K+', label:'Residents', icon: <Users className="w-4 h-4" />},
-    { value:'99.8%', label:'Uptime', icon: <Shield className="w-4 h-4" />},
-    { value:'4.8/5', label:'Rating', icon: <Award className="w-4 h-4" />},
-  ]
-
-  return (
-    <div className="py-8 bg-gray-900 text-white">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {stats.map((stat, index) => (
-            <div key={index} className="text-center">
-              <div className="flex justify-center mb-3">
-                <div className="p-2 bg-white/10">
-                  {stat.icon}
-                </div>
-              </div>
-              <div className="text-2xl md:text-3xl font-bold mb-1">{stat.value}</div>
-              <div className="text-sm text-gray-300">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
 
 export default function HomePage() {
   const router = useRouter()

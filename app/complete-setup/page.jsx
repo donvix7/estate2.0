@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { 
   Building, 
@@ -17,45 +17,33 @@ import {
   Lock,
   Flag
 } from 'lucide-react'
-import { handleEstateRegistration, handleUserRegistration } from '@/lib/action'
+import { handleEstateCompleteRegistration, handleUserRegistration } from '@/lib/action'
 import AuthCarousel from '@/components/AuthCarousel'
 
 
 
 export default function EstateRegistrationPage() {
+
+    const token = useSearchParams().get('token');
+    console.log(token);
   const [step, setStep] = useState(1)
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [address, setAddress] = useState('')
-  const [city, setCity] = useState('')
-  const [state, setState] = useState('')  
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [termsAccepted, setTermsAccepted] = useState(false)
-  
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
   const router = useRouter()
-  
-  const estateTypes = [
-    { value: 'apartment', label: 'Apartment Complex' },
-    { value: 'gated', label: 'Gated Community' },
-    { value: 'townhouse', label: 'Townhouse Society' },
-    { value: 'villa', label: 'Villa Complex' },
-    { value: 'cooperative', label: 'Cooperative Housing' }
-  ]
-
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
     const val = type === 'checkbox' ? checked : value
         switch (name) {
-        case 'firstName': setFirstName(val); break;
-        case 'lastName': setLastName(val); break;
         case 'address': setAddress(val); break;
         case 'city': setCity(val); break;
         case 'state': setState(val); break;
@@ -77,21 +65,13 @@ export default function EstateRegistrationPage() {
     const newErrors = {}
 
     if (step === 1) {
-      if (!firstName.trim()) newErrors.firstName = 'Estate name is required'
-      if (!lastName.trim()) newErrors.lastName = 'Estate name is required'
-      if (!address.trim()) newErrors.address = 'Address is required'
-      if (!city.trim()) newErrors.city = 'City is required'
-    }
-
-    if (step === 2) {
-      if (!email.trim()) newErrors.email = 'Email is required'
-      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = 'Invalid email format'
-      if (!phone.trim()) newErrors.phone = 'Phone number is required'
-    }
-
-    if (step === 3) {
+      if (!email) newErrors.email = 'Email is required'
+      if (!phone) newErrors.phone = 'Phone number is required'
+      if (!address) newErrors.address = 'Address is required'
+      if (!city) newErrors.city = 'City is required'
+      if (!state) newErrors.state = 'State is required'
       if (!password) newErrors.password = 'Password is required'
-      else if (password.length < 8) newErrors.password = 'Password must be at least 8 characters'
+      else if (password.length < 8) newErrors.password = 'Password must be at least 6 characters'
       if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match'
       if (!termsAccepted) newErrors.termsAccepted = 'You must accept the terms'
     }
@@ -118,20 +98,16 @@ export default function EstateRegistrationPage() {
       setIsSubmitting(true)
       
       const formData = {
-        firstName,
-        lastName,
+        estate_contact_email: email,
+        estate_contact_phone: phone,
         address,
         city,
         state,
-        phone, 
-        email,
-         password, 
-         confirmPassword, 
-         termsAccepted
+        password, 
       }
 
       try {
-        const response = await handleUserRegistration(formData)
+        const response = await handleEstateCompleteRegistration(formData,token)
         if (!response.success) {
           throw new Error(response.message)
         }
@@ -145,12 +121,7 @@ export default function EstateRegistrationPage() {
     }
   }
 
-  const progressSteps = [
-    { number: 1, label: 'Personal Information', icon: <Building2 className="w-4 h-4" /> },
-    { number: 2, label: 'Contact Information', icon: <User className="w-4 h-4" /> },
-    { number: 3, label: 'Account Information', icon: <Shield className="w-4 h-4" /> }
-  ]
-
+  
   return (
     <div className="min-h-screen w-full flex bg-gray-50 overflow-hidden">
       
@@ -165,39 +136,16 @@ export default function EstateRegistrationPage() {
 
         <div className="max-w-xl w-full mx-auto mt-10 space-y-8">
             
-            {/* Progress Bar (Compact for Right Side) */}
-            <div className="mb-8">
-              <div className="flex justify-between items-center mb-2">
-                {progressSteps.map((item) => (
-                   <div key={item.number} className="flex flex-col items-center gap-1 flex-1 relative">
-                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold z-10 ${
-                            step > item.number ? 'bg-gray-900 text-white' : 
-                            step === item.number ? 'bg-gray-900 text-white ring-4 ring-gray-100' : 
-                            'bg-gray-100 text-gray-400'
-                       }`}>
-                           {step > item.number ? <CheckCircle2 className="w-4 h-4" /> : item.number}
-                       </div>
-                       <div className={`text-[10px] font-semibold tracking-wider uppercase hidden sm:block ${step >= item.number ? 'text-gray-900' : 'text-gray-400'}`}>
-                           {item.label}
-                       </div>
-                       {item.number < 4 && (
-                           <div className={`absolute top-4 left-1/2 w-full h-[2px] z-0 ${step > item.number ? 'bg-gray-900' : 'bg-gray-100'}`} />
-                       )}
-                   </div>
-                ))}
-              </div>
-            </div>
+            
 
             <div className="text-center lg:text-left mb-8">
                 <h1 className="text-3xl lg:text-4xl font-bold text-gray-700 mb-3 tracking-tight">
-                    {step === 1 && 'Tell us about your estate'}
-                    {step === 2 && 'Who will manage this account?'}
-                    {step === 3 && 'Configure your security'}
+                    {step === 1 && 'Complete your setup'}
+
                 </h1>
                 <p className="text-gray-500 mt-2 text-lg">
-                    {step === 1 && 'We need some basic details to get you set up.'}
-                    {step === 2 && 'Provide contact details for the primary administrator.'}
-                    {step === 3 && 'Help us tailor the experience to your needs.'}
+                    {step === 1 && 'Fill in your details to complete your registration.'}
+
                 </p>
             </div>
 
@@ -212,143 +160,93 @@ export default function EstateRegistrationPage() {
               onSubmit={handleSubmit} 
               className="space-y-6 bg-gray-100 p-6 rounded-lg"
             >
-              
-              {/* STEP 1: BASIC INFO */}
+
               {step === 1 && (
                 <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Estate Name <span className="text-red-500">*</span></label>
-                      <input
-                        type="text"
-                        name="firstName"
-                        value={firstName}
-                        onChange={handleChange}
-                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                          errors.firstName ? ' border-red-500' : ' border-gray-200'
-                        }`}
-                        placeholder="e.g. Royal Gardens"
-                      />
-                      {errors.firstName && <p className="text-red-600 text-xs">{errors.firstName}</p>}
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Last Name <span className="text-red-500">*</span></label>
-                      <input
-                        type="text"
-                        name="lastName"
-                        value={lastName}
-                        onChange={handleChange}
-                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                          errors.lastName ? ' border-red-500' : ' border-gray-200'
-                        }`}
-                        placeholder="e.g. Royal Gardens"
-                      />
-                      {errors.lastName && <p className="text-red-600 text-xs">{errors.lastName}</p>}
-                    </div>
-
-                    <div className="space-y-2">
-  
-                    </div>
-
-                    <div className="md:col-span-2 space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Address <span className="text-red-500">*</span></label>
-                      <textarea
-                        name="address"
-                        value={address}
-                        onChange={handleChange}
-                        rows="3"
-                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all resize-none placeholder:text-gray-400 text-gray-800 ${
-                          errors.address ? ' border-red-500' : ' border-gray-200'
-                        }`}
-                        placeholder="Full street address"
-                      />
-                      {errors.address && <p className="text-red-600 text-xs">{errors.address}</p>}
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">City <span className="text-red-500">*</span></label>
-                        <div className="relative">
-                            <MapPin className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
-                            <input
-                                type="text"
-                                name="city"
-                                value={city}
-                                onChange={handleChange}
-                                className={`w-full pl-10 pr-4 py-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                                errors.city ? ' border-red-500' : ' border-gray-200'
-                                }`}
-                                placeholder="City"
-                            />
-                        </div>
-                        {errors.city && <p className="text-red-600 text-xs">{errors.city}</p>}
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">State/Province</label>
-                      <input
-                        type="text"
-                        name="state"
-                        value={state}
-                        onChange={handleChange}
-                        className="w-full p-3.5 bg-white border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all text-gray-800"
-                        placeholder="State"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* STEP 2: CONTACT */}
-              {step === 2 && (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="md:col-span-2 space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Phone <span className="text-red-500">*</span></label>
-                      <input
-                        type="text"
-                        name="phone"
-                        value={phone}
-                        onChange={handleChange}
-                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                          errors.phone ? ' border-red-500' : ' border-gray-200'
-                        }`}
-                        placeholder="Phone Number"
-                      />
-                      {errors.phone && <p className="text-red-600 text-xs">{errors.phone}</p>}
-                    </div>
-
-                   
-
-                    <div className="md:col-span-2 space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Email <span className="text-red-500">*</span></label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={email}
-                        onChange={handleChange}
-                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                          errors.email ? ' border-red-500' : ' border-gray-200'
-                        }`}
-                        placeholder="admin@estate.com"
-                      />
-                      {errors.email && <p className="text-red-600 text-xs">{errors.email}</p>}
-                    </div>
-
-                    <div className="md:col-span-2 space-y-2">
-</div>
-                  </div>
-                </div>
-              )}
-
-
-
-              {/* STEP 3: ACCOUNT */}
-              {step === 3 && (
-                <div className="space-y-6">
                   <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="gap-6">
+                          
+                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                         <h2 className='text-xl font-semibold text-gray-800 mb-4 col-span-2'>Estate Information</h2>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-700">Email <span className="text-red-500">*</span></label>
+                            <input
+                                type="email"
+                                name="email"
+                                value={email}
+                                onChange={handleChange}
+                                className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                                    errors.email ? ' border-red-500' : ' border-gray-200'
+                                }`}
+                                placeholder="your estate email"
+                            />
+                            {errors.email && <p className="text-red-600 text-xs">{errors.email}</p>}
+                        </div> 
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-700">Phone Number <span className="text-red-500">*</span></label>
+                            <input
+                            type="text"
+                            name="phone"
+                            value={phone}
+                            onChange={handleChange}
+                            className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                                errors.phone ? ' border-red-500' : ' border-gray-200'
+                            }`}
+                            placeholder="phone number"
+                            />
+                            {errors.phone && <p className="text-red-600 text-xs">{errors.phone}</p>}
+                        </div>
+                    </div>
+                    <h2 className='text-xl font-semibold text-gray-800 mb-2 mt-4'>Address</h2>
+                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                       <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">Address <span className="text-red-500">*</span></label>
+                        <input
+                          type="text"
+                          name="address"
+                          value={address}
+                          onChange={handleChange}
+                          className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                            errors.address ? ' border-red-500' : ' border-gray-200'
+                          }`}
+                          placeholder="full address"
+                        />
+                        {errors.address && <p className="text-red-600 text-xs">{errors.address}</p>}
+                      </div>
+                         
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">City <span className="text-red-500">*</span></label>
+                        <input
+                          type="text"
+                          name="city"
+                          value={city}
+                          onChange={handleChange}
+                          className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                            errors.city ? ' border-red-500' : ' border-gray-200'
+                          }`}
+                          placeholder="city"
+                        />
+                        {errors.city && <p className="text-red-600 text-xs">{errors.city}</p>}
+                      </div>
+                         
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">State <span className="text-red-500">*</span></label>
+                        <input
+                          type="text"
+                          name="state"
+                          value={state}
+                          onChange={handleChange}
+                          className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
+                            errors.state ? ' border-red-500' : ' border-gray-200'
+                          }`}
+                          placeholder="state"
+                        />
+                        {errors.state && <p className="text-red-600 text-xs">{errors.state}</p>}
+                      </div>
+                       </div>
+                     <h2 className='text-xl font-semibold text-gray-800 mb-2 mt-4'>Account Security</h2>
+                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                       <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-700">Password <span className="text-red-500">*</span></label>
                         <input
                           type="password"
@@ -376,6 +274,7 @@ export default function EstateRegistrationPage() {
                           placeholder="••••••••"
                         />
                         {errors.confirmPassword && <p className="text-red-600 text-xs">{errors.confirmPassword}</p>}
+                      </div>
                       </div>
                     </div>
 
@@ -413,7 +312,7 @@ export default function EstateRegistrationPage() {
                   <ArrowLeft className="w-4 h-4" /> Back
                 </button>
 
-                {step < 4 ? (
+                {step < 1 ? (
                   <button
                     
                     
@@ -439,7 +338,7 @@ export default function EstateRegistrationPage() {
             </form>
 
             <p className="text-center text-sm text-gray-500 mt-8">
-                Already have an account? <Link href="/login" className="text-blue-600 font-bold hover:underline transition-all">Sign in here</Link>
+                Already have an account? <Link href="/auth/login" className="text-blue-600 font-bold hover:underline transition-all">Sign in here</Link>
             </p>
           </div>
       </div>

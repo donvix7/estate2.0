@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { 
   Building2, 
   CheckCircle, 
@@ -12,9 +12,10 @@ import {
   HelpCircle
 } from 'lucide-react'
 import Link from 'next/link';
+import { getAllEstates } from '@/lib/service';
+import { sendJoinRequest } from '@/lib/action';
 
 // Mock data for available estates
-const AVAILABLE_ESTATES = [];
 
 // Icon mapping
 const IconMap = {
@@ -25,11 +26,23 @@ const IconMap = {
 }
 
 export default function EstateSelectionPage() {
-  const [selectedEstateId, setSelectedEstateId] = useState('estate-1')
-  const [joinedEstateIds, setJoinedEstateIds] = useState(['estate-1', 'estate-2'])
+  const [selectedEstateId, setSelectedEstateId] = useState('')
+  const [joinedEstateIds, setJoinedEstateIds] = useState([])
   const [notification, setNotification] = useState(null)
+  const [estates, setEstates] = useState([])
 
-  const handleJoinEstate = () => {
+  useEffect(() => {
+    const fetchEstates = async () => {
+      const estates = await getAllEstates()
+      setEstates(estates)
+
+    }
+    fetchEstates()
+  }, [])
+const AVAILABLE_ESTATES = estates;
+
+  const handleJoinEstate = async() => {
+    // Guard must come before the API call
     if (!selectedEstateId) return
 
     // Check if already joined
@@ -42,13 +55,24 @@ export default function EstateSelectionPage() {
       return
     }
 
-    // Add to joined estates
+    const res = await sendJoinRequest(selectedEstateId)
+
+    if (!res?.success) {
+      setNotification({
+        message: res?.message || 'Failed to send join request. Please try again.',
+        type: 'warning',
+      })
+      setTimeout(() => setNotification(null), 2500)
+      return
+    }
+
+    // Only add to joined list on success
     setJoinedEstateIds([...joinedEstateIds, selectedEstateId])
 
     // Show success notification
-    const estateName = AVAILABLE_ESTATES.find(e => e.id === selectedEstateId)?.name || selectedEstateId
+    const estateName = AVAILABLE_ESTATES.find(e => e.id === selectedEstateId)?.estateName || selectedEstateId
     setNotification({
-      message: `Joined "${estateName}" successfully.`,
+      message: `Join request for "${estateName}" sent successfully.`,
       type: 'success',
     })
     setTimeout(() => setNotification(null), 2500)
@@ -69,7 +93,7 @@ export default function EstateSelectionPage() {
       <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-900/80 via-slate-900 to-slate-900" />
       
       {/* Main Card */}
-      <div className="relative z-20 w-full max-w-[960px] flex flex-col md:flex-row bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl rounded-xl overflow-hidden shadow-2xl">
+      <div className="relative z-20 w-full max-w-[960px] flex flex-col md:flex-row bg-white/95 min-h-[500px] dark:bg-slate-900/90 backdrop-blur-xl rounded-xl overflow-hidden shadow-2xl">
         
         {/* Left Side: Visual Context */}
         <div className=" md:flex flex-1 flex-col justify-between p-10 bg-[#1241a1]/10">
@@ -88,7 +112,7 @@ export default function EstateSelectionPage() {
             </div>
           </div>
             <div className="space-y-2 max-h-[240px] overflow-y-auto pr-1 custom-scroll">
-              {joinedEstateIds ? (
+              {joinedEstateIds.length === 0 ? (
                 <div className="text-center py-6 text-slate-400 dark:text-slate-500 text-sm flex flex-col gap-2 items-center">
                   <Home className="size-8 mx-auto mb-2 opacity-40" />
                   No joined estates yet. Use the dropdown to join one 
@@ -171,15 +195,16 @@ export default function EstateSelectionPage() {
                 <select
                   value={selectedEstateId}
                   onChange={(e) => setSelectedEstateId(e.target.value)}
-                  className="w-full appearance-none bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white rounded-xl py-3 pl-5 pr-12 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition shadow-sm cursor-pointer"
+                  className="w-full border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white rounded-xl py-3 pl-5 pr-12 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition shadow-sm cursor-pointer"
                 >
-                  {AVAILABLE_ESTATES ? AVAILABLE_ESTATES.map((estate) => (
-                    <option key={estate.id} value={estate.id}>
-                      {estate.name}
+                  <option value="">-- Select an estate --</option>
+                  {AVAILABLE_ESTATES.length > 0 ? AVAILABLE_ESTATES.map((estate) => (
+                    <option className='text-black' key={estate.id} value={estate.id}>
+                      {estate.estateName}
                     </option>
                   ))
                   : 
-                  <option value="">No estates available</option>
+                  <option value="" disabled>No estates available</option>
                   }
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">

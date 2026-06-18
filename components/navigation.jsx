@@ -62,7 +62,7 @@ const Navigation = () => {
             await Logout();
             setIsLoggedIn(false);
             // Navigate to login and refresh to ensure UI updates
-            router.push('/login');
+            router.push('/auth/login');
             router.refresh();
         } catch (error) {
             console.error("Logout error:", error);
@@ -174,14 +174,14 @@ const Navigation = () => {
                     {!isLoggedIn ? (
                         <div className="hidden md:flex items-center gap-4">
                             <button 
-                                onClick={() => router.push('/login')}
+                                onClick={() => router.push('/auth/login')}
                                 className="px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-[#1241a1] transition-colors flex gap-2 items-center"
                             >
                                 <LogIn size={18}/>
                                 Login
                             </button>
                             <button 
-                                onClick={() => router.push('/register')}
+                                onClick={() => router.push('/auth/register')}
                                 className="px-6 py-2.5 bg-[#1241a1] hover:bg-[#1241a1]/90 text-white rounded-lg text-sm font-bold transition-all shadow-lg shadow-[#1241a1]/20 hover:-translate-y-0.5 active:scale-95 flex gap-2 items-center"
                             >
                                 <User size={18}/>
@@ -193,7 +193,7 @@ const Navigation = () => {
                             {role === 'admin' ? (
                                 <Link href="/dashboard/admin" onClick={() => setIsMenuOpen(false)}>
                                     <button className="px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-[#1241a1] transition-colors flex gap-2 items-center">
-                                        Admin Dashboard</button>
+                                        <LayoutDashboard/> Admin Dashboard</button>
                                 </Link>
                             ) : (
                                 <Link href="/dashboard/resident" onClick={() => setIsMenuOpen(false)}>

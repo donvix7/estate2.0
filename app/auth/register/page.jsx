@@ -54,8 +54,8 @@ export default function EstateRegistrationPage() {
     const { name, value, type, checked } = e.target
     const val = type === 'checkbox' ? checked : value
         switch (name) {
-        case 'firstName': setFirstName(val); break;
-        case 'lastName': setLastName(val); break;
+        case 'estateName': setFirstName(val); break;
+        
         case 'address': setAddress(val); break;
         case 'city': setCity(val); break;
         case 'state': setState(val); break;
@@ -221,31 +221,18 @@ export default function EstateRegistrationPage() {
                       <label className="text-sm font-medium text-gray-700">Estate Name <span className="text-red-500">*</span></label>
                       <input
                         type="text"
-                        name="firstName"
-                        value={firstName}
+                        name="estateName"
+                        value={estateName}
                         onChange={handleChange}
                         className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                          errors.firstName ? ' border-red-500' : ' border-gray-200'
+                          errors.estateName ? ' border-red-500' : ' border-gray-200'
                         }`}
                         placeholder="e.g. Royal Gardens"
                       />
-                      {errors.firstName && <p className="text-red-600 text-xs">{errors.firstName}</p>}
+                      {errors.estateName && <p className="text-red-600 text-xs">{errors.estateName}</p>}
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Last Name <span className="text-red-500">*</span></label>
-                      <input
-                        type="text"
-                        name="lastName"
-                        value={lastName}
-                        onChange={handleChange}
-                        className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                          errors.lastName ? ' border-red-500' : ' border-gray-200'
-                        }`}
-                        placeholder="e.g. Royal Gardens"
-                      />
-                      {errors.lastName && <p className="text-red-600 text-xs">{errors.lastName}</p>}
-                    </div>
+                    
 
                     <div className="space-y-2">
   
