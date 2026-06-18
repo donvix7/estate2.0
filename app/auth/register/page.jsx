@@ -24,8 +24,7 @@ import AuthCarousel from '@/components/AuthCarousel'
 
 export default function EstateRegistrationPage() {
   const [step, setStep] = useState(1)
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
+  const [estateName, setEstateName] = useState('')
   const [address, setAddress] = useState('')
   const [city, setCity] = useState('')
   const [state, setState] = useState('')  
@@ -54,7 +53,7 @@ export default function EstateRegistrationPage() {
     const { name, value, type, checked } = e.target
     const val = type === 'checkbox' ? checked : value
         switch (name) {
-        case 'estateName': setFirstName(val); break;
+        case 'estateName': setEstateName(val); break;
         
         case 'address': setAddress(val); break;
         case 'city': setCity(val); break;
