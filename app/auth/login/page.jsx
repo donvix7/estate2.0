@@ -76,7 +76,7 @@ export default function LoginPage() {
               <div className="p-2 bg-[#1241a1] rounded-lg text-white shadow-lg group-hover:scale-110 transition-transform">
                 <Building2 className="size-6" />
               </div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100">EstatePro</h1>
+              <h1 className="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100">EMSS</h1>
             </div>
             <h2 className="text-3xl font-bold leading-tight text-[#1241a1] dark:text-white mb-4 italic">Next-Gen Estate Management</h2>
             <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">Experience the ultimate all-in-one suite designed for luxury residences and smart communities.</p>

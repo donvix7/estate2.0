@@ -15,7 +15,7 @@ export default function Footer() {
               <div className="size-10 bg-[#1241a1] rounded-lg flex items-center justify-center text-white shadow-lg shadow-[#1241a1]/20">
                 <Building2 className="size-6" />
               </div>
-              <span className="text-2xl font-black tracking-tighter dark:text-white">EstatePro</span>
+              <span className="text-2xl font-black tracking-tighter dark:text-white">EMSS</span>
             </Link>
             <p className="text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm">
               The world's most sophisticated all-in-one management suite designed exclusively for luxury residences and smart estates.
@@ -75,7 +75,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-900 dark:border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-slate-500 text-xs font-medium">
-            © {new Date().getFullYear()} EstatePro Management. Built for the future of living.
+            © {new Date().getFullYear()} EMSS Management. Built for the future of living.
           </p>
           <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-slate-400">
             <Link href="#" className="hover:text-[#1241a1] transition-colors">Privacy Policy</Link>

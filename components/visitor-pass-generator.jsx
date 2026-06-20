@@ -665,7 +665,7 @@ export function VisitorPassGenerator() {
       )}
 
       <footer className="mt-12 py-6 text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">© 2024 EstatePro Visitor Management</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">© 2024 EMSS Visitor Management</p>
       </footer>
 
       {/* Modals */}

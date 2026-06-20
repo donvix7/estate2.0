@@ -110,7 +110,7 @@ const Navigation = () => {
                         <div className="size-10 bg-[#1241a1] rounded-lg flex items-center justify-center text-white">
                             <Building2 className="size-6" />
                         </div>
-                        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">EstatePro</h2>
+                        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">EMSS</h2>
                     </div>
                 </div>
             </header>
@@ -133,7 +133,7 @@ const Navigation = () => {
                         <div className="size-10 bg-[#1241a1] rounded-lg flex items-center justify-center text-white shadow-lg shadow-[#1241a1]/20 group-hover:scale-105 transition-transform">
                             <Building2 className="size-6" />
                         </div>
-                        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">EstatePro</h2>
+                        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">EMSS</h2>
                     </div>
 
                     {/* Desktop Navigation */}
@@ -238,7 +238,7 @@ const Navigation = () => {
                                 <div className="size-10 bg-[#1241a1] rounded-lg flex items-center justify-center text-white shadow-md">
                                     <Building2 className="size-5" />
                                 </div>
-                                <span className="font-bold text-xl text-slate-900 dark:text-white">EstatePro</span>
+                                <span className="font-bold text-xl text-slate-900 dark:text-white">EMSS</span>
                             </div>
                             <button onClick={() => setIsMenuOpen(false)} className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors">
                                 <X size={24} />

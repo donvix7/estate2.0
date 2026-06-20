@@ -444,7 +444,7 @@ export default function ResidentDashboard() {
       </section>
 
       <footer className="mt-auto px-8 py-6 text-center">
-        <p className="text-xs text-slate-500 dark:text-slate-400">© 2024 EstatePro Management Ecosystem. All rights reserved.</p>
+        <p className="text-xs text-slate-500 dark:text-slate-400">© 2024 EMSS Management Ecosystem. All rights reserved.</p>
       </footer>
     </div>
   )

@@ -195,11 +195,11 @@ const AVAILABLE_ESTATES = estates;
                 <select
                   value={selectedEstateId}
                   onChange={(e) => setSelectedEstateId(e.target.value)}
-                  className="w-full border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white rounded-xl py-3 pl-5 pr-12 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition shadow-sm cursor-pointer"
+                  className="w-full border px-4 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white rounded-xl py-3 pl-5 pr-12 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition shadow-sm cursor-pointer"
                 >
                   <option value="">-- Select an estate --</option>
                   {AVAILABLE_ESTATES.length > 0 ? AVAILABLE_ESTATES.map((estate) => (
-                    <option className='text-black' key={estate.id} value={estate.id}>
+                    <option className='text-black px-4' key={estate.id} value={estate.id}>
                       {estate.estateName}
                     </option>
                   ))
@@ -207,11 +207,7 @@ const AVAILABLE_ESTATES = estates;
                   <option value="" disabled>No estates available</option>
                   }
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
-                  <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
+               
               </div>
             </div>
             <button
@@ -225,7 +221,7 @@ const AVAILABLE_ESTATES = estates;
 
         
           {/* Footer */}
-          <div className="mt-6 pt-4 text-center border-t border-slate-200/60 dark:border-slate-700/40">
+          <div className="mt-6 pt-4 text-center">
             <p className="text-slate-400 dark:text-slate-500 text-xs">
               <HelpCircle className="inline size-3 mr-1" />
               Need help? 

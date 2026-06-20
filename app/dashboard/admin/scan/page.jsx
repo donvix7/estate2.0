@@ -335,7 +335,7 @@ export default function QRScanPage() {
           time: timestamp
         });
 
-        toast.success(`ACCESS GRANTED: Welcome to EstatePro`);
+        toast.success(`ACCESS GRANTED: Welcome to EMSS`);
         setPassCode('');
         setPin('');
         setLicensePlate('');

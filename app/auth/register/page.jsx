@@ -60,8 +60,6 @@ export default function EstateRegistrationPage() {
         case 'state': setState(val); break;
         case 'email': setEmail(val); break;
         case 'phone': setPhone(val); break;
-        case 'password': setPassword(val); break;
-        case 'confirmPassword': setConfirmPassword(val); break;
         case 'termsAccepted': setTermsAccepted(val); break;
       }
     
@@ -76,8 +74,8 @@ export default function EstateRegistrationPage() {
     const newErrors = {}
 
     if (step === 1) {
-      if (!firstName.trim()) newErrors.firstName = 'Estate name is required'
-      if (!lastName.trim()) newErrors.lastName = 'Estate name is required'
+      if (!estateName.trim()) newErrors.estateName = 'Estate name is required'
+      if (!state.trim()) newErrors.state = 'State is required'
       if (!address.trim()) newErrors.address = 'Address is required'
       if (!city.trim()) newErrors.city = 'City is required'
     }
@@ -89,10 +87,7 @@ export default function EstateRegistrationPage() {
     }
 
     if (step === 3) {
-      if (!password) newErrors.password = 'Password is required'
-      else if (password.length < 8) newErrors.password = 'Password must be at least 8 characters'
-      if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match'
-      if (!termsAccepted) newErrors.termsAccepted = 'You must accept the terms'
+     if (!termsAccepted) newErrors.termsAccepted = 'You must accept the terms'
     }
 
     setErrors(newErrors)
@@ -117,15 +112,12 @@ export default function EstateRegistrationPage() {
       setIsSubmitting(true)
       
       const formData = {
-        firstName,
-        lastName,
+        estateName,
         address,
         city,
         state,
         phone, 
         email,
-         password, 
-         confirmPassword, 
          termsAccepted
       }
 
@@ -333,37 +325,7 @@ export default function EstateRegistrationPage() {
               {step === 3 && (
                 <div className="space-y-6">
                   <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">Password <span className="text-red-500">*</span></label>
-                        <input
-                          type="password"
-                          name="password"
-                          value={password}
-                          onChange={handleChange}
-                          className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                            errors.password ? ' border-red-500' : ' border-gray-200'
-                          }`}
-                          placeholder="••••••••"
-                        />
-                        {errors.password && <p className="text-red-600 text-xs">{errors.password}</p>}
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">Confirm Password <span className="text-red-500">*</span></label>
-                        <input
-                          type="password"
-                          name="confirmPassword"
-                          value={confirmPassword}
-                          onChange={handleChange}
-                          className={`w-full p-3.5 bg-white   rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all placeholder:text-gray-400 text-gray-800 ${
-                            errors.confirmPassword ? ' border-red-500' : ' border-gray-200'
-                          }`}
-                          placeholder="••••••••"
-                        />
-                        {errors.confirmPassword && <p className="text-red-600 text-xs">{errors.confirmPassword}</p>}
-                      </div>
-                    </div>
+                   
 
                     <div className="pt-4">
                       <label className="flex items-start gap-3 p-4 bg-white border-gray-200 rounded-xl shadow-sm cursor-pointer hover:border-gray-300 hover:bg-gray-50/50 transition-all">
