@@ -3,38 +3,21 @@
 import { useRouter, usePathname } from 'next/navigation'
 import React, { useState, useEffect } from 'react'
 import { 
-  Home, 
-  FileText, 
   Menu, 
   X, 
-  ChevronDown,
-  ArrowRight,
-  Shield,
-  Smartphone,
-  CreditCard,
-  Users,
-  Info,
-  MessageSquare,
-  Zap,
-  BarChart3,
-  Lock,
-  Building2,
-  LogIn,
-  User,
-  LogOut,
-  LayoutDashboard,
+  LogIn, 
+  User, 
+  LogOut, 
+  LayoutDashboard 
 } from 'lucide-react'
-import { getResidentData, getUserById } from '@/lib/service'
+import { getResidentData } from '@/lib/service'
 import { Logout } from '@/lib/action'
 import Link from 'next/link'
 
 const Navigation = () => {
     const router = useRouter()
     const pathname = usePathname()
-    const [isScrolled, setIsScrolled] = useState(false)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const [activeDropdown, setActiveDropdown] = useState(null)
-    const [activeLink, setActiveLink] = useState('')
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [role, setRole] = useState('')
@@ -43,7 +26,6 @@ const Navigation = () => {
         const checkLoginStatus = async () => {
             try {
                 const result = await getResidentData();
-                // Check if result exists and has user data (not null)
                 setIsLoggedIn(!!result && result !== null);
                 setRole(result?.role);
             } catch (error) {
@@ -61,26 +43,12 @@ const Navigation = () => {
         try {
             await Logout();
             setIsLoggedIn(false);
-            // Navigate to login and refresh to ensure UI updates
             router.push('/auth/login');
             router.refresh();
         } catch (error) {
             console.error("Logout error:", error);
         }
     };
-
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 10)
-        }
-
-        window.addEventListener('scroll', handleScroll)
-        return () => window.removeEventListener('scroll', handleScroll)
-    }, [])
-
-    useEffect(() => {
-        setActiveLink(pathname)
-    }, [pathname])
 
     const handleNavClick = (path) => {
         if (path.startsWith('/#')) {
@@ -98,20 +66,18 @@ const Navigation = () => {
             router.push(path)
         }
         setIsMenuOpen(false)
-        setActiveDropdown(null)
-    }
+    };
 
-    // Don't render anything while checking login status to prevent flashing
     if (isLoading) {
         return (
-            <header className="sticky top-0 z-50 w-full bg-white/90 dark:bg-[#111621]/90 backdrop-blur-xl shadow-md">
-                <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="size-10 bg-[#1241a1] rounded-lg flex items-center justify-center text-white">
-                            <Building2 className="size-6" />
+            <header className="fixed top-[24px] left-0 right-0 z-50 flex items-center justify-center px-4 w-full pointer-events-none">
+                <div className="pointer-events-auto w-full max-w-[700px] flex items-center justify-between bg-black/95 backdrop-blur-xl rounded-full px-2 py-2 shadow-xl border border-white/10 h-[56px]">
+                    <div className="flex items-center gap-6 pl-2">
+                        <div className="w-[34px] h-[34px] rounded-full border border-page-bg/80 flex items-center justify-center shrink-0">
+                            <span className="text-page-bg font-bold text-sm leading-none">E</span>
                         </div>
-                        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">EMSS</h2>
                     </div>
+                    <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-white animate-spin mr-2"></div>
                 </div>
             </header>
         )
@@ -119,207 +85,166 @@ const Navigation = () => {
 
     return (
         <>
-            <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-                isScrolled 
-                    ? 'bg-white/90 dark:bg-[#111621]/90 backdrop-blur-xl shadow-md' 
-                    : 'bg-transparent'
-            }`}>
-                <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                    {/* Logo */}
-                    <div 
-                        onClick={() => router.push('/')}
-                        className="flex items-center gap-3 cursor-pointer group"
-                    >
-                        <div className="size-10 bg-[#1241a1] rounded-lg flex items-center justify-center text-white shadow-lg shadow-[#1241a1]/20 group-hover:scale-105 transition-transform">
-                            <Building2 className="size-6" />
+            <header className="fixed top-[24px] left-0 right-0 z-50 flex items-center justify-center px-4 w-full pointer-events-none">
+                <div className="pointer-events-auto w-full max-w-[700px] flex items-center justify-between bg-black/95 backdrop-blur-xl rounded-full px-2 py-2 shadow-xl border border-white/10 h-[56px]">
+                    <div className="flex items-center gap-6 pl-2">
+                        {/* Logo */}
+                        <div 
+                            onClick={() => router.push('/')}
+                            className="w-[34px] h-[34px] rounded-full border border-page-bg/80 flex items-center justify-center shrink-0 cursor-pointer hover:scale-105 transition-transform"
+                        >
+                            <span className="text-page-bg font-bold text-sm leading-none">E</span>
                         </div>
-                        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">EMSS</h2>
+                        {/* Desktop Navigation */}
+                        <nav className="hidden md:flex items-center gap-6">
+                            <button 
+                                onClick={() => handleNavClick('/#features')} 
+                                className="font-label text-label text-page-bg/80 hover:text-page-bg transition-colors duration-300 cursor-pointer bg-transparent border-0 outline-none"
+                            >
+                                Features
+                            </button>
+                            <button 
+                                onClick={() => handleNavClick('/pricing')} 
+                                className="font-label text-label text-page-bg/80 hover:text-page-bg transition-colors duration-300 cursor-pointer bg-transparent border-0 outline-none"
+                            >
+                                Pricing
+                            </button>
+                            <button 
+                                onClick={() => handleNavClick('/#console')} 
+                                className="font-label text-label text-page-bg/80 hover:text-page-bg transition-colors duration-300 cursor-pointer bg-transparent border-0 outline-none"
+                            >
+                                Console
+                            </button>
+                            <button 
+                                onClick={() => handleNavClick('/#estates')} 
+                                className="font-label text-label text-page-bg/80 hover:text-page-bg transition-colors duration-300 cursor-pointer bg-transparent border-0 outline-none"
+                            >
+                                Estates
+                            </button>
+                            <button 
+                                onClick={() => handleNavClick('/#faq')} 
+                                className="font-label text-label text-page-bg/80 hover:text-page-bg transition-colors duration-300 cursor-pointer bg-transparent border-0 outline-none"
+                            >
+                                FAQ
+                            </button>
+                        </nav>
                     </div>
 
-                    {/* Desktop Navigation */}
-                    <nav className="hidden md:flex items-center gap-10">
-                        <button 
-                            onClick={() => handleNavClick('/#features')} 
-                            className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-[#1241a1] transition-colors cursor-pointer"
-                        >
-                            Features
-                        </button>
-                        <button 
-                            onClick={() => handleNavClick('/pricing')} 
-                            className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-[#1241a1] transition-colors cursor-pointer"
-                        >
-                            Pricing
-                        </button>
-                        <button 
-                            onClick={() => handleNavClick('/#testimonials')} 
-                            className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-[#1241a1] transition-colors cursor-pointer"
-                        >
-                            Testimonials
-                        </button>
-                        <button 
-                            onClick={() => handleNavClick('/support')} 
-                            className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-[#1241a1] transition-colors cursor-pointer"
-                        >
-                            Support
-                        </button>
-                        {isLoggedIn && role === "user" && (
-                        <button onClick={() => handleNavClick('/join-request')} className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-[#1241a1] transition-colors cursor-pointer">
-                            Request Join
-                        </button>
+                    {/* Desktop Actions */}
+                    <div className="hidden md:flex items-center gap-3">
+                        {!isLoggedIn ? (
+                            <>
+                                <button 
+                                    onClick={() => router.push('/auth/login')}
+                                    className="font-label text-page-bg/80 hover:text-page-bg transition-colors duration-300 text-[10px] font-semibold uppercase tracking-wider bg-transparent border-0 px-2 cursor-pointer outline-none"
+                                >
+                                    Login
+                                </button>
+                                <button 
+                                    onClick={() => router.push('/auth/register')}
+                                    className="font-label rounded-full bg-white text-black hover:bg-page-bg/85 transition-all duration-300 shrink-0 flex items-center px-4 text-[10px] h-[32px] font-semibold uppercase tracking-wider cursor-pointer border-0 outline-none"
+                                >
+                                    Get Started
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button 
+                                    onClick={() => router.push(role === 'admin' ? '/dashboard/admin' : '/dashboard/resident')}
+                                    className="font-label rounded-full bg-white text-black hover:bg-page-bg/85 transition-all duration-300 shrink-0 flex items-center px-4 text-[10px] h-[32px] font-semibold uppercase tracking-wider cursor-pointer border-0 outline-none"
+                                >
+                                    Dashboard
+                                </button>
+                                <button 
+                                    onClick={handleLogout}
+                                    className="font-label text-page-bg/80 hover:text-page-bg transition-colors duration-300 text-[10px] font-semibold uppercase tracking-wider bg-transparent border-0 px-2 cursor-pointer outline-none"
+                                >
+                                    Logout
+                                </button>
+                            </>
                         )}
-                       
-                    </nav>
-
-                    {/* Desktop Actions - FIXED CONDITION */}
-                    {!isLoggedIn ? (
-                        <div className="hidden md:flex items-center gap-4">
-                            <button 
-                                onClick={() => router.push('/auth/login')}
-                                className="px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-[#1241a1] transition-colors flex gap-2 items-center"
-                            >
-                                <LogIn size={18}/>
-                                Login
-                            </button>
-                            <button 
-                                onClick={() => router.push('/auth/register')}
-                                className="px-6 py-2.5 bg-[#1241a1] hover:bg-[#1241a1]/90 text-white rounded-lg text-sm font-bold transition-all shadow-lg shadow-[#1241a1]/20 hover:-translate-y-0.5 active:scale-95 flex gap-2 items-center"
-                            >
-                                <User size={18}/>
-                                Get Started
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="hidden md:flex items-center gap-4">
-                            {role === 'admin' ? (
-                                <Link href="/dashboard/admin" onClick={() => setIsMenuOpen(false)}>
-                                    <button className="px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-[#1241a1] transition-colors flex gap-2 items-center">
-                                        <LayoutDashboard/> Admin Dashboard</button>
-                                </Link>
-                            ) : (
-                                <Link href="/dashboard/resident" onClick={() => setIsMenuOpen(false)}>
-                                    <button className="px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-[#1241a1] transition-colors flex gap-2 items-center">
-                                        <LayoutDashboard/> Dashboard</button>
-                                </Link>
-                            )}
-                            
-                            <button 
-                                onClick={handleLogout}
-                                className="px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-[#1241a1] transition-colors flex gap-2 items-center"
-                            >
-                                <LogOut size={18}/>
-                                Logout
-                            </button>
-                        </div>
-                    )}
+                    </div>
 
                     {/* Mobile Menu Button */}
-                    <div className="md:hidden flex items-center">
+                    <div className="md:hidden flex items-center pr-2">
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="p-2 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                            className="p-1 text-white hover:bg-white/10 rounded-lg transition-colors bg-transparent border-0 cursor-pointer outline-none"
                         >
-                            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
                         </button>
                     </div>
                 </div>
             </header>
 
-            {/* Mobile Menu */}
+            {/* Mobile Drawer Menu */}
             {isMenuOpen && (
-                <div className="fixed inset-0 z-[200] lg:hidden overflow-hidden">
+                <div className="fixed inset-0 z-[200] md:hidden overflow-hidden">
                     <div 
-                        className="absolute inset-0 bg-white/80 dark:bg-[#111621]/80 backdrop-blur-sm transition-opacity"
+                        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
                         onClick={() => setIsMenuOpen(false)}
                     />
                     
-                    <div className="absolute top-0 right-0 h-full w-full max-w-sm bg-white dark:bg-[#111621] shadow-2xl animate-fade-in slide-in-from-right duration-300 p-6 flex flex-col z-[210]">
+                    <div className="absolute top-0 right-0 h-full w-full max-w-xs bg-deep-black border-l border-white/10 shadow-2xl p-6 flex flex-col z-[210] animate-in slide-in-from-right duration-300">
                         <div className="flex items-center justify-between mb-8">
                             <div className="flex items-center gap-3">
-                                <div className="size-10 bg-[#1241a1] rounded-lg flex items-center justify-center text-white shadow-md">
-                                    <Building2 className="size-5" />
+                                <div className="w-[30px] h-[30px] rounded-full border border-page-bg/80 flex items-center justify-center shrink-0">
+                                    <span className="text-page-bg font-bold text-xs leading-none">E</span>
                                 </div>
-                                <span className="font-bold text-xl text-slate-900 dark:text-white">EMSS</span>
+                                <span className="font-bold text-lg text-white">EstateEase</span>
                             </div>
-                            <button onClick={() => setIsMenuOpen(false)} className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors">
-                                <X size={24} />
+                            <button onClick={() => setIsMenuOpen(false)} className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors border-0 outline-none cursor-pointer">
+                                <X size={18} />
                             </button>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto space-y-2">
-                            <button
-                                onClick={() => handleNavClick('/#features')}
-                                className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-sm transition-colors"
-                            >
-                                Features
-                            </button>
-                            <button
-                                onClick={() => handleNavClick('/pricing')}
-                                className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-sm transition-colors"
-                            >
-                                Pricing
-                            </button>
-                            <button
-                                onClick={() => handleNavClick('/#testimonials')}
-                                className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-sm transition-colors"
-                            >
-                                Testimonials
-                            </button>
-                            <button
-                                onClick={() => handleNavClick('/support')}
-                                className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-sm transition-colors"
-                            >
-                                Support
-                            </button>
-                            <button onClick={() => handleNavClick('/join-request')} className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-sm transition-colors">
-                                Request Join
-                            </button>
+                        <div className="flex-1 overflow-y-auto space-y-3">
+                            {['Features', 'Pricing', 'Console', 'Estates', 'FAQ'].map((link) => {
+                                const path = link === 'Pricing' ? '/pricing' : `/#${link.toLowerCase()}`
+                                return (
+                                    <button
+                                        key={link}
+                                        onClick={() => handleNavClick(path)}
+                                        className="w-full text-left px-4 py-3 rounded-xl hover:bg-white/5 text-white/80 hover:text-white font-label text-xs uppercase tracking-wider transition-colors bg-transparent border-0 outline-none cursor-pointer"
+                                    >
+                                        {link}
+                                    </button>
+                                )
+                            })}
                         </div>
 
-                        <div className="pt-6 mt-auto space-y-4">
+                        <div className="pt-6 mt-auto space-y-3 border-t border-white/10">
                             {!isLoggedIn ? (
                                 <>
                                     <button 
-                                        onClick={() => router.push('/register')}
-                                        className="w-full py-4 text-center font-bold text-sm bg-[#1241a1] text-white rounded-xl shadow-lg shadow-[#1241a1]/30 hover:bg-[#1241a1]/90 transition-colors"
+                                        onClick={() => { setIsMenuOpen(false); router.push('/auth/register'); }}
+                                        className="w-full py-3 text-center font-label text-[10px] uppercase font-bold tracking-wider bg-white text-black hover:bg-page-bg/90 rounded-full transition-colors border-0 outline-none cursor-pointer"
                                     >
                                         Get Started
                                     </button>
                                     <button 
-                                        onClick={() => router.push('/login')} 
-                                        className="w-full py-4 text-center font-bold text-sm bg-slate-50 dark:bg-slate-800 rounded-xl text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                                        onClick={() => { setIsMenuOpen(false); router.push('/auth/login'); }}
+                                        className="w-full py-3 text-center font-label text-[10px] uppercase font-bold tracking-wider bg-white/10 text-white hover:bg-white/20 rounded-full transition-colors border-0 outline-none cursor-pointer"
                                     >
                                         Login
                                     </button>
                                 </>
                             ) : (
-                                <div className='flex gap-4 w-full'>
-                                    {role === 'admin' ? (
-                                        <Link href="/dashboard/admin">
-                                            <button 
-                                                className="w-full py-4 text-center font-bold text-sm bg-[#1241a1] hover:bg-[#1241a1]/90 text-white rounded-xl transition-colors flex items-center justify-center gap-2"
-                                            >
-                                                <ArrowRight size={18}/>
-                                                {role === 'admin' ? 'Admin' : 'Resident'} Dashboard
-                                            </button>
-                                        </Link>
-                                    ) : (
-                                        <Link href="/dashboard/resident">
-                                            <button 
-                                                className="w-full py-4 text-center font-bold text-sm bg-[#1241a1] hover:bg-[#1241a1]/90 text-white rounded-xl transition-colors flex items-center justify-center gap-2"
-                                            >
-                                                <ArrowRight size={18}/>
-                                               {role === 'admin' ? 'Admin' : 'Resident'} Dashboard
-                                            </button>
-                                        </Link>
-                                    )}
-                                <button 
-                                    onClick={handleLogout} 
-                                    className="w-full py-4 text-center font-bold text-sm bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors flex items-center justify-center gap-2"
-                                >
-                                    <LogOut size={18}/>
-                                    Logout
-                                </button>
-                            </div>)}
+                                <div className="space-y-3">
+                                    <button 
+                                        onClick={() => { setIsMenuOpen(false); router.push(role === 'admin' ? '/dashboard/admin' : '/dashboard/resident'); }}
+                                        className="w-full py-3 text-center font-label text-[10px] uppercase font-bold tracking-wider bg-white text-black hover:bg-page-bg/90 rounded-full transition-colors border-0 outline-none cursor-pointer"
+                                    >
+                                        Dashboard
+                                    </button>
+                                    <button 
+                                        onClick={() => { setIsMenuOpen(false); handleLogout(); }}
+                                        className="w-full py-3 text-center font-label text-[10px] uppercase font-bold tracking-wider bg-red-600 text-white hover:bg-red-700 rounded-full transition-colors border-0 outline-none cursor-pointer"
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -9,7 +9,8 @@ import {
   Water,
   Tree,
   Mountain,
-  HelpCircle
+  HelpCircle,
+  CheckCircle2
 } from 'lucide-react'
 import Link from 'next/link';
 import { getAllEstates } from '@/lib/service';
@@ -96,7 +97,7 @@ const AVAILABLE_ESTATES = estates;
       <div className="relative z-20 w-full max-w-[960px] flex flex-col md:flex-row bg-white/95 min-h-[500px] dark:bg-slate-900/90 backdrop-blur-xl rounded-xl overflow-hidden shadow-2xl">
         
         {/* Left Side: Visual Context */}
-        <div className=" md:flex flex-1 flex-col justify-between p-10 bg-[#1241a1]/10">
+        <div className=" md:flex flex-1 flex-col justify-between p-10 bg-slate-100">
           
           
           <div className="space-y-4">
@@ -117,7 +118,7 @@ const AVAILABLE_ESTATES = estates;
                   <Home className="size-8 mx-auto mb-2 opacity-40" />
                   No joined estates yet. Use the dropdown to join one 
                   <span className="text-slate-500 dark:text-slate-400 px-2">or</span>
-                  <Link className='text-blue-100 bg-blue-500 px-4 py-2 w-fit mx:auto rounded-lg font-bold' href="/auth/login"> return to login page</Link>
+                  <Link className='text-blue-100 bg-slate-900 px-4 py-2 w-fit mx:auto rounded-lg font-bold' href="/auth/login"> return to login page</Link>
                 </div>
               ) : (
                 joinedEstateIds.map((id) => {
@@ -131,7 +132,7 @@ const AVAILABLE_ESTATES = estates;
                       className="flex items-center justify-between p-3 rounded-xl bg-white/60 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50 shadow-sm hover:shadow-md transition-all"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#1241a1]/20 flex items-center justify-center text-[#1241a1]">
+                        <div className="w-8 h-8 rounded-full bg-[#1241a1]/20 flex items-center justify-center text-slate-800">
                           <Icon className="size-4" />
                         </div>
                         <div>
@@ -159,10 +160,10 @@ const AVAILABLE_ESTATES = estates;
         <div className="flex-1 p-6 md:p-10 flex flex-col">
           {/* Header */}
           <div className="mb-6">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
-              <Home className="size-6 text-[#1241a1]" />
+            <div className="text-2xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+              <Home className="size-6 text-slate-500" />
               Join Estate
-            </h3>
+            </div>
             <p className="text-slate-500 dark:text-slate-400 text-sm">
               Select an estate from the dropdown or view your joined estates
             </p>
@@ -184,52 +185,67 @@ const AVAILABLE_ESTATES = estates;
             </div>
           )}
 
-          {/* Dropdown & Join Button */}
-          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-end mb-8">
-            <div className="w-full sm:w-2/3">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 ml-1">
-                <Building2 className="inline size-4 mr-1" />
-                Available Estate
-              </label>
-              <div className="relative">
-                <select
-                  value={selectedEstateId}
-                  onChange={(e) => setSelectedEstateId(e.target.value)}
-                  className="w-full border px-4 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white rounded-xl py-3 pl-5 pr-12 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition shadow-sm cursor-pointer"
-                >
-                  <option value="">-- Select an estate --</option>
-                  {AVAILABLE_ESTATES.length > 0 ? AVAILABLE_ESTATES.map((estate) => (
-                    <option className='text-black px-4' key={estate.id} value={estate.id}>
-                      {estate.estateName}
-                    </option>
-                  ))
-                  : 
-                  <option value="" disabled>No estates available</option>
-                  }
-                </select>
-               
-              </div>
+          {/* Available Estate - Scrollable List */}
+<div className="sm:flex-row gap-3 items-start sm:items-end mb-8">
+  <div className="w-full flex flex-col">
+    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 ml-1">
+      <Building2 className="inline size-4 mr-1" />
+      Available Estate
+    </label>
+    <div className="relative">
+      {/* Scrollable Container */}
+      <div className="w-full border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-800">
+        <div className="max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-[#1241a1] scrollbar-track-slate-100 dark:scrollbar-track-slate-700">
+          {AVAILABLE_ESTATES.length > 0 ? (
+            AVAILABLE_ESTATES.map((estate) => (
+              <button
+                key={estate.id}
+                type="button"
+                onClick={() => setSelectedEstateId(estate.id)}
+                className={`w-full text-left px-5 py-3 hover:bg-slate-50 dark:hover:bg-slate-400 hover:text-white transition-colors text-sm border-b border-slate-100 dark:border-slate-700 last:border-b-0 ${
+                  selectedEstateId === estate.id 
+                    ? 'text-slate-700 dark:text-slate-300' 
+                    : 'text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span>{estate.estateName}</span>
+                  {selectedEstateId === estate.id && (
+                    <CheckCircle2 className="size-4 text-[#1241a1]" />
+                  )}
+                </div>
+              </button>
+            ))
+          ) : (
+            <div className="px-5 py-8 text-center text-slate-400 text-sm">
+              No estates available
             </div>
+          )}
+        </div>
+      </div>
+      
+      {/* Optional: Show selected estate name below */}
+      {selectedEstateId && (
+        <p className="mt-2 text-xs text-[#1241a1] font-medium">
+          Selected: {AVAILABLE_ESTATES.find(e => e.id === selectedEstateId)?.estateName}
+        </p>
+      )}
+    </div>
+  </div>
             <button
               onClick={handleJoinEstate}
-              className="w-full sm:w-auto bg-[#1241a1] hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-xl shadow-md transition flex items-center justify-center gap-2 whitespace-nowrap"
+              className="w-full mt-4  bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 px-8 rounded-xl shadow-md transition flex items-center justify-center gap-2 whitespace-nowrap"
             >
               <PlusCircle className="size-5" />
               Join Estate
             </button>
           </div>
+          <Link href="/" className="w-full mt-4 ">
+            Return to Home page
+          </Link>
 
         
-          {/* Footer */}
-          <div className="mt-6 pt-4 text-center">
-            <p className="text-slate-400 dark:text-slate-500 text-xs">
-              <HelpCircle className="inline size-3 mr-1" />
-              Need help? 
-              <Link href="/" className="text-[#1241a1] font-medium hover:underline ml-1">
-                Return to Home Page
-              </Link>
-            </p>
-          </div>
+         
         </div>
       </div>
 

@@ -15,10 +15,10 @@ export function PageHeader({ title, description, icon: Icon, iconColor = 'blue',
   const iconClass = colorMap[iconColor] || colorMap.blue;
 
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 ">
       <div>
         <h1 className="text-3xl font-semibold text-slate-900 dark:text-white flex items-center gap-3">
-          {Icon && <Icon className={`w-8 h-8 ${iconClass}`} />}
+          {Icon && <Icon className={`w-8 h-8 dark text-amber-700 ${iconClass}`} />}
           {title}
         </h1>
         {description && (

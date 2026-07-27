@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { 
   Building2, 
   UserCheck, 
@@ -40,18 +41,23 @@ export default function LoginPage() {
       }
 
       if (result?.success) {
-        // Redirection logic based on role
-        if (userType === 'admin' || result.user?.type === 'admin') {
-          router.push('/dashboard/admin')
-        } else {
-          router.push('/auth/proceed')
-        }
+        // ✅ Reset loading before redirect
+        setIsLoading(false)
+        
+        // ✅ Use setTimeout to ensure state updates before navigation
+        setTimeout(() => {
+          if (userType === 'admin' || result.user?.type === 'admin') {
+            router.push('/dashboard/admin')
+          } else {
+            router.push('/auth/proceed')
+          }
+        }, 100)
       } else {
         setError(result?.message || 'Login failed. Please check your credentials.')
         setIsLoading(false)
       }
     } catch (err) {
-      console.error(err)
+      console.error('Login error:', err)
       setError(err.message || 'An unexpected error occurred.')
       setIsLoading(false)
     }
@@ -69,27 +75,42 @@ export default function LoginPage() {
       {/* Main Login Card */}
       <div className="relative z-20 w-full max-w-[960px] flex flex-col md:flex-row bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl rounded-xl overflow-hidden shadow-2xl">
         
-        {/* Left Side: Visual Context */}
-        <div className="hidden md:flex flex-1 flex-col justify-between p-10 bg-[#1241a1]/10">
-          <div>
-            <div className="flex items-center gap-2 mb-8 cursor-pointer group" onClick={() => router.push('/')}>
-              <div className="p-2 bg-[#1241a1] rounded-lg text-white shadow-lg group-hover:scale-110 transition-transform">
-                <Building2 className="size-6" />
-              </div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100">EMSS</h1>
+        {/* Left Side: Visual Context with Full Cover Image */}
+        <div className="hidden md:flex flex-1 flex-col justify-between p-10 relative min-h-[500px] overflow-hidden">
+          {/* Background Image - Full Cover */}
+           <div className="absolute inset-0 z-0" >
+              <Image 
+                src="/images/estatelanding.jpg"
+                alt="Preview"
+                fill
+                className="object-cover"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-slate-900/80 to-slate-900/90" />
             </div>
-            <h2 className="text-3xl font-bold leading-tight text-[#1241a1] dark:text-white mb-4 italic">Next-Gen Estate Management</h2>
-            <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">Experience the ultimate all-in-one suite designed for luxury residences and smart communities.</p>
-          </div>
           
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300">
-              <UserCheck className="size-5 text-[#1241a1]" />
-              <span className="text-sm font-medium">Enterprise Grade Security</span>
+          {/* Content - sits on top of image */}
+          <div className="relative z-10 flex flex-col justify-center h-full">
+    <div className="border border-slate-400/50 bg-white/10 backdrop-blur-md p-10 rounded-xl text-white">
+              <div className="flex items-center gap-2 mb-8 cursor-pointer group" onClick={() => router.push('/')}>
+                <div className="p-2 bg-white/20 backdrop-blur rounded-lg text-white shadow-lg group-hover:scale-110 transition-transform">
+                  <Building2 className="size-6" />
+                </div>
+                <h1 className="text-2xl font-bold tracking-tight text-white">EMSS</h1>
+              </div>
+              <h2 className="text-3xl font-bold leading-tight text-white mb-4 italic">Next-Gen Estate Management</h2>
+              <p className="text-white/80 text-lg leading-relaxed">Experience the ultimate all-in-one suite designed for luxury residences and smart communities.</p>
             </div>
-            <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300">
-              <Headset className="size-5 text-[#1241a1]" />
-              <span className="text-sm font-medium">24/7 Professional Support</span>
+            
+            <div className="space-y-4 mt-8">
+              <div className="flex items-center gap-3 text-white/80">
+                <UserCheck className="size-5 text-blue-300" />
+                <span className="text-sm font-medium">Enterprise Grade Security</span>
+              </div>
+              <div className="flex items-center gap-3 text-white/80">
+                <Headset className="size-5 text-blue-300" />
+                <span className="text-sm font-medium">24/7 Professional Support</span>
+              </div>
             </div>
           </div>
         </div>
@@ -97,7 +118,7 @@ export default function LoginPage() {
         {/* Right Side: Login Form */}
         <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
           <div className="mb-8 text-center md:text-left">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Welcome Back</h3>
+            <span className="text-2xl font-bold text-slate-900 dark:text-slate-200 mb-2">Welcome Back</span>
             <p className="text-slate-600 dark:text-slate-300">Please select your account type to continue</p>
           </div>
 
@@ -106,14 +127,14 @@ export default function LoginPage() {
             <button 
               type="button"
               onClick={() => setUserType('resident')}
-              className={`flex-1 h-full rounded-lg text-sm font-semibold transition-all ${userType === 'resident' ? 'bg-[#1241a1] text-white shadow-lg' : 'text-slate-500 hover:text-[#1241a1]'}`}
+              className={`flex-1 h-full rounded-lg text-sm font-semibold transition-all ${userType === 'resident' ? 'bg-slate-500 text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
             >
               Resident
             </button>
             <button 
               type="button"
               onClick={() => setUserType('admin')}
-              className={`flex-1 h-full rounded-lg text-sm font-semibold transition-all ${userType === 'admin' ? 'bg-[#1241a1] text-white shadow-lg' : 'text-slate-500 hover:text-[#1241a1]'}`}
+              className={`flex-1 h-full rounded-lg text-sm font-semibold transition-all ${userType === 'admin' ? 'bg-slate-500 text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
             >
               Admin / Staff
             </button>
@@ -138,6 +159,7 @@ export default function LoginPage() {
                   className="w-full bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white pl-14 pr-4 py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] outline-none transition-all placeholder:text-slate-500"
                   placeholder={userType === 'resident' ? 'resident@demo.com' : 'admin@demo.com'}
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -153,11 +175,13 @@ export default function LoginPage() {
                   className="w-full bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white pl-14 pr-14 py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] outline-none transition-all placeholder:text-slate-500"
                   placeholder="••••••••"
                   required
+                  disabled={isLoading}
                 />
                 <button 
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#1241a1] transition-colors"
+                  disabled={isLoading}
                 >
                   {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
                 </button>
@@ -167,7 +191,7 @@ export default function LoginPage() {
             <button 
               type="submit"
               disabled={isLoading}
-              className="w-full bg-[#1241a1] hover:bg-blue-700 disabled:bg-slate-400 text-white font-bold py-4 rounded-xl shadow-xl transition-all transform active:scale-95 flex items-center justify-center gap-2"
+              className="w-full bg-slate-900 hover:bg-slate-500 disabled:bg-slate-400 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all transform active:scale-95 flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -180,8 +204,8 @@ export default function LoginPage() {
 
           <div className="mt-8 text-center pt-8">
             <p className="text-slate-500 dark:text-slate-400 text-sm">
-              Dont have account? 
-              <Link href="/auth/signup" className="text-[#1241a1] font-bold ml-1 hover:underline">Sign up here</Link>
+              Don't have account? 
+              <Link href="/auth/signup" className="text-slate-700 dark:text-slate-200 font-bold ml-1 hover:underline">Sign up here</Link>
             </p>
           </div>
         </div>

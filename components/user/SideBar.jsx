@@ -54,7 +54,7 @@ const SideBar = ({ role = 'resident' }) => {
   const navLinks = getNavLinks(role);
 
   return (
-    <aside className="w-64 bg-slate-50 dark:bg-gray-900 h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto hidden md:block transition-colors">
+    <aside className="w-64 bg-slate-50 dark:bg-gray-300 h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto hidden md:block transition-colors">
       <div className="py-6 px-4">
         <div className="text-xs font-semibold text-slate-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-3">
           Main Menu

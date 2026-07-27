@@ -13,7 +13,7 @@ export function WalletCard({ balance = 0, currency = "$" }) {
   }).format(balance)
 
   return (
-    <div className="p-4 max-w-2xl mx-auto rounded-md relative z-40 overflow-hidden text-white w-full group transition-all duration-300 bg-[#1241a1]">
+    <div className="p-4 max-w-2xl mx-auto rounded-md relative z-40 overflow-hidden text-white w-full group transition-all duration-300  bg-[#818b94]/40">
     
       <div className="relative p-7 sm:p-8 flex flex-col h-full z-10">
         
@@ -54,17 +54,17 @@ export function WalletCard({ balance = 0, currency = "$" }) {
 
         {/* Bottom Section: Action Buttons */}
         <div className="grid grid-cols-3 gap-3 sm:gap-4 mt-auto pt-2">
-          <button className="flex flex-col items-center justify-center py-3.5 px-2 rounded-md bg-white text-[#1241a1] hover:brightness-95 transition-all group/btn">
-            <Plus className="w-5 h-5 mb-1.5 text-[#1241a1] group-hover/btn:scale-110 transition-transform" />
-            <span className="text-xs font-semibold tracking-wide text-[#1241a1]">Top Up</span>
+          <button className="flex flex-col items-center justify-center py-3.5 px-2 rounded-md bg-amber-700 text-white hover:brightness-95 transition-all group/btn">
+            <Plus className="w-5 h-5 mb-1.5 text-white group-hover/btn:scale-110 transition-transform" />
+            <span className="text-xs font-semibold tracking-wide text-white">Top Up</span>
           </button>
           
-          <button className="flex flex-col items-center justify-center py-3.5 px-2 rounded-md bg-white/10 hover:bg-white/20 transition-all group/btn">
+          <button className="flex flex-col items-center justify-center py-3.5 px-2 rounded-md bg-white/10 hover:bg-amber-700 transition-all group/btn">
             <ArrowUpRight className="w-5 h-5 mb-1.5 text-white group-hover/btn:scale-110 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
             <span className="text-xs font-semibold tracking-wide text-white">Transfer</span>
           </button>
           
-          <button className="flex flex-col items-center justify-center py-3.5 px-2 rounded-md bg-white/10 hover:bg-white/20 transition-all group/btn">
+          <button className="flex flex-col items-center justify-center py-3.5 px-2 rounded-md bg-white/10 hover:bg-amber-700 transition-all group/btn">
             <History className="w-5 h-5 mb-1.5 text-white group-hover/btn:scale-110 transition-transform" />
             <span className="text-xs font-semibold tracking-wide text-white">History</span>
           </button>

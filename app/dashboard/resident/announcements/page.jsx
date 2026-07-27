@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Megaphone, Plus, Search, Calendar, Shield, Wrench, Info, Users, ChevronRight, ChevronLeft, BellRing } from 'lucide-react';
-import { api } from '@/services/api';
 import ViewAnnouncementModal from '@/components/admin/ViewAnnouncementModal';
 import { getAnnouncements, getResidentData } from '@/lib/service';
 import { readAnnouncement } from '@/lib/action';
@@ -114,7 +113,7 @@ export default function AnnouncementsPage() {
                 onClick={() => setActiveTab(tab)}
                 className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-all ${
                   activeTab === tab 
-                    ? 'bg-blue-700 text-white shadow-sm' 
+                    ? 'bg-amber-700 text-white shadow-sm' 
                     : 'text-slate-500 hover:bg-primary/10'
                 }`}
               >
@@ -125,12 +124,12 @@ export default function AnnouncementsPage() {
         </PageHeader>
 
         {/* High-Density List Container */}
-        <div className="bg-white dark:bg-slate-900/50 rounded-xl overflow-hidden shadow-sm">
+        <div className="bg-white dark:bg-[#818b94]/10 rounded-xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             {/* Desktop Table View */}
             <table className="w-full hidden md:table">
-              <thead>
-                <tr className="text-left bg-slate-50 dark:bg-primary/5">
+              <thead className='bg-[#818b94]/40 text-white '>
+                <tr className="text-left  dark:bg-primary/5">
                   {['Announcement', 'Category', 'Date','status', ''].map((header) => (
                     <th key={header} className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">{header}</th>
                   ))}
@@ -149,8 +148,8 @@ export default function AnnouncementsPage() {
                 ) : filteredAnnouncements.length === 0 ? (
                   <tr>
                     <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
-                      <div className="flex flex-col items-center gap-3">
-                        <BellRing className="size-12 opacity-20" />
+                      <div className="flex flex-col items-center gap-3 w-full">
+                        <BellRing className="size-12  text-amber-700" />
                         <p className="text-sm font-medium">No announcements found matching your criteria.</p>
                       </div>
                     </td>
@@ -188,7 +187,7 @@ export default function AnnouncementsPage() {
                       <td className="px-6 py-4 text-right">
                         <button 
                           onClick={() => handleReadMore(ann)}
-                          className="text-primary text-xs font-bold hover:underline hover:cursor-pointer hover:text-blue-500"
+                          className="text-primary text-xs font-bold hover:underline hover:cursor-pointer hover:text-amber-500"
                         >
                           View
                         </button>

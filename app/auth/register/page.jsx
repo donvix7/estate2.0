@@ -122,7 +122,7 @@ export default function EstateRegistrationPage() {
       }
 
       try {
-        const response = await handleUserRegistration(formData)
+        const response = await estateJoinRequest(formData)
         if (!response.success) {
           throw new Error(response.message)
         }

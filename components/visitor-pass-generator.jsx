@@ -273,17 +273,7 @@ export function VisitorPassGenerator() {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
       {/* Page Header */}
-      <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <div className="size-9 bg-[#1241a1] rounded-md flex items-center justify-center text-white">
-              <UserCheck className="size-5" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">Visitor Management</h2>
-          </div>
-          <p className="text-slate-500 text-sm ml-12 font-medium">Authorize entry and generate secure digital passes</p>
-        </div>
-      </div>
+     
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -293,13 +283,13 @@ export function VisitorPassGenerator() {
           { label: 'Pending', value: passHistory.filter(p => p.status === 'pending').length, icon: <Clock className="size-5" />, color: 'bg-amber-500/10 text-amber-600' },
           { label: 'Blacklisted', value: blacklistedVisitors.length, icon: <Ban className="size-5" />, color: 'bg-red-500/10 text-red-600' },
         ].map(stat => (
-          <div key={stat.label} className="bg-slate-100 dark:bg-slate-800/50 p-5 rounded-md flex items-center gap-4 transition-all">
-            <div className={`size-10 rounded-md flex items-center justify-center flex-shrink-0 ${stat.color}`}>
+          <div key={stat.label} className="bg-slate-100 dark:bg-[#818b94]/40 p-5 rounded-md flex group items-center gap-4 transition-all cursor-pointer">
+            <div className={`size-10 rounded-md flex items-center justify-center flex-shrink-0 bg-white text-black group-hover:bg-amber-700 group-hover:text-white hover:text-white transition-all`}>
               {stat.icon}
             </div>
             <div>
-              <p className="text-2xl font-semibold">{stat.value}</p>
-              <p className="text-xs text-slate-500 font-semibold">{stat.label}</p>
+              <p className="text-xs text-slate-400 dark:text-slate-100 font-semibold">{stat.label}</p>
+              <p className="text-2xl font-semibold text-amber-500">{stat.value}</p>
             </div>
           </div>
         ))}
@@ -314,7 +304,7 @@ export function VisitorPassGenerator() {
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold transition-all whitespace-nowrap border-none ${
               activeTab === tab.id 
                 ? 'bg-[#1241a1] text-white' 
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-amber-700'
             }`}
           >
             {tab.icon}
@@ -327,7 +317,7 @@ export function VisitorPassGenerator() {
       {activeTab === 'schedule' && (
         <div className="space-y-8">
           {generatedPass ? (
-            <div className="flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500  dark:bg-[#818b94]/10">
               {/* Hero */}
               <div className="size-20 bg-emerald-500/15 text-emerald-500 rounded-full flex items-center justify-center mb-5">
                 <CheckIcon className="size-10 stroke-3" />
@@ -431,7 +421,7 @@ export function VisitorPassGenerator() {
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
               {/* Form */}
-              <div className="lg:col-span-3 bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden">
+              <div className="lg:col-span-3 bg-slate-100 dark: dark:bg-[#818b94]/10 rounded-md overflow-hidden">
                 <div className="p-6 bg-white dark:bg-slate-900">
                   <h3 className="text-xl font-semibold">Schedule New Visitor</h3>
                   <p className="text-slate-500 text-sm mt-1 font-semibold">Complete the details below to authorize entry and generate a secure digital pass.</p>
@@ -439,7 +429,7 @@ export function VisitorPassGenerator() {
                 <div className="p-6 space-y-7">
                   {/* Visitor Info */}
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-[#1241a1]">
+                    <div className="flex items-center gap-2 text-amber-700">
                       <User className="size-5" />
                       <h4 className="font-semibold uppercase tracking-wider text-xs">Visitor Information</h4>
                     </div>
@@ -467,7 +457,7 @@ export function VisitorPassGenerator() {
                   
                   {/* Timing */}
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-[#1241a1]">
+                    <div className="flex items-center gap-2 text-amber-700">
                       <Calendar className="size-5" />
                       <h4 className="font-semibold uppercase tracking-wider text-xs">Access Timing</h4>
                     </div>
@@ -485,9 +475,9 @@ export function VisitorPassGenerator() {
 
                   {/* Vehicle */}
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-[#1241a1]">
+                    <div className="flex items-center gap-2 text-amber-700">
                       <Car className="size-5" />
-                      <h4 className="font-semibold uppercase tracking-wider text-xs">Vehicle Details <span className="text-slate-400 font-normal normal-case">(Optional)</span></h4>
+                      <h4 className="font-semibold uppercase tracking-wider text-xs ">Vehicle Details <span className="text-slate-400 font-normal normal-case">(Optional)</span></h4>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div className="space-y-1.5">
@@ -510,7 +500,7 @@ export function VisitorPassGenerator() {
                     <button
                       onClick={generatePass}
                       disabled={isGenerating || !formData.visitorName || !formData.phone}
-                      className="w-full py-4 bg-[#1241a1] hover:bg-[#1241a1]/90 text-white font-bold rounded-xl shadow-lg shadow-[#1241a1]/25 transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full py-4 bg-amber-700 hover:bg-amber-700/90 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isGenerating ? (
                         <span className="flex items-center gap-2">
@@ -530,10 +520,10 @@ export function VisitorPassGenerator() {
               </div>
 
               {/* Empty placeholder */}
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2  dark:bg-[#818b94]/10">
                 <div className="h-80 lg:h-full min-h-[300px] bg-slate-100 dark:bg-slate-800/30 rounded-md flex flex-col items-center justify-center text-center p-8 gap-3">
                   <div className="size-16 bg-white dark:bg-slate-900 rounded-md flex items-center justify-center">
-                    <QrCode className="size-8 text-slate-400" />
+                    <QrCode className="size-8 text-amber-700" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-slate-700 dark:text-slate-300 mb-1">No Pass Generated</h3>
@@ -550,14 +540,14 @@ export function VisitorPassGenerator() {
 
       {/* History Tab */}
       {activeTab === 'history' && (
-        <div className="bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden">
+        <div className="bg-slate-100 dark:dark:bg-[#818b94]/10 rounded-md overflow-hidden">
           <div className="p-6 flex items-center justify-between">
             <h3 className="font-semibold text-lg">Pass History</h3>
             <span className="text-xs text-slate-500 font-medium">{passHistory.length} total passes</span>
           </div>
           {passHistory.length === 0 ? (
             <div className="p-12 text-center text-slate-400">
-              <History className="size-10 mb-3 mx-auto opacity-50" />
+              <History className="size-10 mb-3 mx-auto opacity-50 text-amber-700" />
               <p className="font-semibold">No pass history yet</p>
             </div>
           ) : (
@@ -625,20 +615,20 @@ export function VisitorPassGenerator() {
 
       {/* Blacklist Tab */}
       {activeTab === 'blacklist' && (
-        <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-white dark:bg-[#818b94]/10 rounded-2xl overflow-hidden shadow-sm">
           <div className="p-6 flex items-center justify-between">
-            <h3 className="font-bold text-lg text-red-600 dark:text-red-500 flex items-center gap-2">
+            <h3 className="font-bold text-lg text-white dark:text-amber-700 flex items-center gap-2">
               <Ban className="size-5" />
               Blacklisted Visitors
             </h3>
-            <button onClick={addToBlacklist} className="flex items-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl text-sm font-bold hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors">
+            <button onClick={addToBlacklist} className="flex items-center gap-2 px-4 py-2 bg-amber-50 dark:bg-amber-700 text-white dark:text-white rounded-xl text-sm font-bold hover:bg-red-100 dark:hover:bg-amber-700/40 transition-colors">
               <Plus className="w-4 h-4" />
               Add Entry
             </button>
           </div>
           {blacklistedVisitors.length === 0 ? (
             <div className="p-12 text-center text-slate-400">
-              <ShieldCheck className="size-10 mb-3 mx-auto opacity-50" />
+              <ShieldCheck className="size-10 mb-3 mx-auto opacity-50 text-amber-700" />
               <p className="font-medium">No blacklisted visitors</p>
             </div>
           ) : (

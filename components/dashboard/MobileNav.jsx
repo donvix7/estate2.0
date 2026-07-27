@@ -1,21 +1,42 @@
-"use client";
+'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Building2, Menu, X, Settings, HelpCircle, LogOut, ShieldAlert } from 'lucide-react';
+import { Building2, Menu, X, Settings, HelpCircle, LogOut, ShieldAlert, ChevronDown, User, UserCircle } from 'lucide-react';
 import { AlertModal } from '../ui/AlertModal';
+import { logout } from '@/lib/action';
 
 export default function DashboardMobileNav({ links, user, role, estateName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('currentUser');
-    sessionStorage.removeItem('sessionId');
-    router.push('/login');
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = async() => {
+    const res = await logout();
+    if(res?.success){
+      setShowLogoutConfirm(false);
+      router.push('/auth/login');
+    }
+
+
   };
 
   return (
@@ -41,19 +62,96 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
                 Emergency Alert
               </Link>
             )}
-            <Link href={`/dashboard/${role}/profile`}>
-              <div className="size-8 rounded-full bg-slate-300 dark:bg-slate-700 bg-cover bg-center shadow-sm" style={{ backgroundImage: `url(${user?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop'})` }}></div>
-            </Link>
-            <button 
-              onClick={() => setIsMenuOpen(true)}
-              className="p-2 text-slate-500 dark:text-slate-400 hover:text-[#1241a1] rounded-xl bg-slate-100 dark:bg-slate-800 transition-colors"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
+            
+            {/* Profile Picture with Dropdown */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                className="flex items-center gap-2 focus:outline-none"
+              >
+                <div className="size-8 rounded-full bg-slate-300 dark:bg-slate-700 bg-cover bg-center shadow-sm border-2 border-transparent hover:border-[#1241a1] transition-all" 
+                  style={{ backgroundImage: `url(${user?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop'})` }}>
+                </div>
+                <ChevronDown className={`size-4 text-slate-500 transition-transform duration-200 ${isProfileDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Dropdown Menu */}
+              {isProfileDropdownOpen && (
+                <div className="absolute right-0 mt-3 w-64 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                  {/* User Info Section */}
+                  <div className="p-4 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                    <div className="flex items-center gap-3">
+                      <div className="size-12 rounded-full bg-slate-300 dark:bg-slate-700 bg-cover bg-center shadow-sm" 
+                        style={{ backgroundImage: `url(${user?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop'})` }}>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{user?.name || 'User'}</p>
+                        <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest truncate">{estateName || 'Lekki Phase 1'}</p>
+                        <p className="text-[9px] text-slate-400 dark:text-slate-500 font-medium capitalize">{role || 'resident'}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Dropdown Options */}
+                  <div className="p-2">
+                    <Link
+                      href={`/dashboard/${role}/profile`}
+                      onClick={() => {
+                        setIsProfileDropdownOpen(false);
+                        setIsMenuOpen(false);
+                      }}
+                      className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-[#1241a1]/10 hover:text-[#1241a1] dark:hover:bg-[#1241a1]/20 transition-all"
+                    >
+                      <User className="size-5" />
+                      <span>My Profile</span>
+                    </Link>
+
+                    <Link
+                      href={`/dashboard/${role}/settings`}
+                      onClick={() => {
+                        setIsProfileDropdownOpen(false);
+                        setIsMenuOpen(false);
+                      }}
+                      className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-[#1241a1]/10 hover:text-[#1241a1] dark:hover:bg-[#1241a1]/20 transition-all"
+                    >
+                      <Settings className="size-5" />
+                      <span>Settings</span>
+                    </Link>
+
+                    <Link
+                      href={`/dashboard/${role}/help`}
+                      onClick={() => {
+                        setIsProfileDropdownOpen(false);
+                        setIsMenuOpen(false);
+                      }}
+                      className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-[#1241a1]/10 hover:text-[#1241a1] dark:hover:bg-[#1241a1]/20 transition-all"
+                    >
+                      <HelpCircle className="size-5" />
+                      <span>Help & Support</span>
+                    </Link>
+
+                    <div className="h-px bg-slate-200 dark:bg-slate-800 my-2"></div>
+
+                    <button
+                      onClick={() => {
+                        setIsProfileDropdownOpen(false);
+                        setShowLogoutConfirm(true);
+                      }}
+                      className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
+                    >
+                      <LogOut className="size-5" />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
           </div>
         </div>
       </nav>
 
+      {/* Mobile Side Menu */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-100 bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-md animate-fade-in" onClick={() => setIsMenuOpen(false)}>
           <div 
@@ -78,46 +176,14 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
             <div className="flex items-center p-4 bg-white dark:bg-slate-800 m-4 rounded-2xl shadow-sm">
               <div className="size-10 rounded-full bg-slate-300 dark:bg-slate-700 bg-cover bg-center" style={{ backgroundImage: `url(${user?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop'})` }}></div>
               <div className="ml-3">
-                <Link href={`/dashboard/${role}/profile`}>
-                <p className="text-sm font-black text-slate-900 dark:text-white leading-tight">{user?.name || 'User'}</p>
-                <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{estateName || 'Lekki Phase 1'}</p>
+                <Link href={`/dashboard/${role}/profile`} onClick={() => setIsMenuOpen(false)}>
+                  <p className="text-sm font-black text-slate-900 dark:text-white leading-tight">{user?.name || 'User'}</p>
+                  <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{estateName || 'Lekki Phase 1'}</p>
                 </Link>
-               </div>
+              </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto py-4 px-4 space-y-1">
-              <div className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4 px-2">
-                Main Menu
-              </div>
-              {links.map((link) => {
-                const isActive = pathname === link.href;
-                const Icon = link.icon;
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`flex items-center justify-between px-4 py-3.5 rounded-xl transition-all ${
-                      isActive 
-                        ? 'bg-[#1241a1] text-white shadow-lg shadow-[#1241a1]/20' 
-                        : 'text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      {link.icon ? (
-                        <link.icon className={`size-5 ${isActive ? 'text-white' : 'text-slate-400'}`} />
-                      ) : (
-                        <Building2 className={`size-5 ${isActive ? 'text-white' : 'text-slate-400'}`} />
-                      )}
-                      <span className="font-bold text-sm">{link.label}</span>
-                    </div>
-                    {link.badge > 0 && (
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${isActive ? 'bg-white text-[#1241a1]' : 'bg-[#1241a1] text-white'}`}>{link.badge}</span>
-                    )}
-                  </Link>
-                );
-              })}
-            </div>
+            
 
             <div className="p-4 bg-white dark:bg-slate-800/50 mt-auto">
               <div className="flex items-center justify-around mb-4">

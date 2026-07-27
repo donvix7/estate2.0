@@ -109,7 +109,7 @@ export default function FinancePage() {
     link.click()
   }
   return (
-    <div className="min-h-screen bg-[#f6f6f8] dark:bg-[#111621]">
+    <div className="min-h-screen">
       <div className="max-w-6xl mx-auto px-6 lg:px-8 py-8 space-y-10">
 
         <PageHeader 
@@ -118,14 +118,14 @@ export default function FinancePage() {
           icon={Receipt}
           iconColor="blue"
         >
-          <div className="bg-slate-100 dark:bg-slate-800/30 p-6 rounded-md flex items-center justify-between gap-8 min-w-[300px]">
+          <div className=" p-6 rounded-md flex items-center justify-between gap-8 min-w-[300px]">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Total Outstanding</p>
-              <p className="text-3xl font-semibold text-slate-900 dark:text-white">{formatNGN(TOTAL_OUTSTANDING)}</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-200 mb-1">Total Outstanding</p>
+              <p className="text-3xl font-semibold text-slate-900 dark:text-amber-700">{formatNGN(TOTAL_OUTSTANDING)}</p>
             </div>
             <Link
               href="/dashboard/resident/finance/checkout"
-              className="bg-[#1241a1] hover:brightness-110 text-white px-6 py-2.5 rounded-md font-semibold text-sm transition-all whitespace-nowrap"
+              className="bg-amber-700 hover:brightness-110 text-white px-6 py-2.5 rounded-md font-semibold text-sm transition-all whitespace-nowrap"
             >
               Pay All
             </Link>
@@ -141,70 +141,18 @@ export default function FinancePage() {
             <Clock className="size-5 text-[#1241a1]" />
             Active Bills
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {activeBills.map(bill => (
-              <div
-                key={bill.id}
-                className="bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden transition-all group"
-              >
-                {/* Bill image / icon area */}
-                <div className="h-32 w-full bg-white dark:bg-slate-900 flex items-center justify-center relative">
-                  {(() => {
-                    const BillIcon = ICONS[bill.icon] || Building2
-                    return <BillIcon className={`size-10 relative z-10 transition-colors group-hover:text-[#1241a1] ${bill.iconColor}`} />
-                  })()}
-                </div>
-                <div className="p-5">
-                  <div className="flex justify-between items-start mb-3">
-                    <h4 className="font-semibold text-base">{bill.name}</h4>
-                    <span className={`px-2 py-1 rounded-full text-[10px] font-semibold uppercase ${bill.dueClass}`}>{bill.due}</span>
-                  </div>
-                  <p className="text-2xl font-semibold mb-4">{formatNGN(bill.amount)}</p>
-                  {bill.clickable ? (
-                    <Link
-                      href="/dashboard/resident/finance/checkout"
-                      className="block w-full text-center py-2.5 rounded-md bg-white dark:bg-slate-900 text-[#1241a1] hover:bg-[#1241a1] hover:text-white font-semibold text-sm transition-all"
-                    >
-                      Pay Now
-                    </Link>
-                  ) : (
-                    <div className="w-full text-center py-2.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold text-sm">
-                      Paid
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <div className="bg-slate-100 dark:dark:bg-[#818b94]/10 rounded-md overflow-hidden">
 
-        {/* ── Recent Transactions ── */}
-        <section>
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold flex items-center gap-2">
-              <History className="size-5 text-slate-500" />
-              Recent Transactions
-            </h3>
-            <button 
-              onClick={handleDownloadReport}
-              className="text-sm font-semibold text-[#1241a1] hover:underline flex items-center gap-1"
-            >
-              <Download className="size-4" />
-              Download PDF Report
-            </button>
-          </div>
-          <div className="bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden">
-            {/* Desktop Table */}
-            <table className="w-full text-left hidden md:table">
-              <thead>
-                <tr className="bg-slate-50 dark:bg-slate-800/50">
+           <table className="w-full text-left">
+             <thead className="bg-slate-50 dark:bg-slate-800/50 ">
+              <tr className="bg-slate-50 dark:bg-slate-800/50">
                   {['Date', 'Description', 'Amount', 'Status', ''].map(h => (
                     <th key={h} className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y-0">
-                {paginatedTransactions.map((tx, i) => (
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                {activeBills.length > 0 ? (activeBills.map((tx, i) => (
                   <tr key={i} className="group hover:bg-white dark:hover:bg-slate-800 transition-all">
                     
                     <td className="px-6 py-4 text-sm font-semibold whitespace-nowrap">{tx.date}</td>
@@ -224,9 +172,82 @@ export default function FinancePage() {
                       </button>
                     </td>
                   </tr>
-                ))}
+                ))):(
+                    <tr>
+                      <td colSpan={4} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
+                        <div className="flex flex-col items-center justify-center gap-2">
+                          <Wrench className="size-8 text-slate-300 dark:text-slate-600 mb-2" />
+                          <p className="font-medium text-slate-600 dark:text-slate-300">No active transactions</p>
+                          <p className="text-xs">You have no ongoing transaction at the moment.</p>
+                        </div>
+                      </td>
+                    </tr>
+                )}
               </tbody>
             </table>
+            </div>
+        </section>
+
+        {/* ── Recent Transactions ── */}
+        <section>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-bold flex items-center gap-2">
+              <History className="size-5 text-slate-500" />
+              Recent Transactions
+            </h3>
+            <button 
+              onClick={handleDownloadReport}
+              className="text-sm font-semibold text-[#1241a1] hover:underline flex items-center gap-1"
+            >
+              <Download className="size-4" />
+              Download PDF Report
+            </button>
+          </div>
+        <div className="bg-slate-100 dark:dark:bg-[#818b94]/10 rounded-md overflow-hidden">
+            {/* Desktop Table */}
+              <table className="w-full text-left">
+             <thead className="bg-slate-50 dark:bg-slate-800/50 ">
+              <tr className="bg-slate-50 dark:bg-slate-800/50">
+                  {['Date', 'Description', 'Amount', 'Status', ''].map(h => (
+                    <th key={h} className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                {paginatedTransactions.length > 0 ? (paginatedTransactions.map((tx, i) => (
+                  <tr key={i} className="group hover:bg-white dark:hover:bg-slate-800 transition-all">
+                    
+                    <td className="px-6 py-4 text-sm font-semibold whitespace-nowrap">{tx.date}</td>
+                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">{tx.description}</td>
+                    <td className={`px-6 py-4 text-sm font-semibold ${tx.amountClass || ''}`}>{tx.amount}</td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${tx.statusClass}`}>
+                        {tx.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <button 
+                        onClick={() => setSelectedTx(tx)}
+                        className="text-slate-400 group-hover:text-[#1241a1] transition-colors"
+                      >
+                        <Receipt className="size-5" />
+                      </button>
+                    </td>
+                  </tr>
+                ))):(
+                    <tr>
+                      <td colSpan={4} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
+                        <div className="flex flex-col items-center justify-center gap-2">
+                          <Wrench className="size-8 text-slate-300 dark:text-slate-600 mb-2" />
+                          <p className="font-medium text-slate-600 dark:text-slate-300">No active transactions</p>
+                          <p className="text-xs">You have no ongoing transaction at the moment.</p>
+                        </div>
+                      </td>
+                    </tr>
+                )}
+              </tbody>
+            </table>
+            
 
             {/* Mobile Card List */}
             <div className="md:hidden flex flex-col gap-4">

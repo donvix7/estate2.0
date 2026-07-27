@@ -178,7 +178,7 @@ export default function AdminDashboard() {
           value:residents.length ,
           trend:"+2.5%" ,
           trendColor:"text-green-500" ,
-          bgColor:"bg-blue-100 dark:bg-blue-900/30" ,
+          bgColor:"bg-blue-100 dark:bg-[#818b94] " ,
           iconColor:"text-blue-600" ,
     },
     {
@@ -220,7 +220,7 @@ export default function AdminDashboard() {
   ]
 
   return (
-    <div className="flex flex-col gap-5 lg:gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="flex flex-col gap-5 lg:gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700 bg-black">
       
       {/* Header & Welcome */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">

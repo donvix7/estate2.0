@@ -21,6 +21,7 @@ import {
   UserCircle 
 } from 'lucide-react';
 import { getAnnouncements, getCurrentSession, getResidentData, getUserById } from '@/lib/service'
+import BottomNav from '@/components/dashboard/BottomNav'
 
 export default function ResidentLayout({ children }) {
   const pathname = usePathname();
@@ -74,12 +75,12 @@ export default function ResidentLayout({ children }) {
 
   }, []);
   return (
-    <div className="min-h-screen bg-background-light dark:bg-gray-900 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-background-light dark:bg-black text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 flex flex-col lg:flex-row">
       {/* Sidebar Navigation */}
       <DashboardSidebar links={residentLinks} user={userData} role="resident" estateName={userData?.estateID} />
       
       <div className="flex flex-col flex-1 min-w-0 h-screen overflow-y-scroll">
-        <div className="hidden lg:block">
+        <div className="hidden">
           <DashboardHeader userName={userData?.name} estateName={userData?.estateID} />
         </div>
         <DashboardMobileNav links={residentLinks} user={userData} role="resident" estateName={userData?.estateID} />
@@ -89,17 +90,8 @@ export default function ResidentLayout({ children }) {
           {children}
         </main>
 
-        {/* Mobile Bottom Navigation */}
-        <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-900  pb-safe">
-          <div className="max-w-md mx-auto flex justify-between items-center px-2 py-2">
-            {mobileLinks.map((link) => (
-              <Link key={link.href} href={link.href} className={`flex flex-col items-center gap-1 flex-1 py-1 ${pathname === link.href ? 'text-[#1241a1]' : 'text-slate-400 dark:text-slate-500'}`}>
-                <link.icon className="size-5" />
-                <span className="text-[10px] font-medium uppercase tracking-tighter text-center">{link.label}</span>
-              </Link>
-            ))}
-          </div>
-        </nav>
+              <BottomNav pathname={pathname} links={mobileLinks}/>
+
       </div>
     </div>
   )

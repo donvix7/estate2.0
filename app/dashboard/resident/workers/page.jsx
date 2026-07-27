@@ -125,7 +125,7 @@ export default function WorkersDirectoryPage() {
         icon={Briefcase}
         iconColor="blue"
       >
-        <button className="bg-[#1241a1] text-white px-5 py-2.5 rounded-md text-sm font-bold flex items-center gap-2 hover:bg-[#1241a1]/90 transition-colors shadow-lg shadow-[#1241a1]/20 whitespace-nowrap">
+        <button className="bg-amber-700 text-white px-5 py-2.5 rounded-md text-sm font-bold flex items-center gap-2 hover:bg-amber-700/50 transition-colors shadow-lg shadow-[#1241a1]/20 whitespace-nowrap">
           <Plus className="size-4" />
           Post a Job
         </button>
@@ -139,7 +139,7 @@ export default function WorkersDirectoryPage() {
             onClick={() => setActiveCategory(cat.id)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
               activeCategory === cat.id
-                ? 'bg-[#1241a1] text-white shadow-lg shadow-[#1241a1]/20'
+                ? 'bg-amber-700 text-white '
                 : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 rounded-md'
             }`}
           >
@@ -172,7 +172,7 @@ export default function WorkersDirectoryPage() {
               onClick={() => toggleFilter(f.key)}
               className={`flex items-center gap-2 px-4 py-2 rounded-md text-[11px] font-semibold uppercase tracking-widest transition-all whitespace-nowrap ${
                 filters[f.key]
-                  ? 'bg-[#1241a1] text-white'
+                  ? 'bg-amber-700 text-white'
                   : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'
               }`}
             >
@@ -191,7 +191,7 @@ export default function WorkersDirectoryPage() {
 
       {/* ── Worker Grid ── */}
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
+        <div className="flex flex-col items-center justify-center py-20 text-center gap-4  bg-[#818b94]/10">
           <div className="size-16 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400">
             <UserSearch className="w-8 h-8" />
           </div>
@@ -199,7 +199,7 @@ export default function WorkersDirectoryPage() {
           <p className="text-sm text-slate-400">Try adjusting your search or filters.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6  bg-[#818b94]/10">
           {filtered.map((worker, index) => (
             <div
               key={worker.id || worker._id || `worker-${index}`}

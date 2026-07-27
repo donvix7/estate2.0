@@ -33,7 +33,9 @@ import {
   ChevronRight,
   Droplets,
   Waves,
-  Building2
+  Building2,
+  ArrowBigRight,
+  ArrowRight
 } from 'lucide-react';
 import AnnouncementItem from '@/components/AnnouncementItems';
 import ActionCard from '@/components/ActionCard';
@@ -209,7 +211,7 @@ export default function ResidentDashboard() {
   }
 
   return (
-    <div className="flex flex-col gap-10 lg:gap-12 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-7xl mx-auto w-full pb-24 lg:pb-0">
+    <div className="flex flex-col gap-10 lg:gap-12 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-7xl mx-auto w-full pb-24 lg:pb-0 ">
       
       {/* Header Greeting */}
       <PageHeader 
@@ -222,7 +224,7 @@ export default function ResidentDashboard() {
       {/* Visitor Code Button (Mobile Only) */}
       <section className="lg:hidden">
         <Link href="/dashboard/resident/visitors">
-          <button className="w-full bg-[#1241a1] hover:bg-[#1241a1]/90 text-white rounded-md py-4 px-6 flex items-center justify-between transition-all active:scale-[0.98]">
+          <button className="w-full bg-slate-200 hover:bg-amber-700 text-slate-900 rounded-md py-4 px-6 flex items-center justify-between transition-all active:scale-[0.98]">
             <div className="flex items-center gap-3">
               <QrCode className="size-6" />
               <span className="font-semibold text-lg">Generate Visitor Code</span>
@@ -291,7 +293,7 @@ export default function ResidentDashboard() {
       <section className="hidden lg:block">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold">Quick Actions</h3>
-          <Link href="#" className="text-[#1241a1] text-sm font-semibold hover:underline">View all actions</Link>
+          <Link href="#" className="text-amber-700 text-sm font-semibold hover:text-white flex gap-2 items center align center">View all actions<ArrowRight/></Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {actions.map((action) => (
@@ -307,7 +309,7 @@ export default function ResidentDashboard() {
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-12">
           {/* Billing Summary */}
-          <div className="lg:col-span-1 flex flex-col gap-4">
+          <div className="lg:col-span-1 flex flex-col gap-4 bg-[#818b94]/10">
             <div className="bg-slate-100 dark:bg-slate-800/30 rounded-md p-6 h-full">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-semibold">Billing Summary</h3>
@@ -331,7 +333,7 @@ export default function ResidentDashboard() {
                 )}
               </div>
               <Link href="/dashboard/resident/finance">
-                <button className="w-full mt-6 bg-[#1241a1] text-white py-3 rounded-md font-semibold text-sm hover:bg-[#1241a1]/90 transition-all active:scale-[0.98]">
+                <button className="w-full mt-6 bg-amber-800 text-white py-3 rounded-md font-semibold text-sm hover:bg-amber-700 transition-all active:scale-[0.98]">
                   Pay Now
                 </button>
               </Link>
@@ -339,7 +341,7 @@ export default function ResidentDashboard() {
           </div>
 
           {/* Recent Announcements */}
-          <div className="lg:col-span-1.5 flex flex-col gap-4">
+          <div className="lg:col-span-1.5 flex flex-col gap-4  bg-[#818b94]/10 ">
             <div className="bg-slate-100 dark:bg-slate-800/30 rounded-md p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-semibold">Recent Announcements</h3>
@@ -384,7 +386,7 @@ export default function ResidentDashboard() {
         </div>
         
         {/* Desktop Table */}
-        <div className="hidden lg:block bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden">
+        <div className="hidden lg:block bg-[#818b94]/10 rounded-md overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 dark:bg-slate-800/50 ">
