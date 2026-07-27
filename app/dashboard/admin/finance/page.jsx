@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Receipt, Search, Loader2, ArrowUpRight, CopyPlus, Wallet } from 'lucide-react';
-import { api } from '@/services/api';
 import FinanceTable from '@/components/admin/FinanceTable';
 import StatsCard from '@/components/StatsCard';
 import { PageHeader } from '@/components/ui/PageHeader';

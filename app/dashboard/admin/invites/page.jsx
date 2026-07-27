@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { Mail, Search, Loader2, QrCode, CheckCircle2, Clock } from 'lucide-react';
-import { api } from '@/services/api';
 import InvitesTable from '@/components/admin/InvitesTable';
 import StatsCard from '@/components/StatsCard';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { FilterBar } from '@/components/ui/FilterBar';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
+import { getPendingInvites } from '@/lib/service';
 
 export default function InvitesPage() {
   const [invites, setInvites] = useState([]);
@@ -22,7 +22,7 @@ export default function InvitesPage() {
   const loadInvites = async () => {
     setIsLoading(true);
     try {
-      const data = await api.getInvites();
+      const data = await getPendingInvites();
       setInvites(data);
     } catch (error) {
       console.error('Failed to load invites:', error);

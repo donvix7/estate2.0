@@ -15,7 +15,6 @@ import {
   MapPin,
   MessageSquare
 } from 'lucide-react';
-import { api } from '@/services/api';
 import { toast } from 'react-toastify';
 
 export default function ResolveEmergencyModal({ emergency, onClose, onResolve }) {
@@ -33,7 +32,7 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
 
   const loadContacts = async () => {
     try {
-      const data = await api.getEmergencyContacts();
+      const data = await getEmergencyContacts();
       setContacts(data);
     } catch (err) {
       console.error('Failed to load contacts', err);

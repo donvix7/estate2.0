@@ -24,7 +24,6 @@ import {
   Stethoscope,
   Shield
 } from 'lucide-react';
-import { api } from '@/services/api';
 import ResolveEmergencyModal from '@/components/admin/ResolveEmergencyModal';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
 import ResourceItem from '@/components/ResourceItem';

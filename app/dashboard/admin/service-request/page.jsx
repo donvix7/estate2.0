@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { Wrench, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { api } from '@/services/api';
 import ServicesTable from '@/components/admin/ServicesTable';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { FilterBar } from '@/components/ui/FilterBar';

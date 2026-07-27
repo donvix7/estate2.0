@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import { Briefcase } from 'lucide-react'
-import { api } from '@/services/api'
+import { getStaffMembers } from '@/lib/service'
 
 
 const StaffPage = () => {
@@ -11,7 +11,7 @@ const StaffPage = () => {
   useEffect(() => {
     const loadStaff = async () => {
       try {
-        const staff = await api.getStaffMembers()
+        const staff = await getStaffMembers()
         setStaffMembers(staff)
       } catch (error) {
         console.error('Failed to load staff data:', error)
