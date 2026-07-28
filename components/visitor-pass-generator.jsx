@@ -283,7 +283,7 @@ export function VisitorPassGenerator() {
           { label: 'Pending', value: passHistory.filter(p => p.status === 'pending').length, icon: <Clock className="size-5" />, color: 'bg-amber-500/10 text-amber-600' },
           { label: 'Blacklisted', value: blacklistedVisitors.length, icon: <Ban className="size-5" />, color: 'bg-red-500/10 text-red-600' },
         ].map(stat => (
-          <div key={stat.label} className="bg-slate-100 dark:bg-[#818b94]/40 p-5 rounded-md flex group items-center gap-4 transition-all cursor-pointer">
+          <div key={stat.label} className="bg-[#818b94]/10 p-5 rounded-md flex group items-center gap-4 transition-all cursor-pointer">
             <div className={`size-10 rounded-md flex items-center justify-center flex-shrink-0 bg-white text-black group-hover:bg-amber-700 group-hover:text-white hover:text-white transition-all`}>
               {stat.icon}
             </div>

@@ -44,7 +44,7 @@ export default function DashboardSidebar({ links, user, role, estateName }) {
               )}
             </div>
             <div className="flex flex-col min-w-0">
-              <h2 className="text-sm font-bold truncate">{user?.name || 'User'}</h2>
+              <h2 className="text-sm font-bold truncate">{user?.username || 'User'}</h2>
               <p className="text-[10px] font-medium text-slate-500 dark:text-amber-400 uppercase tracking-tight truncate">
                 {role === 'admin' ? user?.role || 'Administrator' : `Unit ${user?.unitNumber || '402'} • ${user?.building || 'unknown'}`}
               </p>

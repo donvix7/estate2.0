@@ -79,86 +79,119 @@ const BottomNav = ({ pathname, links }) => {
           </div>
 
           {/* Modal Content - Grid of Links */}
-          <div className="p-6 overflow-y-auto h-[calc(100vh-80px)]">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {allLinks.map((link, index) => {
-                const Icon = link.icon
-                const isActive = pathname === link.href 
-                return (
-                  <Link
-                    key={index}
-                    href={link.href}
-                    onClick={() => setIsModalOpen(false)}
-                    className={`flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all hover:scale-105 active:scale-95 ${
-                      isActive 
-                        ? ' bg-amber-700 dark:bg-amber-700 dark:text-white text-white' 
-                        : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 text-slate-600 dark:text-slate-400 hover:border-amber-700 hover:text-amber-700] dark:hover:text-amber-700'
-                    }`}
-                  >
-                    <Icon className="size-8 mb-3" />
-                    <span className={`text-sm font-semibold text-center ${
-                      isActive ? 'text-black dark:text-white' : ''
-                    }`}>
-                      {link.label}
-                    </span>
-                    {isActive && (
-                      <div className="mt-2 w-6 h-1 rounded-full bg-black dark:bg-white" />
-                    )}
-                  </Link>
-                )
-              })}
-            </div>
-
-            {/* Quick Actions Section */}
-            <div className="mt-8 border-t border-amber-700 dark:border-amber-700 pt-8">
-              <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-wider">
-                Quick Actions
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {[
-                  {
-                    icon: UserPlus,
-                    label: 'Add Resident',
-                    href: '/dashboard/admin/add-resident'
-                  },
-                  {
-                    icon: FileText,
-                    label: 'Generate Report',
-                    href: '/dashboard/admin/generate-report'
-                  },
-                  {
-                    icon: Megaphone,
-                    label: 'Send Notice',
-                    href: '/dashboard/admin/send-notice'
-                  },
-                  {
-                    icon: MessageCircle,
-                    label: 'Help Center',
-                    href: '/dashboard/admin/send-message'
-                  }
-                ].map((item, index) => {
-                  const Icon = item.icon
-                  const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
-                  
-                  return (
-                    <Link 
-                      key={index}
-                      href={item.href}
-                      onClick={() => setIsModalOpen(false)}
-                      className={`flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all hover:text-white ${
-                        isActive 
-                          ? 'border-black bg-amber-700 dark:bg-amber-700 dark:text-white text-white' 
-                          : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 text-slate-600 dark:text-slate-400 hover:border-[#1241a1]/50 hover:text-amber-700 dark:hover:text-amber-700'
-                      }`}
-                    >
-                      <Icon className="size-6 mx-auto mb-2 group-hover:scale-110 transition-transform" />
-                      <span className="text-xs font-medium">{item.label}</span>
-                    </Link>
-                  )
-                })}
-              </div>
-            </div>
+         <div className="p-4 sm:p-6 overflow-y-auto h-[calc(100vh-80px)]">
+  {/* Main Navigation Links */}
+  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-3">
+    {allLinks.map((link, index) => {
+      const Icon = link.icon
+      const isActive = pathname === link.href 
+      return (
+        <Link
+          key={index}
+          href={link.href}
+          onClick={() => setIsModalOpen(false)}
+          className={`group flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl transition-all duration-200 ${
+            isActive 
+              ? 'bg-amber-600 dark:bg-amber-600 text-white shadow-lg shadow-amber-600/20 dark:shadow-amber-600/30' 
+              : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm text-slate-600 dark:text-slate-400 hover:bg-amber-50 dark:hover:bg-slate-700/80 hover:text-amber-600 dark:hover:text-amber-400 border border-slate-200/50 dark:border-slate-700/50 hover:border-amber-200 dark:hover:border-amber-700/50'
+          }`}
+        >
+          <div className={`relative p-2 rounded-lg transition-all duration-200 ${
+            isActive 
+              ? 'bg-white/20' 
+              : 'bg-slate-100 dark:bg-slate-700/50 group-hover:bg-amber-100 dark:group-hover:bg-amber-900/30'
+          }`}>
+            <Icon className={`size-5 transition-transform duration-200 ${
+              isActive 
+                ? 'text-white' 
+                : 'text-slate-500 dark:text-slate-400 group-hover:text-amber-600 dark:group-hover:text-amber-400'
+            }`} />
           </div>
+          <span className={`text-[10px] sm:text-xs font-medium text-center mt-1.5 leading-tight ${
+            isActive 
+              ? 'text-white' 
+              : 'text-slate-600 dark:text-slate-400 group-hover:text-amber-600 dark:group-hover:text-amber-400'
+          }`}>
+            {link.label}
+          </span>
+          {isActive && (
+            <div className="mt-1 w-4 h-0.5 rounded-full bg-white/80" />
+          )}
+        </Link>
+      )
+    })}
+  </div>
+
+  {/* Quick Actions Section */}
+  <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-slate-200/60 dark:border-slate-700/60">
+    <div className="flex items-center justify-between mb-4">
+      <h3 className="text-[10px] sm:text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+        Quick Actions
+      </h3>
+      <span className="text-[8px] text-slate-300 dark:text-slate-600 uppercase tracking-wider">⚡</span>
+    </div>
+    
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+      {[
+        {
+          icon: UserPlus,
+          label: 'Add Resident',
+          href: '/dashboard/admin/add-resident'
+        },
+        {
+          icon: FileText,
+          label: 'Generate Report',
+          href: '/dashboard/admin/generate-report'
+        },
+        {
+          icon: Megaphone,
+          label: 'Send Notice',
+          href: '/dashboard/admin/send-notice'
+        },
+        {
+          icon: MessageCircle,
+          label: 'Help Center',
+          href: '/dashboard/admin/send-message'
+        }
+      ].map((item, index) => {
+        const Icon = item.icon
+        const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
+        
+        return (
+          <Link 
+            key={index}
+            href={item.href}
+            onClick={() => setIsModalOpen(false)}
+            className={`group flex flex-col items-center justify-center p-2.5 sm:p-3 rounded-xl transition-all duration-200 ${
+              isActive 
+                ? 'bg-amber-600 dark:bg-amber-600 text-white shadow-lg shadow-amber-600/20 dark:shadow-amber-600/30' 
+                : 'bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 hover:bg-amber-50 dark:hover:bg-slate-700/60 hover:border-amber-200 dark:hover:border-amber-700/50 hover:text-amber-600 dark:hover:text-amber-400'
+            }`}
+          >
+            <div className={`p-1.5 rounded-lg transition-all duration-200 ${
+              isActive 
+                ? 'bg-white/20' 
+                : 'bg-slate-100 dark:bg-slate-700/50 group-hover:bg-amber-100 dark:group-hover:bg-amber-900/30'
+            }`}>
+              <Icon className={`size-4 transition-transform duration-200 ${
+                isActive 
+                  ? 'text-white' 
+                  : 'text-slate-500 dark:text-slate-400 group-hover:text-amber-600 dark:group-hover:text-amber-400'
+              }`} />
+            </div>
+            <span className={`text-[9px] sm:text-[10px] font-medium text-center mt-1 leading-tight ${
+              isActive 
+                ? 'text-white' 
+                : 'text-slate-500 dark:text-slate-400 group-hover:text-amber-600 dark:group-hover:text-amber-400'
+            }`}>
+              {item.label}
+            </span>
+          </Link>
+        )
+      })}
+    </div>
+  </div>
+</div>
         </div>
       )}
     </div>

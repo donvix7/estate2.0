@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { getAnnouncements, getCurrentSession, getResidentData, getUserById } from '@/lib/service'
 import BottomNav from '@/components/dashboard/BottomNav'
+import { getCurrentUser } from '@/lib/action'
 
 export default function ResidentLayout({ children }) {
   const pathname = usePathname();
@@ -67,7 +68,7 @@ export default function ResidentLayout({ children }) {
 
   useEffect(() => {
     const loadUserData = async () => {
-      const data = await getResidentData();
+      const data = await getCurrentUser();
       setUserData(data);
     };
 
@@ -81,12 +82,12 @@ export default function ResidentLayout({ children }) {
       
       <div className="flex flex-col flex-1 min-w-0 h-screen overflow-y-scroll">
         <div className="hidden">
-          <DashboardHeader userName={userData?.name} estateName={userData?.estateID} />
+          <DashboardHeader userName={userData?.username} estateName={userData?.estateID} />
         </div>
         <DashboardMobileNav links={residentLinks} user={userData} role="resident" estateName={userData?.estateID} />
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-3 lg:p-8 pb-32 lg:pb-8">
+        <main className="flex-1 overflow-y-auto p-3 lg:p-8 pb-32 mb-12 lg:pb-8">
           {children}
         </main>
 

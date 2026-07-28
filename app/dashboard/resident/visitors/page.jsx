@@ -6,7 +6,7 @@ import { QrCode } from 'lucide-react'
 
 const page = () => {
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-8 animate-fade-in">
+    <div className="space-y-8 animate-fade-in">
         <PageHeader 
           title="Visitor Access" 
           description="Generate access codes and manage your guest list."

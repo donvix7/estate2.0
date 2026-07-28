@@ -110,7 +110,7 @@ export default function FinancePage() {
   }
   return (
     <div className="min-h-screen">
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 py-8 space-y-10">
+      <div className=" py-8 space-y-10">
 
         <PageHeader 
           title="Bills & Invoices" 

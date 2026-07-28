@@ -42,6 +42,7 @@ import ActionCard from '@/components/ActionCard';
 import BillItem from '@/components/BillItems';
 import ServiceIconLink from '@/components/ServiceIconLink';
 import ServiceRow from '@/components/ServiceRow';
+import { getCurrentUser } from '@/lib/action';
 
 export default function ResidentDashboard() {
   const router = useRouter()
@@ -141,15 +142,19 @@ export default function ResidentDashboard() {
       label:"Profile"
     }
   ] 
+
+  const [user, setUser] = useState(null)
+  
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
       try {
-        const [announcementsData, visitorsData, residentDataResponse, serviceRequestsData] = await Promise.all([
+        const [announcementsData, visitorsData, residentDataResponse, serviceRequestsData, userData ] = await Promise.all([
           getAnnouncements(),
           getVisitors(),
           getResidentData(),
-          getServiceRequests()
+          getServiceRequests(),
+          getCurrentUser()
         ]);
         
         // Map string icons to Lucide components
@@ -158,6 +163,8 @@ export default function ResidentDashboard() {
           ...s,
           icon: iconMap[s.icon] || Wrench
         }));
+
+        setUser(userData)
 
         setAnnouncements(announcementsData || []);
         setVisitors(visitorsData || []);
@@ -178,9 +185,8 @@ export default function ResidentDashboard() {
     setError(null);
     setIsLoading(true);
     router.refresh();
-    // After router.refresh(), we still want to trigger our client-side loadData
     setTimeout(() => {
-      window.location.reload(); // More reliable for a "Try Again" feel in this context
+      window.location.reload();
     }, 100);
   };
 
@@ -201,7 +207,7 @@ export default function ResidentDashboard() {
           </p>
           <button 
             onClick={handleRefresh}
-            className="w-full bg-[#1241a1] hover:bg-[#1241a1]/90 text-white font-semibold py-4 rounded-md transition-all active:scale-95 flex items-center justify-center gap-2"
+            className="w-full bg-slate-700 hover:bg-slate-700 text-white font-semibold py-4 rounded-md transition-all active:scale-95 flex items-center justify-center gap-2"
           >
             Try Again
           </button>
@@ -211,248 +217,198 @@ export default function ResidentDashboard() {
   }
 
   return (
-    <div className="flex flex-col gap-10 lg:gap-12 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-7xl mx-auto w-full pb-24 lg:pb-0 ">
+    <div className="flex flex-col gap-6 md:gap-8 lg:gap-12 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full pb-24 lg:pb-0">
       
       {/* Header Greeting */}
       <PageHeader 
-        title={`Hello, ${residentData?.firstName?.split(' ')[0] || 'Sarah'}!`}
+        title={`Hello, ${user?.username?.split(' ')[0] || 'Unknown'}!`}
         description="Welcome back to your resident dashboard."
         icon={User}
         iconColor="blue"
       />
 
-      {/* Visitor Code Button (Mobile Only) */}
-      <section className="lg:hidden">
-        <Link href="/dashboard/resident/visitors">
-          <button className="w-full bg-slate-200 hover:bg-amber-700 text-slate-900 rounded-md py-4 px-6 flex items-center justify-between transition-all active:scale-[0.98]">
-            <div className="flex items-center gap-3">
-              <QrCode className="size-6" />
-              <span className="font-semibold text-lg">Generate Visitor Code</span>
-            </div>
-            <ChevronRight className="size-5" />
-          </button>
-        </Link>
-      </section>
-
-      {/* Status Overview (Mobile-inspired) */}
-      <section className="lg:hidden">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 px-1">Status Overview</h3>
-        <div className="grid gap-3">
-          <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-md flex gap-3 items-start">
-            <AlertTriangle className="size-6 text-amber-600 dark:text-amber-400" />
-            <div>
-              <p className="font-semibold text-amber-900 dark:text-amber-100 text-sm">Security Alert</p>
-              <p className="text-amber-800 dark:text-amber-300 text-xs text-left">Scheduled maintenance on perimeter sensors today at 2:00 PM.</p>
-            </div>
-          </div>
-          <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-md flex justify-between items-center">
-            <div className="flex gap-3 items-center">
-              <CreditCard className="size-5 text-[#1241a1]" />
-              <div className="text-left">
-                <p className="font-semibold text-sm">Service Charge Due</p>
-                <p className="text-slate-500 dark:text-slate-400 text-xs">Due in 3 days • $120.00</p>
-              </div>
-            </div>
-            <Link href="/dashboard/resident/finance">
-              <button className="text-[#1241a1] font-semibold text-sm px-4 py-1.5 rounded-md bg-[#1241a1]/10 hover:bg-[#1241a1]/20 transition-colors">Pay</button>
-            </Link>
-          </div>
+      {/* Quick Actions - Consistent on all screens */}
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm md:text-base font-semibold">Quick Actions</h3>
+          <Link href="#" className="text-amber-600 dark:text-amber-500 text-xs md:text-sm font-semibold hover:text-amber-700 dark:hover:text-amber-400 flex items-center gap-1 transition-colors">
+            View all <ArrowRight className="size-3 md:size-4" />
+          </Link>
         </div>
-      </section>
-
-      {/* Resident Services Grid (Mobile Only) */}
-      <section className="lg:hidden">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4 px-1">Resident Services</h3>
-        <div className="grid grid-cols-4 gap-y-6">
-          {
-            residentsServiceItems.map((item) => (
-              <ServiceIconLink
-                key={item.href}
-                href={item.href}
-                icon={item.icon}
-                label={item.label}
-                urgent={item.urgent}
-              />
-            ))
-          }          
-        </div>
-      </section>
-
-      {/* Quick Map (Mobile Only) */}
-      <section className="lg:hidden">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 px-1">Quick Map</h3>
-        <div className="w-full h-40 rounded-md overflow-hidden relative">
-          <img className="w-full h-full object-cover" alt="Estate Map Preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBphQarF0qA8nu5MYG1955V6OP0uaO2HSU6m59wuK3VSlPNGpg0OHXggsVUR28HGFECPPXS5UVgYJvgKiEzd0R-Wzh3xBkdIZ3E_TLzPkVs0cWNlNvpj1jKZ7NR3OrqVr3PvtyvcJQIOvYMwzlBqHyFotliCm3qQtjG5bxfaeBCpVqN4FGKbVELeV4OSQcdNQbIiYREZlpxSenxUQ_lK2gkzMKfZTAn0jj4tAPcE3-iq3ttlRUa1zWF5x03YArh8YuSxvK_BOPzqxw" />
-          <div className="absolute bottom-3 left-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-1 rounded-md">
-            <p className="text-[10px] font-semibold">{residentData?.estateName || 'Green Valley Estates'}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Original Desktop/Tablet Sections */}
-      <section className="hidden lg:block">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold">Quick Actions</h3>
-          <Link href="#" className="text-amber-700 text-sm font-semibold hover:text-white flex gap-2 items center align center">View all actions<ArrowRight/></Link>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {actions.map((action) => (
+        
+        {/* Quick Action Grid - Responsive */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+          {actions.slice(0, 4).map((action) => (
             <ActionCard
               key={action.href}
               title={action.title}
               desc={action.desc}
               icon={action.icon}
               href={action.href}
+              compact={true}
             />
-          ))}          
-        </div>
-
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-12">
-          {/* Billing Summary */}
-          <div className="lg:col-span-1 flex flex-col gap-4 bg-[#818b94]/10">
-            <div className="bg-slate-100 dark:bg-slate-800/30 rounded-md p-6 h-full">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="font-semibold">Billing Summary</h3>
-                <MoreHorizontal className="size-5 text-slate-400 cursor-pointer" />
-              </div>
-              <div className="mb-6 text-left">
-                <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Total Outstanding</p>
-                <h2 className="text-3xl font-semibold mt-1 text-[#1241a1]">${outstandingServices.length * 225}.00</h2>
-              </div>
-              <div className="space-y-4 text-left">
-                {outstandingServices.map((service) => (
-                  <BillItem 
-                    key={service.id} 
-                    icon={service.icon} 
-                    label={service.category} 
-                    amount="$225.00" 
-                  />
-                ))}
-                {!outstandingServices.length && (
-                  <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">No outstanding bills.</p>
-                )}
-              </div>
-              <Link href="/dashboard/resident/finance">
-                <button className="w-full mt-6 bg-amber-800 text-white py-3 rounded-md font-semibold text-sm hover:bg-amber-700 transition-all active:scale-[0.98]">
-                  Pay Now
-                </button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Recent Announcements */}
-          <div className="lg:col-span-1.5 flex flex-col gap-4  bg-[#818b94]/10 ">
-            <div className="bg-slate-100 dark:bg-slate-800/30 rounded-md p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="font-semibold">Recent Announcements</h3>
-                <Link href="/dashboard/resident/announcements" className="text-xs font-semibold text-[#1241a1] px-3 py-1 rounded-full bg-[#1241a1]/10 hover:bg-[#1241a1]/20 transition-colors">
-                  View All
-                </Link>
-              </div>
-              <div className="flex flex-col gap-4">
-                {announcements.length > 0 ? (
-                  announcements.slice(0, 3).map((ann, idx) => (
-                    <AnnouncementItem 
-                      key={ann.id || idx}
-                      icon={ann.icon === 'pool' ? Waves : Megaphone} 
-                      title={ann.title} 
-                      desc={ann.content} 
-                      time={ann.timestamp || 'Just now'} 
-                      urgent={ann.urgent}
-                    />
-                  ))
-                ) : (
-                  <>
-                    <AnnouncementItem 
-                      icon={Waves} 
-                      title="Pool Maintenance Schedule" 
-                      desc="The main swimming pool will be closed for quarterly deep cleaning and filtration maintenance starting next Monday, July 15th..." 
-                      time="2 hours ago" 
-                      urgent
-                    />
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Service Request Progress (Desktop/Mobile) */}
-      <section className="lg:mt-12">
+      {/* Two Column Layout - Consistent */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+        {/* Billing Summary */}
+        <section className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm md:text-base font-semibold">Billing Summary</h3>
+            <Link href="/dashboard/resident/finance" className="text-amber-600 dark:text-amber-500 text-xs font-semibold hover:text-amber-700 dark:hover:text-amber-400 transition-colors">
+              View All
+            </Link>
+          </div>
+          <div className="bg-slate-100 dark:bg-[#818b94]/10 rounded-xl p-5 md:p-6">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium">Total Outstanding</p>
+              <MoreHorizontal className="size-4 md:size-5 text-slate-400 cursor-pointer" />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-semibold text-black/70 dark:text-white mb-6">
+              ${outstandingServices.length * 225}.00
+            </h2>
+            <div className="space-y-3">
+              {outstandingServices.slice(0, 3).map((service) => (
+                <BillItem 
+                  key={service.id} 
+                  icon={service.icon} 
+                  label={service.category} 
+                  amount="$225.00" 
+                />
+              ))}
+              {!outstandingServices.length && (
+                <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">No outstanding bills.</p>
+              )}
+            </div>
+            <Link href="/dashboard/resident/finance">
+              <button className="w-full mt-5 bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700 text-white py-2.5 md:py-3 rounded-lg font-semibold text-sm transition-all active:scale-[0.98]">
+                Pay Now
+              </button>
+            </Link>
+          </div>
+        </section>
+
+        {/* Recent Announcements */}
+        <section className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm md:text-base font-semibold">Recent Announcements</h3>
+            <Link href="/dashboard/resident/announcements" className="text-amber-600 dark:text-amber-500 text-xs font-semibold hover:text-amber-700 dark:hover:text-amber-400 transition-colors">
+              View All
+            </Link>
+          </div>
+          <div className="bg-slate-100 dark:bg-[#818b94]/10 rounded-xl p-5 md:p-6 flex-1">
+            <div className="flex flex-col gap-4">
+              {announcements.length > 0 ? (
+                announcements.slice(0, 3).map((ann, idx) => (
+                  <AnnouncementItem 
+                    key={ann.id || idx}
+                    icon={ann.icon === 'pool' ? Waves : Megaphone} 
+                    title={ann.title} 
+                    desc={ann.content} 
+                    time={ann.timestamp || 'Just now'} 
+                    urgent={ann.urgent}
+                  />
+                ))
+              ) : (
+                <>
+                  <div className="rounded-xl p-8 text-center flex flex-col items-center gap-2">
+                    <Megaphone className="size-10 text-slate-300 dark:text-slate-600 mb-2" />
+                    <p className="font-medium text-slate-600 dark:text-slate-300">No announcements</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">You have no announcements at the moment.</p>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {/* Resident Services - Consistent Grid */}
+      <section>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">Active Service Requests</h3>
-          <Link href="/dashboard/resident/maintenance" className="text-[#1241a1] text-xs font-semibold lg:hidden">View All</Link>
+          <h3 className="text-sm md:text-base font-semibold">Resident Services</h3>
+          <Link href="#" className="text-amber-600 dark:text-amber-500 text-xs font-semibold hover:text-amber-700 dark:hover:text-amber-400 transition-colors">
+            More
+          </Link>
+        </div>
+        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 md:gap-4">
+          {residentsServiceItems.map((item) => (
+            <ServiceIconLink
+              key={item.href}
+              href={item.href}
+              icon={item.icon}
+              label={item.label}
+              urgent={item.urgent}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Active Service Requests - Consistent */}
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm md:text-base font-semibold">Active Service Requests</h3>
+          <Link href="/dashboard/resident/maintenance" className="text-amber-600 dark:text-amber-500 text-xs font-semibold hover:text-amber-700 dark:hover:text-amber-400 transition-colors">
+            View All
+          </Link>
         </div>
         
-        {/* Desktop Table */}
-        <div className="hidden lg:block bg-[#818b94]/10 rounded-md overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 dark:bg-slate-800/50 ">
-                <tr>
-                  {['Request ID', 'Category', 'Description', 'Status'].map((header) => (
-                    <th key={header} className="px-6 py-4 font-semibold">{header}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {outstandingServices.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
-                      <div className="flex flex-col items-center justify-center gap-2">
-                        <Wrench className="size-8 text-slate-300 dark:text-slate-600 mb-2" />
-                        <p className="font-medium text-slate-600 dark:text-slate-300">No active requests</p>
-                        <p className="text-xs">You have no ongoing service requests at the moment.</p>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  outstandingServices.map((request) => (
-                    <ServiceRow 
-                      key={request.id}
-                      id={request.id}
-                      category={request.category}
-                      icon={request.icon}
-                      iconColor={request.iconColor}
-                      desc={request.desc}
-                      status={request.status}
-                      statusColor={request.statusColor}
-                    />
-                  ))
-                )}
-              </tbody>
-            </table>
+        {/* Responsive Table/Card Grid */}
+        {outstandingServices.length === 0 ? (
+          <div className="bg-slate-100 dark:bg-[#818b94]/10 rounded-xl p-8 text-center flex flex-col items-center gap-2">
+            <Wrench className="size-10 text-slate-300 dark:text-slate-600 mb-2" />
+            <p className="font-medium text-slate-600 dark:text-slate-300">No active requests</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">You have no ongoing service requests at the moment.</p>
           </div>
-        </div>
-
-        {/* Mobile Card List */}
-        <div className="lg:hidden grid gap-4">
-          {outstandingServices.length === 0 ? (
-            <div className="bg-slate-100 dark:bg-slate-800/30 rounded-md p-8 text-center flex flex-col items-center gap-2">
-              <Wrench className="size-8 text-slate-300 dark:text-slate-600 mb-1" />
-              <p className="font-medium text-slate-600 dark:text-slate-300 text-sm">No active requests</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">You have no ongoing service requests.</p>
+        ) : (
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block bg-slate-100 dark:bg-[#818b94]/10 rounded-xl overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-slate-200/50 dark:bg-slate-700/50">
+                    <tr>
+                      {['Request ID', 'Category', 'Description', 'Status'].map((header) => (
+                        <th key={header} className="px-4 md:px-6 py-3 font-semibold text-xs md:text-sm">
+                          {header}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200/50 dark:divide-slate-700/50">
+                    {outstandingServices.map((request) => (
+                      <ServiceRow 
+                        key={request.id}
+                        id={request.id}
+                        category={request.category}
+                        icon={request.icon}
+                        iconColor={request.iconColor}
+                        desc={request.desc}
+                        status={request.status}
+                        statusColor={request.statusColor}
+                      />
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          ) : (
-            outstandingServices.map((request) => (
-              <ServiceCard
-                key={request.id}
-                {...request}
-              />
-            ))
-          )}
-        </div>
+
+            {/* Mobile Card List */}
+            <div className="md:hidden grid gap-3">
+              {outstandingServices.map((request) => (
+                <ServiceCard
+                  key={request.id}
+                  {...request}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </section>
 
-      <footer className="mt-auto px-8 py-6 text-center">
-        <p className="text-xs text-slate-500 dark:text-slate-400">© 2024 EMSS Management Ecosystem. All rights reserved.</p>
-      </footer>
+    
     </div>
   )
 }
-
-
-
-
-
