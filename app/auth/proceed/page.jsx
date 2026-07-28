@@ -202,16 +202,16 @@ const AVAILABLE_ESTATES = estates;
                 key={estate.id}
                 type="button"
                 onClick={() => setSelectedEstateId(estate.id)}
-                className={`w-full text-left px-5 py-3 hover:bg-slate-50 dark:hover:bg-slate-400 hover:text-white transition-colors text-sm border-b border-slate-100 dark:border-slate-700 last:border-b-0 ${
+                className={`w-full text-left px-5 py-3 hover:bg-slate-400 dark:hover:bg-slate-400 hover:text-white transition-colors text-sm border-b border-slate-100 dark:border-slate-700 last:border-b-0 ${
                   selectedEstateId === estate.id 
-                    ? 'text-slate-700 dark:text-slate-300' 
+                    ? 'text-slate-900 dark:text-slate-300' 
                     : 'text-slate-700 dark:text-slate-300'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <span>{estate.estateName}</span>
                   {selectedEstateId === estate.id && (
-                    <CheckCircle2 className="size-4 text-[#1241a1]" />
+                    <CheckCircle2 className="size-4 text-slate-900" />
                   )}
                 </div>
               </button>
