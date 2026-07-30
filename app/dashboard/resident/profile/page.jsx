@@ -43,6 +43,7 @@ export default function ProfilePage() {
       setIsLoading(true);
       try {
         const data = await getResidentData();
+        console.log(data)
         setResidentData(data);
         setEditForm(data);
       } catch (error) {

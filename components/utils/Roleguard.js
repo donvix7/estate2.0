@@ -29,7 +29,7 @@ export default function RoleGuard({ user, allowedRoles = [], children }) {
     LoadData();
 
     // Check if role is authorized
-    if (allowedRoles.includes("user")) {
+    if (allowedRoles.includes("admin")) {
       setAuthorized(true);
     } else {
       alert("You are not authorized to access this page.");

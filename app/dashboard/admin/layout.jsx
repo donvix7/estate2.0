@@ -59,7 +59,6 @@ export default function AdminLayout({ children }) {
 
   return (
     <div className="min-h-screen text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 flex flex-col lg:flex-row bg-white/90 dark:bg-gray-950  p-0 ">
-     <RoleGuard user={userData} allowedRoles={['admin']}>
       
       <DashboardSidebar links={adminLinks} user={userData} role="admin" estateName="Lekki Phase 1" />
       
@@ -75,9 +74,6 @@ export default function AdminLayout({ children }) {
         {/* Mobile Bottom Navigation */}
        <BottomNav pathname={pathname} links={adminLinks}/>
       </div>
-
-
-      </RoleGuard>
       
       
     </div>

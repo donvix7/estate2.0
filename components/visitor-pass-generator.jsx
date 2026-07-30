@@ -29,23 +29,27 @@ import {
   LogOut,
   ArrowLeft,
   Car,
-  LogIn
+  LogIn,
+  Users,
+  Baby,
+  UserRound
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { 
   getPassHistory as apiGetPassHistory, 
   getEntryExitLogs as apiGetEntryExitLogs, 
-  getBlacklist as apiGetBlacklist 
+  getBlacklist as apiGetBlacklist, 
+  getGuestCodes
 } from '@/lib/service';
 import { 
   savePassToHistory as apiSavePassToHistory, 
   logEntryExit as apiLogEntryExit, 
   addToBlacklist as apiAddToBlacklist, 
-  removeFromBlacklist as apiRemoveFromBlacklist 
+  removeFromBlacklist as apiRemoveFromBlacklist, 
+  generateGuestCode
 } from '@/lib/action';
 import { AlertModal } from './ui/AlertModal';
 import { PromptModal } from './ui/PromptModal';
-
 
 const TABS = [
   { id: 'schedule', label: 'Schedule Visitor', icon: <QrCode className="size-4" /> },
@@ -54,16 +58,30 @@ const TABS = [
   { id: 'blacklist', label: 'Blacklist', icon: <Ban className="size-4" /> },
 ];
 
+const TRANSPORT_MODES = [
+  { value: 'car', label: 'Car', icon: Car },
+  { value: 'bike', label: 'Bike', icon: '🏍️' },
+  { value: 'walk', label: 'Walking', icon: '🚶' },
+  { value: 'public', label: 'Public Transport', icon: '🚌' },
+  { value: 'taxi', label: 'Taxi', icon: '🚕' },
+];
+
 export function VisitorPassGenerator() {
   const [formData, setFormData] = useState({
-    visitorName: '',
-    phone: '',
+    type: 'ONE_TIME',
+    guestName: '',
+    guestPhone: '',
+    inviteDate: '',
+    inviteTimeFrom: '14:00:00',
+    inviteTimeTo: '18:00:00',
+    modeOfTransport: 'car',
+    totalAdults: 1,
+    totalChildren: 0,
+    totalInfants: 0,
+    searchGuest: false,
+    checkGuestId: true,
+    // Additional fields for display
     purpose: 'Personal Guest',
-    vehicleMake: '',
-    vehicleColor: '',
-    vehicleNumber: '',
-    expectedArrival: '',
-    expectedDeparture: '',
     residentName: 'John Doe',
     unitNumber: 'A-101'
   });
@@ -90,8 +108,9 @@ export function VisitorPassGenerator() {
         const [history, blacklist, logs] = await Promise.all([
           apiGetPassHistory(),
           apiGetBlacklist(),
-          apiGetEntryExitLogs()
+          getGuestCodes()
         ]);
+        console.log(logs)
         setPassHistory(history.docs);
         setBlacklistedVisitors(Array.isArray(blacklist) ? blacklist : []);
         setEntryExitLogs(logs);
@@ -102,13 +121,17 @@ export function VisitorPassGenerator() {
       }
     };
 
+    // Set default dates
     const now = new Date();
-    const arrival = new Date(now.getTime() + 30 * 60000);
-    const departure = new Date(arrival.getTime() + 2 * 3600000);
+    const today = now.toISOString().split('T')[0];
+    const fromTime = '14:00:00';
+    const toTime = '18:00:00';
+    
     setFormData(prev => ({
       ...prev,
-      expectedArrival: arrival.toISOString().slice(0, 16),
-      expectedDeparture: departure.toISOString().slice(0, 16)
+      inviteDate: today,
+      inviteTimeFrom: fromTime,
+      inviteTimeTo: toTime
     }));
 
     loadData();
@@ -116,60 +139,69 @@ export function VisitorPassGenerator() {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: type === 'checkbox' ? checked : value 
+    }));
   };
 
   const generateQRCode = (passData) => {
     const qrData = JSON.stringify({
-      passId: passData.id, visitor: passData.visitorName,
-      passCode: passData.passCode, generated: passData.timestamp
+      passId: passData.id,
+      visitor: passData.guestName,
+      passCode: passData.passCode,
+      generated: passData.timestamp
     });
     return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
   };
 
+  const buildPayload = (formData) => {
+    return {
+      type: formData.type,
+      guestName: formData.guestName,
+      guestPhone: formData.guestPhone,
+      inviteDate: formData.inviteDate,
+      inviteTimeFrom: formData.inviteTimeFrom,
+      inviteTimeTo: formData.inviteTimeTo,
+      modeOfTransport: formData.modeOfTransport,
+      totalAdults: parseInt(formData.totalAdults) || 1,
+      totalChildren: parseInt(formData.totalChildren) || 0,
+      totalInfants: parseInt(formData.totalInfants) || 0,
+      searchGuest: formData.searchGuest,
+      checkGuestId: formData.checkGuestId
+    };
+  };
+
   const generatePass = async () => {
-    if (!formData.visitorName || !formData.phone) {
-      toast.error('Please fill in visitor name and phone number');
+    if (!formData.guestName || !formData.guestPhone) {
+      toast.error('Please fill in guest name and phone number');
       return;
     }
+
     setIsGenerating(true);
     setTimeout(async () => {
       try {
-        const passCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-        const pin = Math.floor(1000 + Math.random() * 9000).toString();
-        const passData = { id: Date.now().toString(), ...formData, passCode, pin, timestamp: new Date().toISOString(), status: 'pending', securityVerified: false };
-        setGeneratedPass(passData);
-        setQrCodeData(generateQRCode(passData));
-        await apiSavePassToHistory(passData);
-        setPassHistory(prev => [passData, ...prev.slice(0, 9)]);
-        const logEntry = { id: Date.now(), type: 'entry', visitor: passData.visitorName, passCode: passData.passCode, timestamp: new Date().toISOString(), verifiedBy: 'System' };
-        await apiLogEntryExit(logEntry);
-        setEntryExitLogs(prev => [logEntry, ...prev.slice(0, 9)]);
-        const expiryTime = new Date(formData.expectedDeparture).getTime() - Date.now();
-        if (expiryTime > 0) {
-          setTimeLeft(Math.floor(expiryTime / 1000));
-          timerRef.current = setInterval(() => {
-            setTimeLeft(prev => { 
-            if (prev <= 1) { 
-              clearInterval(timerRef.current); 
-              toast.warning(`Pass for ${formData.visitorName} has expired!`); 
-              return null; 
-            } 
-            return prev - 1; 
-          });
-        }, 1000);
+        const payload = buildPayload(formData);
+        const res = await generateGuestCode(payload);
+        console.log(res)
+        if(!res.ok){
+          toast.error("Something went wrong")
+          return;
+        }
+        setGeneratedPass(res.data)
+
+        setAlertConfig({
+          isOpen: true,
+          title: 'Pass Generated!',
+          message: `Visitor pass for ${formData.guestName} is ready. PIN: ${pin}`,
+          type: 'success'
+        });
+      } catch { 
+        toast.error('Failed to generate pass. Please try again.'); 
+      } finally { 
+        setIsGenerating(false); 
       }
-      setAlertConfig({
-        isOpen: true,
-        title: 'Pass Generated!',
-        message: `Visitor pass for ${formData.visitorName} is ready. PIN: ${pin}`,
-        type: 'success'
-      });
-    } catch { 
-      toast.error('Failed to generate pass. Please try again.'); 
-    }
-      finally { setIsGenerating(false); }
     }, 1500);
   };
 
@@ -177,7 +209,14 @@ export function VisitorPassGenerator() {
     if (enteredPin === generatedPass.pin) {
       setGeneratedPass(prev => ({ ...prev, securityVerified: true, status: 'active' }));
       toast.success('Visitor verified and allowed entry!');
-      const logEntry = { id: Date.now(), type: 'entry', visitor: generatedPass.visitorName, passCode: generatedPass.passCode, timestamp: new Date().toISOString(), verifiedBy: 'Security' };
+      const logEntry = {
+        id: Date.now(),
+        type: 'entry',
+        visitor: generatedPass.guestName,
+        passCode: generatedPass.passCode,
+        timestamp: new Date().toISOString(),
+        verifiedBy: 'Security'
+      };
       apiLogEntryExit(logEntry).then(() => {
         setEntryExitLogs(prev => [logEntry, ...prev.slice(0, 9)]);
       });
@@ -191,7 +230,7 @@ export function VisitorPassGenerator() {
     setPromptConfig({
       isOpen: true,
       title: 'Verify Visitor PIN',
-      message: `Enter the 4-digit PIN for ${generatedPass.visitorName}`,
+      message: `Enter the 4-digit PIN for ${generatedPass.guestName}`,
       placeholder: 'Enter 4-digit PIN',
       confirmText: 'Verify Entry',
       onConfirm: handleVerifyPIN
@@ -199,7 +238,12 @@ export function VisitorPassGenerator() {
   };
 
   const handleBlacklistConfirm = (reason) => {
-    const visitor = { name: formData.visitorName, phone: formData.phone, reason, added: new Date().toISOString() };
+    const visitor = {
+      name: formData.guestName,
+      phone: formData.guestPhone,
+      reason,
+      added: new Date().toISOString()
+    };
     apiAddToBlacklist(visitor).then(() => {
       setBlacklistedVisitors(prev => [...prev, visitor]);
       toast.success('Visitor added to blacklist');
@@ -207,14 +251,14 @@ export function VisitorPassGenerator() {
   };
 
   const addToBlacklist = () => {
-    if (!formData.visitorName) { 
-      toast.error('Please enter visitor name first'); 
+    if (!formData.guestName) { 
+      toast.error('Please enter guest name first'); 
       return; 
     }
     setPromptConfig({
       isOpen: true,
       title: 'Add to Blacklist',
-      message: `Why are you blacklisting ${formData.visitorName}?`,
+      message: `Why are you blacklisting ${formData.guestName}?`,
       placeholder: 'Reason for blacklisting...',
       confirmText: 'Confirm Blacklist',
       onConfirm: handleBlacklistConfirm
@@ -224,11 +268,18 @@ export function VisitorPassGenerator() {
   const markExit = async () => {
     if (!generatedPass) return;
     setGeneratedPass(prev => ({ ...prev, status: 'completed' }));
-    const logExit = { id: Date.now(), type: 'exit', visitor: generatedPass.visitorName, passCode: generatedPass.passCode, timestamp: new Date().toISOString(), verifiedBy: 'Security' };
+    const logExit = {
+      id: Date.now(),
+      type: 'exit',
+      visitor: generatedPass.guestName,
+      passCode: generatedPass.passCode,
+      timestamp: new Date().toISOString(),
+      verifiedBy: 'Security'
+    };
     await apiLogEntryExit(logExit);
     setEntryExitLogs(prev => [logExit, ...prev.slice(0, 9)]);
     if (timerRef.current) { clearInterval(timerRef.current); setTimeLeft(null); }
-    toast.info(`Visitor ${generatedPass.visitorName} has checked out.`);
+    toast.info(`Visitor ${generatedPass.guestName} has checked out.`);
   };
 
   const removeFromBlacklist = async (index) => {
@@ -238,7 +289,7 @@ export function VisitorPassGenerator() {
 
   const sharePass = () => {
     if (!generatedPass) return;
-    const message = `Visitor Pass for ${generatedPass.visitorName}:\nPass Code: ${generatedPass.passCode}\nPIN: ${generatedPass.pin}\nValid until: ${new Date(generatedPass.expectedDeparture).toLocaleString()}`;
+    const message = `Visitor Pass for ${generatedPass.guestName}:\nPass Code: ${generatedPass.passCode}\nPIN: ${generatedPass.pin}\nValid until: ${new Date(generatedPass.inviteDate + 'T' + generatedPass.inviteTimeTo).toLocaleString()}`;
     if (navigator.share) { 
       navigator.share({ title: 'Visitor Pass', text: message }); 
     } else { 
@@ -254,9 +305,25 @@ export function VisitorPassGenerator() {
   };
 
   const loadFromHistory = (pass) => {
-    setFormData({ visitorName: pass.visitorName, phone: pass.phone, purpose: pass.purpose, vehicleMake: '', vehicleColor: '', vehicleNumber: pass.vehicleNumber || '', expectedArrival: pass.expectedArrival || '', expectedDeparture: pass.expectedDeparture || '', residentName: pass.residentName, unitNumber: pass.unitNumber });
+    setFormData({
+      type: pass.type || 'ONE_TIME',
+      guestName: pass.guestName,
+      guestPhone: pass.guestPhone,
+      inviteDate: pass.inviteDate || '',
+      inviteTimeFrom: pass.inviteTimeFrom || '14:00:00',
+      inviteTimeTo: pass.inviteTimeTo || '18:00:00',
+      modeOfTransport: pass.modeOfTransport || 'car',
+      totalAdults: pass.totalAdults || 1,
+      totalChildren: pass.totalChildren || 0,
+      totalInfants: pass.totalInfants || 0,
+      searchGuest: pass.searchGuest || false,
+      checkGuestId: pass.checkGuestId !== undefined ? pass.checkGuestId : true,
+      purpose: pass.purpose || 'Personal Guest',
+      residentName: pass.residentName || 'John Doe',
+      unitNumber: pass.unitNumber || 'A-101'
+    });
     setActiveTab('schedule');
-    toast.info(`Loaded ${pass.visitorName}'s details`);
+    toast.info(`Loaded ${pass.guestName}'s details`);
   };
 
   if (isLoading) {
@@ -272,9 +339,6 @@ export function VisitorPassGenerator() {
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {/* Page Header */}
-     
-
       {/* Quick Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
@@ -283,15 +347,15 @@ export function VisitorPassGenerator() {
           { label: 'Pending', value: passHistory.filter(p => p.status === 'pending').length, icon: <Clock className="size-5" />, color: 'bg-amber-500/10 text-amber-600' },
           { label: 'Blacklisted', value: blacklistedVisitors.length, icon: <Ban className="size-5" />, color: 'bg-red-500/10 text-red-600' },
         ].map(stat => (
-          <div key={stat.label} className="bg-[#818b94]/10 p-5 rounded-md flex group items-center gap-4 transition-all cursor-pointer">
-            <div className={`size-10 rounded-md flex items-center justify-center flex-shrink-0 bg-white text-black group-hover:bg-amber-700 group-hover:text-white hover:text-white transition-all`}>
-              {stat.icon}
-            </div>
-            <div>
-              <p className="text-xs text-slate-400 dark:text-slate-100 font-semibold">{stat.label}</p>
-              <p className="text-2xl font-semibold text-amber-500">{stat.value}</p>
-            </div>
-          </div>
+         
+            <div key={stat.label} className="group p-6 bg-[#818b94]/30 dark:bg-[#818b94]/40 rounded-md transition-all cursor-pointer text-left">
+                <div className="bg-white dark:bg-slate-100 text-amber-500 p-3 dark:text-black font-bold rounded-md w-fit mb-4 group-hover:bg-amber-700 group-hover:text-white transition-all">
+                  {stat.icon}  
+                </div>
+                <h4 className="font-semibold mb-1 text-sm text-slate-900 dark:text-white">{stat.label}</h4>
+                <p className="text-2xl text-slate-500 dark:text-slate-200 font-medium leading-relaxed">{stat.value}</p>
+              </div>
+         
         ))}
       </div>
 
@@ -303,7 +367,7 @@ export function VisitorPassGenerator() {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold transition-all whitespace-nowrap border-none ${
               activeTab === tab.id 
-                ? 'bg-[#1241a1] text-white' 
+                ? 'bg-slate-900 text-white' 
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-amber-700'
             }`}
           >
@@ -317,7 +381,7 @@ export function VisitorPassGenerator() {
       {activeTab === 'schedule' && (
         <div className="space-y-8">
           {generatedPass ? (
-            <div className="flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500  dark:bg-[#818b94]/10">
+            <div className="flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500 dark:bg-[#818b94]/10">
               {/* Hero */}
               <div className="size-20 bg-emerald-500/15 text-emerald-500 rounded-full flex items-center justify-center mb-5">
                 <CheckIcon className="size-10 stroke-3" />
@@ -349,11 +413,15 @@ export function VisitorPassGenerator() {
                     <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5">Visitor Summary</h4>
                     <div className="space-y-4">
                       {[
-                        { label: 'Visitor Name', value: generatedPass.visitorName },
+                        { label: 'Guest Name', value: generatedPass.guestName },
+                        { label: 'Phone', value: generatedPass.guestPhone },
                         { label: 'Pass Code', value: <span className="font-mono font-semibold">{generatedPass.passCode}</span> },
-                        { label: 'Visitor Type', value: <span className="px-2 py-0.5 bg-[#1241a1]/10 text-[#1241a1] text-xs font-semibold rounded uppercase">{generatedPass.purpose}</span> },
-                        { label: 'Valid Until', value: generatedPass.expectedDeparture ? new Date(generatedPass.expectedDeparture).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—' },
-                        { label: 'Destination', value: `${generatedPass.residentName} — Unit ${generatedPass.unitNumber}` },
+                        { label: 'Type', value: <span className="px-2 py-0.5 bg-[#1241a1]/10 text-[#1241a1] text-xs font-semibold rounded uppercase">{generatedPass.type}</span> },
+                        { label: 'Date', value: generatedPass.inviteDate ? new Date(generatedPass.inviteDate).toLocaleDateString() : '—' },
+                        { label: 'Time', value: `${generatedPass.inviteTimeFrom} - ${generatedPass.inviteTimeTo}` },
+                        { label: 'Transport', value: generatedPass.modeOfTransport },
+                        { label: 'Guests', value: `${generatedPass.totalAdults} Adults, ${generatedPass.totalChildren} Children, ${generatedPass.totalInfants} Infants` },
+                        { label: 'ID Check', value: generatedPass.checkGuestId ? '✅ Required' : '❌ Not Required' },
                       ].map(item => (
                         <div key={item.label} className="flex items-center justify-between gap-4">
                           <span className="text-slate-500 text-sm font-medium shrink-0">{item.label}</span>
@@ -381,7 +449,7 @@ export function VisitorPassGenerator() {
                       </button>
                       <button
                         onClick={() => {
-                          const text = `VISITOR PASS\nName: ${generatedPass.visitorName}\nCode: ${generatedPass.passCode}\nPIN: ${generatedPass.pin}\nValid: ${generatedPass.expectedDeparture ? new Date(generatedPass.expectedDeparture).toLocaleString() : '—'}`;
+                          const text = `VISITOR PASS\nName: ${generatedPass.guestName}\nCode: ${generatedPass.passCode}\nPIN: ${generatedPass.pin}\nValid: ${generatedPass.inviteDate} ${generatedPass.inviteTimeTo}`;
                           const el = document.createElement('a');
                           el.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
                           el.download = `visitor-pass-${generatedPass.passCode}.txt`;
@@ -421,26 +489,26 @@ export function VisitorPassGenerator() {
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
               {/* Form */}
-              <div className="lg:col-span-3 bg-slate-100 dark: dark:bg-[#818b94]/10 rounded-md overflow-hidden">
+              <div className="lg:col-span-3 bg-slate-100 dark:dark:bg-[#818b94]/10 rounded-md overflow-hidden">
                 <div className="p-6 bg-white dark:bg-slate-900">
                   <h3 className="text-xl font-semibold">Schedule New Visitor</h3>
                   <p className="text-slate-500 text-sm mt-1 font-semibold">Complete the details below to authorize entry and generate a secure digital pass.</p>
                 </div>
                 <div className="p-6 space-y-7">
-                  {/* Visitor Info */}
+                  {/* Guest Info */}
                   <div className="space-y-4">
                     <div className="flex items-center gap-2 text-amber-700">
                       <User className="size-5" />
-                      <h4 className="font-semibold uppercase tracking-wider text-xs">Visitor Information</h4>
+                      <h4 className="font-semibold uppercase tracking-wider text-xs">Guest Information</h4>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Full Name *</label>
-                        <input name="visitorName" value={formData.visitorName} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all text-sm" placeholder="e.g. Michael Smith" />
+                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Guest Name *</label>
+                        <input name="guestName" value={formData.guestName} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all text-sm" placeholder="e.g. John Doe" />
                       </div>
                       <div className="space-y-1.5">
                         <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Phone Number *</label>
-                        <input name="phone" type="tel" value={formData.phone} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all text-sm" placeholder="+1 (555) 000-0000" />
+                        <input name="guestPhone" type="tel" value={formData.guestPhone} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all text-sm" placeholder="+2348012345678" />
                       </div>
                       <div className="sm:col-span-2 space-y-1.5">
                         <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Purpose of Visit</label>
@@ -455,42 +523,76 @@ export function VisitorPassGenerator() {
                     </div>
                   </div>
                   
-                  {/* Timing */}
+                  {/* Visit Details */}
                   <div className="space-y-4">
                     <div className="flex items-center gap-2 text-amber-700">
                       <Calendar className="size-5" />
-                      <h4 className="font-semibold uppercase tracking-wider text-xs">Access Timing</h4>
+                      <h4 className="font-semibold uppercase tracking-wider text-xs">Visit Details</h4>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Expected Entry</label>
-                        <input type="datetime-local" name="expectedArrival" value={formData.expectedArrival} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-sm" />
+                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Date *</label>
+                        <input type="date" name="inviteDate" value={formData.inviteDate} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-sm" />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Expected Exit</label>
-                        <input type="datetime-local" name="expectedDeparture" value={formData.expectedDeparture} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-sm" />
+                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">From *</label>
+                        <input type="time" name="inviteTimeFrom" value={formData.inviteTimeFrom} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-sm" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">To *</label>
+                        <input type="time" name="inviteTimeTo" value={formData.inviteTimeTo} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-sm" />
                       </div>
                     </div>
                   </div>
 
-                  {/* Vehicle */}
+                  {/* Guest Count */}
                   <div className="space-y-4">
                     <div className="flex items-center gap-2 text-amber-700">
-                      <Car className="size-5" />
-                      <h4 className="font-semibold uppercase tracking-wider text-xs ">Vehicle Details <span className="text-slate-400 font-normal normal-case">(Optional)</span></h4>
+                      <Users className="size-5" />
+                      <h4 className="font-semibold uppercase tracking-wider text-xs">Guest Count</h4>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Make & Model</label>
-                        <input name="vehicleMake" value={formData.vehicleMake} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-sm" placeholder="e.g. Tesla Model 3" />
+                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Adults</label>
+                        <input type="number" name="totalAdults" value={formData.totalAdults} onChange={handleChange} min="0" className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-sm" />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Color</label>
-                        <input name="vehicleColor" value={formData.vehicleColor} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-sm" placeholder="e.g. Midnight Silver" />
+                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Children</label>
+                        <input type="number" name="totalChildren" value={formData.totalChildren} onChange={handleChange} min="0" className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-sm" />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">License Plate</label>
-                        <input name="vehicleNumber" value={formData.vehicleNumber} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-sm" placeholder="ABC-1234" />
+                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Infants</label>
+                        <input type="number" name="totalInfants" value={formData.totalInfants} onChange={handleChange} min="0" className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-sm" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Transport & Options */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-amber-700">
+                      <Car className="size-5" />
+                      <h4 className="font-semibold uppercase tracking-wider text-xs">Transport & Options</h4>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Mode of Transport</label>
+                        <select name="modeOfTransport" value={formData.modeOfTransport} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-sm appearance-none">
+                          {TRANSPORT_MODES.map(mode => (
+                            <option key={mode.value} value={mode.value}>{mode.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="space-y-1.5 flex flex-col justify-end">
+                        <div className="flex items-center gap-6">
+                          <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                            <input type="checkbox" name="searchGuest" checked={formData.searchGuest} onChange={handleChange} className="w-4 h-4 rounded border-slate-300 text-[#1241a1] focus:ring-[#1241a1] focus:ring-offset-0" />
+                            Search Guest
+                          </label>
+                          <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                            <input type="checkbox" name="checkGuestId" checked={formData.checkGuestId} onChange={handleChange} className="w-4 h-4 rounded border-slate-300 text-[#1241a1] focus:ring-[#1241a1] focus:ring-offset-0" />
+                            Check ID
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -499,7 +601,7 @@ export function VisitorPassGenerator() {
                   <div className="pt-2 flex flex-col items-center gap-3">
                     <button
                       onClick={generatePass}
-                      disabled={isGenerating || !formData.visitorName || !formData.phone}
+                      disabled={isGenerating || !formData.guestName || !formData.guestPhone}
                       className="w-full py-4 bg-amber-700 hover:bg-amber-700/90 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isGenerating ? (
@@ -519,8 +621,8 @@ export function VisitorPassGenerator() {
                 </div>
               </div>
 
-              {/* Empty placeholder */}
-              <div className="lg:col-span-2  dark:bg-[#818b94]/10">
+              {/* Preview Sidebar */}
+              <div className="lg:col-span-2 dark:bg-[#818b94]/10">
                 <div className="h-80 lg:h-full min-h-[300px] bg-slate-100 dark:bg-slate-800/30 rounded-md flex flex-col items-center justify-center text-center p-8 gap-3">
                   <div className="size-16 bg-white dark:bg-slate-900 rounded-md flex items-center justify-center">
                     <QrCode className="size-8 text-amber-700" />
@@ -529,14 +631,20 @@ export function VisitorPassGenerator() {
                     <h3 className="font-semibold text-slate-700 dark:text-slate-300 mb-1">No Pass Generated</h3>
                     <p className="text-sm text-slate-400 max-w-[220px] font-medium">Fill out the form to generate a secure QR code and Entry PIN for your visitor.</p>
                   </div>
+                  
+                  {/* Payload Preview */}
+                  <div className="mt-4 w-full ">
+                    <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold mb-2">Payload Preview</p>
+                    <pre className="text-[8px] bg-white/50 dark:bg-slate-900/50 p-3 rounded text-left overflow-x-auto">
+                      {JSON.stringify(buildPayload(formData), null, 2)}
+                    </pre>
+                  </div>
                 </div>
               </div>
             </div>
           )}
         </div>
       )}
-
-
 
       {/* History Tab */}
       {activeTab === 'history' && (
@@ -556,10 +664,10 @@ export function VisitorPassGenerator() {
                 <div key={pass.id || i} className="group p-4 flex items-center justify-between bg-white dark:bg-slate-900 rounded-md hover:bg-[#1241a1] transition-all cursor-pointer">
                   <div className="flex items-center gap-3">
                     <div className="size-10 bg-slate-100 dark:bg-slate-800 text-[#1241a1] rounded-md flex items-center justify-center font-semibold text-sm flex-shrink-0 group-hover:bg-white/20 group-hover:text-white transition-colors">
-                      {pass.visitorName?.charAt(0) || 'V'}
+                      {pass.guestName?.charAt(0) || 'V'}
                     </div>
                     <div>
-                      <p className="font-semibold text-sm group-hover:text-white transition-colors">{pass.visitorName}</p>
+                      <p className="font-semibold text-sm group-hover:text-white transition-colors">{pass.guestName}</p>
                       <p className="text-xs text-slate-500 group-hover:text-white/60 transition-colors">{pass.purpose} • <span className="font-mono">{pass.passCode}</span></p>
                     </div>
                   </div>

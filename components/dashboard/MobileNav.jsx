@@ -44,7 +44,7 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
       <nav className="lg:hidden bg-background-light dark:bg-background-dark sticky top-0 z-50 transition-colors backdrop-blur-sm">
         <div className="flex items-center justify-between h-16 px-4">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push('/')}>
-            <div className="bg-[#1241a1] rounded-lg p-1.5 text-white">
+            <div className="bg-slate-600 rounded-lg p-1.5 text-white">
               <Building2 className="size-5" />
             </div>
             <div>

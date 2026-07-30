@@ -70,14 +70,7 @@ const FAQ = () => {
     <section className="py-16 bg-white" id='faq'>
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-gray-600">
-              Get answers to common questions about EstateSecure
-            </p>
-          </div>
+         
 
           <div className="space-y-6">
             {faqs.map((category, categoryIndex) => (

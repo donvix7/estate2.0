@@ -87,7 +87,7 @@ export default function ResidentLayout({ children }) {
         <DashboardMobileNav links={residentLinks} user={userData} role="resident" estateName={userData?.estateID} />
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-3 lg:p-8 pb-32 mb-12 lg:pb-8">
+        <main className="flex-1 overflow-y-auto p-3 lg:p-8  mb-12 lg:pb-8">
           {children}
         </main>
 

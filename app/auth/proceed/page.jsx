@@ -14,7 +14,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link';
 import { getAllEstates } from '@/lib/service';
-import { sendJoinRequest } from '@/lib/action';
+import { getCurrentUser, getMemberships, sendJoinRequest } from '@/lib/action';
 
 // Mock data for available estates
 
@@ -31,11 +31,14 @@ export default function EstateSelectionPage() {
   const [joinedEstateIds, setJoinedEstateIds] = useState([])
   const [notification, setNotification] = useState(null)
   const [estates, setEstates] = useState([])
+  const [memberships, setMemberships] = useState([])
 
   useEffect(() => {
     const fetchEstates = async () => {
       const estates = await getAllEstates()
+      const memberships = await getMemberships()
       setEstates(estates)
+      setMemberships(memberships)
 
     }
     fetchEstates()
@@ -108,12 +111,12 @@ const AVAILABLE_ESTATES = estates;
                 Joined Estates
               </h4>
               <span className="text-xs bg-slate-200 dark:bg-slate-700 px-3 py-1 rounded-full text-slate-600 dark:text-slate-300 font-medium">
-                {joinedEstateIds.length}
+                {memberships.length}
               </span>
             </div>
           </div>
             <div className="space-y-2 max-h-[240px] overflow-y-auto pr-1 custom-scroll">
-              {joinedEstateIds.length === 0 ? (
+              {memberships.length === 0 ? (
                 <div className="text-center py-6 text-slate-400 dark:text-slate-500 text-sm flex flex-col gap-2 items-center">
                   <Home className="size-8 mx-auto mb-2 opacity-40" />
                   No joined estates yet. Use the dropdown to join one 
@@ -121,26 +124,21 @@ const AVAILABLE_ESTATES = estates;
                   <Link className='text-blue-100 bg-slate-900 px-4 py-2 w-fit mx:auto rounded-lg font-bold' href="/auth/login"> return to login page</Link>
                 </div>
               ) : (
-                joinedEstateIds.map((id) => {
-                  const estate = AVAILABLE_ESTATES.find(e => e.id === id)
-                  if (!estate) return null
-                  const Icon = IconMap[estate.icon] || Building2
+                memberships.map((memberships) => {
                   
                   return (
                     <div
-                      key={id}
+                      key={memberships.id}
                       className="flex items-center justify-between p-3 rounded-xl bg-white/60 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50 shadow-sm hover:shadow-md transition-all"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#1241a1]/20 flex items-center justify-center text-slate-800">
-                          <Icon className="size-4" />
-                        </div>
+                       
                         <div>
                           <p className="text-sm font-medium text-slate-800 dark:text-slate-100">
-                            {estate.name}
+                            {memberships.name}
                           </p>
                           <p className="text-[10px] text-slate-400">
-                            joined • {estate.units} unit{estate.units !== 1 ? 's' : ''}
+                            joined • {memberships.units} unit{memberships.units !== 1 ? 's' : ''}
                           </p>
                         </div>
                       </div>
@@ -226,7 +224,7 @@ const AVAILABLE_ESTATES = estates;
       
       {/* Optional: Show selected estate name below */}
       {selectedEstateId && (
-        <p className="mt-2 text-xs text-[#1241a1] font-medium">
+        <p className="mt-2 text-xs text-slate-800 dark:text-slate-300 font-medium">
           Selected: {AVAILABLE_ESTATES.find(e => e.id === selectedEstateId)?.estateName}
         </p>
       )}
@@ -234,13 +232,13 @@ const AVAILABLE_ESTATES = estates;
   </div>
             <button
               onClick={handleJoinEstate}
-              className="w-full mt-4  bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 px-8 rounded-xl shadow-md transition flex items-center justify-center gap-2 whitespace-nowrap"
+              className="w-full mt-4  bg-amber-700 hover:bg-amber-800 text-white font-semibold py-3 px-8 rounded-xl shadow-md transition flex items-center justify-center gap-2 whitespace-nowrap"
             >
               <PlusCircle className="size-5" />
               Join Estate
             </button>
           </div>
-          <Link href="/" className="w-full mt-4 ">
+          <Link href="/" className="w-full mt-4 text-center text-amber-700 hover:text-amber-800 font-semibold">
             Return to Home page
           </Link>
 

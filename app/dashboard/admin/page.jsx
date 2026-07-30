@@ -272,7 +272,7 @@ export default function AdminDashboard() {
 
       {/* Quick Actions (Mobile Only as per template) */}
       <section className="lg:hidden">
-        <h3 className="text-slate-900 dark:text-white text-lg font-semibold mb-4">Quick Actions</h3>
+        <span className="text-slate-900 dark:text-white text-lg font-semibold mb-4">Quick Actions</span>
         <div className="grid grid-cols-3 gap-4">
             {mobileQuickLinks.map((link, index) => (
           <Link href={link.href} key={index} className="flex flex-col items-center gap-2 group ">
@@ -290,14 +290,14 @@ export default function AdminDashboard() {
       {/* Feed Section */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Active Security Alerts */}
-        <div className="xl:col-span-2 bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden">
-          <div className="p-6 flex items-center justify-between">
-            <h3 className="font-semibold text-lg text-slate-900 dark:text-white">Recent Security Logs</h3>
+        <div className="xl:col-span-2  bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden group">
+          <div className=" flex items-center justify-between">
+            <span className="font-semibold text-lg text-slate-900 dark:text-white">Recent Security Logs</span>
             <Link href="/dashboard/admin/security">
-              <button className="text-sm font-semibold text-[#1241a1]">See all</button>
+              <button className="text-sm font-semibold text-indigo">See all</button>
             </Link>
           </div>
-          <div className="flex flex-col gap-3 p-4">
+          <div className="flex flex-col gap-3 p-4 bg-[#818b94]/10">
             {securityLogs.length > 0 ? (
               <div className="space-y-3">
                 {securityLogs.slice(0, 5).map((log, idx) => (
@@ -327,8 +327,8 @@ export default function AdminDashboard() {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center p-8 text-center bg-white dark:bg-slate-800/20 rounded-md">
-                <ShieldAlert className="size-12 text-slate-300 dark:text-slate-700 mb-3" />
-                <h3 className="text-slate-900 dark:text-white text-base font-semibold">No Recent Logs</h3>
+                <ShieldAlert className="size-12 text-indigo-700 dark:text-slate-700 mb-3" />
+                <span className="text-slate-900 dark:text-white text-base font-semibold">No Recent Logs</span>
                 <p className="text-xs text-slate-500">All systems are currently reported as secure.</p>
               </div>
             )}
@@ -336,18 +336,18 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Visitors / Estate Map Preview */}
-        <div className="space-y-6">
-         
-
-          <div className="hidden lg:block bg-slate-100 dark:bg-slate-800/30 rounded-md p-8">
-            <h3 className="font-semibold text-lg uppercase tracking-tight text-slate-900 dark:text-white mb-8">Access Logs</h3>
-            <div className="space-y-6">
+        <div className="group">
+        <div className=" bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden group ">
+            <span className="text-slate-900 dark:text-white text-base font-semibold">Access Logs</span>
+            <div className="space-y-6 bg-[#818b94]/10 h-full">
               {visitors.length > 0 ? (
                 visitors.slice(0, 5).map((visitor, index) => (
                   <VisitorItem key={index} name={visitor.name || visitor.visitor} role={visitor.type || 'Visitor'} status={visitor.status || 'Verified'} img={visitor.img || visitor.image} />
                 ))
               ) : (
-                <div className="text-center py-4 text-slate-500 text-sm">No recent visitors</div>
+                <div className="flex flex-col items-center mt-6 justify-center text-center bg-white dark:bg-slate-800/20 rounded-md min-h-40 h-full">
+                  No recent visitors
+                </div>
               )}
             </div>
           </div>

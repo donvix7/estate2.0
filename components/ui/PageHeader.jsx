@@ -17,10 +17,10 @@ export function PageHeader({ title, description, icon: Icon, iconColor = 'blue',
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 ">
       <div>
-        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white flex items-center gap-3">
-          {Icon && <Icon className={`w-8 h-8 dark text-amber-700 ${iconClass}`} />}
+        <span className="text-3xl font-semibold text-slate-900 dark:text-white flex items-center gap-3">
+          {Icon && <Icon className={`w-8 h-8 dark:text-amber-700 ${iconClass}`} />}
           {title}
-        </h1>
+        </span>
         {description && (
           <p className="text-slate-500 dark:text-slate-400 mt-2 font-semibold">{description}</p>
         )}
