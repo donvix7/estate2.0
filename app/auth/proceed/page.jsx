@@ -1,17 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { 
-  Building2, 
-  CheckCircle, 
-  PlusCircle, 
-  Home,
-  Water,
-  Tree,
-  Mountain,
-  HelpCircle,
-  CheckCircle2
-} from 'lucide-react'
+import { Building2, CheckCircle, CheckCircle2, GlassWater, HelpCircle, Home, Mountain, PlusCircle, TreeDeciduous } from 'lucide-react'
 import Link from 'next/link';
 import { getAllEstates } from '@/lib/service';
 import { getCurrentUser, getMemberships, sendJoinRequest } from '@/lib/action';
@@ -21,8 +11,8 @@ import { getCurrentUser, getMemberships, sendJoinRequest } from '@/lib/action';
 // Icon mapping
 const IconMap = {
   building: Building2,
-  water: Water,
-  tree: Tree,
+  water: GlassWater,
+  tree: TreeDeciduous,
   mountain: Mountain,
 }
 
