@@ -32,7 +32,9 @@ import {
   LogIn,
   Users,
   Baby,
-  UserRound
+  UserRound,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { 
@@ -80,7 +82,6 @@ export function VisitorPassGenerator() {
     totalInfants: 0,
     searchGuest: false,
     checkGuestId: true,
-    // Additional fields for display
     purpose: 'Personal Guest',
     residentName: 'John Doe',
     unitNumber: 'A-101'
@@ -96,6 +97,10 @@ export function VisitorPassGenerator() {
   const [activeTab, setActiveTab] = useState('schedule');
   const [timeLeft, setTimeLeft] = useState(null);
   const timerRef = useRef(null);
+  
+  // Sorting states
+  const [historySort, setHistorySort] = useState({ key: 'createdAt', direction: 'desc' });
+  const [logsSort, setLogsSort] = useState({ key: 'timestamp', direction: 'desc' });
 
   // Modal States
   const [alertConfig, setAlertConfig] = useState({ isOpen: false, title: '', message: '', type: 'info' });
@@ -106,14 +111,15 @@ export function VisitorPassGenerator() {
       setIsLoading(true);
       try {
         const [history, blacklist, logs] = await Promise.all([
-          apiGetPassHistory(),
+          getGuestCodes(),
           apiGetBlacklist(),
           getGuestCodes()
         ]);
-        console.log(logs)
-        setPassHistory(history.docs);
+        console.log(history)
+
+        setPassHistory(history.data || []);
         setBlacklistedVisitors(Array.isArray(blacklist) ? blacklist : []);
-        setEntryExitLogs(logs);
+        setEntryExitLogs(logs.data || []);
       } catch {
         setBlacklistedVisitors([]);
       } finally {
@@ -146,16 +152,6 @@ export function VisitorPassGenerator() {
     }));
   };
 
-  const generateQRCode = (passData) => {
-    const qrData = JSON.stringify({
-      passId: passData.id,
-      visitor: passData.guestName,
-      passCode: passData.passCode,
-      generated: passData.timestamp
-    });
-    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
-  };
-
   const buildPayload = (formData) => {
     return {
       type: formData.type,
@@ -184,7 +180,6 @@ export function VisitorPassGenerator() {
       try {
         const payload = buildPayload(formData);
         const res = await generateGuestCode(payload);
-        console.log(res)
         if(!res.ok){
           toast.error("Something went wrong")
           return;
@@ -194,7 +189,7 @@ export function VisitorPassGenerator() {
         setAlertConfig({
           isOpen: true,
           title: 'Pass Generated!',
-          message: `Visitor pass for ${formData.guestName} is ready. PIN: ${pin}`,
+          message: `Visitor pass for ${formData.guestName} is ready.`,
           type: 'success'
         });
       } catch { 
@@ -326,6 +321,65 @@ export function VisitorPassGenerator() {
     toast.info(`Loaded ${pass.guestName}'s details`);
   };
 
+  // Sorting functions
+  const sortHistory = (key) => {
+    const direction = historySort.key === key && historySort.direction === 'asc' ? 'desc' : 'asc';
+    setHistorySort({ key, direction });
+  };
+
+  const sortLogs = (key) => {
+    const direction = logsSort.key === key && logsSort.direction === 'asc' ? 'desc' : 'asc';
+    setLogsSort({ key, direction });
+  };
+
+  const getSortedHistory = () => {
+    return [...passHistory].sort((a, b) => {
+      let aVal = a[historySort.key];
+      let bVal = b[historySort.key];
+      
+      if (historySort.key === 'createdAt' || historySort.key === 'inviteDate') {
+        aVal = new Date(aVal).getTime();
+        bVal = new Date(bVal).getTime();
+      }
+      
+      if (historySort.key === 'totalAdults' || historySort.key === 'totalChildren' || historySort.key === 'totalInfants') {
+        aVal = parseInt(aVal) || 0;
+        bVal = parseInt(bVal) || 0;
+      }
+      
+      if (typeof aVal === 'string' && typeof bVal === 'string') {
+        return historySort.direction === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+      }
+      
+      return historySort.direction === 'asc' ? (aVal - bVal) : (bVal - aVal);
+    });
+  };
+
+  const getSortedLogs = () => {
+    return [...entryExitLogs].sort((a, b) => {
+      let aVal = a[logsSort.key];
+      let bVal = b[logsSort.key];
+      
+      if (logsSort.key === 'timestamp') {
+        aVal = new Date(aVal).getTime();
+        bVal = new Date(bVal).getTime();
+      }
+      
+      if (typeof aVal === 'string' && typeof bVal === 'string') {
+        return logsSort.direction === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+      }
+      
+      return logsSort.direction === 'asc' ? (aVal - bVal) : (bVal - aVal);
+    });
+  };
+
+  const renderSortIcon = (key, currentSort) => {
+    if (currentSort.key !== key) return null;
+    return currentSort.direction === 'asc' ? 
+      <ChevronUp className="size-3 inline ml-1" /> : 
+      <ChevronDown className="size-3 inline ml-1" />;
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-24">
@@ -343,19 +397,17 @@ export function VisitorPassGenerator() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
           { label: 'Total Passes', value: passHistory.length, icon: <QrCode className="size-5" />, color: 'bg-blue-500/10 text-blue-600' },
-          { label: 'Active Now', value: passHistory.filter(p => p.status === 'active').length, icon: <UserCheck className="size-5" />, color: 'bg-green-500/10 text-green-600' },
-          { label: 'Pending', value: passHistory.filter(p => p.status === 'pending').length, icon: <Clock className="size-5" />, color: 'bg-amber-500/10 text-amber-600' },
+          { label: 'Active Now', value: passHistory.filter(item => item.isActive && !item.isUsed).length, icon: <UserCheck className="size-5" />, color: 'bg-green-500/10 text-green-600' },
+          { label: 'Used', value: passHistory.filter(item => item.isUsed).length, icon: <Clock className="size-5" />, color: 'bg-amber-500/10 text-amber-600' },
           { label: 'Blacklisted', value: blacklistedVisitors.length, icon: <Ban className="size-5" />, color: 'bg-red-500/10 text-red-600' },
         ].map(stat => (
-         
-            <div key={stat.label} className="group p-6 bg-[#818b94]/30 dark:bg-[#818b94]/40 rounded-md transition-all cursor-pointer text-left">
-                <div className="bg-white dark:bg-slate-100 text-amber-500 p-3 dark:text-black font-bold rounded-md w-fit mb-4 group-hover:bg-amber-700 group-hover:text-white transition-all">
-                  {stat.icon}  
-                </div>
-                <h4 className="font-semibold mb-1 text-sm text-slate-900 dark:text-white">{stat.label}</h4>
-                <p className="text-2xl text-slate-500 dark:text-slate-200 font-medium leading-relaxed">{stat.value}</p>
-              </div>
-         
+          <div key={stat.label} className="group p-6 bg-[#818b94]/30 dark:bg-[#818b94]/40 rounded-md transition-all cursor-pointer text-left">
+            <div className="bg-white dark:bg-slate-100 text-amber-500 p-3 dark:text-black font-bold rounded-md w-fit mb-4 group-hover:bg-amber-700 group-hover:text-white transition-all">
+              {stat.icon}  
+            </div>
+            <h4 className="font-semibold mb-1 text-sm text-slate-900 dark:text-white">{stat.label}</h4>
+            <p className="text-2xl text-slate-500 dark:text-slate-200 font-medium leading-relaxed">{stat.value}</p>
+          </div>
         ))}
       </div>
 
@@ -404,7 +456,7 @@ export function VisitorPassGenerator() {
                     )}
                   </div>
                   <p className="text-slate-500 text-xs font-semibold uppercase tracking-widest mb-1">Numerical Access Key</p>
-                  <h3 className="text-4xl sm:text-5xl font-semibold text-[#1241a1] tracking-tighter">{generatedPass.pin}</h3>
+                  <h3 className="text-4xl sm:text-5xl font-semibold text-[#1241a1] tracking-tighter">{generatedPass.pin || 'N/A'}</h3>
                 </div>
 
                 {/* Right: Details + Actions */}
@@ -415,7 +467,7 @@ export function VisitorPassGenerator() {
                       {[
                         { label: 'Guest Name', value: generatedPass.guestName },
                         { label: 'Phone', value: generatedPass.guestPhone },
-                        { label: 'Pass Code', value: <span className="font-mono font-semibold">{generatedPass.passCode}</span> },
+                        { label: 'Pass Code', value: <span className="font-mono font-semibold">{generatedPass.code}</span> },
                         { label: 'Type', value: <span className="px-2 py-0.5 bg-[#1241a1]/10 text-[#1241a1] text-xs font-semibold rounded uppercase">{generatedPass.type}</span> },
                         { label: 'Date', value: generatedPass.inviteDate ? new Date(generatedPass.inviteDate).toLocaleDateString() : '—' },
                         { label: 'Time', value: `${generatedPass.inviteTimeFrom} - ${generatedPass.inviteTimeTo}` },
@@ -449,10 +501,10 @@ export function VisitorPassGenerator() {
                       </button>
                       <button
                         onClick={() => {
-                          const text = `VISITOR PASS\nName: ${generatedPass.guestName}\nCode: ${generatedPass.passCode}\nPIN: ${generatedPass.pin}\nValid: ${generatedPass.inviteDate} ${generatedPass.inviteTimeTo}`;
+                          const text = `VISITOR PASS\nName: ${generatedPass.guestName}\nCode: ${generatedPass.code}\nPIN: ${generatedPass.pin}\nValid: ${generatedPass.inviteDate} ${generatedPass.inviteTimeTo}`;
                           const el = document.createElement('a');
                           el.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
-                          el.download = `visitor-pass-${generatedPass.passCode}.txt`;
+                          el.download = `visitor-pass-${generatedPass.code}.txt`;
                           el.click();
                         }}
                         className="flex items-center justify-center gap-2 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold py-3 rounded-md transition-all text-sm border-none"
@@ -646,12 +698,14 @@ export function VisitorPassGenerator() {
         </div>
       )}
 
-      {/* History Tab */}
+      {/* History Tab - Table View */}
       {activeTab === 'history' && (
-        <div className="bg-slate-100 dark:dark:bg-[#818b94]/10 rounded-md overflow-hidden">
-          <div className="p-6 flex items-center justify-between">
-            <h3 className="font-semibold text-lg">Pass History</h3>
-            <span className="text-xs text-slate-500 font-medium">{passHistory.length} total passes</span>
+        <div className="bg-slate-100 dark:bg-[#818b94]/10 rounded-md overflow-hidden">
+          <div className="p-6 flex items-center justify-between border-b border-slate-200 dark:border-slate-700">
+            <div>
+              <h3 className="font-semibold text-lg">Pass History</h3>
+              <p className="text-xs text-slate-500 font-medium">{passHistory.length} total passes</p>
+            </div>
           </div>
           {passHistory.length === 0 ? (
             <div className="p-12 text-center text-slate-400">
@@ -659,40 +713,81 @@ export function VisitorPassGenerator() {
               <p className="font-semibold">No pass history yet</p>
             </div>
           ) : (
-            <div className="grid gap-1 px-1 pb-1">
-              {passHistory.map((pass, i) => (
-                <div key={pass.id || i} className="group p-4 flex items-center justify-between bg-white dark:bg-slate-900 rounded-md hover:bg-[#1241a1] transition-all cursor-pointer">
-                  <div className="flex items-center gap-3">
-                    <div className="size-10 bg-slate-100 dark:bg-slate-800 text-[#1241a1] rounded-md flex items-center justify-center font-semibold text-sm flex-shrink-0 group-hover:bg-white/20 group-hover:text-white transition-colors">
-                      {pass.guestName?.charAt(0) || 'V'}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-sm group-hover:text-white transition-colors">{pass.guestName}</p>
-                      <p className="text-xs text-slate-500 group-hover:text-white/60 transition-colors">{pass.purpose} • <span className="font-mono">{pass.passCode}</span></p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className={`text-[10px] px-2 py-1 rounded-full font-semibold uppercase tracking-widest ${
-                      pass.status === 'active' ? 'bg-green-100 text-green-700 group-hover:bg-green-500 group-hover:text-white' :
-                      pass.status === 'pending' ? 'bg-amber-100 text-amber-700 group-hover:bg-amber-500 group-hover:text-white' :
-                      'bg-slate-100 text-slate-600 group-hover:bg-slate-500 group-hover:text-white'
-                    }`}>{pass.status}</span>
-                    <button onClick={(e) => { e.stopPropagation(); loadFromHistory(pass); }} className="text-xs font-semibold text-[#1241a1] group-hover:text-white border-none bg-transparent hover:underline">
-                      Re-use
-                    </button>
-                  </div>
-                </div>
-              ))}
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-200 dark:bg-slate-800/50">
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 cursor-pointer hover:text-slate-900 dark:hover:text-white" onClick={() => sortHistory('guestName')}>
+                      Guest {renderSortIcon('guestName', historySort)}
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 cursor-pointer hover:text-slate-900 dark:hover:text-white" onClick={() => sortHistory('code')}>
+                      Pass Code {renderSortIcon('code', historySort)}
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 cursor-pointer hover:text-slate-900 dark:hover:text-white" onClick={() => sortHistory('type')}>
+                      Type {renderSortIcon('type', historySort)}
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 cursor-pointer hover:text-slate-900 dark:hover:text-white" onClick={() => sortHistory('inviteDate')}>
+                      Date {renderSortIcon('inviteDate', historySort)}
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 cursor-pointer hover:text-slate-900 dark:hover:text-white" onClick={() => sortHistory('modeOfTransport')}>
+                      Transport {renderSortIcon('modeOfTransport', historySort)}
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 cursor-pointer hover:text-slate-900 dark:hover:text-white" onClick={() => sortHistory('totalAdults')}>
+                      Guests {renderSortIcon('totalAdults', historySort)}
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300">Status</th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {getSortedHistory().map((pass, i) => (
+                    <tr key={pass.id || i} className="border-b border-slate-200 dark:border-slate-700/50 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td className="px-4 py-3 font-medium">{pass.guestName}</td>
+                      <td className="px-4 py-3 font-mono text-xs">{pass.code}</td>
+                      <td className="px-4 py-3">
+                        <span className="px-2 py-0.5 bg-[#1241a1]/10 text-[#1241a1] dark:bg-[#1241a1]/20 dark:text-[#1241a1] text-xs font-semibold rounded uppercase">
+                          {pass.type}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-xs">{pass.inviteDate ? new Date(pass.inviteDate).toLocaleDateString() : '—'}</td>
+                      <td className="px-4 py-3 text-xs capitalize">{pass.modeOfTransport}</td>
+                      <td className="px-4 py-3 text-xs">
+                        {pass.totalAdults}A {pass.totalChildren > 0 ? `, ${pass.totalChildren}C` : ''} {pass.totalInfants > 0 ? `, ${pass.totalInfants}I` : ''}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`text-[10px] px-2 py-1 rounded-full font-semibold uppercase tracking-widest ${
+                          pass.isActive && !pass.isUsed ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                          pass.isUsed ? 'bg-slate-100 text-slate-600 dark:bg-slate-700/30 dark:text-slate-400' :
+                          'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                        }`}>
+                          {pass.isActive && !pass.isUsed ? 'Active' : pass.isUsed ? 'Used' : 'Expired'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); loadFromHistory(pass); }} 
+                          className="text-xs font-semibold text-[#1241a1] dark:text-[#1241a1] hover:underline border-none bg-transparent"
+                        >
+                          Re-use
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
       )}
 
-      {/* Logs Tab */}
+      {/* Logs Tab - Table View */}
       {activeTab === 'logs' && (
-        <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm">
-          <div className="p-6">
-            <h3 className="font-bold text-lg">Activity Logs</h3>
+        <div className="bg-slate-100 dark:bg-[#818b94]/10 rounded-md overflow-hidden">
+          <div className="p-6 flex items-center justify-between border-b border-slate-200 dark:border-slate-700">
+            <div>
+              <h3 className="font-bold text-lg">Activity Logs</h3>
+              <p className="text-xs text-slate-500 font-medium">{entryExitLogs.length} total entries</p>
+            </div>
           </div>
           {entryExitLogs.length === 0 ? (
             <div className="p-12 text-center text-slate-400">
@@ -700,22 +795,43 @@ export function VisitorPassGenerator() {
               <p className="font-medium">No activity logged yet</p>
             </div>
           ) : (
-            <div className="">
-              {entryExitLogs.map((log, i) => (
-                <div key={log.id || i} className="p-4 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                  <div className={`size-9 rounded-full flex items-center justify-center flex-shrink-0 ${log.type === 'entry' ? 'bg-green-100 text-green-600 dark:bg-green-900/30' : 'bg-red-100 text-red-600 dark:bg-red-900/30'}`}>
-                    {log.type === 'entry' ? <LogIn className="size-4" /> : <LogOut className="size-4" />}
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-semibold text-sm">{log.visitor}</p>
-                    <p className="text-xs text-slate-500">Code: <span className="font-mono">{log.passCode}</span> • {log.verifiedBy}</p>
-                  </div>
-                  <div className="text-right">
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${log.type === 'entry' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}>{log.type}</span>
-                    <p className="text-[10px] text-slate-400 mt-1">{new Date(log.timestamp).toLocaleTimeString()}</p>
-                  </div>
-                </div>
-              ))}
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-200 dark:bg-slate-800/50">
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 cursor-pointer hover:text-slate-900 dark:hover:text-white" onClick={() => sortLogs('visitor')}>
+                      Visitor {renderSortIcon('visitor', logsSort)}
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 cursor-pointer hover:text-slate-900 dark:hover:text-white" onClick={() => sortLogs('type')}>
+                      Type {renderSortIcon('type', logsSort)}
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 cursor-pointer hover:text-slate-900 dark:hover:text-white" onClick={() => sortLogs('passCode')}>
+                      Pass Code {renderSortIcon('passCode', logsSort)}
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300 cursor-pointer hover:text-slate-900 dark:hover:text-white" onClick={() => sortLogs('timestamp')}>
+                      Timestamp {renderSortIcon('timestamp', logsSort)}
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-600 dark:text-slate-300">Verified By</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {getSortedLogs().map((log, i) => (
+                    <tr key={log.id || i} className="border-b border-slate-200 dark:border-slate-700/50 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td className="px-4 py-3 font-medium">{log.visitor}</td>
+                      <td className="px-4 py-3">
+                        <span className={`text-[10px] px-2 py-1 rounded-full font-bold uppercase ${
+                          log.type === 'entry' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                        }`}>
+                          {log.type}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 font-mono text-xs">{log.passCode}</td>
+                      <td className="px-4 py-3 text-xs">{log.timestamp ? new Date(log.timestamp).toLocaleString() : '—'}</td>
+                      <td className="px-4 py-3 text-xs">{log.verifiedBy || 'Security'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>

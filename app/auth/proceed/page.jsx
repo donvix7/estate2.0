@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react'
 import { Building2, CheckCircle, CheckCircle2, GlassWater, HelpCircle, Home, Mountain, PlusCircle, TreeDeciduous } from 'lucide-react'
 import Link from 'next/link';
-import { getAllEstates } from '@/lib/service';
+import { getAllEstates, setEstate } from '@/lib/service';
 import { getCurrentUser, getMemberships, sendJoinRequest } from '@/lib/action';
+import { useRouter } from 'next/navigation';
 
 // Mock data for available estates
 
@@ -33,6 +34,21 @@ export default function EstateSelectionPage() {
     }
     fetchEstates()
   }, [])
+  const router = useRouter();
+
+  const handleProceed = async (estateId) => {
+    const res = await setEstate(estateId)
+    if(res.ok){
+      router.push('/dashboard/resident');
+    }
+    else{
+      setNotification({
+        message: res?.message || 'Failed to set estate. Please try again.',
+        type: 'warning',
+      })
+      setTimeout(() => setNotification(null), 2500)
+    }
+  }
 const AVAILABLE_ESTATES = estates;
 
   const handleJoinEstate = async() => {
@@ -119,20 +135,21 @@ const AVAILABLE_ESTATES = estates;
                   return (
                     <div
                       key={memberships.id}
-                      className="flex items-center justify-between p-3 rounded-xl bg-white/60 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50 shadow-sm hover:shadow-md transition-all"
+                      onClick={() => handleProceed(memberships.estate.id)}
+                      className="flex items-center justify-between p-3 rounded-xl bg-white/60 dark:bg-slate-400/40 transition-all"
                     >
                       <div className="flex items-center gap-3">
                        
                         <div>
-                          <p className="text-sm font-medium text-slate-800 dark:text-slate-100">
+                          <p className="text-sm font-medium text-slate-100 dark:text-slate-100">
                             {memberships.name}
                           </p>
-                          <p className="text-[10px] text-slate-400">
-                            joined • {memberships.units} unit{memberships.units !== 1 ? 's' : ''}
+                          <p className=" text-slate-900">
+                            joined • {memberships.estate.estateName}
                           </p>
                         </div>
                       </div>
-                      <span className="text-emerald-500 text-xs bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-full flex items-center gap-1">
+                      <span className="text-emerald-500 text-xs bg-emerald-50 px-2 py-1 rounded-full flex items-center gap-1">
                         <CheckCircle className="size-3" />
                         active
                       </span>
@@ -184,8 +201,8 @@ const AVAILABLE_ESTATES = estates;
       {/* Scrollable Container */}
       <div className="w-full border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-800">
         <div className="max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-[#1241a1] scrollbar-track-slate-100 dark:scrollbar-track-slate-700">
-          {AVAILABLE_ESTATES.length > 0 ? (
-            AVAILABLE_ESTATES.map((estate) => (
+          {estates.length > 0 ? (
+            estates.map((estate) => (
               <button
                 key={estate.id}
                 type="button"
