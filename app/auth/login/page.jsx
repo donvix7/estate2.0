@@ -33,45 +33,36 @@ export default function LoginPage() {
     setError('')
     setIsLoading(true)
 
-    try {
-      let result;
       
       if (userType === 'admin') {
-        result = await handleAdminLogin(email, password)
+        const result = await handleAdminLogin(email, password)
+
+        if(result.success){
+          router.push('/dashboard/admin')
+          return
+        }
       } else if(userType === 'security'){
         // Validate gate ID for security
         if (!gateId.trim()) {
-          setError('Gate ID is required for security personnel')
+          router.push('/dashboard/security')
+          return
+        }
+        const result = await handleSecurityLogin(email, password, gateId)
+        if(!result.success){
+          setError(result.message)
           setIsLoading(false)
           return
         }
-        result = await handleSecurityLogin(email, password, gateId)
       } else {
-        result = await handleUserLogin(email, password)
+        const result = await handleUserLogin(email, password)
+        if(!result.success){
+          setError(result.message)
+          setIsLoading(false)
+          return
+        }
       }
 
-      if (result?.success) {
-        // ✅ Reset loading before redirect
-        setIsLoading(false)
-        
-        // ✅ Use setTimeout to ensure state updates before navigation
-        setTimeout(() => {
-          if (userType === 'admin' || result.user?.type === 'admin') {
-            router.push('/dashboard/admin')
-          } else {
-            router.push('/auth/proceed')
-          }
-        }, 100)
-      } else {
-        setError(result?.message || 'Login failed. Please check your credentials.')
-        setIsLoading(false)
-      }
-    } catch (err) {
-      console.error('Login error:', err)
-      setError(err.message || 'An unexpected error occurred.')
-      setIsLoading(false)
-    }
-  }
+    } 
 
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center p-4 overflow-hidden bg-slate-50 dark:bg-slate-950 font-sans">
