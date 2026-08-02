@@ -65,14 +65,14 @@ const handleLogin = async (e) => {
     
     else { // resident
       const result = await handleUserLogin(email, password)
-      if (result.success) {
-        setIsLoading(false)
-        router.push('/dashboard/resident')
-        return
-      } else {
+        console.log(result)
+
+      if (!result.success) {
         setError(result.errors?.[0] || 'Login failed')
         setIsLoading(false)
-        return
+      } else {
+        setIsLoading(false)
+        router.push('/auth/proceed')
       }
     }
   } catch (error) {
