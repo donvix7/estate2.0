@@ -27,7 +27,7 @@ import UnauthenticatedWithImage from '@/components/UnAuthenticated'
 import BottomNav from '@/components/dashboard/BottomNav'
 import RoleGuard from '@/components/utils/Roleguard'
 
-export default function AdminLayout({ children }) {
+export default function securityLayout({ children }) {
   const pathname = usePathname();
   const securityLinks = [
     { href: '/dashboard/security', label: 'Dashboard', icon: LayoutDashboard },

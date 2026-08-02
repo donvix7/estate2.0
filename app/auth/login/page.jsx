@@ -13,13 +13,15 @@ import {
   Lock, 
   Eye, 
   EyeOff, 
-  LogIn 
+  LogIn,
+  Shield
 } from 'lucide-react'
-import { handleAdminLogin, handleUserLogin } from '@/lib/action'
+import { handleAdminLogin, handleSecurityLogin, handleUserLogin } from '@/lib/action'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [gateId, setGateId] = useState('')
   const [userType, setUserType] = useState('resident')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -36,6 +38,14 @@ export default function LoginPage() {
       
       if (userType === 'admin') {
         result = await handleAdminLogin(email, password)
+      } else if(userType === 'security'){
+        // Validate gate ID for security
+        if (!gateId.trim()) {
+          setError('Gate ID is required for security personnel')
+          setIsLoading(false)
+          return
+        }
+        result = await handleSecurityLogin(email, password, gateId)
       } else {
         result = await handleUserLogin(email, password)
       }
@@ -91,7 +101,7 @@ export default function LoginPage() {
           
           {/* Content - sits on top of image */}
           <div className="relative z-10 flex flex-col justify-center h-full">
-    <div className="border border-slate-400/50 bg-white/10 backdrop-blur-md p-10 rounded-xl text-white">
+            <div className="border border-slate-400/50 bg-white/10 backdrop-blur-md p-10 rounded-xl text-white">
               <div className="flex items-center gap-2 mb-8 cursor-pointer group" onClick={() => router.push('/')}>
                 <div className="p-2 bg-white/20 backdrop-blur rounded-lg text-white shadow-lg group-hover:scale-110 transition-transform">
                   <Building2 className="size-6" />
@@ -126,14 +136,30 @@ export default function LoginPage() {
           <div className="flex h-12 w-full items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 p-1 mb-8 shadow-inner">
             <button 
               type="button"
-              onClick={() => setUserType('resident')}
+              onClick={() => {
+                setUserType('resident')
+                setGateId('') // Clear gate ID when switching
+              }}
               className={`flex-1 h-full rounded-lg text-sm font-semibold transition-all ${userType === 'resident' ? 'bg-slate-500 text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
             >
               Resident
             </button>
             <button 
               type="button"
-              onClick={() => setUserType('admin')}
+              onClick={() => {
+                setUserType('security')
+                setGateId('') // Clear gate ID when switching
+              }}
+              className={`flex-1 h-full rounded-lg text-sm font-semibold transition-all ${userType === 'security' ? 'bg-slate-500 text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
+            >
+              Security
+            </button>
+            <button 
+              type="button"
+              onClick={() => {
+                setUserType('admin')
+                setGateId('') // Clear gate ID when switching
+              }}
               className={`flex-1 h-full rounded-lg text-sm font-semibold transition-all ${userType === 'admin' ? 'bg-slate-500 text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
             >
               Admin / Staff
@@ -188,6 +214,28 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {/* Gate ID Field - Only visible for Security */}
+            {userType === 'security' && (
+              <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Gate ID</label>
+                <div className="relative group">
+                  <Shield className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1241a1] size-5 transition-colors" />
+                  <input 
+                    type="text"
+                    value={gateId}
+                    onChange={(e) => setGateId(e.target.value)}
+                    className="w-full bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white pl-14 pr-4 py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] outline-none transition-all placeholder:text-slate-500"
+                    placeholder="Enter your assigned gate ID (e.g., GATE-001)"
+                    required
+                    disabled={isLoading}
+                  />
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 pl-1">
+                  Enter the gate ID assigned to your security post
+                </p>
+              </div>
+            )}
+
             <button 
               type="submit"
               disabled={isLoading}
@@ -202,7 +250,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-8 text-center pt-8">
+          <div className="mt-8 text-center pt-8 border-t border-slate-200 dark:border-slate-700">
             <p className="text-slate-500 dark:text-slate-400 text-sm">
               Don't have account? 
               <Link href="/auth/signup" className="text-slate-700 dark:text-slate-200 font-bold ml-1 hover:underline">Sign up here</Link>

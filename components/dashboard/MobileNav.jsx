@@ -54,24 +54,6 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
       badge: null
     },
     {
-      icon: Bell,
-      label: 'Notifications',
-      href: `/dashboard/${role}/notifications`,
-      badge: 3 // Example: 3 unread notifications
-    },
-    {
-      icon: MessageSquare,
-      label: 'Messages',
-      href: `/dashboard/${role}/messages`,
-      badge: 5 // Example: 5 unread messages
-    },
-    {
-      icon: FileText,
-      label: 'My Documents',
-      href: `/dashboard/${role}/documents`,
-      badge: null
-    },
-    {
       icon: Settings,
       label: 'Settings',
       href: `/dashboard/${role}/settings`,
@@ -127,9 +109,9 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
 
               {/* Dropdown Menu */}
               {isProfileDropdownOpen && (
-                <div className="absolute right-0 mt-3 w-72 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute right-0 mt-3 w-72 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                   {/* User Info Section */}
-                  <div className="p-4 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800/50 dark:to-slate-800/30 border-b border-slate-200 dark:border-slate-800">
+                  <div className="p-4 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800/50 dark:to-slate-800/30 ">
                     <div className="flex items-center gap-3">
                       <div className="relative">
                         <div className="size-12 rounded-full bg-slate-300 dark:bg-slate-700 bg-cover bg-center shadow-sm" 
@@ -157,10 +139,10 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
                             setIsProfileDropdownOpen(false);
                             setIsMenuOpen(false);
                           }}
-                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-[#1241a1]/10 hover:text-[#1241a1] dark:hover:bg-[#1241a1]/20 transition-all group"
+                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-[#818b94]/30   dark:hover:bg-[#818b94]/20 transition-all group"
                         >
                           <div className="flex items-center gap-3">
-                            <Icon className="size-5 text-slate-400 group-hover:text-[#1241a1] dark:group-hover:text-[#1241a1] transition-colors" />
+                            <Icon className="size-5 text-slate-400 group-hover:text-white transition-colors" />
                             <span>{item.label}</span>
                           </div>
                           {item.badge && (
@@ -172,7 +154,7 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
                       );
                     })}
 
-                    <div className="h-px bg-slate-200 dark:bg-slate-800 my-2"></div>
+                    <div className="h-px bg-amber-700 dark:bg-slate-800 my-2"></div>
 
                     <button
                       onClick={() => {
@@ -181,7 +163,7 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
                       }}
                       className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all group"
                     >
-                      <LogOut className="size-5 text-red-500 group-hover:scale-110 transition-transform" />
+                      <LogOut className="size-5 text-red-500 flex items-center align-center justify-center group-hover:scale-110 transition-transform" />
                       <span>Logout</span>
                     </button>
                   </div>
@@ -196,14 +178,7 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
               )}
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={toggleMenu}
-              className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-white bg-white dark:bg-slate-800 rounded-lg transition-colors shadow-sm"
-              aria-label="Toggle menu"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
+          
           </div>
         </div>
       </nav>
@@ -217,10 +192,10 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
           >
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <div className="bg-[#1241a1] rounded-lg p-1.5 text-white">
+                <div className="bg-[#818b94]/40  rounded-lg p-1.5 text-white">
                   <Building2 className="size-5" />
                 </div>
-                <span className="font-bold text-lg tracking-tight">Elite Towers</span>
+                <span className="font-bold text-lg tracking-tight">Estate</span>
               </div>
               <button 
                 onClick={closeMenu}
@@ -252,7 +227,7 @@ export default function DashboardMobileNav({ links, user, role, estateName }) {
                     onClick={closeMenu}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${
                       isActive
-                        ? 'bg-[#1241a1] text-white shadow-lg shadow-[#1241a1]/20'
+                        ? 'bg-[#818b94]/30  text-white shadow-lg'
                         : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                   >

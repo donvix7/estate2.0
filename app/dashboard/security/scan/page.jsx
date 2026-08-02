@@ -145,6 +145,8 @@ export default function QRScanPage() {
   const onScanSuccess = async (decodedText, decodedResult) => {
     console.log(`Scan success: ${decodedText}`);
     processQRCode(decodedText);
+
+    await refreshSecurityToken(decodedText)
     
     // Briefly stop to avoid spamming multiple detections
     await stopScanner();
