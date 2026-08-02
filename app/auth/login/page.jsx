@@ -27,46 +27,59 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const router = useRouter()
+const handleLogin = async (e) => {
+  e.preventDefault()
+  setError('')
+  setIsLoading(true)
 
-  const handleLogin = async (e) => {
-    e.preventDefault()
-    setError('')
-    setIsLoading(true)
-
-      
-      if (userType === 'admin') {
-        const result = await handleAdminLogin(email, password)
-
-        if(result.success){
-          router.push('/dashboard/admin')
-          return
-        }
-      } else if(userType === 'security'){
-        // Validate gate ID for security
-        if (!gateId.trim()) {
-          router.push('/dashboard/security')
-          return
-        }
-        const result = await handleSecurityLogin(email, password, gateId)
-        if(!result.success){
-          setError(result.errors[0])
-          setIsLoading(false)
-          return
-        }
-        router.push('/dashboard/security')
+  try {
+    if (userType === 'admin') {
+      const result = await handleAdminLogin(email, password)
+      if (result.success) {
+        router.push('/dashboard/admin')
+        return
       } else {
-        const result = await handleUserLogin(email, password)
-        if(result.success){
-          router.push('/dashboard/resident')
-        }
-        else{
-        setError(result.errors[0])
+        setError(result.errors?.[0] || 'Admin login failed')
         setIsLoading(false)
-        }
+        return
       }
-
     } 
-
+    
+    else if (userType === 'security') {
+      if (!gateId.trim()) {
+        setError('Gate ID is required')
+        setIsLoading(false)
+        return
+      }
+      
+      const result = await handleSecurityLogin(email, password, gateId)
+      if (result.success) {
+        router.push('/dashboard/security')
+        return
+      } else {
+        setError(result.errors?.[0] || 'Security login failed')
+        setIsLoading(false)
+        return
+      }
+    } 
+    
+    else { // resident
+      const result = await handleUserLogin(email, password)
+      if (result.success) {
+        setIsLoading(false)
+        router.push('/dashboard/resident')
+        return
+      } else {
+        setError(result.errors?.[0] || 'Login failed')
+        setIsLoading(false)
+        return
+      }
+    }
+  } catch (error) {
+    setError('An unexpected error occurred')
+    setIsLoading(false)
+  }
+}
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center p-4 overflow-hidden bg-slate-50 dark:bg-slate-950 font-sans">
       {/* Background Image with Overlay */}
