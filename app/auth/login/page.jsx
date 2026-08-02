@@ -53,12 +53,15 @@ export default function LoginPage() {
           setIsLoading(false)
           return
         }
+        router.push('/dashboard/security')
       } else {
         const result = await handleUserLogin(email, password)
-        if(!result.success){
-          setError(result.errors[0])
-          setIsLoading(false)
-          return
+        if(result.success){
+          router.push('/dashboard/resident')
+        }
+        else{
+        setError(result.errors[0])
+        setIsLoading(false)
         }
       }
 
