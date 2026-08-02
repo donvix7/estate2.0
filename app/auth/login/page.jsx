@@ -49,14 +49,14 @@ export default function LoginPage() {
         }
         const result = await handleSecurityLogin(email, password, gateId)
         if(!result.success){
-          setError(result.message)
+          setError(result.errors[0])
           setIsLoading(false)
           return
         }
       } else {
         const result = await handleUserLogin(email, password)
         if(!result.success){
-          setError(result.message)
+          setError(result.errors[0])
           setIsLoading(false)
           return
         }
@@ -158,7 +158,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-500/10 rounded-xl flex items-start gap-3 text-red-500 dark:text-red-400 animate-in fade-in slide-in-from-top-2">
+            <div className="mb-6 p-4 bg-red-500/10 rounded-xl flex items-center  gap-3 text-red-500 dark:text-red-400 animate-in fade-in slide-in-from-top-2">
               <AlertCircle className="size-5 mt-0.5 shrink-0" />
               <p className="text-xs font-medium">{error}</p>
             </div>
