@@ -53,6 +53,8 @@ const handleLogin = async (e) => {
       }
       
       const result = await handleSecurityLogin(email, password, gateId)
+      console.log(result)
+
       if (result.success) {
         router.push('/dashboard/security')
         return
@@ -186,7 +188,7 @@ const handleLogin = async (e) => {
               <div className="relative group">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1241a1] size-5 transition-colors" />
                 <input 
-                  type="email"
+                  type={userType === 'security' ? 'text' : 'email'}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white pl-14 pr-4 py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] outline-none transition-all placeholder:text-slate-500"

@@ -136,7 +136,7 @@ const AVAILABLE_ESTATES = estates;
                     <div
                       key={memberships.id}
                       onClick={() => handleProceed(memberships.estate.id)}
-                      className="flex items-center justify-between p-3 rounded-xl bg-white/60 dark:bg-slate-400/40 transition-all"
+                      className="flex items-center justify-between p-3 rounded-xl bg-white/60 dark:bg-slate-400/40 transition-all hover:brightness-50"
                     >
                       <div className="flex items-center gap-3">
                        
@@ -145,11 +145,11 @@ const AVAILABLE_ESTATES = estates;
                             {memberships.name}
                           </p>
                           <p className=" text-slate-900">
-                            joined • {memberships.estate.estateName}
+                            {memberships.estate.estateName}
                           </p>
                         </div>
                       </div>
-                      <span className="text-emerald-500 text-xs bg-emerald-50 px-2 py-1 rounded-full flex items-center gap-1">
+                      <span className="text-slate-50 text-xs bg-amber-900 px-2 py-1 rounded-full hover:brightness-200 flex items-center gap-1">
                         <CheckCircle className="size-3" />
                         active
                       </span>

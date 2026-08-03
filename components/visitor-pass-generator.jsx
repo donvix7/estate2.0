@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
+import QRCode from 'qrcode';
 import { 
   Key, 
   Clock, 
@@ -34,7 +35,17 @@ import {
   Baby,
   UserRound,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Eye,
+  X,
+  MessageSquare,
+  CalendarDays,
+  Clock as ClockIcon,
+  UserCog,
+  UserX,
+  Info,
+  Check,
+  Building
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { 
@@ -48,10 +59,11 @@ import {
   logEntryExit as apiLogEntryExit, 
   addToBlacklist as apiAddToBlacklist, 
   removeFromBlacklist as apiRemoveFromBlacklist, 
-  generateGuestCode
+  generateGuestCode,
+  deactivateGuestCode,
+  preApproveVisitor
 } from '@/lib/action';
 import { AlertModal } from './ui/AlertModal';
-import { PromptModal } from './ui/PromptModal';
 
 const TABS = [
   { id: 'schedule', label: 'Schedule Visitor', icon: <QrCode className="size-4" /> },
@@ -67,6 +79,27 @@ const TRANSPORT_MODES = [
   { value: 'public', label: 'Public Transport', icon: '🚌' },
   { value: 'taxi', label: 'Taxi', icon: '🚕' },
 ];
+
+// Helper component for preview rows
+const PreviewRow = ({ label, value }) => (
+  <div className="flex items-center justify-between gap-4 text-sm">
+    <span className="text-slate-500 font-medium shrink-0">{label}</span>
+    <span className="font-semibold text-slate-700 dark:text-slate-200 text-right truncate max-w-[180px]">
+      {value}
+    </span>
+  </div>
+);
+
+// Helper component for detail rows in modal
+const DetailRow = ({ label, value, icon, valueClassName = '' }) => (
+  <div className="flex items-center gap-3 text-sm">
+    <span className="text-slate-400">{icon}</span>
+    <span className="text-slate-500 font-medium min-w-[120px]">{label}</span>
+    <span className={`font-semibold text-slate-700 dark:text-slate-200 ml-auto ${valueClassName}`}>
+      {value}
+    </span>
+  </div>
+);
 
 export function VisitorPassGenerator() {
   const [formData, setFormData] = useState({
@@ -105,6 +138,77 @@ export function VisitorPassGenerator() {
   // Modal States
   const [alertConfig, setAlertConfig] = useState({ isOpen: false, title: '', message: '', type: 'info' });
   const [promptConfig, setPromptConfig] = useState({ isOpen: false, title: '', message: '', placeholder: '', onConfirm: () => {} });
+  
+  // Pass Details Modal States
+  const [viewPassData, setViewPassData] = useState(null);
+  const [showPassDetails, setShowPassDetails] = useState(false);
+  const [viewQRCodeData, setViewQRCodeData] = useState('');
+
+  // Generate QR code whenever generatedPass changes
+  useEffect(() => {
+    if (generatedPass) {
+      generateQRCode(generatedPass);
+    }
+  }, [generatedPass]);
+
+  const generateQRCode = async (passData) => {
+    try {
+      const qrData = JSON.stringify({
+        passCode: passData.code,
+        pin: passData.pin,
+        guestName: passData.guestName,
+        guestPhone: passData.guestPhone,
+        inviteDate: passData.inviteDate,
+        inviteTimeFrom: passData.inviteTimeFrom,
+        inviteTimeTo: passData.inviteTimeTo,
+        type: passData.type
+      });
+
+      const qrImage = await QRCode.toDataURL(qrData, {
+        width: 300,
+        margin: 2,
+        color: {
+          dark: '#1241a1',
+          light: '#ffffff'
+        }
+      });
+      
+      setQrCodeData(qrImage);
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+      toast.error('Failed to generate QR code');
+    }
+  };
+
+  // Generate QR for history passes
+  const generateHistoryQR = async (passData) => {
+    try {
+      const qrData = JSON.stringify({
+        passCode: passData.code,
+        pin: passData.pin,
+        guestName: passData.guestName,
+        guestPhone: passData.guestPhone,
+        inviteDate: passData.inviteDate,
+        inviteTimeFrom: passData.inviteTimeFrom,
+        inviteTimeTo: passData.inviteTimeTo,
+        type: passData.type
+      });
+
+      const qrImage = await QRCode.toDataURL(qrData, {
+        width: 300,
+        margin: 2,
+        color: {
+          dark: '#1241a1',
+          light: '#ffffff'
+        }
+      });
+      
+      return qrImage;
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -127,7 +231,6 @@ export function VisitorPassGenerator() {
       }
     };
 
-    // Set default dates
     const now = new Date();
     const today = now.toISOString().split('T')[0];
     const fromTime = '14:00:00';
@@ -144,6 +247,10 @@ export function VisitorPassGenerator() {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, []);
 
+  const loadPassDetails = async (id) => {
+    const res = await getGuestCodesById(id);
+    console.log(res)
+  }
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({ 
@@ -176,28 +283,31 @@ export function VisitorPassGenerator() {
     }
 
     setIsGenerating(true);
-    setTimeout(async () => {
-      try {
-        const payload = buildPayload(formData);
-        const res = await generateGuestCode(payload);
-        if(!res.ok){
-          toast.error("Something went wrong")
-          return;
-        }
-        setGeneratedPass(res.data)
-
-        setAlertConfig({
-          isOpen: true,
-          title: 'Pass Generated!',
-          message: `Visitor pass for ${formData.guestName} is ready.`,
-          type: 'success'
-        });
-      } catch { 
-        toast.error('Failed to generate pass. Please try again.'); 
-      } finally { 
-        setIsGenerating(false); 
+    try {
+      const payload = buildPayload(formData);
+      const res = await generateGuestCode(payload);
+      console.log(res)
+      
+      if (!res.data) {
+        toast.error("Something went wrong");
+        return;
       }
-    }, 1500);
+      
+      const passData = res.data;
+      setGeneratedPass(passData);
+
+      setAlertConfig({
+        isOpen: true,
+        title: 'Pass Generated!',
+        message: `Visitor pass for ${formData.guestName} is ready.`,
+        type: 'success'
+      });
+    } catch (error) {
+      console.error('Generation error:', error);
+      toast.error('Failed to generate pass. Please try again.');
+    } finally { 
+      setIsGenerating(false); 
+    }
   };
 
   const handleVerifyPIN = (enteredPin) => {
@@ -284,7 +394,7 @@ export function VisitorPassGenerator() {
 
   const sharePass = () => {
     if (!generatedPass) return;
-    const message = `Visitor Pass for ${generatedPass.guestName}:\nPass Code: ${generatedPass.passCode}\nPIN: ${generatedPass.pin}\nValid until: ${new Date(generatedPass.inviteDate + 'T' + generatedPass.inviteTimeTo).toLocaleString()}`;
+    const message = `Visitor Pass for ${generatedPass.guestName}:\nPass Code: ${generatedPass.code}\nPIN: ${generatedPass.pin}\nValid until: ${new Date(generatedPass.inviteDate + 'T' + generatedPass.inviteTimeTo).toLocaleString()}`;
     if (navigator.share) { 
       navigator.share({ title: 'Visitor Pass', text: message }); 
     } else { 
@@ -299,26 +409,65 @@ export function VisitorPassGenerator() {
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  const loadFromHistory = (pass) => {
-    setFormData({
-      type: pass.type || 'ONE_TIME',
-      guestName: pass.guestName,
-      guestPhone: pass.guestPhone,
-      inviteDate: pass.inviteDate || '',
-      inviteTimeFrom: pass.inviteTimeFrom || '14:00:00',
-      inviteTimeTo: pass.inviteTimeTo || '18:00:00',
-      modeOfTransport: pass.modeOfTransport || 'car',
-      totalAdults: pass.totalAdults || 1,
-      totalChildren: pass.totalChildren || 0,
-      totalInfants: pass.totalInfants || 0,
-      searchGuest: pass.searchGuest || false,
-      checkGuestId: pass.checkGuestId !== undefined ? pass.checkGuestId : true,
-      purpose: pass.purpose || 'Personal Guest',
-      residentName: pass.residentName || 'John Doe',
-      unitNumber: pass.unitNumber || 'A-101'
+  // Format date helper for modal
+  const formatDate = (dateString) => {
+    if (!dateString) return '—';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'short', 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
     });
-    setActiveTab('schedule');
-    toast.info(`Loaded ${pass.guestName}'s details`);
+  };
+
+  const formatTimeString = (dateString) => {
+    if (!dateString) return '—';
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+  };
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return '—';
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', { 
+      weekday: 'short',
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit', 
+      minute: '2-digit'
+    });
+  };
+
+  // View pass details from history
+  const viewPassDetails = async (pass) => {
+    const qrImage = await generateHistoryQR(pass);
+    setViewQRCodeData(qrImage);
+    setViewPassData(pass);
+    setShowPassDetails(true);
+  };
+
+  // Deactivate a pass
+  const deactivatePass = async (pass) => {
+    try {
+     const res = await deactivateGuestCode(pass.id)
+     console.log(res)
+      
+      toast.success(`Pass for ${pass.guestName} deactivated`);
+      setShowPassDetails(false);
+    } catch (error) {
+      toast.error('Failed to deactivate pass');
+    }
+  };
+  const preApprovePass = async (id) => {
+   const res = await preApproveVisitor(id)
+   console.log(res)
+    toast.success(`Pass for ${pass.guestName} pre approved`);
+    setShowPassDetails(false);
   };
 
   // Sorting functions
@@ -380,6 +529,318 @@ export function VisitorPassGenerator() {
       <ChevronDown className="size-3 inline ml-1" />;
   };
 
+  // Render Prompt Modal (inline)
+  const renderPromptModal = () => {
+    if (!promptConfig.isOpen) return null;
+    
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
+        <div 
+          className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-300 border-none"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="p-8">
+            <div className="flex flex-col items-center text-center mb-6">
+              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                <ShieldCheck className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
+                {promptConfig.title}
+              </h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-[280px]">
+                {promptConfig.message}
+              </p>
+            </div>
+
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const input = e.target.querySelector('input');
+              if (input && input.value.trim()) {
+                promptConfig.onConfirm(input.value);
+                setPromptConfig({ ...promptConfig, isOpen: false });
+              }
+            }} className="space-y-6">
+              <div>
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder={promptConfig.placeholder}
+                  className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-none text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none transition-all shadow-sm"
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setPromptConfig({ ...promptConfig, isOpen: false })}
+                  className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:scale-95"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3.5 rounded-2xl text-sm font-black text-white bg-primary hover:brightness-110 shadow-lg shadow-primary/20 transition-all active:scale-95"
+                >
+                  {promptConfig.confirmText || 'Submit'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Render Pass Details Modal (inline)
+  const renderPassDetailsModal = () => {
+    if (!showPassDetails || !viewPassData) return null;
+
+    const pass = viewPassData;
+    const isActive = pass.isActive && !pass.isUsed;
+
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
+        <div 
+          className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-300 border-none"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="sticky top-0 z-10 p-6 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-t-3xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                  <QrCode className="w-5 h-5 text-emerald-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Pass Details</h3>
+                  <p className="text-xs text-slate-500 font-medium">Complete visitor pass information</p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setShowPassDetails(false);
+                  setViewPassData(null);
+                  setViewQRCodeData('');
+                }}
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+              >
+                <X className="w-5 h-5 text-slate-500" />
+              </button>
+            </div>
+          </div>
+
+          <div className="p-6 space-y-6">
+            {/* Status Badge */}
+            <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl">
+              <div className={`w-3 h-3 rounded-full ${isActive ? 'bg-green-500 animate-pulse' : pass.isUsed ? 'bg-slate-400' : 'bg-amber-500'}`} />
+              <span className="font-semibold text-sm text-slate-700 dark:text-slate-300">
+                Status: {isActive ? 'Active' : pass.isUsed ? 'Used' : 'Expired'}
+              </span>
+              {isActive && (
+                <span className="ml-auto text-[10px] px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full font-bold uppercase tracking-wider">
+                  Valid
+                </span>
+              )}
+              {pass.isDetained && (
+                <span className="ml-auto text-[10px] px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full font-bold uppercase tracking-wider">
+                  Detained
+                </span>
+              )}
+            </div>
+
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Left: QR Code */}
+              <div className="flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-slate-800/30 rounded-2xl">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">QR Code</p>
+                <div className="p-4 bg-white dark:bg-slate-900 rounded-xl shadow-sm">
+                  {viewQRCodeData ? (
+                    <Image 
+                      width={250} 
+                      height={250} 
+                      src={viewQRCodeData} 
+                      alt="QR Code" 
+                      className="rounded-lg"
+                      priority
+                    />
+                  ) : (
+                    <div className="w-[250px] h-[250px] bg-slate-200 dark:bg-slate-700 animate-pulse rounded-lg flex items-center justify-center">
+                      <QrCode className="size-16 text-slate-400 dark:text-slate-500" />
+                    </div>
+                  )}
+                </div>
+                <p className="text-slate-500 text-xs font-semibold uppercase tracking-widest mt-4">Numerical Access Key</p>
+                <h3 className="text-3xl font-semibold text-[#1241a1] tracking-tighter">{pass.pin || 'N/A'}</h3>
+                
+                {/* Pass Code */}
+                <div className="mt-3 text-center">
+                  <p className="text-slate-500 text-xs font-semibold uppercase tracking-widest">Pass Code</p>
+                  <p className="text-lg font-mono font-bold text-slate-800 dark:text-slate-200">{pass.code}</p>
+                </div>
+              </div>
+
+              {/* Right: Details */}
+              <div className="space-y-4">
+                {/* Visitor Information */}
+                <div className="bg-slate-50 dark:bg-slate-800/30 rounded-xl p-4">
+                  <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <User className="w-3 h-3" />
+                    Visitor Information
+                  </h4>
+                  <div className="space-y-2.5">
+                    <DetailRow label="Guest Name" value={pass.guestName} icon={<User className="w-3 h-3" />} />
+                    <DetailRow label="Phone" value={pass.guestPhone} icon={<Phone className="w-3 h-3" />} />
+                    <DetailRow label="Pass Type" value={pass.type} icon={<Key className="w-3 h-3" />} />
+                    <DetailRow label="Event Name" value={pass.eventName || '—'} icon={<CalendarDays className="w-3 h-3" />} />
+                  </div>
+                </div>
+
+                {/* Visit Details */}
+                <div className="bg-slate-50 dark:bg-slate-800/30 rounded-xl p-4">
+                  <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <Calendar className="w-3 h-3" />
+                    Visit Details
+                  </h4>
+                  <div className="space-y-2.5">
+                    <DetailRow label="Date" value={formatDate(pass.inviteDate)} icon={<Calendar className="w-3 h-3" />} />
+                    <DetailRow label="From" value={formatTimeString(pass.inviteTimeFrom)} icon={<ClockIcon className="w-3 h-3" />} />
+                    <DetailRow label="To" value={formatTimeString(pass.inviteTimeTo)} icon={<ClockIcon className="w-3 h-3" />} />
+                    <DetailRow label="Transport" value={pass.modeOfTransport} icon={<Car className="w-3 h-3" />} />
+                    <DetailRow 
+                      label="Guests" 
+                      value={`${pass.totalAdults || 0}A, ${pass.totalChildren || 0}C, ${pass.totalInfants || 0}I`} 
+                      icon={<Users className="w-3 h-3" />} 
+                    />
+                  </div>
+                </div>
+
+                {/* Security & Status */}
+                <div className="bg-slate-50 dark:bg-slate-800/30 rounded-xl p-4">
+                  <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <ShieldCheck className="w-3 h-3" />
+                    Security & Status
+                  </h4>
+                  <div className="space-y-2.5">
+                    <DetailRow 
+                      label="ID Check" 
+                      value={pass.checkGuestId ? '✅ Required' : '❌ Not Required'} 
+                      icon={<ShieldCheck className="w-3 h-3" />}
+                      valueClassName={pass.checkGuestId ? 'text-green-600' : 'text-slate-400'}
+                    />
+                    <DetailRow 
+                      label="Search Guest" 
+                      value={pass.searchGuest ? 'Enabled' : 'Disabled'} 
+                      icon={<Search className="w-3 h-3" />}
+                      valueClassName={pass.searchGuest ? 'text-green-600' : 'text-slate-400'}
+                    />
+                    <DetailRow 
+                      label="Pre-approved" 
+                      value={pass.isPreApprovedForCheckout ? ' Yes' : ' No'} 
+                      icon={<UserCheck className="w-3 h-3" />}
+                      valueClassName={pass.isPreApprovedForCheckout ? 'text-green-600' : 'text-slate-400'}
+                    />
+                    <DetailRow 
+                      label="Detained" 
+                      value={pass.isDetained ? ' Yes' : ' No'} 
+                      icon={<UserX className="w-3 h-3" />}
+                      valueClassName={pass.isDetained ? 'text-red-600' : 'text-green-600'}
+                    />
+                  </div>
+                </div>
+
+                {/* Usage & Timestamps */}
+                <div className="bg-slate-50 dark:bg-slate-800/30 rounded-xl p-4">
+                  <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <Clock className="w-3 h-3" />
+                    Usage & Timestamps
+                  </h4>
+                  <div className="space-y-2.5">
+                    <DetailRow label="Usage Count" value={pass.usageCount || 0} icon={<Info className="w-3 h-3" />} />
+                    <DetailRow label="Usage Limit" value={pass.usageLimit || 'Unlimited'} icon={<Info className="w-3 h-3" />} />
+                    <DetailRow label="Created" value={formatDateTime(pass.createdAt)} icon={<ClockIcon className="w-3 h-3" />} />
+                    <DetailRow label="Updated" value={formatDateTime(pass.updatedAt)} icon={<ClockIcon className="w-3 h-3" />} />
+                    {pass.usedAt && (
+                      <DetailRow label="Used At" value={formatDateTime(pass.usedAt)} icon={<Check className="w-3 h-3" />} />
+                    )}
+                    {pass.checkedInBy && (
+                      <DetailRow label="Checked In By" value={pass.checkedInBy} icon={<UserCog className="w-3 h-3" />} />
+                    )}
+                    {pass.checkedOutBy && (
+                      <DetailRow label="Checked Out By" value={pass.checkedOutBy} icon={<UserCog className="w-3 h-3" />} />
+                    )}
+                    {pass.checkedOutAt && (
+                      <DetailRow label="Checked Out At" value={formatDateTime(pass.checkedOutAt)} icon={<ClockIcon className="w-3 h-3" />} />
+                    )}
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-700">
+                  <button
+                    onClick={() => {
+                      const message = `Visitor Pass for ${pass.guestName}:\nPass Code: ${pass.code}\nPIN: ${pass.pin}\nValid until: ${formatDateTime(pass.inviteTimeTo)}`;
+                      if (navigator.share) { 
+                        navigator.share({ title: 'Visitor Pass', text: message }); 
+                      } else { 
+                        navigator.clipboard.writeText(message); 
+                        toast.success('Pass details copied to clipboard!'); 
+                      }
+                    }}
+                    className="w-full flex items-center justify-center gap-3 bg-[#25D366] hover:brightness-110 text-white font-semibold py-3 rounded-xl transition-all border-none"
+                  >
+                    <Share2 className="size-5" />
+                    Share via WhatsApp
+                  </button>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => window.print()}
+                      className="flex items-center justify-center gap-2 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold py-3 rounded-xl transition-all text-sm border border-slate-200 dark:border-slate-700"
+                    >
+                      <Printer className="size-4" />
+                      Print Pass
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (viewQRCodeData) {
+                          const link = document.createElement('a');
+                          link.download = `visitor-pass-${pass.code}.png`;
+                          link.href = viewQRCodeData;
+                          link.click();
+                        }
+                      }}
+                      className="flex items-center justify-center gap-2 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold py-3 rounded-xl transition-all text-sm border border-slate-200 dark:border-slate-700"
+                    >
+                      <Download className="size-4" />
+                      Download QR
+                    </button>
+                  </div>
+                  {isActive && (
+                    <button
+                      onClick={() => deactivatePass(pass)}
+                      className="w-full flex items-center justify-center gap-2 py-3 bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 rounded-xl font-semibold text-sm transition-all border-none"
+                    >
+                      <Ban className="size-4" />
+                      Deactivate Pass
+                    </button>
+                  )}
+                  {isActive && (
+                    <button
+                      onClick={() => preApprovePass(pass.id)}
+                      className="w-full flex items-center justify-center gap-2 py-3 bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 rounded-xl font-semibold text-sm transition-all border-none"
+                    >
+                      <User className="size-4" />
+                      Pre Approve Pass
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-24">
@@ -433,21 +894,32 @@ export function VisitorPassGenerator() {
       {activeTab === 'schedule' && (
         <div className="space-y-8">
           {generatedPass ? (
-            <div className="flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500 dark:bg-[#818b94]/10">
+            <div className="flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500 dark:bg-[#818b94]/10 p-4">
               {/* Hero */}
               <div className="size-20 bg-emerald-500/15 text-emerald-500 rounded-full flex items-center justify-center mb-5">
                 <CheckIcon className="size-10 stroke-3" />
               </div>
               <h2 className="text-2xl sm:text-3xl font-semibold mb-2 text-center">Visitor Access Code Generated</h2>
-              <p className="text-slate-500 text-center mb-10 max-w-lg text-sm font-medium">The access code is now active and ready for use. Please share it with your visitor for seamless entry.</p>
+              <p className="text-slate-500 text-center mb-10  text-sm font-medium">The access code is now active and ready for use. Please share it with your visitor for seamless entry.</p>
 
               {/* Pass Card */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 w-full max-w-4xl bg-slate-100 dark:bg-slate-800/50 rounded-md overflow-hidden">
                 {/* Left: QR + Numeric Code */}
                 <div className="flex flex-col items-center justify-center p-8 bg-white dark:bg-slate-900">
                   <div className="p-5 bg-slate-50 dark:bg-slate-800 rounded-md mb-6 relative">
-                    {qrCodeData && (
-                      <Image width={192} height={192} src={qrCodeData} alt="QR Code" className="rounded-md" />
+                    {qrCodeData ? (
+                      <Image 
+                        width={300} 
+                        height={300} 
+                        src={qrCodeData} 
+                        alt="QR Code" 
+                        className="rounded-md"
+                        priority
+                      />
+                    ) : (
+                      <div className="w-[300px] h-[300px] bg-slate-200 dark:bg-slate-700 animate-pulse rounded-md flex items-center justify-center">
+                        <QrCode className="size-16 text-slate-400 dark:text-slate-500" />
+                      </div>
                     )}
                     {timeLeft && (
                       <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-red-500 text-white px-3 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap">
@@ -501,16 +973,17 @@ export function VisitorPassGenerator() {
                       </button>
                       <button
                         onClick={() => {
-                          const text = `VISITOR PASS\nName: ${generatedPass.guestName}\nCode: ${generatedPass.code}\nPIN: ${generatedPass.pin}\nValid: ${generatedPass.inviteDate} ${generatedPass.inviteTimeTo}`;
-                          const el = document.createElement('a');
-                          el.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
-                          el.download = `visitor-pass-${generatedPass.code}.txt`;
-                          el.click();
+                          if (qrCodeData) {
+                            const link = document.createElement('a');
+                            link.download = `visitor-pass-${generatedPass.code}.png`;
+                            link.href = qrCodeData;
+                            link.click();
+                          }
                         }}
                         className="flex items-center justify-center gap-2 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold py-3 rounded-md transition-all text-sm border-none"
                       >
                         <Download className="size-4" />
-                        Download
+                        Download QR
                       </button>
                     </div>
                     <div className="grid grid-cols-2 gap-3 pt-1">
@@ -531,7 +1004,7 @@ export function VisitorPassGenerator() {
               <div className="mt-10">
                 <button
                   onClick={() => setGeneratedPass(null)}
-                  className="flex items-center gap-2 text-[#1241a1] font-semibold hover:underline border-none"
+                  className="flex items-center gap-2 text-amber-700 font-semibold hover:brightness-150 border-none"
                 >
                   <ArrowLeft className="size-5" />
                   Schedule Another Visitor
@@ -628,7 +1101,7 @@ export function VisitorPassGenerator() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
                         <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Mode of Transport</label>
-                        <select name="modeOfTransport" value={formData.modeOfTransport} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-sm appearance-none">
+                        <select name="modeOfTransport" value={formData.modeOfTransport} onChange={handleChange} className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all text-sm appearance-none">
                           {TRANSPORT_MODES.map(mode => (
                             <option key={mode.value} value={mode.value}>{mode.label}</option>
                           ))}
@@ -674,22 +1147,121 @@ export function VisitorPassGenerator() {
               </div>
 
               {/* Preview Sidebar */}
-              <div className="lg:col-span-2 dark:bg-[#818b94]/10">
-                <div className="h-80 lg:h-full min-h-[300px] bg-slate-100 dark:bg-slate-800/30 rounded-md flex flex-col items-center justify-center text-center p-8 gap-3">
-                  <div className="size-16 bg-white dark:bg-slate-900 rounded-md flex items-center justify-center">
-                    <QrCode className="size-8 text-amber-700" />
+              <div className="lg:col-span-2">
+                <div className="h-full bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden flex flex-col">
+                  {/* Header */}
+                  <div className="p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50">
+                    <div className="flex items-center gap-2">
+                      <QrCode className="size-5 text-amber-700" />
+                      <h3 className="font-semibold text-sm text-slate-700 dark:text-slate-300">Pass Preview</h3>
+                      <span className="ml-auto text-[10px] text-slate-400 font-medium uppercase tracking-wider">Live Preview</span>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-700 dark:text-slate-300 mb-1">No Pass Generated</h3>
-                    <p className="text-sm text-slate-400 max-w-[220px] font-medium">Fill out the form to generate a secure QR code and Entry PIN for your visitor.</p>
-                  </div>
-                  
-                  {/* Payload Preview */}
-                  <div className="mt-4 w-full ">
-                    <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold mb-2">Payload Preview</p>
-                    <pre className="text-[8px] bg-white/50 dark:bg-slate-900/50 p-3 rounded text-left overflow-x-auto">
-                      {JSON.stringify(buildPayload(formData), null, 2)}
-                    </pre>
+
+                  {/* Content - Scrollable */}
+                  <div className="flex-1 overflow-y-auto p-6">
+                    {!formData.guestName && !formData.guestPhone ? (
+                      <div className="flex flex-col items-center justify-center text-center h-full min-h-[300px] gap-4">
+                        <div className="size-20 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center shadow-sm">
+                          <QrCode className="size-10 text-amber-700/50" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-slate-700 dark:text-slate-300">No Pass Generated</h4>
+                          <p className="text-sm text-slate-400 max-w-[220px] font-medium mt-1">
+                            Fill out the form to generate a secure QR code and Entry PIN for your visitor.
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-5">
+                        {/* Visitor Summary Card */}
+                        <div className="bg-white dark:bg-slate-900 rounded-lg p-4 shadow-sm">
+                          <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
+                            Visitor Summary
+                          </h4>
+                          <div className="space-y-2.5">
+                            <PreviewRow label="Guest Name" value={formData.guestName || '—'} />
+                            <PreviewRow label="Phone" value={formData.guestPhone || '—'} />
+                            <PreviewRow label="Purpose" value={formData.purpose || '—'} />
+                            <PreviewRow label="Pass Type" value={formData.type || '—'} />
+                          </div>
+                        </div>
+
+                        {/* Visit Details Card */}
+                        <div className="bg-white dark:bg-slate-900 rounded-lg p-4 shadow-sm">
+                          <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
+                            Visit Details
+                          </h4>
+                          <div className="space-y-2.5">
+                            <PreviewRow 
+                              label="Date" 
+                              value={formData.inviteDate ? new Date(formData.inviteDate).toLocaleDateString('en-US', { 
+                                weekday: 'short', 
+                                year: 'numeric', 
+                                month: 'short', 
+                                day: 'numeric' 
+                              }) : '—'} 
+                            />
+                            <PreviewRow 
+                              label="Time" 
+                              value={`${formData.inviteTimeFrom || '—'} - ${formData.inviteTimeTo || '—'}`} 
+                            />
+                            <PreviewRow 
+                              label="Guests" 
+                              value={`${formData.totalAdults} Adult${formData.totalAdults !== 1 ? 's' : ''}, ${formData.totalChildren} Child${formData.totalChildren !== 1 ? 'ren' : ''}, ${formData.totalInfants} Infant${formData.totalInfants !== 1 ? 's' : ''}`} 
+                            />
+                            <PreviewRow label="Transport" value={formData.modeOfTransport} />
+                          </div>
+                        </div>
+
+                        {/* Options Card */}
+                        <div className="bg-white dark:bg-slate-900 rounded-lg p-4 shadow-sm">
+                          <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
+                            Security Options
+                          </h4>
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-slate-500">Search Guest</span>
+                              <span className={`font-semibold ${formData.searchGuest ? 'text-green-600' : 'text-slate-400'}`}>
+                                {formData.searchGuest ? '✅ Enabled' : '❌ Disabled'}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-slate-500">ID Check</span>
+                              <span className={`font-semibold ${formData.checkGuestId ? 'text-green-600' : 'text-slate-400'}`}>
+                                {formData.checkGuestId ? '✅ Required' : '❌ Not Required'}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* QR Preview */}
+                        {formData.guestName && formData.guestPhone && (
+                          <div className="bg-white dark:bg-slate-900 rounded-lg p-4 shadow-sm flex items-center justify-between">
+                            <div>
+                              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">QR Code</p>
+                              <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">Ready to generate</p>
+                            </div>
+                            <div className="size-14 bg-amber-50 dark:bg-amber-900/20 rounded-lg flex items-center justify-center border-2 border-dashed border-amber-200 dark:border-amber-800">
+                              <QrCode className="size-7 text-amber-700" />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Payload Preview */}
+                        <details className="group">
+                          <summary className="flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer transition-colors">
+                            <span className="uppercase tracking-wider">Payload Preview</span>
+                            <span className="text-slate-300 group-open:rotate-180 transition-transform">▼</span>
+                          </summary>
+                          <div className="mt-3">
+                            <pre className="text-[10px] bg-slate-200 dark:bg-slate-800 p-3 rounded-md overflow-x-auto max-h-[150px] overflow-y-auto">
+                              {JSON.stringify(buildPayload(formData), null, 2)}
+                            </pre>
+                          </div>
+                        </details>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -765,10 +1337,16 @@ export function VisitorPassGenerator() {
                       </td>
                       <td className="px-4 py-3">
                         <button 
-                          onClick={(e) => { e.stopPropagation(); loadFromHistory(pass); }} 
-                          className="text-xs font-semibold text-[#1241a1] dark:text-[#1241a1] hover:underline border-none bg-transparent"
+                          onClick={(e) => { 
+                            e.stopPropagation(); 
+                            viewPassDetails(pass); 
+                            loadPassDetails(pass.id)
+
+                          }} 
+                          className="flex items-center gap-1 text-xs font-semibold text-[#1241a1] dark:text-[#1241a1] hover:underline border-none bg-transparent"
                         >
-                          Re-use
+                          <Eye className="w-3 h-3" />
+                          View
                         </button>
                       </td>
                     </tr>
@@ -890,15 +1468,9 @@ export function VisitorPassGenerator() {
         message={alertConfig.message}
         type={alertConfig.type}
       />
-      <PromptModal
-        isOpen={promptConfig.isOpen}
-        onClose={() => setPromptConfig({ ...promptConfig, isOpen: false })}
-        title={promptConfig.title}
-        message={promptConfig.message}
-        placeholder={promptConfig.placeholder}
-        confirmText={promptConfig.confirmText}
-        onConfirm={promptConfig.onConfirm}
-      />
+      
+      {renderPromptModal()}
+      {renderPassDetailsModal()}
     </div>
   );
 }

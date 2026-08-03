@@ -22,7 +22,7 @@ export default function DashboardSidebar({ links, user, role, estateName }) {
       <div className="flex flex-col gap-8">
         {/* Branding & User */}
         <div className="flex items-center gap-3 px-2 cursor-pointer group" onClick={() => router.push('/')}>
-          <div className="bg-[#1241a1] rounded-lg p-2 text-white shadow-lg shadow-[#1241a1]/20 group-hover:scale-110 transition-transform flex items-center justify-center">
+          <div className="bg-slate-300 dark:bg-slate-700 rounded-lg p-2 text-white shadow-lg shadow-[#1241a1]/20 group-hover:scale-110 transition-transform flex items-center justify-center">
             <Building2 className="size-6" />
           </div>
           <div>
