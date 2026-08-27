@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Search, Loader2, QrCode, CheckCircle2, Clock } from 'lucide-react';
 import InvitesTable from '@/components/admin/InvitesTable';
-import StatsCard from '@/components/StatsCard';
+import MetricCard from '@/components/MetricCard';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { FilterBar } from '@/components/ui/FilterBar';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
@@ -48,7 +48,7 @@ export default function InvitesPage() {
   const activeInvites = invites.filter(i => i.status === 'approved' || i.status === 'accepted').length;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto animate-fade-in">
+    <div className="max-w-7xl mx-auto pb-12 animate-in fade-in duration-700">
       {/* Header */}
       <PageHeader 
         title="Guest Invites" 
@@ -59,23 +59,23 @@ export default function InvitesPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <StatsCard 
-          title="Total Invites" 
+        <MetricCard 
+          label="Total Invites" 
           value={totalInvites} 
-          icon={QrCode} 
-          color="blue" 
+          icon={<QrCode className="size-5" />} 
+          tone="blue" 
         />
-        <StatsCard 
-          title="Pending Requests" 
+        <MetricCard 
+          label="Pending Requests" 
           value={pendingInvites} 
-          icon={Clock} 
-          color="yellow" 
+          icon={<Clock className="size-5" />} 
+          tone="amber" 
         />
-        <StatsCard 
-          title="Active/Approved" 
+        <MetricCard 
+          label="Active/Approved" 
           value={activeInvites} 
-          icon={CheckCircle2} 
-          color="green" 
+          icon={<CheckCircle2 className="size-5" />} 
+          tone="green" 
         />
       </div>
 

@@ -67,16 +67,16 @@ export function PanicButton() {
   return (
     <div className="flex flex-col items-center">
       {showPin ? (
-        <div className="bg-red-50 dark:bg-red-900/10 p-8 rounded-3xl animate-in zoom-in-95 duration-300">
-          <h3 className="text-red-700 dark:text-red-400 font-black mb-4 tracking-tight text-lg">Emergency Panic System</h3>
+        <div className="bg-red-50 bg-red-900/10 p-8 rounded-3xl animate-in zoom-in-95 duration-300">
+          <h3 className="text-red-700 text-red-400 font-black mb-4 tracking-tight text-lg">Emergency Panic System</h3>
           <div className="mb-4">
-            <label className="block text-sm text-gray-600 mb-2">Enter Panic PIN (or wait {countdown}s)</label>
+            <label className="block text-sm text-[#8a8f98] mb-2">Enter Panic PIN (or wait {countdown}s)</label>
             <input
               autoFocus
               type="password"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
-              className="w-full px-5 py-4 rounded-2xl bg-white dark:bg-slate-900 border-none text-center text-2xl font-black tracking-[0.5em] text-red-600 focus:ring-2 focus:ring-red-500/20 outline-none transition-all shadow-sm"
+              className="w-full px-5 py-4 rounded-2xl bg-[#1a1d23] border-none text-center text-2xl font-black tracking-[0.5em] text-red-600 focus:ring-2 focus:ring-red-500/20 outline-none transition-all shadow-sm"
               placeholder="••••"
               maxLength="4"
             />
@@ -90,7 +90,7 @@ export function PanicButton() {
             </button>
             <button
               onClick={handleCancel}
-              className="flex-1 bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 py-4 rounded-2xl font-bold hover:brightness-110 active:scale-95 transition-all"
+              className="flex-1 bg-[#1a1d23] text-[#8a8f98] text-[#8a8f98] py-4 rounded-2xl font-bold hover:brightness-110 active:scale-95 transition-all"
             >
               Cancel
             </button>
@@ -108,7 +108,7 @@ export function PanicButton() {
           {isPanicking ? countdown : 'PANIC'}
         </button>
       )}
-      <p className="mt-4 text-sm text-slate-500 text-center max-w-[200px] leading-relaxed">
+      <p className="mt-4 text-sm text-white0 text-center max-w-[200px] leading-relaxed">
         Press in case of emergency. Alerts security and admin immediately.
       </p>
 

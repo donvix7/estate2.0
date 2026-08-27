@@ -20,6 +20,9 @@ import {
 import { toast } from 'react-toastify';
 import { handleCreateWorker } from '@/lib/action';
 import { getEstateData } from '@/lib/service';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Button } from '@/components/ui/Button';
+import { Card, CardHeader, CardTitle, CardBody } from '@/components/ui/Card';
 
 export default function AddServiceWorkerPage() {
   const router = useRouter();
@@ -80,63 +83,39 @@ export default function AddServiceWorkerPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6 lg:p-10 animate-in fade-in duration-500">
-      <div className="max-w-6xl mx-auto">
-        {/* Top Navigation */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex flex-col gap-1">
-            <button 
-              onClick={() => router.back()}
-              className="flex items-center gap-1 text-sm font-black text-slate-400 hover:text-[#1241a1] transition-colors mb-2 uppercase tracking-widest"
-            >
-              <ChevronLeft size={16} />
-              Back to Workforce
-            </button>
-            <h1 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight uppercase">
-              Register New Personnel
-            </h1>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => router.back()}
-              className="px-6 py-3 text-xs font-black text-slate-500 uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-colors"
-            >
-              Discard
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-              className="px-8 py-3 bg-[#1241a1] text-white text-xs font-black rounded-xl shadow-xl shadow-blue-900/20 hover:scale-[1.02] active:scale-95 disabled:opacity-50 flex items-center gap-2 transition-all uppercase tracking-widest border-none"
-            >
-              {isSubmitting ? (
-                <div className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <Save size={18} />
-              )}
-              {isSubmitting ? 'Onboarding...' : 'Finalize Profile'}
-            </button>
-          </div>
+    <div className="animate-in fade-in duration-500 max-w-7xl mx-auto pb-12">
+      <PageHeader 
+        title="Register New Personnel" 
+        description="Create a profile for a new service professional in the estate workforce."
+        icon={Briefcase}
+        iconColor="blue"
+      >
+        <div className="flex items-center gap-3">
+          <Button variant="secondary" size="md" icon={ChevronLeft} onClick={() => router.back()}>
+            Discard
+          </Button>
+          <Button
+            size="md"
+            icon={Save}
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Onboarding...' : 'Finalize Profile'}
+          </Button>
         </div>
+      </PageHeader>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content Area */}
           <div className="lg:col-span-2 space-y-8">
             {/* Identity Details */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm overflow-hidden">
-              <div className="px-8 py-5 bg-slate-50/50 dark:bg-slate-800/30">
-                <h3 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.15em] flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-[#1241a1]">
-                    <User size={16} />
-                  </div>
-                  Personal Identity
-                </h3>
-              </div>
-              
-              <div className="p-8 space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle icon={User} title="Personal Identity" />
+              </CardHeader>
+              <CardBody className="space-y-6">
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Legal Name</label>
+                  <label className="text-[10px] font-black text-[#8a8f98] uppercase tracking-widest ml-1">Full Legal Name</label>
                   <input
                     type="text"
                     name="name"
@@ -144,15 +123,15 @@ export default function AddServiceWorkerPage() {
                     onChange={handleInputChange}
                     required
                     placeholder="e.g. James Taylor"
-                    className="w-full px-5 py-4 rounded-xl border-none bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-bold text-sm"
+                    className="w-full px-5 py-4 rounded-xl border-none bg-[#1a1d23] text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-bold text-sm"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+                    <label className="text-[10px] font-black text-[#8a8f98] uppercase tracking-widest ml-1">Email Address</label>
                     <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8f98]" size={16} />
                       <input
                         type="email"
                         name="email"
@@ -160,14 +139,14 @@ export default function AddServiceWorkerPage() {
                         onChange={handleInputChange}
                         required
                         placeholder="worker@estate.com"
-                        className="w-full pl-12 pr-5 py-4 rounded-xl border-none bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-bold text-sm"
+                        className="w-full pl-12 pr-5 py-4 rounded-xl border-none bg-[#1a1d23] text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-bold text-sm"
                       />
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Direct Phone</label>
+                    <label className="text-[10px] font-black text-[#8a8f98] uppercase tracking-widest ml-1">Direct Phone</label>
                     <div className="relative">
-                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8f98]" size={16} />
                       <input
                         type="tel"
                         name="phone"
@@ -175,29 +154,23 @@ export default function AddServiceWorkerPage() {
                         onChange={handleInputChange}
                         required
                         placeholder="+234 000 000 0000"
-                        className="w-full pl-12 pr-5 py-4 rounded-xl border-none bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-bold text-sm"
+                        className="w-full pl-12 pr-5 py-4 rounded-xl border-none bg-[#1a1d23] text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-bold text-sm"
                       />
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </CardBody>
+            </Card>
 
             {/* Professional Classification */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm overflow-hidden">
-              <div className="px-8 py-5 bg-slate-50/50 dark:bg-slate-800/30">
-                <h3 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.15em] flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-[#1241a1]">
-                    <Briefcase size={16} />
-                  </div>
-                  Professional Metrics
-                </h3>
-              </div>
-              
-              <div className="p-8 space-y-8">
+            <Card>
+              <CardHeader>
+                <CardTitle icon={Zap} title="Professional Metrics" />
+              </CardHeader>
+              <CardBody className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Professional Title</label>
+                    <label className="text-[10px] font-black text-[#8a8f98] uppercase tracking-widest ml-1">Professional Title</label>
                     <input
                       type="text"
                       name="title"
@@ -205,19 +178,19 @@ export default function AddServiceWorkerPage() {
                       onChange={handleInputChange}
                       required
                       placeholder="e.g. Lead Electrician"
-                      className="w-full px-5 py-4 rounded-xl border-none bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-bold text-sm"
+                      className="w-full px-5 py-4 rounded-xl border-none bg-[#1a1d23] text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-bold text-sm"
                     />
                   </div>
                   
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Department / Category</label>
+                    <label className="text-[10px] font-black text-[#8a8f98] uppercase tracking-widest ml-1">Department / Category</label>
                     <div className="relative">
-                      <Zap className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
+                      <Zap className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8f98]" size={16} />
                       <select
                         name="category"
                         value={formData.category}
                         onChange={handleInputChange}
-                        className="w-full pl-12 pr-5 py-4 rounded-xl border-none bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-bold text-sm appearance-none cursor-pointer"
+                        className="w-full pl-12 pr-5 py-4 rounded-xl border-none bg-[#1a1d23] text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-bold text-sm appearance-none cursor-pointer"
                       >
                         <option value="Electrical">Electrical Services</option>
                         <option value="Plumbing">Plumbing & HVAC</option>
@@ -231,9 +204,9 @@ export default function AddServiceWorkerPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Hourly Rate (₦/hr)</label>
+                    <label className="text-[10px] font-black text-[#8a8f98] uppercase tracking-widest ml-1">Hourly Rate (₦/hr)</label>
                     <div className="relative">
-                      <Wallet className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
+                      <Wallet className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8f98]" size={16} />
                       <input
                         type="text"
                         name="rate"
@@ -241,96 +214,99 @@ export default function AddServiceWorkerPage() {
                         onChange={handleInputChange}
                         required
                         placeholder="25,000"
-                        className="w-full pl-12 pr-5 py-4 rounded-xl border-none bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-bold text-sm"
+                        className="w-full pl-12 pr-5 py-4 rounded-xl border-none bg-[#1a1d23] text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-bold text-sm"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Expertise Tags (Comma Sep)</label>
+                    <label className="text-[10px] font-black text-[#8a8f98] uppercase tracking-widest ml-1">Expertise Tags (Comma Sep)</label>
                     <div className="relative">
-                      <Star className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
+                      <Star className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8f98]" size={16} />
                       <input
                         type="text"
                         name="skills"
                         value={formData.skills}
                         onChange={handleInputChange}
                         placeholder="Washing Machines, AC Repairs..."
-                        className="w-full pl-12 pr-5 py-4 rounded-xl border-none bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-bold text-sm"
+                        className="w-full pl-12 pr-5 py-4 rounded-xl border-none bg-[#1a1d23] text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-bold text-sm"
                       />
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </CardBody>
+            </Card>
           </div>
 
           {/* Sidebar Area */}
           <div className="space-y-8">
             {/* Verification Status */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm p-8 space-y-6">
-              <div className="space-y-4">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">System Verification</label>
-                <div 
-                   onClick={() => setFormData(prev => ({ ...prev, verified: !prev.verified }))}
-                   className={`flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all ${
-                     formData.verified 
-                       ? 'bg-emerald-50/50 text-emerald-700' 
-                       : 'bg-slate-50 text-slate-500'
-                   }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <ShieldCheck size={20} className={formData.verified ? 'text-emerald-500' : 'text-slate-300'} />
-                    <span className="text-xs font-black uppercase tracking-wider">Identity Verified</span>
-                  </div>
-                  <div className={`size-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                    formData.verified ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300'
-                  }`}>
-                    {formData.verified && <div className="size-2 bg-white rounded-full" />}
+            <Card>
+              <CardBody className="space-y-6">
+                <div className="space-y-4">
+                  <label className="text-[10px] font-black text-[#8a8f98] uppercase tracking-widest">System Verification</label>
+                  <div 
+                     onClick={() => setFormData(prev => ({ ...prev, verified: !prev.verified }))}
+                     className={`flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all ${
+                       formData.verified 
+                         ? 'bg-emerald-50/50 text-emerald-700' 
+                         : 'bg-[#1a1d23] text-[#8a8f98]'
+                     }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <ShieldCheck size={20} className={formData.verified ? 'text-emerald-500' : 'text-[#8a8f98]'} />
+                      <span className="text-xs font-black uppercase tracking-wider">Identity Verified</span>
+                    </div>
+                    <div className={`size-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                      formData.verified ? 'bg-emerald-500 border-emerald-500' : 'border-[#2a2d33]'
+                    }`}>
+                      {formData.verified && <div className="size-2 bg-[#1a1d23] rounded-full" />}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="space-y-4">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Initial Status</label>
-                <select
-                  name="status"
-                  value={formData.status}
-                  onChange={handleInputChange}
-                  className="w-full px-5 py-4 rounded-xl border-none bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-black text-xs appearance-none cursor-pointer"
-                >
-                  <option value="active">Active Workforce</option>
-                  <option value="inactive">On Leave / Inactive</option>
-                </select>
-              </div>
-            </div>
+                <div className="space-y-4">
+                  <label className="text-[10px] font-black text-[#8a8f98] uppercase tracking-widest">Initial Status</label>
+                  <select
+                    name="status"
+                    value={formData.status}
+                    onChange={handleInputChange}
+                    className="w-full px-5 py-4 rounded-xl border-none bg-[#1a1d23] text-white focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-black text-xs appearance-none cursor-pointer"
+                  >
+                    <option value="active">Active Workforce</option>
+                    <option value="inactive">On Leave / Inactive</option>
+                  </select>
+                </div>
+              </CardBody>
+            </Card>
 
             {/* Profile Asset */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm p-8">
-              <div className="flex flex-col items-center text-center space-y-5">
-                <div className="size-36 bg-slate-50 dark:bg-slate-800 rounded-3xl flex items-center justify-center text-slate-200 relative group cursor-pointer overflow-hidden border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-[#1241a1] transition-all">
-                  <Camera size={32} className="group-hover:scale-110 transition-transform" />
-                  <div className="absolute inset-0 bg-[#1241a1]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-black uppercase tracking-[0.2em]">
-                    Upload Media
+            <Card>
+              <CardBody>
+                <div className="flex flex-col items-center text-center space-y-5">
+                  <div className="size-36 bg-[#1a1d23] rounded-3xl flex items-center justify-center text-[#8a8f98] relative group cursor-pointer overflow-hidden border-2 border-dashed border-[#2a2d33] hover:border-[#1241a1] transition-all">
+                    <Camera size={32} className="group-hover:scale-110 transition-transform" />
+                    <div className="absolute inset-0 bg-[#1241a1]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-black uppercase tracking-[0.2em]">
+                      Upload Media
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <h4 className="text-xs font-black text-white tracking-widest uppercase">Worker Avatar</h4>
+                    <p className="text-[10px] text-[#8a8f98] font-bold leading-tight">Displayed in directory and client booking panels.</p>
                   </div>
                 </div>
-                <div className="space-y-1.5">
-                  <h4 className="text-xs font-black text-slate-900 dark:text-white tracking-widest uppercase">Worker Avatar</h4>
-                  <p className="text-[10px] text-slate-400 font-bold leading-tight">Displayed in directory and client booking panels.</p>
-                </div>
-              </div>
-            </div>
+              </CardBody>
+            </Card>
 
             {/* Compliance Info */}
-            <div className="bg-blue-50/50 dark:bg-blue-900/10 rounded-2xl p-5 flex gap-4">
+            <div className="bg-[#1a1d23]/50 bg-[#1241a1] rounded-2xl p-5 flex gap-4">
               <Info size={18} className="text-[#1241a1] mt-0.5 shrink-0" />
-              <p className="text-[11px] font-bold text-blue-800/70 dark:text-blue-300/80 leading-relaxed">
+              <p className="text-[11px] font-bold text-[#1241a1]/80 text-[#1241a1]/80 leading-relaxed">
                 By registering this personnel, you authorize their access to estate maintenance logs and resident contact details for active service assignments.
               </p>
             </div>
           </div>
         </form>
-      </div>
     </div>
   );
 }

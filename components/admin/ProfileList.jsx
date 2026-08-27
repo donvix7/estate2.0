@@ -9,7 +9,6 @@ import { getAllProfiles } from '@/lib/service';
 import { deleteProfile } from '@/lib/action';
 import { toast } from 'react-toastify';
 import MetricCard from '@/components/MetricCard';
-import Link from 'next/link';
 import { LoadingState } from '@/components/ui/LoadingState';
 import Pagination from '@/components/pagination';
 
@@ -168,10 +167,10 @@ export default function ProfileList() {
 
   const getStatusColor = (status) => {
     switch(status) {
-      case 'active': return 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400';
-      case 'inactive': return 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400';
-      case 'pending': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400';
-      default: return 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300';
+      case 'active': return 'bg-green-100 text-green-700 bg-green-900/40 text-green-400';
+      case 'inactive': return 'bg-red-100 text-red-700 bg-red-900/40 text-red-400';
+      case 'pending': return 'bg-yellow-100 text-yellow-700 bg-yellow-900/40 text-yellow-400';
+      default: return 'bg-[#1a1d23] text-[#8a8f98] ';
     }
   };
 
@@ -185,48 +184,48 @@ export default function ProfileList() {
   ];
 
   return (
-    <div className="flex flex-col gap-8 -m-4 lg:-m-8 animate-in fade-in duration-700 p-6 lg:p-8">
+    <div className="flex flex-col gap-6 lg:gap-8 animate-in fade-in duration-700">
       {/* Summary Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-        <MetricCard 
-          icon={<Users className="size-5" />} 
-          label="Total Users" 
-          value={profiles.length} 
-          trend="Live" 
-          trendColor="text-blue-500" 
-          bgColor="bg-blue-100 dark:bg-blue-900/30" 
-          iconColor="text-blue-600" 
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
+        <MetricCard
+          icon={<Users className="size-5" />}
+          label="Total Users"
+          value={profiles.length}
+          trend="Live"
+          trendColor="text-blue-500"
+          tone="blue"
+          color="blue"
         />
-        <MetricCard 
-          icon={<Home className="size-5" />} 
-          label="Residents" 
-          value={profiles.filter(p => p.type === 'resident').length} 
-          trend="+2.5%" 
-          trendColor="text-green-500" 
-          bgColor="bg-emerald-100 dark:bg-emerald-900/30" 
-          iconColor="text-emerald-600" 
+        <MetricCard
+          icon={<Home className="size-5" />}
+          label="Residents"
+          value={profiles.filter(p => p.type === 'resident').length}
+          trend="+2.5%"
+          trendColor="text-green-500"
+          tone="emerald"
+          color="green"
         />
-        <MetricCard 
-          icon={<Wrench className="size-5" />} 
-          label="Staff" 
-          value={profiles.filter(p => p.type === 'staff').length} 
-          trend="Stable" 
-          trendColor="text-slate-400" 
-          bgColor="bg-amber-100 dark:bg-amber-900/30" 
-          iconColor="text-amber-500" 
+        <MetricCard
+          icon={<Wrench className="size-5" />}
+          label="Staff"
+          value={profiles.filter(p => p.type === 'staff').length}
+          trend="Stable"
+          trendColor="text-[#8a8f98]"
+          tone="amber"
+          color="amber"
         />
-        <MetricCard 
-          icon={<ShieldCheck className="size-5" />} 
-          label="Security" 
-          value={totalDocs ? profiles.filter(p => p.type === 'security').length : 0} 
-          trend="Active" 
-          trendColor="text-blue-500" 
-          bgColor="bg-indigo-100 dark:bg-indigo-900/30" 
-          iconColor="text-indigo-600" 
+        <MetricCard
+          icon={<ShieldCheck className="size-5" />}
+          label="Security"
+          value={totalDocs ? profiles.filter(p => p.type === 'security').length : 0}
+          trend="Active"
+          trendColor="text-blue-500"
+          tone="blue"
+          color="indigo"
         />
       </div>
 
-      <div className="bg-slate-50 dark:bg-slate-800/30 rounded-xl p-6">
+      <div className="bg-[#1a1d23]/30 rounded-xl p-6">
         {/* Search & Filters */}
         <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="flex-1">
@@ -236,9 +235,9 @@ export default function ProfileList() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by name, email, phone, or role..."
-              className="w-full p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
+              className="w-full p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white text-white bg-[#1a1d23]/50"
             />
-            <span className="absolute left-3 top-3 text-gray-400"><Search className="w-5 h-5" /></span>
+            <span className="absolute left-3 top-3 text-[#8a8f98]"><Search className="w-5 h-5" /></span>
           </div>
         </div>
         
@@ -246,7 +245,7 @@ export default function ProfileList() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-slate-50 dark:bg-slate-800/50"
+            className="p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white text-white bg-[#1a1d23]/50"
           >
             {['all', 'active', 'inactive', 'pending'].map((status) => (
               <option key={status} value={status}>
@@ -255,7 +254,7 @@ export default function ProfileList() {
             ))}
           </select>
           
-          <span className="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
+          <span className="text-sm text-[#8a8f98] text-[#8a8f98] whitespace-nowrap">
             {filteredProfiles.length} {filteredProfiles.length === 1 ? 'person' : 'people'}
           </span>
         </div>
@@ -266,12 +265,12 @@ export default function ProfileList() {
         {/* Mobile View (Cards) */}
         <div className="grid grid-cols-1 gap-4 md:hidden">
           {filteredProfiles.length === 0 ? (
-            <div className="py-12 text-center bg-gray-50 dark:bg-gray-800/50 rounded-xl">
-              <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="py-12 text-center bg-[#1a1d23]/50 rounded-xl">
+              <div className="w-16 h-16 bg-[#1a1d23] rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">👥</span>
               </div>
-              <p className="text-gray-500 dark:text-gray-400 text-lg">No people found</p>
-              <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">
+              <p className="text-white0 text-[#8a8f98] text-lg">No people found</p>
+              <p className="text-[#8a8f98] text-white0 text-sm mt-1">
                 {searchTerm ? 'Try a different search term' : 'Add new people to get started'}
               </p>
             </div>
@@ -280,19 +279,19 @@ export default function ProfileList() {
               <div 
                 key={profile.id || profile._id || index}
                 onClick={() => handleProfileSelect(profile)}
-                className="bg-slate-50 dark:bg-slate-800/30 rounded-2xl p-6 cursor-pointer active:scale-[0.98] transition-all"
+                className="bg-[#1a1d23]/30 rounded-2xl p-6 cursor-pointer active:scale-[0.98] transition-all"
               >
                 <div className="flex flex-col gap-5">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center text-xl shadow-inner">
-                        {profile.profileImage || <User className="w-6 h-6 text-slate-400" />}
+                      <div className="w-12 h-12 bg-[#1a1d23] rounded-xl flex items-center justify-center text-xl shadow-inner">
+                        {profile.profileImage || <User className="w-6 h-6 text-[#8a8f98]" />}
                       </div>
                       <div>
-                        <span className="font-semibold text-slate-900 dark:text-white block text-lg">
+                        <span className="font-semibold text-white text-white block text-lg">
                           {profile.name}
                         </span>
-                        <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-widest mt-0.5 block">
+                        <span className="text-[10px] text-[#8a8f98] font-semibold uppercase tracking-widest mt-0.5 block">
                           ID: {profile.id || profile._id || 'N/A'}
                         </span>
                       </div>
@@ -301,7 +300,7 @@ export default function ProfileList() {
                       <div className="relative options-dropdown-container">
                         <button 
                           onClick={(e) => handleOptionsClick(e, profile)}
-                          className="p-2 -mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                          className="p-2 -mr-2 text-[#8a8f98] hover:text-[#8a8f98] hover:text-white rounded-xl hover:bg-[#2a2d33]  transition-all"
                         >
                           <MoreHorizontal className="w-5 h-5" />
                         </button>
@@ -312,18 +311,18 @@ export default function ProfileList() {
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-50 dark:border-slate-800/50">
+                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#2a2d33]">
                     <div>
-                      <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-tight mb-1">Contact</p>
-                      <p className="text-xs text-slate-900 dark:text-slate-200 font-semibold truncate">{profile.phone || 'No Phone'}</p>
+                      <p className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-tight mb-1">Contact</p>
+                      <p className="text-xs text-white text-white font-semibold truncate">{profile.phone || 'No Phone'}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-tight mb-1">Type</p>
-                      <p className="text-xs text-slate-900 dark:text-slate-200 font-semibold">{getProfileTypeLabel(profile.type)}</p>
+                      <p className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-tight mb-1">Type</p>
+                      <p className="text-xs text-white text-white font-semibold">{getProfileTypeLabel(profile.type)}</p>
                     </div>
                     <div className="col-span-2">
-                      <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-tight mb-1">Role / Designation</p>
-                      <p className="text-xs font-semibold text-[#1241a1] dark:text-blue-400">
+                      <p className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-tight mb-1">Role / Designation</p>
+                      <p className="text-xs font-semibold text-[#1241a1] text-blue-400">
                         {profile.role || profile.occupation || profile.unit || 'No Detail Provided'}
                       </p>
                     </div>
@@ -342,11 +341,11 @@ export default function ProfileList() {
             onRowClick={handleProfileSelect}
             emptyState={
               <div className="py-12 text-center">
-                <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-[#1a1d23] rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">👥</span>
                 </div>
-                <p className="text-gray-500 dark:text-gray-400 text-lg">No people found</p>
-                <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">
+                <p className="text-white0 text-[#8a8f98] text-lg">No people found</p>
+                <p className="text-[#8a8f98] text-white0 text-sm mt-1">
                   {searchTerm ? 'Try a different search term' : 'Add new people to get started'}
                 </p>
               </div>
@@ -355,40 +354,40 @@ export default function ProfileList() {
               <>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center text-lg shadow-inner">
-                      {profile.profileImage || <User className="w-5 h-5 text-slate-400" />}
+                    <div className="w-10 h-10 bg-[#1a1d23] rounded-lg flex items-center justify-center text-lg shadow-inner">
+                      {profile.profileImage || <User className="w-5 h-5 text-[#8a8f98]" />}
                     </div>
                     <div>
-                      <span className="font-semibold text-slate-900 dark:text-white block">
+                      <span className="font-semibold text-white text-white block">
                         {profile.name}
                       </span>
-                      <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-tight">
+                      <span className="text-[10px] text-[#8a8f98] font-semibold uppercase tracking-tight">
                         {profile.role || profile.occupation || 'No Role'}
                       </span>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className=" font-mono text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 px-2 py-1 rounded">
+                  <span className=" font-mono text-white0 text-[#8a8f98] bg-[#1a1d23]/50 px-2 py-1 rounded">
                     {profile.id || profile._id || 'N/A'}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex flex-col">
-                    <span className="text-sm text-slate-900 dark:text-white font-medium">{profile.email}</span>
-                    <span className="text-xs text-slate-400 mt-0.5">{profile.phone}</span>
+                    <span className="text-sm text-white text-white font-medium">{profile.email}</span>
+                    <span className="text-xs text-[#8a8f98] mt-0.5">{profile.phone}</span>
                   </div>
                 </td>
               
                 <td className="px-6 py-4 whitespace-nowrap text-right">
-                  <Link 
+                  <Button
                     href={`/dashboard/admin/users/${profile.id || profile._id}`}
-                    onClick={(e) => e.stopPropagation()}
-                    className="inline-flex items-center gap-2 px-4 py-1.5 text-[#1241a1] hover:bg-[#1241a1] hover:text-white rounded-md text-xs font-semibold transition-all"
+                    variant="secondary"
+                    size="sm"
+                    icon={Eye}
                   >
-                    <Eye size={14} />
-                    View 
-                  </Link>
+                    View
+                  </Button>
                 </td>
               </>
             )}
@@ -410,7 +409,7 @@ export default function ProfileList() {
           onClick={() => setSelectedActionProfile(null)}
         >
           <div 
-            className="absolute px-4  bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-64  overflow-hidden animate-in fade-in zoom-in-95 duration-100 py-2"
+            className="absolute px-4  bg-[#1a1d23] rounded-xl shadow-2xl w-64  overflow-hidden animate-in fade-in zoom-in-95 duration-100 py-2"
             style={{ 
               top: `${actionMenuPos.top}px`, 
               left: `${actionMenuPos.left}px`,
@@ -422,7 +421,7 @@ export default function ProfileList() {
               <button 
                 key={option.action}
                 onClick={(e) => handleAction(e, option.action, selectedActionProfile)}
-                className="w-full mt-2 text-left px-4 py-2 text-sm text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 flex items-center gap-2"
+                className="w-full mt-2 text-left px-4 py-2 text-sm text-white0  hover:bg-[#2a2d33] /50 flex items-center gap-2"
               >
                 {option.icon}
                 {option.label}

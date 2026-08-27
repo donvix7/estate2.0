@@ -1,7 +1,7 @@
 import React from 'react'
-import ComingSoon from '@/components/ComingSoon'
-import { Bell, History, Settings, TriangleAlert, UserPlus, Wallet, FileText, CreditCard, Receipt, CalendarRange, PartyPopper, FileBadge2, UsersRound, UserCircle, ShieldCheck, HardHat, Megaphone, Siren, Info, Activity, Headset, Map, PersonStanding } from 'lucide-react'
+import { TriangleAlert, UserPlus, Wallet, FileText, CreditCard, Receipt, CalendarRange, PartyPopper, FileBadge2, UsersRound, UserCircle, HardHat, Megaphone, Siren, Info, Activity, Headset, Map, PersonStanding, Sparkles } from 'lucide-react'
 import { TechCard } from '@/components/ui/TechCard'
+import { PageHeader } from '@/components/ui/PageHeader'
 import Link from 'next/link'
 
 const page = () => {
@@ -33,19 +33,25 @@ const page = () => {
       { name: 'Contact Us', icon: Headset, href: '/dashboard/resident/contact' },
     ]
   return (
-    <div className=" ">
+    <div className="max-w-7xl mx-auto pb-12 animate-in fade-in duration-700">
+      <PageHeader
+        title="Features"
+        description="Explore everything your estate has to offer."
+        icon={Sparkles}
+        iconColor="indigo"
+      />
           <div className="block md:hidden text-sm p-2 max-w-md mx-auto">
             <div className="text-lg font-bold mb-4">Access </div>
               <div className="grid grid-cols-4 gap-2 sm:gap-4 mb-8 md:hidden">
                 {accessTabs.map((tab, index) => (
                  <div key={index} className="flex flex-col items-center justify-start w-full">
                   <Link href={tab.href} className="flex flex-col items-center gap-2 w-full group">
-                    <TechCard noPadding className="w-[80px] h-[80px] sm:w-[92px] sm:h-[92px] rounded-2xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors flex flex-col items-center justify-center " hoverEffect={false}>
-                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-50/80 dark:bg-blue-900/40 rounded-full flex items-center justify-center">
-                        <tab.icon className="w-6 h-6 sm:w-7 sm:h-7 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+                    <TechCard noPadding className="w-[80px] h-[80px] sm:w-[92px] sm:h-[92px] rounded-2xl cursor-pointer hover:bg-[#1a1d23] hover:bg-[#2a2d33]/50 transition-colors flex flex-col items-center justify-center " hoverEffect={false}>
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-50/80 bg-blue-900/40 rounded-full flex items-center justify-center">
+                        <tab.icon className="w-6 h-6 sm:w-7 sm:h-7 text-[#1241a1] text-blue-400 group-hover:scale-110 transition-transform duration-300" />
                       </div>
                     </TechCard>
-                    <span className="text-xs sm:text-sm font-bold text-gray-500 font-heading text-center leading-tight group-hover:text-gray-900 dark:group-hover:text-gray-300 transition-colors">{tab.name}</span>
+                    <span className="text-xs sm:text-sm font-bold text-[#8a8f98] font-heading text-center leading-tight group-hover:text-white group-hover:text-white transition-colors">{tab.name}</span>
                   </Link>
                   </div>
                 ))}
@@ -58,12 +64,12 @@ const page = () => {
                 {communicationTabs.map((tab, index) => (
                  <div key={index} className="flex flex-col items-center justify-start w-full">
                   <Link href={tab.href} className="flex flex-col items-center gap-2 w-full group">
-                    <TechCard noPadding className="w-[80px] h-[80px] sm:w-[92px] sm:h-[92px] rounded-2xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors flex flex-col items-center justify-center " hoverEffect={false}>
-                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-50/80 dark:bg-blue-900/40 rounded-full flex items-center justify-center">
-                        <tab.icon className="w-6 h-6 sm:w-7 sm:h-7 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+                    <TechCard noPadding className="w-[80px] h-[80px] sm:w-[92px] sm:h-[92px] rounded-2xl cursor-pointer hover:bg-[#1a1d23] hover:bg-[#2a2d33]/50 transition-colors flex flex-col items-center justify-center " hoverEffect={false}>
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-50/80 bg-blue-900/40 rounded-full flex items-center justify-center">
+                        <tab.icon className="w-6 h-6 sm:w-7 sm:h-7 text-[#1241a1] text-blue-400 group-hover:scale-110 transition-transform duration-300" />
                       </div>
                     </TechCard>
-                    <span className="text-xs sm:text-sm font-bold text-gray-500 font-heading text-center leading-tight group-hover:text-gray-900 dark:group-hover:text-gray-300 transition-colors">{tab.name}</span>
+                    <span className="text-xs sm:text-sm font-bold text-[#8a8f98] font-heading text-center leading-tight group-hover:text-white group-hover:text-white transition-colors">{tab.name}</span>
                   </Link>
                   </div>
                 ))}
@@ -76,12 +82,12 @@ const page = () => {
                 {paymentTabs.map((tab, index) => (
                  <div key={index} className="flex flex-col items-center justify-start w-full">
                   <Link href={tab.href} className="flex flex-col items-center gap-2 w-full group">
-                    <TechCard noPadding className="w-[80px] h-[80px] sm:w-[92px] sm:h-[92px] rounded-2xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors flex flex-col items-center justify-center " hoverEffect={false}>
-                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-50/80 dark:bg-blue-900/40 rounded-full flex items-center justify-center">
-                        <tab.icon className="w-6 h-6 sm:w-7 sm:h-7 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+                    <TechCard noPadding className="w-[80px] h-[80px] sm:w-[92px] sm:h-[92px] rounded-2xl cursor-pointer hover:bg-[#1a1d23] hover:bg-[#2a2d33]/50 transition-colors flex flex-col items-center justify-center " hoverEffect={false}>
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-50/80 bg-blue-900/40 rounded-full flex items-center justify-center">
+                        <tab.icon className="w-6 h-6 sm:w-7 sm:h-7 text-[#1241a1] text-blue-400 group-hover:scale-110 transition-transform duration-300" />
                       </div>
                     </TechCard>
-                    <span className="text-xs sm:text-sm font-bold text-gray-500 font-heading text-center leading-tight group-hover:text-gray-900 dark:group-hover:text-gray-300 transition-colors">{tab.name}</span>
+                    <span className="text-xs sm:text-sm font-bold text-[#8a8f98] font-heading text-center leading-tight group-hover:text-white group-hover:text-white transition-colors">{tab.name}</span>
                   </Link>
                   </div>
                 ))}
@@ -90,48 +96,48 @@ const page = () => {
           
           {/* Desktop View */}
           <div className="hidden md:block text-sm p-4 max-w-7xl mx-auto mt-6">
-            <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white font-heading">Access </h2>
+            <h2 className="text-xl font-bold mb-6 text-white text-white font-heading">Access </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
               {accessTabs.map((tab, index) => (
                 <Link href={tab.href} key={index} className="group">
-                  <TechCard className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors h-full flex flex-col justify-center ">
+                  <TechCard className="cursor-pointer hover:bg-[#1a1d23] hover:bg-[#2a2d33]/50 transition-colors h-full flex flex-col justify-center ">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-50/80 dark:bg-blue-900/40 rounded-xl flex items-center justify-center shrink-0">
-                        <tab.icon className="w-5 h-5 md:w-6 md:h-6 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+                      <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-50/80 bg-blue-900/40 rounded-xl flex items-center justify-center shrink-0">
+                        <tab.icon className="w-5 h-5 md:w-6 md:h-6 text-[#1241a1] text-blue-400 group-hover:scale-110 transition-transform duration-300" />
                       </div>
-                      <span className="text-sm md:text-base font-bold text-gray-700 dark:text-gray-300 font-heading group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{tab.name}</span>
+                      <span className="text-sm md:text-base font-bold text-white text-white font-heading group-hover:text-white group-hover:text-white transition-colors">{tab.name}</span>
                     </div>
                   </TechCard>
                 </Link>
               ))}
             </div>
 
-            <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white font-heading">Communication </h2>
+            <h2 className="text-xl font-bold mb-6 text-white text-white font-heading">Communication </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
                 {communicationTabs.map((tab, index) => (
                     <Link href={tab.href} key={index} className="group">
-                        <TechCard className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors h-full flex flex-col justify-center ">
+                        <TechCard className="cursor-pointer hover:bg-[#1a1d23] hover:bg-[#2a2d33]/50 transition-colors h-full flex flex-col justify-center ">
                             <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-50/80 dark:bg-blue-900/40 rounded-xl flex items-center justify-center shrink-0">
-                                    <tab.icon className="w-5 h-5 md:w-6 md:h-6 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+                                <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-50/80 bg-blue-900/40 rounded-xl flex items-center justify-center shrink-0">
+                                    <tab.icon className="w-5 h-5 md:w-6 md:h-6 text-[#1241a1] text-blue-400 group-hover:scale-110 transition-transform duration-300" />
                                 </div>
-                                <span className="text-sm md:text-base font-bold text-gray-700 dark:text-gray-300 font-heading group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{tab.name}</span>
+                                <span className="text-sm md:text-base font-bold text-white text-white font-heading group-hover:text-white group-hover:text-white transition-colors">{tab.name}</span>
                             </div>
                         </TechCard>
                     </Link>
                 ))}
             </div>
 
-            <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white font-heading">Payment </h2>
+            <h2 className="text-xl font-bold mb-6 text-white text-white font-heading">Payment </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
               {paymentTabs.map((tab, index) => (
                 <Link href={tab.href} key={index} className="group">
-                  <TechCard className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors h-full flex flex-col justify-center ">
+                  <TechCard className="cursor-pointer hover:bg-[#1a1d23] hover:bg-[#2a2d33]/50 transition-colors h-full flex flex-col justify-center ">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-50/80 dark:bg-blue-900/40 rounded-xl flex items-center justify-center shrink-0">
-                        <tab.icon className="w-5 h-5 md:w-6 md:h-6 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+                      <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-50/80 bg-blue-900/40 rounded-xl flex items-center justify-center shrink-0">
+                        <tab.icon className="w-5 h-5 md:w-6 md:h-6 text-[#1241a1] text-blue-400 group-hover:scale-110 transition-transform duration-300" />
                       </div>
-                      <span className="text-sm md:text-base font-bold text-gray-700 dark:text-gray-300 font-heading group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{tab.name}</span>
+                      <span className="text-sm md:text-base font-bold text-white text-white font-heading group-hover:text-white group-hover:text-white transition-colors">{tab.name}</span>
                     </div>
                   </TechCard>
                 </Link>

@@ -61,13 +61,13 @@ export default function EmergencyForm({ caseType }) {
   const getHeaderStyle = () => {
     switch (caseType) {
       case 'medical-emergency': 
-        return { icon: Stethoscope, bg: 'bg-red-50 dark:bg-red-500/10', text: 'text-red-600 dark:text-red-500', theme: 'red' }
+        return { icon: Stethoscope, bg: 'bg-red-50 bg-red-500/10', text: 'text-red-600 text-red-500', theme: 'red' }
       case 'security-alert': 
-        return { icon: ShieldAlert, bg: 'bg-blue-50 dark:bg-blue-500/10', text: 'text-blue-600 dark:text-blue-500', theme: 'blue' }
+        return { icon: ShieldAlert, bg: 'bg-blue-50 bg-blue-500/10', text: 'text-blue-600 text-blue-500', theme: 'blue' }
       case 'fire': 
-        return { icon: Flame, bg: 'bg-orange-50 dark:bg-orange-500/10', text: 'text-orange-600 dark:text-orange-500', theme: 'orange' }
+        return { icon: Flame, bg: 'bg-orange-50 bg-orange-500/10', text: 'text-orange-600 text-orange-500', theme: 'orange' }
       default: 
-        return { icon: TriangleAlert, bg: 'bg-gray-100 dark:bg-gray-800', text: 'text-gray-600 dark:text-gray-400', theme: 'gray' }
+        return { icon: TriangleAlert, bg: 'bg-[#1a1d23]', text: 'text-[#8a8f98] text-[#8a8f98]', theme: 'gray' }
     }
   }
 
@@ -107,38 +107,38 @@ export default function EmergencyForm({ caseType }) {
   })
 
   return (
-    <div className="fixed inset-0 z-9999 flex items-center justify-center p-4 sm:p-6 bg-gray-900/40 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-9999 flex items-center justify-center p-4 sm:p-6 bg-[#0d0f13]/40 backdrop-blur-sm animate-fade-in">
       <div 
-        className="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden animate-scaleIn flex flex-col max-h-[90vh]"
+        className="bg-[#1a1d23] rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden animate-scaleIn flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="px-8 py-6 flex items-center justify-between bg-white dark:bg-gray-900 relative z-20">
+        <div className="px-8 py-6 flex items-center justify-between bg-[#1a1d23] relative z-20">
           <div className="flex items-center gap-4">
             <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${header.bg} ${header.text}`}>
               <Icon className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Report {title}</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Alerting estate security & rescue teams</p>
+              <h2 className="text-xl font-bold text-white text-white">Report {title}</h2>
+              <p className="text-sm text-[#8a8f98] text-[#8a8f98] mt-0.5">Alerting estate security & rescue teams</p>
             </div>
           </div>
           <button 
             onClick={() => router.back()}
-            className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors absolute top-6 right-6"
+            className="w-10 h-10 flex items-center justify-center text-[#8a8f98] hover:text-white hover:text-white hover:bg-[#2a2d33]  rounded-full transition-colors absolute top-6 right-6"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content Wrapper */}
-        <div className="flex-1 overflow-y-auto p-8 pt-6 space-y-8 custom-scrollbar bg-gray-50/50 dark:bg-gray-900/50">
+        <div className="flex-1 overflow-y-auto p-8 pt-6 space-y-8 custom-scrollbar bg-[#0d0f13]">
             
             {/* Form Section */}
             <form id="emergency-form" onSubmit={handleSubmit} className="space-y-6">
                 {/* Location Field */}
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
-                    <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
+                <div className="bg-[#1a1d23] p-6 rounded-2xl shadow-sm">
+                    <label className="block text-sm font-bold text-white text-white mb-3">
                         Exact Location
                     </label>
                     <div className="relative">
@@ -146,39 +146,39 @@ export default function EmergencyForm({ caseType }) {
                             type="text"
                             required
                             placeholder="E.g., Sector 4, outside Building B"
-                            className="w-full pl-11 pr-4 py-3.5 bg-gray-50 dark:bg-gray-900 border-none rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all font-medium"
+                            className="w-full pl-11 pr-4 py-3.5 bg-[#1a1d23] border-none rounded-xl text-sm text-white text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all font-medium"
                             value={formData.location}
                             onChange={(e) => setFormData({...formData, location: e.target.value})}
                         />
-                        <MapPin className="w-5 h-5 text-gray-400 absolute left-4 top-3.5" />
+                        <MapPin className="w-5 h-5 text-[#8a8f98] absolute left-4 top-3.5" />
                     </div>
                 </div>
 
                 {/* Description Field */}
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
-                    <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
+                <div className="bg-[#1a1d23] p-6 rounded-2xl shadow-sm">
+                    <label className="block text-sm font-bold text-white text-white mb-3">
                         Situation Brief
                     </label>
                     <textarea
                         required
                         rows={3}
                         placeholder="Provide helpful context for the responders..."
-                        className="w-full p-4 bg-gray-50 dark:bg-gray-900 border-none rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all resize-none font-medium"
+                        className="w-full p-4 bg-[#1a1d23] border-none rounded-xl text-sm text-white text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all resize-none font-medium"
                         value={formData.description}
                         onChange={(e) => setFormData({...formData, description: e.target.value})}
                     />
                 </div>
 
                 {/* Media (UI Only) */}
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
-                    <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
+                <div className="bg-[#1a1d23] p-6 rounded-2xl shadow-sm">
+                    <label className="block text-sm font-bold text-white text-white mb-3">
                         Attach Evidence (Optional)
                     </label>
                     <button 
                         type="button"
-                        className="w-full py-6 bg-gray-50 dark:bg-gray-900 rounded-xl flex flex-col items-center justify-center gap-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all border-none group"
+                        className="w-full py-6 bg-[#1a1d23] rounded-xl flex flex-col items-center justify-center gap-2 text-[#8a8f98] text-[#8a8f98] hover:bg-[#2a2d33]  transition-all border-none group"
                     >
-                        <div className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm group-hover:bg-red-50 dark:group-hover:bg-red-900/20 transition-colors">
+                        <div className="w-10 h-10 rounded-full bg-[#1a1d23] flex items-center justify-center shadow-sm group-hover:bg-red-50 group-hover:bg-red-900/20 transition-colors">
                             <Camera className="w-5 h-5 group-hover:text-red-500 transition-colors" />
                         </div>
                         <span className="text-sm font-bold">Upload Photo / Video</span>
@@ -189,7 +189,7 @@ export default function EmergencyForm({ caseType }) {
             {/* Emergency Contacts Section */}
             <div>
                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-gray-900 dark:text-white text-lg">Direct Dispatch Contacts</h3>
+                    <h3 className="font-bold text-white text-white text-lg">Direct Dispatch Contacts</h3>
                 </div>
                 
                 <div className="relative mb-4">
@@ -198,9 +198,9 @@ export default function EmergencyForm({ caseType }) {
                     placeholder="Search emergency services..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white dark:bg-gray-800 border-none text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all shadow-sm font-medium"
+                    className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-[#1a1d23] border-none text-sm text-white text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all shadow-sm font-medium"
                   />
-                  <Search className="w-5 h-5 text-gray-400 absolute left-4 top-3.5" />
+                  <Search className="w-5 h-5 text-[#8a8f98] absolute left-4 top-3.5" />
                 </div>
 
                 {isLoadingContacts ? (
@@ -213,19 +213,19 @@ export default function EmergencyForm({ caseType }) {
                             filteredContacts.map(contact => {
                                 const caseMainType = caseType?.split('-')[0].toLowerCase()
                                 return (
-                                <div key={contact.id} className={`flex flex-col p-4 rounded-xl border-none ${isRecommended ? 'bg-red-50/50 dark:bg-red-500/10' : 'bg-white dark:bg-gray-800 shadow-sm'}`}>
+                                <div key={contact.id} className={`flex flex-col p-4 rounded-xl border-none ${isRecommended ? 'bg-red-50/50 bg-red-500/10' : 'bg-[#1a1d23] shadow-sm'}`}>
                                     <div className="flex justify-between items-start mb-3">
                                         <div>
-                                            <div className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                            <div className="font-bold text-white text-white flex items-center gap-2">
                                                 {contact.name}
                                                 {isRecommended && <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>}
                                             </div>
-                                            <div className="text-xs text-gray-500 mt-1">{contact.role}</div>
+                                            <div className="text-xs text-[#8a8f98] mt-1">{contact.role}</div>
                                         </div>
                                     </div>
                                     <a 
                                         href={`tel:${contact.phone}`}
-                                        className={`w-full py-2.5 rounded-lg border-none text-sm font-bold flex items-center justify-center gap-2 transition-colors ${isRecommended ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white'}`}
+                                        className={`w-full py-2.5 rounded-lg border-none text-sm font-bold flex items-center justify-center gap-2 transition-colors ${isRecommended ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-[#1a1d23] hover:bg-[#2a2d33] text-white text-white'}`}
                                     >
                                         <Phone className="w-4 h-4" />
                                         {contact.phone}
@@ -233,8 +233,8 @@ export default function EmergencyForm({ caseType }) {
                                 </div>
                             )})
                         ) : (
-                            <div className="col-span-2 text-center py-8 bg-white dark:bg-gray-800 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
-                               <p className="text-sm text-gray-500">No matching contacts available.</p>
+                            <div className="col-span-2 text-center py-8 bg-[#1a1d23] rounded-xl border border-dashed border-[#2a2d33] border-gray-700">
+                               <p className="text-sm text-[#8a8f98]">No matching contacts available.</p>
                             </div>
                         )}
                     </div>
@@ -243,11 +243,11 @@ export default function EmergencyForm({ caseType }) {
         </div>
 
         {/* Footer Actions */}
-        <div className="px-8 py-5 bg-white dark:bg-gray-900 flex justify-between items-center border-none relative z-20">
+        <div className="px-8 py-5 bg-[#1a1d23] flex justify-between items-center border-none relative z-20">
           <button 
             onClick={() => router.back()}
             disabled={isSubmitting}
-            className="px-6 py-2.5 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl font-bold transition-colors disabled:opacity-50"
+            className="px-6 py-2.5 text-[#8a8f98] text-white hover:bg-[#2a2d33]  rounded-xl font-bold transition-colors disabled:opacity-50"
           >
             Cancel
           </button>

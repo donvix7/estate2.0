@@ -21,19 +21,19 @@ export const AlertModal = ({
       case 'success':
         return {
           icon: <CheckCircle2 className="w-6 h-6 text-emerald-500" />,
-          bg: 'bg-emerald-50 dark:bg-emerald-500/10',
+          bg: 'bg-emerald-50 bg-emerald-500/10',
           button: 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20'
         };
       case 'error':
         return {
           icon: <AlertCircle className="w-6 h-6 text-red-500" />,
-          bg: 'bg-red-50 dark:bg-red-500/10',
+          bg: 'bg-red-50 bg-red-500/10',
           button: 'bg-red-500 hover:bg-red-600 shadow-red-500/20'
         };
       case 'warning':
         return {
           icon: <AlertTriangle className="w-6 h-6 text-red-500" />,
-          bg: 'bg-red-50 dark:bg-red-500/10',
+          bg: 'bg-red-50 bg-red-500/10',
           button: 'bg-red-500 hover:bg-red-600 shadow-red-500/20'
         };
       case 'question':
@@ -54,9 +54,9 @@ export const AlertModal = ({
   const styles = getTypeStyles();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0d0f13]/40 backdrop-blur-sm animate-in fade-in duration-300">
       <div 
-        className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-fit overflow-hidden animate-in zoom-in-95 duration-300 border-none"
+        className="bg-[#1a1d23] rounded-3xl shadow-2xl w-fit overflow-hidden animate-in zoom-in-95 duration-300 border-none"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-8 flex flex-col items-center text-center">
@@ -64,11 +64,11 @@ export const AlertModal = ({
             {styles.icon}
           </div>
           
-          <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
+          <h3 className="text-xl font-black text-white text-white mb-2 tracking-tight">
             {title}
           </h3>
           
-          <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-[280px]">
+          <p className="text-sm text-white0 text-[#8a8f98] leading-relaxed max-w-[280px]">
             {message}
           </p>
           
@@ -76,7 +76,7 @@ export const AlertModal = ({
             {showCancel && (
               <button
                 onClick={onClose}
-                className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:scale-95"
+                className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-white0 hover:bg-[#2a2d33]  transition-all active:scale-95"
               >
                 {cancelText}
               </button>

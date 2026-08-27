@@ -104,12 +104,12 @@ export default function LostAndFoundPage() {
         iconColor="blue"
       >
         <div className="flex items-center gap-3">
-          <div className="flex gap-1 bg-slate-100 dark:bg-slate-800/50 p-1 rounded-md">
+          <div className="flex gap-1 bg-[#1a1d23] p-1 rounded-md">
             {[{ id: 'all', label: 'All Reports' }, { id: 'active', label: 'Active' }, { id: 'resolved', label: 'Resolved' }].map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-md transition-all ${activeTab === tab.id ? 'bg-white dark:bg-slate-700 shadow-sm text-[#1241a1]' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-md transition-all ${activeTab === tab.id ? 'bg-[#1a1d23] shadow-sm text-[#1241a1]' : 'text-[#8a8f98] hover:text-white'}`}
               >
                 {tab.label}
               </button>
@@ -127,13 +127,13 @@ export default function LostAndFoundPage() {
 
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1 max-w-xl">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8a8f98]" size={18} />
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search by item name, color, or location..."
-            className="w-full bg-slate-100 dark:bg-slate-800/30 rounded-md py-2.5 pl-11 pr-4 text-sm focus:ring-2 focus:ring-[#1241a1]/30 outline-none transition-all dark:text-white"
+            className="w-full bg-[#1a1d23] rounded-md py-2.5 pl-11 pr-4 text-sm focus:ring-2 focus:ring-[#1241a1]/30 outline-none transition-all text-white"
           />
         </div>
         <div className="flex flex-wrap gap-2">
@@ -141,7 +141,7 @@ export default function LostAndFoundPage() {
             <button
               key={cat}
               onClick={() => setActiveFilter(cat)}
-              className={` px-4 py-2 rounded-md text-[11px] font-semibold uppercase tracking-widest transition-all ${activeFilter === cat ? 'bg-[#1241a1]/10 text-[#1241a1]' : 'bg-slate-100 dark:bg-slate-800/30 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'}`}
+              className={` px-4 py-2 rounded-md text-[11px] font-semibold uppercase tracking-widest transition-all ${activeFilter === cat ? 'bg-[#1241a1]/10 text-[#1241a1]' : 'bg-[#1a1d23] text-[#8a8f98] hover:bg-[#2a2d33]'}`}
             >
               {cat}
             </button>
@@ -151,11 +151,11 @@ export default function LostAndFoundPage() {
 
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
-          <div className="size-16 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400">
+          <div className="size-16 bg-[#1a1d23] rounded-2xl flex items-center justify-center text-[#8a8f98]">
             <SearchX size={32} />
           </div>
-          <p className="font-bold text-slate-700 dark:text-slate-300">No items found</p>
-          <p className="text-sm text-slate-400">Try adjusting your search or filters.</p>
+          <p className="font-bold text-[#8a8f98]">No items found</p>
+          <p className="text-sm text-[#8a8f98]">Try adjusting your search or filters.</p>
         </div>
       ) : (
         <LostAndFoundList 

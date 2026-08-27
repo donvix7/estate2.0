@@ -33,7 +33,7 @@ export default function AuthCarousel({ children }) {
   }, [])
 
   return (
-    <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gray-900">
+    <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-[#0d0f13]">
       <div
         key={currentImageIndex}
         className="absolute inset-0 z-0 transition-opacity duration-1000"

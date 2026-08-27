@@ -1,13 +1,174 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { Megaphone, Plus, Search, Calendar, Shield, Wrench, Info, Users, ChevronRight, ChevronLeft, BellRing } from 'lucide-react';
+import { Megaphone, Shield, Wrench, Info, Users, ChevronRight, BellRing, Clock, Eye, MoreHorizontal, CheckCircle2, Circle } from 'lucide-react';
 import ViewAnnouncementModal from '@/components/admin/ViewAnnouncementModal';
 import { getAnnouncements, getResidentData } from '@/lib/service';
 import { readAnnouncement } from '@/lib/action';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { Card } from '@/components/ui/Card';
 import Pagination from '@/components/pagination';
 
+// Trading-style stat card component
+const StatCard = ({ label, value, icon, change }) => {
+  const isPositive = change && change > 0;
+  const isNegative = change && change < 0;
+  
+  return (
+    <div className="bg-[#1a1d23]/40 bg-[#12131C] backdrop-blur-md rounded-2xl border-none p-5 shadow-sm">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-xs font-bold text-[#8a8f98] text-[#8a8f98] uppercase tracking-wider">{label}</span>
+        <span className="text-[#8a8f98]">{icon}</span>
+      </div>
+      <div className="flex items-end gap-2">
+        <span className="text-2xl font-extrabold text-white text-white">{value}</span>
+        {change !== undefined && change !== null && (
+          <span className={`text-xs font-semibold ${isPositive ? 'text-emerald-500' : isNegative ? 'text-rose-500' : 'text-[#8a8f98]'}`}>
+            {isPositive ? '+' : ''}{change}%
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Status badge component
+const StatusBadge = ({ isRead }) => {
+  return (
+    <span className={`inline-flex items-center text-[10px] font-bold uppercase tracking-wider ${isRead ? 'text-[#8a8f98]' : 'text-emerald-500'}`}>
+      {isRead ? (
+        <>
+          <CheckCircle2 className="size-3 mr-1.5" />
+          Read
+        </>
+      ) : (
+        <>
+          <Circle className="size-2 mr-1.5 fill-emerald-500 animate-pulse" />
+          Unread
+        </>
+      )}
+    </span>
+  );
+};
+
+// Category badge component
+const CategoryBadge = ({ category }) => {
+  const styles = {
+    maintenance: 'bg-amber-500/10 text-amber-600 text-amber-400 border-none',
+    security: 'bg-rose-500/10 text-rose-600 text-rose-400 border-none',
+    community: 'bg-emerald-500/10 text-emerald-600 text-emerald-400 border-none',
+    general: 'bg-[#1241a1]/10 text-[#1241a1] text-blue-400 border-none'
+  };
+  
+  const getStyle = () => {
+    switch(category?.toLowerCase()) {
+      case 'maintenance': return styles.maintenance;
+      case 'security': return styles.security;
+      case 'community': return styles.community;
+      default: return styles.general;
+    }
+  };
+
+  return (
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${getStyle()}`}>
+      {category || 'General'}
+    </span>
+  );
+};
+
+// Category icon mapping
+const getCategoryIcon = (category) => {
+  switch(category?.toLowerCase()) {
+    case 'maintenance': return <Wrench className="w-5 h-5" />;
+    case 'security': return <Shield className="w-5 h-5" />;
+    case 'community': return <Users className="w-5 h-5" />;
+    default: return <Info className="w-5 h-5" />;
+  }
+};
+
+// Trading-style table component
+const Table = ({ headers, data, onRowClick, renderStatus, renderBadge }) => {
+  return (
+    <div className="w-full overflow-x-auto">
+      <table className="w-full text-sm border-collapse">
+        <thead>
+          <tr className="bg-[#1a1d23]/50 bg-[#0B0C11] border-none">
+            {headers.map((header, idx) => (
+              <th key={idx} className={`px-5 py-3 text-left font-bold text-[#8a8f98] text-[10px] uppercase tracking-wider ${header.align || 'text-left'}`}>
+                {header.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y-0">
+          {data.length > 0 ? (
+            data.map((item, idx) => (
+              <tr 
+                key={idx} 
+                className="hover:bg-[#1a1d23]/40 hover:bg-[#151622] transition-colors cursor-pointer border-none"
+                onClick={() => onRowClick && onRowClick(item)}
+              >
+
+                {headers.map((header, hIdx) => (
+                  <td key={hIdx} className="px-4 py-3">
+                    {header.key === 'status' && renderStatus ? (
+                      renderStatus(item)
+                    ) : header.key === 'category' && renderBadge ? (
+                      renderBadge(item)
+                    ) : header.key === 'announcement' ? (
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-[#1241a1]/10 flex items-center justify-center shrink-0">
+                          <span className="text-[#1241a1]">
+                            {getCategoryIcon(item.type)}
+                          </span>
+                        </div>
+                        <div className="min-w-0">
+                          <h4 className="text-sm font-bold text-white group-hover:text-[#1241a1] transition-colors truncate max-w-[200px]">
+                            {item.title}
+                          </h4>
+                          <p className="text-xs text-[#8a8f98] truncate max-w-[300px]">{item.message}</p>
+                        </div>
+                      </div>
+                    ) : header.key === 'date' ? (
+                      <span className="text-xs text-[#8a8f98] font-medium">
+                        {new Date(item.timestamp || Date.now()).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric', 
+                          year: 'numeric' 
+                        })}
+                      </span>
+                    ) : header.key === 'action' ? (
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); onRowClick && onRowClick(item); }}
+                        className="text-[#8a8f98] hover:text-[#1241a1] text-xs font-semibold transition-colors border-none bg-transparent"
+                      >
+                        View
+                      </button>
+                    ) : (
+                      <span className="text-white font-medium">
+                        {item[header.key] || '—'}
+                      </span>
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={headers.length} className="px-4 py-12 text-center">
+                <div className="flex flex-col items-center gap-3">
+                  <BellRing className="size-12 text-[#8a8f98] opacity-30" />
+                  <p className="font-medium text-white">No announcements found</p>
+                  <p className="text-xs text-[#8a8f98]">No announcements matching your criteria</p>
+                </div>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 export default function AnnouncementsPage() {
   const [announcements, setAnnouncements] = useState([]);
@@ -65,23 +226,10 @@ export default function AnnouncementsPage() {
   const handleReadMore = async (ann) => {
     if (userId) {
       await readAnnouncement(ann._id, userId);
-      loadAnnouncements(); // Refresh list to update stay status
+      loadAnnouncements();
     }
     setSelectedAnnouncement(ann);
     setIsViewModalOpen(true);
-  };
-
-  const getCategoryBadge = (category) => {
-    switch(category?.toLowerCase()) {
-      case 'maintenance': 
-        return 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400';
-      case 'security': 
-        return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
-      case 'community': 
-        return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
-      default: 
-        return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
-    }
   };
 
   const filteredAnnouncements = (Array.isArray(announcements?.docs) ? announcements.docs : [])
@@ -92,182 +240,118 @@ export default function AnnouncementsPage() {
     );
 
   const totalPages = announcements?.totalPages;
+  
+  // Stats
+  const totalAnnouncements = announcements?.totalDocs || 0;
+  const unreadCount = filteredAnnouncements.filter(ann => !ann.readBy?.includes(userId)).length;
+  const readCount = filteredAnnouncements.filter(ann => ann.readBy?.includes(userId)).length;
 
   return (
-    <div className="flex-1 flex flex-col min-w-0 overflow-hidden animate-in fade-in duration-700">
+    <div className="min-h-screen bg-[#0d0f13] p-6 animate-in fade-in duration-700 space-y-6">
       
-
-      {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-8 space-y-6">
-        {/* Page Title & Filters */}
-        <PageHeader 
-          title="Announcements" 
-          description="Stay updated with the latest community news and system updates."
-          icon={Megaphone}
-          iconColor="blue"
-        >
-          <div className="flex items-center gap-2 bg-primary/5 p-1 rounded-xl">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Announcements</h1>
+          <p className="text-[#8a8f98] text-sm font-medium">Stay updated with the latest community news and system updates.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="bg-[#1a1d23] border border-[#2a2d33] rounded-xl p-1.5 flex gap-1">
             {['All', 'Maintenance', 'Security', 'Community'].map((tab) => (
               <button 
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                className={`px-3 py-1.5 text-[10px] font-bold rounded-lg transition-all border-none ${
                   activeTab === tab 
-                    ? 'bg-amber-700 text-white shadow-sm' 
-                    : 'text-slate-500 hover:bg-primary/10'
+                    ? 'bg-[#1241a1] text-white' 
+                    : 'text-[#8a8f98] hover:text-white hover:bg-[#2a2d33]'
                 }`}
               >
                 {tab}
               </button>
             ))}
           </div>
-        </PageHeader>
+        </div>
+      </div>
 
-        {/* High-Density List Container */}
-        <div className="bg-white dark:bg-[#818b94]/10 rounded-xl overflow-hidden shadow-sm">
-          <div className="overflow-x-auto">
-            {/* Desktop Table View */}
-            <table className="w-full hidden md:table">
-              <thead className='bg-[#818b94]/40 text-white '>
-                <tr className="text-left  dark:bg-primary/5">
-                  {['Announcement', 'Category', 'Date','status', ''].map((header) => (
-                    <th key={header} className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">{header}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y-0">
-                {isLoading ? (
-                  <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
-                      <div className="flex flex-col items-center gap-3">
-                        <div className="size-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-                        <p className="text-sm font-medium">Fetching updates...</p>
-                      </div>
-                    </td>
-                  </tr>
-                ) : filteredAnnouncements.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
-                      <div className="flex flex-col items-center gap-3 w-full">
-                        <BellRing className="size-12  text-amber-700" />
-                        <p className="text-sm font-medium">No announcements found matching your criteria.</p>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  announcements?.docs.map((ann) => (
-                    <tr key={ann._id || ann.id} className="hover:bg-primary/5 transition-colors group">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-lg bg-primary/10 shrink-0 flex items-center justify-center">
-                            {ann.type?.toLowerCase() === 'maintenance' ? <Wrench className="w-5 h-5 text-primary" /> : 
-                             ann.type?.toLowerCase() === 'security' ? <Shield className="w-5 h-5 text-primary" /> : 
-                             ann.type?.toLowerCase() === 'community' ? <Users className="w-5 h-5 text-primary" /> : 
-                             <Info className="w-5 h-5 text-primary" />}
-                          </div>
-                          <div className="min-w-0">
-                            <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">{ann.title}</h4>
-                            <p className="text-xs text-slate-500 truncate max-w-sm">{ann.message}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${getCategoryBadge(ann.type)}`}>
-                          {ann.type || 'General'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-xs text-slate-500 font-medium">
-                          {new Date(ann.timestamp || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                        </span>
-                      </td>
-                      <td className={`px-6 py-4 whitespace-nowrap  text-slate-500`}>
-                        {ann.readBy?.includes(userId) ? 'Read' : 'Unread'}
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <button 
-                          onClick={() => handleReadMore(ann)}
-                          className="text-primary text-xs font-bold hover:underline hover:cursor-pointer hover:text-amber-500"
-                        >
-                          View
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+      {/* Quick Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <StatCard 
+          label="Total Announcements" 
+          value={totalAnnouncements} 
+          icon={<Megaphone className="size-4" />}
+          change={12.5}
+        />
+        <StatCard 
+          label="Unread" 
+          value={unreadCount} 
+          icon={<BellRing className="size-4" />}
+          change={-5.2}
+        />
+        <StatCard 
+          label="Read" 
+          value={readCount} 
+          icon={<Eye className="size-4" />}
+          change={8.7}
+        />
+        <StatCard 
+          label="Categories" 
+          value="4" 
+          icon={<Users className="size-4" />}
+          change={0}
+        />
+      </div>
 
-            {/* Mobile Card View */}
-            <div className="md:hidden ">
-              {isLoading ? (
-                <div className="px-6 py-12 text-center text-slate-400">
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="size-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-                    <p className="text-sm font-medium">Fetching updates...</p>
-                  </div>
-                </div>
-              ) : filteredAnnouncements.length === 0 ? (
-                <div className="px-6 py-12 text-center text-slate-400">
-                  <div className="flex flex-col items-center gap-3">
-                    <BellRing className="size-12 opacity-20" />
-                    <p className="text-sm font-medium">No announcements found.</p>
-                  </div>
-                </div>
-              ) : (
-                announcements?.docs.map((ann) => (
-                  <div key={ann._id || ann.id} className="p-4 space-y-4 hover:bg-primary/5 transition-colors">
-                    <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 shrink-0 flex items-center justify-center">
-                        {ann.type?.toLowerCase() === 'maintenance' ? <Wrench className="w-4 h-4 text-primary" /> : 
-                         ann.type?.toLowerCase() === 'security' ? <Shield className="w-4 h-4 text-primary" /> : 
-                         ann.type?.toLowerCase() === 'community' ? <Users className="w-4 h-4 text-primary" /> : 
-                         <Info className="w-4 h-4 text-primary" />}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2 mb-1">
-                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${getCategoryBadge(ann.type)}`}>
-                            {ann.type || 'General'}
-                          </span>
-                          <span className="text-[10px] text-slate-400 font-medium">
-                            {new Date(ann.timestamp || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                          </span>
-                        </div>
-                       
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{ann.title}</h4>
-                      </div>
-                 
-                    </div>
-                    
-                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">{ann.message}</p>
-                    <div className="flex justify-end pt-1">
-                      <button 
-                        onClick={() => handleReadMore(ann)}
-                        className="text-primary text-xs font-bold flex items-center gap-1"
-                      >
-                        Read More
-                        <ChevronRight className="size-4" />
-                      </button>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
+      {/* Announcements Table */}
+      <div className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] overflow-hidden">
+        <div className="p-4 flex items-center justify-between border-b border-[#2a2d33]">
+          <div>
+            <h2 className="font-bold text-lg text-white flex items-center gap-2">
+              <Megaphone className="size-5 text-[#1241a1]" />
+              Announcements
+            </h2>
+            <p className="text-xs text-[#8a8f98] font-medium">{filteredAnnouncements.length} total announcements</p>
           </div>
-          {!isLoading && filteredAnnouncements.length > 0 && (
-            <div className="px-6 py-4 bg-slate-50 dark:bg-primary/5 flex flex-col sm:flex-row items-center justify-between gap-4 ">
-              <p className="text-sm text-slate-500">
-                Showing <span className="font-bold text-slate-700 dark:text-slate-300">{announcements?.pagingCounter || 0} to {((announcements?.pagingCounter || 1) + (announcements?.docs?.length || 0) - 1)}</span> of <span className="font-bold text-slate-700 dark:text-slate-300">{announcements?.totalDocs || 0}</span> announcements
-              </p>
-            </div>
-          )}
+          <button className="p-2 hover:bg-[#2a2d33] rounded-lg transition-colors border-none bg-transparent">
+            <MoreHorizontal className="size-4 text-[#8a8f98]" />
+          </button>
         </div>
 
-        <Pagination 
-          page={currentPage}
-          totalPages={totalPages}
-          handlePageChange={setCurrentPage}
-        />
+        {isLoading ? (
+          <div className="px-4 py-12 text-center">
+            <div className="flex flex-col items-center gap-3">
+              <div className="size-8 border-2 border-[#1241a1]/20 border-t-[#1241a1] rounded-full animate-spin"></div>
+              <p className="text-sm font-medium text-[#8a8f98]">Fetching updates...</p>
+            </div>
+          </div>
+        ) : (
+          <Table 
+            headers={[
+              { key: 'announcement', label: 'Announcement' },
+              { key: 'category', label: 'Category' },
+              { key: 'date', label: 'Date' },
+              { key: 'status', label: 'Status' },
+              { key: 'action', label: '', align: 'text-right' }
+            ]}
+            data={filteredAnnouncements}
+            onRowClick={(item) => handleReadMore(item)}
+            renderBadge={(item) => <CategoryBadge category={item.type} />}
+            renderStatus={(item) => <StatusBadge isRead={item.readBy?.includes(userId)} />}
+          />
+        )}
+
+        {!isLoading && filteredAnnouncements.length > 0 && (
+          <div className="px-4 py-3 bg-[#2a2d33]/30 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[#2a2d33]">
+            <p className="text-sm text-[#8a8f98]">
+              Showing <span className="font-bold text-white">{announcements?.pagingCounter || 0} to {((announcements?.pagingCounter || 1) + (announcements?.docs?.length || 0) - 1)}</span> of <span className="font-bold text-white">{announcements?.totalDocs || 0}</span> announcements
+            </p>
+            <Pagination 
+              page={currentPage}
+              totalPages={totalPages}
+              handlePageChange={setCurrentPage}
+            />
+          </div>
+        )}
       </div>
 
       {/* View Detail Modal */}

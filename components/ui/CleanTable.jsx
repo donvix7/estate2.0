@@ -13,7 +13,7 @@ import React from 'react';
 export function CleanTable({ headers, data, renderRow, className = '', emptyState, onRowClick }) {
   if (!data || data.length === 0) {
     return (
-      <div className={`p-8 text-center text-gray-500 italic ${className}`}>
+      <div className={`p-8 text-center text-white0 italic ${className}`}>
         {emptyState || 'No data available'}
       </div>
     );
@@ -21,22 +21,22 @@ export function CleanTable({ headers, data, renderRow, className = '', emptyStat
 
   return (
     <div className={`overflow-x-auto ${className}`}>
-      <table className="w-full text-left text-sm">
-        <thead className="bg-slate-50/50 dark:bg-slate-900/50">
+      <table className="w-full text-left text-sm border-collapse">
+        <thead className="bg-[#1a1d23]/50 bg-[#0B0C11] border-none">
           <tr>
             {headers.map((header, index) => (
-              <th key={index} className="px-6 py-4 font-semibold text-gray-900 dark:text-gray-100 font-heading whitespace-nowrap">
+              <th key={index} className="px-6 py-3.5 font-bold text-[#8a8f98] text-[11px] uppercase tracking-wider whitespace-nowrap border-none">
                 {header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="">
+        <tbody className="divide-y-0">
           {data.map((item, index) => (
             <tr 
               key={index} 
               onClick={onRowClick ? () => onRowClick(item) : undefined}
-              className={`hover:bg-gray-50/50 dark:hover:bg-gray-700/50 transition-colors group ${onRowClick ? 'cursor-pointer' : ''}`}
+              className={`hover:bg-[#1a1d23]/40 hover:bg-[#151622] transition-colors border-none group ${onRowClick ? 'cursor-pointer' : ''}`}
             >
               {renderRow(item, index)}
             </tr>
@@ -44,5 +44,6 @@ export function CleanTable({ headers, data, renderRow, className = '', emptyStat
         </tbody>
       </table>
     </div>
+
   );
 }

@@ -3,8 +3,9 @@
 import React from 'react'
 import { WalletCard } from '@/components/resident/WalletCard'
 import PaystackPayment from '@/components/payment'
-import Link from 'next/link'
-import { ChevronRight, Lock, ShieldCheck, ShieldAlert, CreditCard } from 'lucide-react'
+import { ShieldCheck, ShieldAlert, CreditCard } from 'lucide-react'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { Card, CardHeader, CardTitle, CardBody } from '@/components/ui/Card'
 
 // Outstanding bills — shared with the bills overview page
 export const OUTSTANDING_BILLS = [
@@ -18,25 +19,17 @@ const formatUSD = (n) => `$${n.toLocaleString('en-US', { minimumFractionDigits: 
 
 export default function CheckoutPage() {
   return (
-    <div className="min-h-screen bg-[#f6f6f8] dark:bg-[#111621] font-sans">
+    <div className="max-w-5xl mx-auto pb-12 animate-in fade-in duration-700">
 
-      {/* ── Breadcrumbs & Title ── */}
-      <div className="px-6 lg:px-10 pt-8 pb-6 max-w-7xl mx-auto">
-        <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-4">
-          <Link href="/dashboard/resident" className="hover:text-[#1241a1] transition-colors">Dashboard</Link>
-          <ChevronRight className="size-4" />
-          <Link href="/dashboard/resident/finance" className="hover:text-[#1241a1] transition-colors">Bills &amp; Invoices</Link>
-          <ChevronRight className="size-4" />
-          <span className="text-[#1241a1] font-semibold">Checkout</span>
-        </div>
-        <h1 className="text-3xl lg:text-4xl font-black tracking-tight mb-2">Complete Your Payment</h1>
-        <p className="text-slate-500 dark:text-slate-400 flex items-center gap-2 text-sm">
-          <Lock className="size-4 text-green-500" />
-          Encrypted and secure transaction. Your data is protected.
-        </p>
-      </div>
+      {/* ── Page Header ── */}
+      <PageHeader
+        title="Complete Your Payment"
+        description="Encrypted and secure transaction. Your data is protected."
+        icon={CreditCard}
+        iconColor="blue"
+      />
 
-      <div className="px-6 lg:px-10 pb-16 max-w-7xl mx-auto space-y-8">
+      <div className="space-y-8">
 
         {/* Wallet Card at top */}
         <WalletCard />
@@ -46,17 +39,18 @@ export default function CheckoutPage() {
 
           {/* LEFT: Order Summary */}
           <div className="lg:col-span-7 flex flex-col gap-6">
-            <div className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm">
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between">
-                <h3 className="font-bold text-lg">1. Order Summary</h3>
+            <Card>
+              <CardHeader>
+                <CardTitle title="1. Order Summary" />
                 <span className="text-xs font-bold px-2.5 py-1 bg-[#1241a1]/10 text-[#1241a1] rounded-lg uppercase tracking-wider">
                   Outstanding Bills
                 </span>
-              </div>
+              </CardHeader>
+              <CardBody padded={false}>
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="text-xs uppercase text-slate-500 dark:text-slate-400 font-bold tracking-wider">
+                    <tr className="text-xs uppercase text-[#8a8f98] text-[#8a8f98] font-bold tracking-wider">
                       <th className="px-6 py-4">Description</th>
                       <th className="px-6 py-4">Period</th>
                       <th className="px-6 py-4 text-right">Amount</th>
@@ -64,29 +58,30 @@ export default function CheckoutPage() {
                   </thead>
                   <tbody className="divide-y-0">
                     {OUTSTANDING_BILLS.map((bill, i) => (
-                      <tr key={i} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                      <tr key={i} className="hover:bg-[#1a1d23]/50 hover:bg-[#1a1d23]/30 transition-colors">
                         <td className="px-6 py-5">
                           <p className="font-semibold text-sm">{bill.description}</p>
-                          <p className="text-xs text-slate-500 mt-0.5">{bill.subtitle}</p>
+                          <p className="text-xs text-[#8a8f98] mt-0.5">{bill.subtitle}</p>
                         </td>
-                        <td className="px-6 py-5 text-sm text-slate-500">{bill.period}</td>
+                        <td className="px-6 py-5 text-sm text-[#8a8f98]">{bill.period}</td>
                         <td className="px-6 py-5 text-right font-semibold text-sm">{formatUSD(bill.amount)}</td>
                       </tr>
                     ))}
                   </tbody>
                   <tfoot>
-                    <tr className="bg-slate-50 dark:bg-slate-800/30">
-                      <td className="px-6 py-4 text-right text-sm font-medium text-slate-500" colSpan={2}>Subtotal</td>
+                    <tr className="bg-[#1a1d23] bg-[#1a1d23]/30">
+                      <td className="px-6 py-4 text-right text-sm font-medium text-[#8a8f98]" colSpan={2}>Subtotal</td>
                       <td className="px-6 py-4 text-right font-semibold text-sm">{formatUSD(TOTAL)}</td>
                     </tr>
-                    <tr className="bg-slate-50 dark:bg-slate-800/30">
+                    <tr className="bg-[#1a1d23] bg-[#1a1d23]/30">
                       <td className="px-6 py-6 text-right font-bold text-lg" colSpan={2}>Total Due</td>
                       <td className="px-6 py-6 text-right font-black text-2xl text-[#1241a1]">{formatUSD(TOTAL)}</td>
                     </tr>
                   </tfoot>
                 </table>
               </div>
-            </div>
+              </CardBody>
+            </Card>
 
             {/* Security Badges */}
             <div className="flex flex-wrap gap-4 items-center justify-center lg:justify-start px-1">
@@ -96,7 +91,7 @@ export default function CheckoutPage() {
                 { icon: CreditCard, label: 'Fraud Protection' },
               ].map((badge, i, arr) => (
                 <React.Fragment key={badge.label}>
-                  <div className="flex items-center gap-2 text-slate-500 text-sm">
+                  <div className="flex items-center gap-2 text-[#8a8f98] text-sm">
                     <badge.icon className="size-5" />
                     <span>{badge.label}</span>
                   </div>
@@ -107,22 +102,28 @@ export default function CheckoutPage() {
           </div>
 
           {/* RIGHT: Payment Method */}
-          <div className="lg:col-span-5 bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm">
-            <h3 className="font-bold text-lg mb-6">2. Payment Method</h3>
-            <PaystackPayment />
+          <div className="lg:col-span-5">
+            <Card>
+              <CardHeader>
+                <CardTitle title="2. Payment Method" />
+              </CardHeader>
+              <CardBody>
+                <PaystackPayment />
+              </CardBody>
+            </Card>
           </div>
 
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="px-6 lg:px-10 py-8 bg-white dark:bg-slate-900">
+      <footer className="px-6 lg:px-10 py-8 bg-[#1a1d23]">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-slate-500 text-sm">© 2024 EstatePay Secure Management. All rights reserved.</p>
+          <p className="text-[#8a8f98] text-sm">© 2024 EstatePay Secure Management. All rights reserved.</p>
           <div className="flex gap-6">
-            <a href="#" className="text-slate-500 hover:text-[#1241a1] text-sm transition-colors">Privacy Policy</a>
-            <a href="#" className="text-slate-500 hover:text-[#1241a1] text-sm transition-colors">Terms of Service</a>
-            <a href="#" className="text-slate-500 hover:text-[#1241a1] text-sm transition-colors">Refund Policy</a>
+            <a href="#" className="text-[#8a8f98] hover:text-[#1241a1] text-sm transition-colors">Privacy Policy</a>
+            <a href="#" className="text-[#8a8f98] hover:text-[#1241a1] text-sm transition-colors">Terms of Service</a>
+            <a href="#" className="text-[#8a8f98] hover:text-[#1241a1] text-sm transition-colors">Refund Policy</a>
           </div>
         </div>
       </footer>

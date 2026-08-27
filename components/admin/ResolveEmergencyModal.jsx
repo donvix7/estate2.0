@@ -102,85 +102,85 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
   const incidentTimestamp = emergency.createdAt || emergency.date;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#0d0f13]/60 backdrop-blur-md animate-in fade-in duration-300">
       <div 
-        className="bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl w-full max-w-3xl overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col max-h-[90vh] border border-white/20"
+        className="bg-[#1a1d23] rounded-[2rem] shadow-2xl w-full max-w-3xl overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col max-h-[90vh] border border-white/20"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="px-8 py-7 flex items-center justify-between bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
+        <div className="px-8 py-7 flex items-center justify-between bg-white/50 bg-[#0d0f13]/50 backdrop-blur-sm">
           <div className="flex items-center gap-5">
             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner ${
-              isResolved ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500' : 'bg-red-50 dark:bg-red-500/10 text-red-500'
+              isResolved ? 'bg-emerald-50 bg-emerald-500/10 text-emerald-500' : 'bg-red-50 bg-red-500/10 text-red-500'
             }`}>
                {isResolved ? <CheckCircle2 className="w-7 h-7" /> : <ShieldAlert className="w-7 h-7" />}
             </div>
             <div>
-              <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+              <h2 className="text-2xl font-black tracking-tight text-white text-white">
                 {isResolved ? 'Incident Resolved' : 'Emergency Response'}
               </h2>
-              <p className="text-sm font-bold text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-2 uppercase tracking-widest">
+              <p className="text-sm font-bold text-white0 text-[#8a8f98] mt-0.5 flex items-center gap-2 uppercase tracking-widest">
                 ID: {emergency._id || emergency.id}
-                <span className="size-1 rounded-full bg-slate-300 dark:bg-slate-700"></span>
+                <span className="size-1 rounded-full bg-[#2a2d33]"></span>
                 {emergency.type} Alert
               </p>
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="w-12 h-12 flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl transition-all active:scale-90"
+            className="w-12 h-12 flex items-center justify-center text-[#8a8f98] hover:text-[#8a8f98] hover:text-white hover:bg-[#2a2d33]  rounded-2xl transition-all active:scale-90"
           >
             <X className="w-6 h-6" />
           </button>
         </div>
 
         {/* Content Wrapper */}
-        <div className="flex-1 overflow-y-auto p-8 pt-6 space-y-8 no-scrollbar bg-slate-50/30 dark:bg-slate-900/30">
+        <div className="flex-1 overflow-y-auto p-8 pt-6 space-y-8 no-scrollbar bg-[#0d0f13]">
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Alert Summary Box */}
               <div className="md:col-span-2 space-y-6">
-                <div className="bg-white dark:bg-slate-800/80 p-8 rounded-[1.5rem] shadow-sm relative overflow-hidden group">
+                <div className="bg-white bg-[#1a1d23]/80 p-8 rounded-[1.5rem] shadow-sm relative overflow-hidden group">
                   <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                     <ShieldAlert className="w-24 h-24" />
                   </div>
                   
                   <div className="flex items-center gap-2 mb-4">
                     <MessageSquare className="w-4 h-4 text-primary" />
-                    <h3 className="font-black text-[10px] uppercase tracking-[0.2em] text-slate-400">Incident Description</h3>
+                    <h3 className="font-black text-[10px] uppercase tracking-[0.2em] text-[#8a8f98]">Incident Description</h3>
                   </div>
                   
-                  <p className="text-slate-800 dark:text-slate-200 text-lg leading-relaxed font-medium">
+                  <p className="text-white text-white text-lg leading-relaxed font-medium">
                     {emergency.description || emergency.desc}
                   </p>
                   
                   <div className="mt-8  grid grid-cols-2 gap-8">
                       <div className="space-y-1">
-                        <span className="flex items-center gap-1.5 text-slate-400 text-[10px] uppercase tracking-widest font-black">
+                        <span className="flex items-center gap-1.5 text-[#8a8f98] text-[10px] uppercase tracking-widest font-black">
                           <User className="w-3 h-3" /> Reported By
                         </span>
-                        <span className="font-bold text-slate-900 dark:text-white text-base">{emergency.residentName}</span>
+                        <span className="font-bold text-white text-white text-base">{emergency.residentName}</span>
                       </div>
                       <div className="space-y-1">
-                        <span className="flex items-center gap-1.5 text-slate-400 text-[10px] uppercase tracking-widest font-black">
+                        <span className="flex items-center gap-1.5 text-[#8a8f98] text-[10px] uppercase tracking-widest font-black">
                           <MapPin className="w-3 h-3" /> Location
                         </span>
-                        <span className="font-bold text-slate-900 dark:text-white text-base">{emergency.unit}</span>
+                        <span className="font-bold text-white text-white text-base">{emergency.unit}</span>
                       </div>
                   </div>
                 </div>
 
                 {/* Resolution Info (If Resolved) */}
                 {isResolved && (
-                  <div className="bg-emerald-50 dark:bg-emerald-500/10 p-8 rounded-[1.5rem]">
+                  <div className="bg-emerald-50 bg-emerald-500/10 p-8 rounded-[1.5rem]">
                     <div className="flex items-center gap-2 mb-6">
                       <History className="w-4 h-4 text-emerald-500" />
                       <h3 className="font-black text-[10px] uppercase tracking-[0.2em] text-emerald-600/70">Resolution Details</h3>
                     </div>
                     
                     <div className="space-y-6">
-                      <div className="bg-white dark:bg-slate-800/50 p-4 rounded-xl">
-                        <p className="text-sm text-slate-700 dark:text-slate-300 italic">
+                      <div className="bg-white bg-[#1a1d23]/50 p-4 rounded-xl">
+                        <p className="text-sm text-white  italic">
                           "{emergency.resolutionNote || 'The incident was successfully handled by the response team.'}"
                         </p>
                       </div>
@@ -188,11 +188,11 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
                       <div className="flex flex-wrap gap-x-12 gap-y-4">
                         <div className="space-y-1">
                           <span className="text-emerald-600/70 text-[9px] uppercase tracking-widest font-black">Resolved By</span>
-                          <span className="block font-bold text-slate-900 dark:text-white text-sm">{emergency.resolvedBy || 'Admin Team'}</span>
+                          <span className="block font-bold text-white text-white text-sm">{emergency.resolvedBy || 'Admin Team'}</span>
                         </div>
                         <div className="space-y-1">
                           <span className="text-emerald-600/70 text-[9px] uppercase tracking-widest font-black">Resolved At</span>
-                          <span className="block font-bold text-slate-900 dark:text-white text-sm">{formatReportDate(emergency.resolvedAt)} • {formatReportTime(emergency.resolvedAt)}</span>
+                          <span className="block font-bold text-white text-white text-sm">{formatReportDate(emergency.resolvedAt)} • {formatReportTime(emergency.resolvedAt)}</span>
                         </div>
                       </div>
                     </div>
@@ -204,13 +204,13 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <History className="w-4 h-4 text-primary" />
-                      <h3 className="font-black text-[10px] uppercase tracking-[0.2em] text-slate-400">Final Resolution Note</h3>
+                      <h3 className="font-black text-[10px] uppercase tracking-[0.2em] text-[#8a8f98]">Final Resolution Note</h3>
                     </div>
                     <textarea 
                       value={resolutionNote}
                       onChange={(e) => setResolutionNote(e.target.value)}
                       placeholder="Detail the response actions taken..."
-                      className="w-full p-6 bg-slate-100 dark:bg-slate-800/80 border-none rounded-[1.5rem] text-base text-slate-900 dark:text-white focus:outline-none focus:ring-0 transition-all min-h-[160px] resize-none shadow-sm placeholder:text-slate-400"
+                      className="w-full p-6 bg-[#1a1d23] bg-[#1a1d23]/80 border-none rounded-[1.5rem] text-base text-white text-white focus:outline-none focus:ring-0 transition-all min-h-[160px] resize-none shadow-sm placeholder:text-[#8a8f98]"
                     />
                   </div>
                 )}
@@ -219,24 +219,24 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
               {/* Side Info */}
               <div className="space-y-6">
                 {/* Timeline Box */}
-                <div className="bg-slate-100 dark:bg-slate-800/40 p-6 rounded-[1.5rem]">
+                <div className="bg-[#1a1d23] bg-[#1a1d23]/40 p-6 rounded-[1.5rem]">
                    <div className="space-y-5">
                       <div className="flex items-start gap-4">
-                        <div className="mt-1 p-2 rounded-lg bg-white dark:bg-slate-700 shadow-sm">
+                        <div className="mt-1 p-2 rounded-lg bg-[#1a1d23] shadow-sm">
                           <Calendar className="w-4 h-4 text-primary" />
                         </div>
                         <div>
-                          <span className="block text-[9px] font-black text-slate-400 uppercase tracking-widest">Date Reported</span>
-                          <span className="block font-bold text-sm text-slate-900 dark:text-white">{formatReportDate(incidentTimestamp)}</span>
+                          <span className="block text-[9px] font-black text-[#8a8f98] uppercase tracking-widest">Date Reported</span>
+                          <span className="block font-bold text-sm text-white text-white">{formatReportDate(incidentTimestamp)}</span>
                         </div>
                       </div>
                       <div className="flex items-start gap-4">
-                        <div className="mt-1 p-2 rounded-lg bg-white dark:bg-slate-700 shadow-sm">
+                        <div className="mt-1 p-2 rounded-lg bg-[#1a1d23] shadow-sm">
                           <Clock className="w-4 h-4 text-primary" />
                         </div>
                         <div>
-                          <span className="block text-[9px] font-black text-slate-400 uppercase tracking-widest">Time Reported</span>
-                          <span className="block font-bold text-sm text-slate-900 dark:text-white">{formatReportTime(incidentTimestamp)}</span>
+                          <span className="block text-[9px] font-black text-[#8a8f98] uppercase tracking-widest">Time Reported</span>
+                          <span className="block font-bold text-sm text-white text-white">{formatReportTime(incidentTimestamp)}</span>
                         </div>
                       </div>
                    </div>
@@ -244,7 +244,7 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
 
                 {/* Contacts Section */}
                 <div className="space-y-4">
-                    <h3 className="font-black text-[10px] uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2">
+                    <h3 className="font-black text-[10px] uppercase tracking-[0.2em] text-[#8a8f98] flex items-center gap-2">
                       <Phone className="w-3 h-3" /> Quick Dispatch
                     </h3>
                     
@@ -254,9 +254,9 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
                         placeholder="Search services..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border-none text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-0 transition-all shadow-sm"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#1a1d23] bg-[#1a1d23]/80 border-none text-xs text-white text-white focus:outline-none focus:ring-0 transition-all shadow-sm"
                       />
-                      <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <Search className="w-4 h-4 text-[#8a8f98] absolute left-3.5 top-1/2 -translate-y-1/2" />
                     </div>
 
                     <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 no-scrollbar">
@@ -271,15 +271,15 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
                                 <div key={contact.id} className={`p-4 rounded-2xl transition-all ${
                                   isRecommended 
                                     ? 'bg-primary/5' 
-                                    : 'bg-white dark:bg-slate-800'
+                                    : 'bg-[#1a1d23]'
                                 }`}>
                                     <div className="flex justify-between items-center mb-3">
                                         <div>
-                                            <div className="font-bold text-slate-900 dark:text-white text-xs flex items-center gap-2">
+                                            <div className="font-bold text-white text-white text-xs flex items-center gap-2">
                                                 {contact.name}
                                                 {isRecommended && <span className="px-1.5 py-0.5 rounded-full bg-primary/20 text-primary text-[8px] font-black uppercase">Reco</span>}
                                             </div>
-                                            <div className="text-[10px] text-slate-500 font-medium">{contact.role}</div>
+                                            <div className="text-[10px] text-white0 font-medium">{contact.role}</div>
                                         </div>
                                     </div>
                                     <a 
@@ -296,8 +296,8 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
                                 </div>
                             )})
                         ) : (
-                            <div className="text-center py-8 bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
-                               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">No services found</p>
+                            <div className="text-center py-8 bg-[#1a1d23] rounded-2xl border border-dashed border-[#2a2d33] border-[#2a2d33]">
+                               <p className="text-[10px] font-bold text-[#8a8f98] uppercase tracking-widest">No services found</p>
                             </div>
                         )}
                     </div>
@@ -307,10 +307,10 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
         </div>
 
         {/* Footer Actions */}
-        <div className="px-8 py-6 bg-red-300 dark:bg-slate-800/80 flex justify-between items-center ">
+        <div className="px-8 py-6 bg-red-300 bg-[#1a1d23]/80 flex justify-between items-center ">
           <button 
             onClick={onClose}
-            className="px-8 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-2xl font-black text-xs uppercase tracking-widest transition-colors"
+            className="px-8 py-3 text-white0 text-[#8a8f98] hover:bg-[#2a2d33]  rounded-2xl font-black text-xs uppercase tracking-widest transition-colors"
           >
             Close Window
           </button>
@@ -319,7 +319,7 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
             <button 
               onClick={handleResolveSubmit}
               disabled={isResolving}
-              className="flex items-center gap-3 px-10 py-3.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl shadow-slate-900/10 dark:shadow-white/5 active:scale-95 disabled:opacity-50"
+              className="flex items-center gap-3 px-10 py-3.5 bg-[#1a1d23] text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl shadow-slate-900/10 shadow-white/5 active:scale-95 disabled:opacity-50"
             >
               {isResolving ? (
                  <Loader2 className="w-5 h-5 animate-spin" />

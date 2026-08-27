@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -14,122 +14,336 @@ import {
   Eye, 
   EyeOff, 
   LogIn,
-  Shield
+  Shield,
+  QrCode,
+  X,
+  Scan,
+  CheckCircle,
+  Loader2,
+  Home
 } from 'lucide-react'
 import { handleAdminLogin, handleSecurityLogin, handleUserLogin } from '@/lib/action'
+
+// QR Scanner component
+const QRScanner = ({ onScan, onClose }) => {
+  const videoRef = useRef(null)
+  const canvasRef = useRef(null)
+  const [scanning, setScanning] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let stream = null
+    let animationFrame = null
+
+    const startCamera = async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ 
+          video: { facingMode: 'environment' } 
+        })
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream
+          await videoRef.current.play()
+          scanQRCode()
+        }
+      } catch (err) {
+        setError('Unable to access camera. Please ensure camera permissions are granted.')
+        console.error('Camera error:', err)
+      }
+    }
+
+    const scanQRCode = () => {
+      if (!videoRef.current || !canvasRef.current || !scanning) return
+
+      const video = videoRef.current
+      const canvas = canvasRef.current
+      const context = canvas.getContext('2d')
+
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        canvas.width = video.videoWidth
+        canvas.height = video.videoHeight
+        context.drawImage(video, 0, 0, canvas.width, canvas.height)
+        
+        const imageData = context.getImageData(0, 0, canvas.width, canvas.height)
+        const code = decodeQRCode(imageData)
+        
+        if (code) {
+          setScanning(false)
+          onScan(code)
+          return
+        }
+      }
+
+      animationFrame = requestAnimationFrame(scanQRCode)
+    }
+
+    startCamera()
+
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop())
+      }
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame)
+      }
+    }
+  }, [onScan, scanning])
+
+  const decodeQRCode = (imageData) => {
+    // Placeholder - use a proper QR library in production
+    return null
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300">
+      <div className="relative w-full max-w-2xl bg-[#1a1d23] rounded-2xl overflow-hidden shadow-2xl border border-[#2a2d33]">
+        <div className="flex items-center justify-between p-4 border-b border-[#2a2d33]">
+          <div className="flex items-center gap-2 text-white">
+            <Scan className="size-5 text-[#1241a1]" />
+            <h3 className="font-semibold">Scan QR Code</h3>
+          </div>
+          <button 
+            onClick={onClose}
+            className="text-[#8a8f98] hover:text-white transition-colors p-1 rounded-lg hover:bg-[#2a2d33]"
+          >
+            <X className="size-5" />
+          </button>
+        </div>
+
+        <div className="relative aspect-square bg-black">
+          <video 
+            ref={videoRef} 
+            className="w-full h-full object-cover"
+            playsInline
+          />
+          <canvas ref={canvasRef} className="hidden" />
+          
+          <div className="absolute inset-0 border-2 border-white/30 rounded-lg m-8 pointer-events-none">
+            <div className="absolute inset-0 border-2 border-[#1241a1]/50 animate-pulse rounded-lg" />
+            <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-[#1241a1]" />
+            <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-[#1241a1]" />
+            <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-[#1241a1]" />
+            <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-[#1241a1]" />
+          </div>
+          
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#1241a1] to-transparent animate-scanner" />
+          </div>
+        </div>
+
+        <div className="p-4 border-t border-[#2a2d33]">
+          {error ? (
+            <div className="flex items-center gap-2 text-red-400">
+              <AlertCircle className="size-4" />
+              <p className="text-sm">{error}</p>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-[#8a8f98]">
+              <Loader2 className="size-4 animate-spin" />
+              <p className="text-sm">Position QR code within the frame to scan...</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [gateId, setGateId] = useState('')
   const [userType, setUserType] = useState('resident')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [showQRScanner, setShowQRScanner] = useState(false)
+  const [scanSuccess, setScanSuccess] = useState(false)
   const router = useRouter()
-const handleLogin = async (e) => {
-  e.preventDefault()
-  setError('')
-  setIsLoading(true)
 
-  try {
-    if (userType === 'admin') {
-      const result = await handleAdminLogin(email, password)
-      if (result.success) {
-        router.push('/dashboard/admin')
-        return
-      } else {
-        setError(result.errors?.[0] || 'Admin login failed')
-        setIsLoading(false)
-        return
-      }
-    } 
-    
-    else if (userType === 'security') {
-      if (!gateId.trim()) {
-        setError('Gate ID is required')
-        setIsLoading(false)
-        return
-      }
+  // Role-specific content configuration
+  const roleConfig = {
+    resident: {
+      title: 'Welcome Home',
+      subtitle: 'Access your estate management dashboard',
+      image: '/images/resident-bg.jpg',
+      fallbackImage: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=2000&auto=format&fit=crop',
+      icon: Home,
+      features: [
+        'View your property details',
+        'Submit maintenance requests',
+        'Pay association fees',
+        'Access community amenities'
+      ],
+      gradient: 'from-[#1241a1]/60 via-[#0d0f13]/80 to-[#0d0f13]/90',
+      buttonColor: 'bg-[#1241a1] hover:bg-[#1a51b1] shadow-[#1241a1]/30'
+    },
+    security: {
+      title: 'Security Command',
+      subtitle: 'Scan QR code for instant access',
+      image: '/images/security-bg.jpg',
+      fallbackImage: 'https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=2000&auto=format&fit=crop',
+      icon: Shield,
+      features: [
+        'QR code authentication',
+        'Real-time access monitoring',
+        'Visitor management system',
+        'Emergency response coordination'
+      ],
+      gradient: 'from-[#1241a1]/60 via-[#0d0f13]/80 to-[#0d0f13]/90',
+      buttonColor: 'bg-[#1241a1] hover:bg-[#1a51b1] shadow-[#1241a1]/30'
+    },
+    admin: {
+      title: 'Admin Control Center',
+      subtitle: 'Full estate management suite',
+      image: '/images/admin-bg.jpg',
+      fallbackImage: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2000&auto=format&fit=crop',
+      icon: Building2,
+      features: [
+        'Resident management',
+        'Staff administration',
+        'Financial reporting',
+        'System configuration'
+      ],
+      gradient: 'from-[#1241a1]/60 via-[#0d0f13]/80 to-[#0d0f13]/90',
+      buttonColor: 'bg-[#1241a1] hover:bg-[#1a51b1] shadow-[#1241a1]/30'
+    }
+  }
+
+  const currentConfig = roleConfig[userType]
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setError('')
+    setIsLoading(true)
+
+    try {
+      if (userType === 'admin') {
+        const result = await handleAdminLogin(email, password)
+        if (!result.success) {
+          setError(result.errors?.[0] || 'Login failed')
+          setIsLoading(false)
+        } else {
+          setIsLoading(false)
+          router.push('/auth/proceed?role=admin')
+        }
+      } 
       
-      const result = await handleSecurityLogin(email, password, gateId)
-      console.log(result)
+      else if (userType === 'resident') {
+        const result = await handleUserLogin(email, password)
+        console.log(result)
 
-      if (result.success) {
-        router.push('/dashboard/security')
+        if (!result.success) {
+          setError(result.errors?.[0] || 'Login failed')
+          setIsLoading(false)
+        } else {
+          setIsLoading(false)
+          router.push('/auth/proceed?role=resident')
+        }
+      }
+    } catch (error) {
+      setError('An unexpected error occurred')
+      setIsLoading(false)
+    }
+  }
+
+  // Handle QR code scan - ONLY for security
+  const handleQRScan = async (scannedData) => {
+    try {
+      // Parse QR code data (expected format: email|gateId|token)
+      const [scannedEmail, scannedGateId, token] = scannedData.split('|')
+      
+      if (!scannedEmail || !scannedGateId || !token) {
+        setError('Invalid QR code format')
+        setShowQRScanner(false)
         return
+      }
+
+      setScanSuccess(true)
+
+      // Auto-login after successful scan
+      setIsLoading(true)
+      
+      const result = await handleSecurityLogin(scannedEmail, token, scannedGateId)
+      
+      if (result.success) {
+        router.push('/auth/proceed?role=security')
       } else {
         setError(result.errors?.[0] || 'Security login failed')
         setIsLoading(false)
-        return
+        setScanSuccess(false)
       }
-    } 
-    
-    else { // resident
-      const result = await handleUserLogin(email, password)
-        console.log(result)
-
-      if (!result.success) {
-        setError(result.errors?.[0] || 'Login failed')
-        setIsLoading(false)
-      } else {
-        setIsLoading(false)
-        router.push('/auth/proceed')
-      }
+    } catch (error) {
+      setError('Failed to process QR code')
+      setIsLoading(false)
+    } finally {
+      setShowQRScanner(false)
     }
-  } catch (error) {
-    setError('An unexpected error occurred')
-    setIsLoading(false)
   }
-}
+
+  const RoleIcon = currentConfig.icon
+
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center justify-center p-4 overflow-hidden bg-slate-50 dark:bg-slate-950 font-sans">
+    <div className="relative min-h-screen w-full flex flex-col items-center justify-center p-4 overflow-hidden bg-[#0d0f13] font-sans">
       {/* Background Image with Overlay */}
       <div 
-        className="absolute inset-0 z-0 bg-center bg-cover bg-no-repeat opacity-20"
-        style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2000&auto=format&fit=crop")' }}
+        className="absolute inset-0 z-0 bg-center bg-cover bg-no-repeat opacity-20 transition-all duration-700"
+        style={{ backgroundImage: `url("${currentConfig.fallbackImage}")` }}
       />
-      <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-900/80 via-slate-900 to-slate-900" />
+      <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#0d0f13]/80 via-[#0d0f13] to-[#0d0f13]" />
       
       {/* Main Login Card */}
-      <div className="relative z-20 w-full max-w-[960px] flex flex-col md:flex-row bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl rounded-xl overflow-hidden shadow-2xl">
+      <div className="relative z-20 w-full max-w-[960px] flex flex-col md:flex-row bg-[#1a1d23]/95 backdrop-blur-xl rounded-xl overflow-hidden shadow-2xl border border-[#2a2d33]">
         
-        {/* Left Side: Visual Context with Full Cover Image */}
-        <div className="hidden md:flex flex-1 flex-col justify-between p-10 relative min-h-[500px] overflow-hidden">
-          {/* Background Image - Full Cover */}
-           <div className="absolute inset-0 z-0" >
-              <Image 
-                src="/images/estatelanding.jpg"
-                alt="Preview"
-                fill
-                className="object-cover"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-slate-900/80 to-slate-900/90" />
-            </div>
+        {/* Left Side: Dynamic Visual Context */}
+        <div className="hidden md:flex flex-1 flex-col justify-between p-10 relative min-h-[500px] overflow-hidden transition-all duration-700">
+          {/* Dynamic Background Image */}
+          <div className="absolute inset-0 z-0 transition-all duration-700">
+            <Image 
+              src={currentConfig.image}
+              alt={`${userType} background`}
+              fill
+              className="object-cover transition-all duration-700"
+              priority
+              onError={(e) => {
+                e.currentTarget.src = currentConfig.fallbackImage
+              }}
+            />
+            <div className={`absolute inset-0 bg-gradient-to-br ${currentConfig.gradient} transition-all duration-700`} />
+          </div>
           
-          {/* Content - sits on top of image */}
+          {/* Content */}
           <div className="relative z-10 flex flex-col justify-center h-full">
-            <div className="border border-slate-400/50 bg-white/10 backdrop-blur-md p-10 rounded-xl text-white">
+            <div className="bg-white/10 backdrop-blur-md p-10 rounded-xl text-white transition-all duration-500">
               <div className="flex items-center gap-2 mb-8 cursor-pointer group" onClick={() => router.push('/')}>
                 <div className="p-2 bg-white/20 backdrop-blur rounded-lg text-white shadow-lg group-hover:scale-110 transition-transform">
                   <Building2 className="size-6" />
                 </div>
                 <h1 className="text-2xl font-bold tracking-tight text-white">EMSS</h1>
               </div>
-              <h2 className="text-3xl font-bold leading-tight text-white mb-4 italic">Next-Gen Estate Management</h2>
-              <p className="text-white/80 text-lg leading-relaxed">Experience the ultimate all-in-one suite designed for luxury residences and smart communities.</p>
+              
+              <div className="flex items-center gap-3 mb-3">
+               
+                <h2 className="text-3xl font-bold leading-tight text-white italic">
+                  {currentConfig.title}
+                </h2>
+              </div>
+              
+              <p className="text-white/80 text-lg leading-relaxed">
+                {currentConfig.subtitle}
+              </p>
             </div>
             
-            <div className="space-y-4 mt-8">
-              <div className="flex items-center gap-3 text-white/80">
-                <UserCheck className="size-5 text-blue-300" />
-                <span className="text-sm font-medium">Enterprise Grade Security</span>
-              </div>
-              <div className="flex items-center gap-3 text-white/80">
-                <Headset className="size-5 text-blue-300" />
-                <span className="text-sm font-medium">24/7 Professional Support</span>
-              </div>
+            {/* Role-specific features */}
+            <div className="space-y-3 mt-8 transition-all duration-500">
+              {currentConfig.features.map((feature, index) => (
+                <div 
+                  key={index}
+                  className="flex items-center gap-3 text-white/80 animate-in fade-in slide-in-from-left-2"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <div className="size-2 rounded-full bg-white/50" />
+                  <span className="text-sm font-medium">{feature}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -137,136 +351,211 @@ const handleLogin = async (e) => {
         {/* Right Side: Login Form */}
         <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
           <div className="mb-8 text-center md:text-left">
-            <span className="text-2xl font-bold text-slate-900 dark:text-slate-200 mb-2">Welcome Back</span>
-            <p className="text-slate-600 dark:text-slate-300">Please select your account type to continue</p>
+            <span className="text-2xl font-bold text-white mb-2">
+              {userType === 'resident' ? 'Welcome Home' : 
+               userType === 'security' ? 'Security Access' : 
+               'Admin Access'}
+            </span>
+            <p className="text-[#8a8f98]">
+              {userType === 'resident' ? 'Sign in to your resident dashboard' : 
+               userType === 'security' ? 'Scan QR code for instant access' : 
+               'Sign in to admin control panel'}
+            </p>
           </div>
 
           {/* Role Selector */}
-          <div className="flex h-12 w-full items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 p-1 mb-8 shadow-inner">
+          <div className="flex h-12 w-full items-center justify-center rounded-xl bg-[#0d0f13] border border-[#2a2d33] p-1 mb-8 shadow-inner">
             <button 
               type="button"
               onClick={() => {
                 setUserType('resident')
-                setGateId('') // Clear gate ID when switching
+                setError('')
+                setEmail('')
+                setPassword('')
+                setScanSuccess(false)
               }}
-              className={`flex-1 h-full rounded-lg text-sm font-semibold transition-all ${userType === 'resident' ? 'bg-slate-500 text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
+              className={`flex-1 h-full rounded-lg text-sm font-semibold transition-all ${userType === 'resident' ? 'bg-[#1241a1] text-white shadow-lg' : 'text-[#8a8f98] hover:text-white'}`}
             >
+              <Home className="size-4 inline-block mr-1" />
               Resident
             </button>
             <button 
               type="button"
               onClick={() => {
                 setUserType('security')
-                setGateId('') // Clear gate ID when switching
+                setError('')
+                setEmail('')
+                setPassword('')
+                setScanSuccess(false)
               }}
-              className={`flex-1 h-full rounded-lg text-sm font-semibold transition-all ${userType === 'security' ? 'bg-slate-500 text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
+              className={`flex-1 h-full rounded-lg text-sm font-semibold transition-all ${userType === 'security' ? 'bg-[#1241a1] text-white shadow-lg' : 'text-[#8a8f98] hover:text-white'}`}
             >
+              <Shield className="size-4 inline-block mr-1" />
               Security
             </button>
             <button 
               type="button"
               onClick={() => {
                 setUserType('admin')
-                setGateId('') // Clear gate ID when switching
+                setError('')
+                setEmail('')
+                setPassword('')
+                setScanSuccess(false)
               }}
-              className={`flex-1 h-full rounded-lg text-sm font-semibold transition-all ${userType === 'admin' ? 'bg-slate-500 text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
+              className={`flex-1 h-full rounded-lg text-sm font-semibold transition-all ${userType === 'admin' ? 'bg-[#1241a1] text-white shadow-lg' : 'text-[#8a8f98] hover:text-white'}`}
             >
-              Admin / Staff
+              <Building2 className="size-4 inline-block mr-1" />
+              Admin
             </button>
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-500/10 rounded-xl flex items-center  gap-3 text-red-500 dark:text-red-400 animate-in fade-in slide-in-from-top-2">
+            <div className="mb-6 p-4 bg-red-500/10 rounded-xl flex items-center gap-3 text-red-400 animate-in fade-in slide-in-from-top-2 border border-red-500/20">
               <AlertCircle className="size-5 mt-0.5 shrink-0" />
               <p className="text-xs font-medium">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Email Address</label>
-              <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1241a1] size-5 transition-colors" />
-                <input 
-                  type={userType === 'security' ? 'text' : 'email'}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white pl-14 pr-4 py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] outline-none transition-all placeholder:text-slate-500"
-                  placeholder={userType === 'resident' ? 'resident@demo.com' : 'admin@demo.com'}
-                  required
-                  disabled={isLoading}
-                />
-              </div>
+          {scanSuccess && (
+            <div className="mb-6 p-4 bg-green-500/10 rounded-xl flex items-center gap-3 text-green-400 animate-in fade-in slide-in-from-top-2 border border-green-500/20">
+              <CheckCircle className="size-5 mt-0.5 shrink-0" />
+              <p className="text-xs font-medium">QR code scanned successfully! Authenticating...</p>
             </div>
+          )}
 
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Password</label>
-              <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1241a1] size-5 transition-colors" />
-                <input 
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white pl-14 pr-14 py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] outline-none transition-all placeholder:text-slate-500"
-                  placeholder="••••••••"
-                  required
-                  disabled={isLoading}
-                />
+          <form onSubmit={handleLogin} className="space-y-5">
+            {/* Security - QR Code Only */}
+            {userType === 'security' ? (
+              <div className="space-y-6">
+                {/* QR Scanner Card - Dark Theme */}
+                <div className="bg-[#1a1d23] border border-[#2a2d33] rounded-xl p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2.5 bg-[#1241a1]/20 rounded-xl">
+                      <QrCode className="size-5 text-[#1241a1]" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-white">QR Authentication</h3>
+                      <p className="text-[11px] text-[#8a8f98]">Scan your assigned QR code to authenticate</p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowQRScanner(true)}
+                    className="w-full py-5 bg-[#1241a1] hover:bg-[#1a51b1] text-white font-semibold rounded-xl transition-all transform active:scale-95 flex flex-col items-center justify-center gap-2 shadow-lg shadow-[#1241a1]/30 border-none"
+                    disabled={isLoading}
+                  >
+                    <QrCode className="size-10" />
+                    <span className="text-sm">Scan QR Code</span>
+                    <span className="text-[11px] text-blue-200">Tap to open camera</span>
+                  </button>
+                </div>
+
+                {/* Info Card */}
+                <div className="bg-[#1a1d23] border border-[#2a2d33] rounded-xl p-4 flex items-start gap-3">
+                  <div className="p-1.5 bg-amber-500/10 rounded-lg mt-0.5">
+                    <AlertCircle className="size-4 text-amber-500" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-white mb-1">Admin Approval Required</p>
+                    <p className="text-[11px] text-[#8a8f98] leading-relaxed">
+                      After scanning, an administrator must approve your login from the Guard Management panel before you gain access.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Manual Login Disabled */}
+                <div className="bg-[#1a1d23]/50 border border-[#2a2d33]/50 rounded-xl py-3 px-4 flex items-center justify-center gap-2">
+                  <Lock className="size-4 text-[#8a8f98]" />
+                  <span className="text-xs font-medium text-[#8a8f98]">Manual login disabled for security</span>
+                </div>
+              </div>
+            ) : (
+              /* Resident & Admin - Manual Login */
+              <div className="space-y-5">
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-semibold text-[#8a8f98] ml-1">
+                    Email Address
+                  </label>
+                  <div className="relative group">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8f98] group-focus-within:text-[#1241a1] size-5 transition-colors" />
+                    <input 
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full bg-[#0d0f13] text-white border border-[#2a2d33] pl-14 pr-4 py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] focus:border-[#1241a1] outline-none transition-all placeholder:text-[#8a8f98]"
+                      placeholder={userType === 'resident' ? 'resident@demo.com' : 'admin@demo.com'}
+                      required
+                      disabled={isLoading}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-semibold text-[#8a8f98] ml-1">Password</label>
+                  <div className="relative group">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8f98] group-focus-within:text-[#1241a1] size-5 transition-colors" />
+                    <input 
+                      type={showPassword ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full bg-[#0d0f13] text-white border border-[#2a2d33] pl-14 pr-14 py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] focus:border-[#1241a1] outline-none transition-all placeholder:text-[#8a8f98]"
+                      placeholder="••••••••"
+                      required
+                      disabled={isLoading}
+                    />
+                    <button 
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8a8f98] hover:text-[#1241a1] transition-colors"
+                      disabled={isLoading}
+                    >
+                      {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                    </button>
+                  </div>
+                </div>
+
                 <button 
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#1241a1] transition-colors"
+                  type="submit"
                   disabled={isLoading}
+                  className={`w-full text-white font-bold py-4 rounded-xl transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-lg ${currentConfig.buttonColor} disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
-                  {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                  {isLoading ? (
+                    <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <LogIn className="size-5" />
+                  )}
+                  {isLoading ? 'Authenticating...' : `Sign in as ${userType.charAt(0).toUpperCase() + userType.slice(1)}`}
                 </button>
               </div>
-            </div>
-
-            {/* Gate ID Field - Only visible for Security */}
-            {userType === 'security' && (
-              <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Gate ID</label>
-                <div className="relative group">
-                  <Shield className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1241a1] size-5 transition-colors" />
-                  <input 
-                    type="text"
-                    value={gateId}
-                    onChange={(e) => setGateId(e.target.value)}
-                    className="w-full bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white pl-14 pr-4 py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] outline-none transition-all placeholder:text-slate-500"
-                    placeholder="Enter your assigned gate ID (e.g., GATE-001)"
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 pl-1">
-                  Enter the gate ID assigned to your security post
-                </p>
-              </div>
             )}
-
-            <button 
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-slate-900 hover:bg-slate-500 disabled:bg-slate-400 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all transform active:scale-95 flex items-center justify-center gap-2"
-            >
-              {isLoading ? (
-                <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <LogIn className="size-5" />
-              )}
-              {isLoading ? 'Authenticating...' : 'Sign In to Dashboard'}
-            </button>
           </form>
 
-          <div className="mt-8 text-center pt-8 border-t border-slate-200 dark:border-slate-700">
-            <p className="text-slate-500 dark:text-slate-400 text-sm">
-              Don't have account? 
-              <Link href="/auth/signup" className="text-slate-700 dark:text-slate-200 font-bold ml-1 hover:underline">Sign up here</Link>
+          <div className="mt-8 text-center pt-8 border-t border-[#2a2d33]">
+            <p className="text-[#8a8f98] text-sm">
+              {userType === 'security' ? (
+                'Contact your administrator for QR code assignment'
+              ) : (
+                <>
+                  Don't have account? 
+                  <Link href="/auth/signup" className="text-white font-bold ml-1 hover:underline">Sign up here</Link>
+                </>
+              )}
             </p>
           </div>
         </div>
       </div>
+
+      {/* QR Scanner Modal */}
+      {showQRScanner && (
+        <QRScanner 
+          onScan={handleQRScan}
+          onClose={() => {
+            setShowQRScanner(false)
+            setScanSuccess(false)
+          }}
+        />
+      )}
     </div>
   )
 }

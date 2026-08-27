@@ -1,17 +1,18 @@
 import React from 'react'
 import ComingSoon from '@/components/ComingSoon'
-import { Megaphone } from 'lucide-react'
+import { Megaphone, BellRing } from 'lucide-react'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 export default function NoticeBoardPage() {
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white font-heading">Notice Board</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Read vital announcements and rules published by estate management.</p>
-        </div>
-      </div>
-      
+    <div className="max-w-7xl mx-auto pb-12 animate-in fade-in duration-700 space-y-6">
+      <PageHeader
+        title="Notice Board"
+        description="Read vital announcements and rules published by estate management."
+        icon={BellRing}
+        iconColor="amber"
+      />
+
       <ComingSoon 
         title="Notice Board" 
         description="The estate communication center is being developed. Check back soon for official announcements." 

@@ -6,7 +6,7 @@ import { BackButton } from '@/components/ui/BackButton'
 
 const page = () => {
   return (
-    <div className="p-6">
+    <div className="max-w-7xl mx-auto pb-12 animate-in fade-in duration-700 space-y-6">
         <PageHeader 
           title="Guests" 
           description="The guest management feature is currently under development."

@@ -36,22 +36,22 @@ export default function ProfileDetails({
 
   const SectionHeader = ({ icon: Icon, title }) => (
     <div className="flex items-center gap-2 mb-4 pb-2">
-      <div className="p-1.5 bg-blue-50 dark:bg-blue-900/20 rounded-md text-blue-600 dark:text-blue-400">
+      <div className="p-1.5 bg-blue-50 bg-blue-900/20 rounded-md text-blue-600 text-blue-400">
         <Icon className="w-4 h-4" />
       </div>
-      <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">{title}</h4>
+      <h4 className="text-xs font-bold uppercase tracking-widest text-[#8a8f98] text-[#8a8f98]">{title}</h4>
     </div>
   );
 
   const DetailItem = ({ icon: Icon, label, value, fullWidth = false }) => (
-    <div className={`p-4 bg-white dark:bg-gray-800/40 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 ${fullWidth ? 'md:col-span-2' : ''}`}>
+    <div className={`p-4 bg-white bg-[#1a1d23]/40 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 ${fullWidth ? 'md:col-span-2' : ''}`}>
       <div className="flex items-start gap-3">
-        <div className="mt-1 p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 dark:text-slate-500">
+        <div className="mt-1 p-2 bg-[#1a1d23] rounded-lg text-[#8a8f98] text-white0">
           <Icon className="w-4 h-4" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">{label}</p>
-          <p className="font-semibold text-gray-900 dark:text-white truncate">{value || 'N/A'}</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[#8a8f98] text-[#8a8f98] mb-1">{label}</p>
+          <p className="font-semibold text-white text-white truncate">{value || 'N/A'}</p>
         </div>
       </div>
     </div>
@@ -62,12 +62,12 @@ export default function ProfileDetails({
       {selectedProfile ? (
         <div className="space-y-6 sticky top-24">
           {/* Main Card */}
-          <div className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="bg-white/80 bg-[#0d0f13]/60 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Header / Banner Area */}
             <div className="h-24 bg-linear-to-r from-blue-600 to-indigo-700 relative">
               <div className="absolute -bottom-12 left-8">
-                <div className="w-24 h-24 bg-white dark:bg-slate-800 rounded-2xl p-1 shadow-2xl">
-                  <div className="w-full h-full bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center text-4xl shadow-inner">
+                <div className="w-24 h-24 bg-[#1a1d23] rounded-2xl p-1 shadow-2xl">
+                  <div className="w-full h-full bg-[#1a1d23] rounded-xl flex items-center justify-center text-4xl shadow-inner">
                     {selectedProfile.profileImage || '👤'}
                   </div>
                 </div>
@@ -101,21 +101,21 @@ export default function ProfileDetails({
             <div className="pt-16 px-8 pb-6">
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                  <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                  <h3 className="text-3xl font-black text-white text-white tracking-tight">
                     {selectedProfile.name}
                   </h3>
                   <div className="flex items-center gap-3 mt-2">
                     <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest ${getStatusColor(selectedProfile.status)}`}>
                       {selectedProfile.status}
                     </span>
-                    <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-full text-xs font-bold uppercase tracking-widest">
+                    <span className="px-3 py-1 bg-[#1a1d23] text-[#8a8f98] text-[#8a8f98] rounded-full text-xs font-bold uppercase tracking-widest">
                       {getProfileTypeLabel(selectedProfile.type)}
                     </span>
                   </div>
                 </div>
-                <div className="bg-slate-50 dark:bg-slate-800/50 px-4 py-2 rounded-xl">
-                  <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Global ID</p>
-                  <p className="font-mono text-sm font-bold text-slate-700 dark:text-slate-300">{selectedProfile.id}</p>
+                <div className="bg-[#1a1d23]/50 px-4 py-2 rounded-xl">
+                  <p className="text-[10px] font-bold text-[#8a8f98] text-white0 uppercase tracking-widest">Global ID</p>
+                  <p className="font-mono text-sm font-bold text-white ">{selectedProfile.id}</p>
                 </div>
               </div>
             </div>
@@ -125,71 +125,71 @@ export default function ProfileDetails({
               {isEditing ? (
                 // --- Premium Edit Form ---
                 <div className="space-y-8 animate-in fade-in slide-in-from-top-4 duration-500">
-                  <div className="bg-slate-50/50 dark:bg-slate-800/30 p-8 rounded-3xl space-y-8">
+                  <div className="bg-[#1a1d23] p-8 rounded-3xl space-y-8">
                     {/* Section: Personal Information */}
                     <div className="space-y-6">
                       <SectionHeader icon={User} title="Personal Information" />
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">Full Legal Name</label>
+                          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8a8f98] text-white0 ml-1">Full Legal Name</label>
                           <div className="relative group">
-                            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a8f98] group-focus-within:text-blue-500 transition-colors" />
                             <input
                               type="text"
                               name="name"
                               value={formData.name}
                               onChange={handleInputChange}
-                              className="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-900 rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-slate-900 dark:text-white font-bold shadow-sm focus:shadow-md"
+                              className="w-full pl-12 pr-4 py-4 bg-[#1a1d23] rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-white text-white font-bold shadow-sm focus:shadow-md"
                               placeholder="Enter full name"
                             />
                           </div>
                         </div>
 
                         <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">Email Address</label>
+                          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8a8f98] text-white0 ml-1">Email Address</label>
                           <div className="relative group">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a8f98] group-focus-within:text-blue-500 transition-colors" />
                             <input
                               type="email"
                               name="email"
                               value={formData.email}
                               onChange={handleInputChange}
-                              className="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-900 rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-slate-900 dark:text-white font-bold shadow-sm focus:shadow-md"
+                              className="w-full pl-12 pr-4 py-4 bg-[#1a1d23] rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-white text-white font-bold shadow-sm focus:shadow-md"
                               placeholder="example@domain.com"
                             />
                           </div>
                         </div>
 
                         <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">Primary Phone</label>
+                          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8a8f98] text-white0 ml-1">Primary Phone</label>
                           <div className="relative group">
-                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a8f98] group-focus-within:text-blue-500 transition-colors" />
                             <input
                               type="tel"
                               name="phone"
                               value={formData.phone}
                               onChange={handleInputChange}
-                              className="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-900 rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-slate-900 dark:text-white font-bold shadow-sm focus:shadow-md"
+                              className="w-full pl-12 pr-4 py-4 bg-[#1a1d23] rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-white text-white font-bold shadow-sm focus:shadow-md"
                               placeholder="+1 (555) 000-0000"
                             />
                           </div>
                         </div>
 
                         <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">Account Visibility</label>
+                          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8a8f98] text-white0 ml-1">Account Visibility</label>
                           <div className="relative group">
-                            <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors z-10" />
+                            <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a8f98] group-focus-within:text-blue-500 transition-colors z-10" />
                             <select
                               name="status"
                               value={formData.status}
                               onChange={handleInputChange}
-                              className="w-full pl-12 pr-10 py-4 bg-white dark:bg-slate-900 rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-slate-900 dark:text-white font-bold shadow-sm focus:shadow-md appearance-none relative"
+                              className="w-full pl-12 pr-10 py-4 bg-[#1a1d23] rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-white text-white font-bold shadow-sm focus:shadow-md appearance-none relative"
                             >
                               <option value="active">Active System Profile</option>
                               <option value="inactive">Suspended / Inactive</option>
                               <option value="pending">Awaiting Verification</option>
                             </select>
-                            <MoreHorizontal className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                            <MoreHorizontal className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a8f98] pointer-events-none" />
                           </div>
                         </div>
                       </div>
@@ -205,43 +205,43 @@ export default function ProfileDetails({
                         {selectedProfile.type === 'resident' ? (
                           <>
                             <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">Assigned Unit</label>
+                              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8a8f98] text-white0 ml-1">Assigned Unit</label>
                               <div className="relative group">
-                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a8f98] group-focus-within:text-blue-500 transition-colors" />
                                 <input
                                   type="text"
                                   name="unitNumber"
                                   value={formData.unitNumber || formData.unit}
                                   onChange={handleInputChange}
-                                  className="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-900 rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-slate-900 dark:text-white font-bold shadow-sm focus:shadow-md"
+                                  className="w-full pl-12 pr-4 py-4 bg-[#1a1d23] rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-white text-white font-bold shadow-sm focus:shadow-md"
                                   placeholder="e.g. Block C, Unit 402"
                                 />
                               </div>
                             </div>
                             <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">Occupation</label>
+                              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8a8f98] text-white0 ml-1">Occupation</label>
                               <div className="relative group">
-                                <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                                <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a8f98] group-focus-within:text-blue-500 transition-colors" />
                                 <input
                                   type="text"
                                   name="occupation"
                                   value={formData.occupation}
                                   onChange={handleInputChange}
-                                  className="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-900 rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-slate-900 dark:text-white font-bold shadow-sm focus:shadow-md"
+                                  className="w-full pl-12 pr-4 py-4 bg-[#1a1d23] rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-white text-white font-bold shadow-sm focus:shadow-md"
                                   placeholder="Current Profession"
                                 />
                               </div>
                             </div>
                             <div className="md:col-span-2 space-y-2">
-                              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">Emergency Contact Information</label>
+                              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8a8f98] text-white0 ml-1">Emergency Contact Information</label>
                               <div className="relative group">
-                                <Stethoscope className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                                <Stethoscope className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a8f98] group-focus-within:text-blue-500 transition-colors" />
                                 <input
                                   type="text"
                                   name="emergencyContact"
                                   value={formData.emergencyContact}
                                   onChange={handleInputChange}
-                                  className="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-900 rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-slate-900 dark:text-white font-bold shadow-sm focus:shadow-md"
+                                  className="w-full pl-12 pr-4 py-4 bg-[#1a1d23] rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-white text-white font-bold shadow-sm focus:shadow-md"
                                   placeholder="Name, Relationship & Phone"
                                 />
                               </div>
@@ -250,50 +250,50 @@ export default function ProfileDetails({
                         ) : (
                           <>
                             <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">
+                              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8a8f98] text-white0 ml-1">
                                 {selectedProfile.type === 'staff' ? 'Designated Role' : 'Security Badge ID'}
                               </label>
                               <div className="relative group">
-                                <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                                <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a8f98] group-focus-within:text-blue-500 transition-colors" />
                                 <input
                                   type="text"
                                   name={selectedProfile.type === 'staff' ? 'role' : 'badgeNumber'}
                                   value={selectedProfile.type === 'staff' ? formData.role : formData.badgeNumber}
                                   onChange={handleInputChange}
-                                  className="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-900 rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-slate-900 dark:text-white font-bold shadow-sm focus:shadow-md"
+                                  className="w-full pl-12 pr-4 py-4 bg-[#1a1d23] rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-white text-white font-bold shadow-sm focus:shadow-md"
                                 />
                               </div>
                             </div>
                             <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">
+                              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8a8f98] text-white0 ml-1">
                                 {selectedProfile.type === 'staff' ? 'Department' : 'Current Shift'}
                               </label>
                               <div className="relative group">
                                 {selectedProfile.type === 'staff' ? (
                                   <>
-                                    <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                                    <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a8f98] group-focus-within:text-blue-500 transition-colors" />
                                     <input
                                       type="text"
                                       name="department"
                                       value={formData.department}
                                       onChange={handleInputChange}
-                                      className="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-900 rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-slate-900 dark:text-white font-bold shadow-sm focus:shadow-md"
+                                      className="w-full pl-12 pr-4 py-4 bg-[#1a1d23] rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-white text-white font-bold shadow-sm focus:shadow-md"
                                     />
                                   </>
                                 ) : (
                                   <>
-                                    <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors z-10" />
+                                    <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a8f98] group-focus-within:text-blue-500 transition-colors z-10" />
                                     <select
                                       name="shift"
                                       value={formData.shift}
                                       onChange={handleInputChange}
-                                      className="w-full pl-12 pr-10 py-4 bg-white dark:bg-slate-900 rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-slate-900 dark:text-white font-bold shadow-sm focus:shadow-md appearance-none relative"
+                                      className="w-full pl-12 pr-10 py-4 bg-[#1a1d23] rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-white text-white font-bold shadow-sm focus:shadow-md appearance-none relative"
                                     >
                                       <option value="Morning (6 AM - 2 PM)">Morning (6 AM - 2 PM)</option>
                                       <option value="Evening (2 PM - 10 PM)">Evening (2 PM - 10 PM)</option>
                                       <option value="Night (10 PM - 6 AM)">Night (10 PM - 6 AM)</option>
                                     </select>
-                                    <MoreHorizontal className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                                    <MoreHorizontal className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a8f98] pointer-events-none" />
                                   </>
                                 )}
                               </div>
@@ -308,7 +308,7 @@ export default function ProfileDetails({
                   <div className="flex flex-col sm:flex-row gap-4 pt-4">
                     <button
                       onClick={() => setIsEditing(false)}
-                      className="flex-1 px-8 py-5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-3xl hover:bg-slate-200 dark:hover:bg-slate-700 font-black transition-all hover:scale-[1.02] active:scale-[0.98]"
+                      className="flex-1 px-8 py-5 bg-[#1a1d23] text-[#8a8f98] text-[#8a8f98] rounded-3xl hover:bg-[#2a2d33]  font-black transition-all hover:scale-[1.02] active:scale-[0.98]"
                     >
                       Discard Changes
                     </button>
@@ -356,19 +356,19 @@ export default function ProfileDetails({
 
                   {/* Bottom Stats / Footer Area */}
                   <div className="md:col-span-2 pt-6">
-                    <div className="p-4 bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-800/40 dark:to-slate-900/40 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="p-4 bg-linear-to-br from-slate-50 to-slate-100 from-slate-800/40 to-slate-900/40 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-xl shadow-sm flex items-center justify-center text-blue-600 dark:text-blue-400">
+                        <div className="w-12 h-12 bg-[#1a1d23] rounded-xl shadow-sm flex items-center justify-center text-blue-600 text-blue-400">
                           <ShieldCheck className="w-6 h-6" />
                         </div>
                         <div>
-                          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600/60 dark:text-blue-400/60">Privilege Level</p>
-                          <p className="text-sm font-bold text-slate-900 dark:text-white capitalize">{selectedProfile.type} Management Access Enabled</p>
+                          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600/60 text-blue-400/60">Privilege Level</p>
+                          <p className="text-sm font-bold text-white text-white capitalize">{selectedProfile.type} Management Access Enabled</p>
                         </div>
                       </div>
                       <div className="flex -space-x-2">
                         {[1,2,3].map(i => (
-                          <div key={i} className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-500">
+                          <div key={i} className="w-8 h-8 rounded-full bg-[#1a1d23] flex items-center justify-center text-[10px] font-bold text-white0">
                             {i}
                           </div>
                         ))}
@@ -382,12 +382,12 @@ export default function ProfileDetails({
         </div>
       ) : (
         // Empty State
-        <div className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl p-12 text-center sticky top-24 animate-pulse">
-          <div className="w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
-            <User className="w-10 h-10 text-slate-300 dark:text-slate-600" />
+        <div className="bg-white/80 bg-[#0d0f13]/60 backdrop-blur-xl rounded-2xl p-12 text-center sticky top-24 animate-pulse">
+          <div className="w-24 h-24 bg-[#1a1d23] rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+            <User className="w-10 h-10  text-[#8a8f98]" />
           </div>
-          <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2">Unselected Perspective</h3>
-          <p className="text-slate-500 dark:text-slate-400 max-w-xs mx-auto mb-8 font-medium">Select a profile from the directory to initialize administrative management controls.</p>
+          <h3 className="text-2xl font-black text-white text-white mb-2">Unselected Perspective</h3>
+          <p className="text-white0 text-[#8a8f98] max-w-xs mx-auto mb-8 font-medium">Select a profile from the directory to initialize administrative management controls.</p>
           <button
             onClick={() => setShowAddModal(true)}
             className="px-8 py-3.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold shadow-lg shadow-blue-500/20 transition-all hover:scale-105"
@@ -399,13 +399,13 @@ export default function ProfileDetails({
 
       {/* Modernized Delete Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 max-w-sm w-full shadow-2xl relative animate-in zoom-in-95 duration-300">
-            <div className="w-16 h-16 rounded-2xl bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center text-rose-600 dark:text-rose-400 mb-6 mx-auto shadow-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0d0f13]/60 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="bg-[#1a1d23] rounded-3xl p-8 max-w-sm w-full shadow-2xl relative animate-in zoom-in-95 duration-300">
+            <div className="w-16 h-16 rounded-2xl bg-rose-50 bg-rose-900/20 flex items-center justify-center text-rose-600 text-rose-400 mb-6 mx-auto shadow-sm">
               <Trash2 className="w-8 h-8" />
             </div>
-            <h3 className="text-2xl font-black text-center text-slate-900 dark:text-white mb-2">Purge Identity</h3>
-            <p className="text-slate-500 dark:text-slate-400 text-center mb-8 font-medium">Are you certain you wish to permanently remove <span className="text-slate-900 dark:text-white font-bold">{selectedProfile?.name}</span>? This action is irreversible.</p>
+            <h3 className="text-2xl font-black text-center text-white text-white mb-2">Purge Identity</h3>
+            <p className="text-white0 text-[#8a8f98] text-center mb-8 font-medium">Are you certain you wish to permanently remove <span className="text-white text-white font-bold">{selectedProfile?.name}</span>? This action is irreversible.</p>
             
             <div className="flex flex-col gap-3">
               <button
@@ -419,7 +419,7 @@ export default function ProfileDetails({
               </button>
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="w-full py-4 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-2xl hover:bg-slate-200 dark:hover:bg-slate-700 font-bold transition-all"
+                className="w-full py-4 bg-[#1a1d23] text-white  rounded-2xl hover:bg-[#2a2d33]  font-bold transition-all"
               >
                 Keep Identity
               </button>

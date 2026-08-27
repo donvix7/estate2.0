@@ -145,7 +145,7 @@ export default function Settings({ role = 'resident' }) {
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-md text-sm font-semibold transition-all border-none ${
                   isActive
                     ? 'bg-[#1241a1] text-white'
-                    : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white'
+                    : 'text-white0 hover:bg-[#2a2d33] hover:bg-[#1a1d23]/50 hover:text-white hover:text-white'
                 }`}
               >
                 <Icon className={`w-4 h-4 ${isActive ? 'text-white' : ''}`} />
@@ -158,7 +158,7 @@ export default function Settings({ role = 'resident' }) {
 
         {/* Content Area */}
         <main className="lg:col-span-9">
-          <div className="bg-slate-100 dark:bg-slate-800/30 text-card-foreground rounded-md overflow-hidden transition-all">
+          <div className="bg-[#1a1d23] bg-[#1a1d23]/30 text-card-foreground rounded-md overflow-hidden transition-all">
             
             {/* Tab: Profile */}
             {activeTab === 'profile' && (
@@ -168,11 +168,11 @@ export default function Settings({ role = 'resident' }) {
                   
                   <div className="flex flex-col md:flex-row gap-10 items-start">
                     <div className="relative group">
-                      <div className="w-24 h-24 rounded-md bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden transition-colors">
+                      <div className="w-24 h-24 rounded-md bg-[#1a1d23] flex items-center justify-center overflow-hidden transition-colors">
                         {userData?.profileImage ? (
                           <img src={userData.profileImage} alt="Profile" className="w-full h-full object-cover" />
                         ) : (
-                          <User className="w-10 h-10 text-slate-400" />
+                          <User className="w-10 h-10 text-[#8a8f98]" />
                         )}
                       </div>
                       <button className="absolute -bottom-2 -right-2 p-2 bg-[#1241a1] text-white rounded-md transition-transform border-none">
@@ -187,7 +187,7 @@ export default function Settings({ role = 'resident' }) {
                           name="fullName"
                           value={formData.fullName}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none"
+                          className="w-full px-4 py-2.5 rounded-md bg-[#1a1d23] focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none"
                           placeholder="e.g. John Doe"
                         />
                       </div>
@@ -197,7 +197,7 @@ export default function Settings({ role = 'resident' }) {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none"
+                          className="w-full px-4 py-2.5 rounded-md bg-[#1a1d23] focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none"
                           placeholder="name@example.com"
                         />
                       </div>
@@ -209,14 +209,14 @@ export default function Settings({ role = 'resident' }) {
                             name="phone"
                             value={formData.phone}
                             onChange={handleInputChange}
-                            className="w-full pl-10 pr-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-md bg-[#1a1d23] focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none"
                             placeholder="+234 ..."
                           />
                         </div>
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-semibold ml-1">Role</label>
-                        <div className="px-4 py-2.5 rounded-md bg-slate-200 dark:bg-slate-800 text-muted-foreground text-sm capitalize flex items-center gap-2">
+                        <div className="px-4 py-2.5 rounded-md bg-[#1a1d23] text-muted-foreground text-sm capitalize flex items-center gap-2">
                           <Shield className="w-4 h-4" /> {role}
                         </div>
                       </div>
@@ -224,12 +224,12 @@ export default function Settings({ role = 'resident' }) {
                   </div>
                 </div>
                 
-                <div className="p-6 md:p-8 bg-slate-100 dark:bg-slate-800/50">
-                   <div className="flex items-start gap-4 p-4 bg-white dark:bg-slate-900 rounded-md">
+                <div className="p-6 md:p-8 bg-[#1a1d23] bg-[#1a1d23]/50">
+                   <div className="flex items-start gap-4 p-4 bg-[#1a1d23] rounded-md">
                       <AlertCircle className="w-5 h-5 text-[#1241a1] shrink-0 mt-0.5" />
                       <div>
-                        <p className="text-sm font-semibold text-slate-900 dark:text-white">Public Profile</p>
-                        <p className="text-xs text-slate-500 mt-0.5 font-medium">
+                        <p className="text-sm font-semibold text-white text-white">Public Profile</p>
+                        <p className="text-xs text-white0 mt-0.5 font-medium">
                           Some of this information may be visible to other estate members and staff.
                         </p>
                       </div>
@@ -247,14 +247,14 @@ export default function Settings({ role = 'resident' }) {
                 </div>
 
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 rounded-md bg-white dark:bg-slate-900 transition-colors">
+                  <div className="flex items-center justify-between p-4 rounded-md bg-[#1a1d23] transition-colors">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-md bg-[#1a1d23] flex items-center justify-center">
                         <Shield className="w-5 h-5 text-[#1241a1]" />
                       </div>
                       <div>
                         <p className="font-semibold text-sm">Two-Factor Authentication</p>
-                        <p className="text-xs text-slate-500 font-medium">Add an extra layer of security to your account.</p>
+                        <p className="text-xs text-white0 font-medium">Add an extra layer of security to your account.</p>
                       </div>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -265,21 +265,21 @@ export default function Settings({ role = 'resident' }) {
                         onChange={handleInputChange}
                         className="sr-only peer" 
                       />
-                      <div className="w-11 h-6 bg-slate-200 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1241a1]"></div>
+                      <div className="w-11 h-6 bg-[#1a1d23] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[#3a3d43] after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1241a1]"></div>
                     </label>
                   </div>
 
-                  <div className="flex items-center justify-between p-4 rounded-md bg-white dark:bg-slate-900 transition-colors">
+                  <div className="flex items-center justify-between p-4 rounded-md bg-[#1a1d23] transition-colors">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-md bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-md bg-amber-50 bg-amber-900/20 flex items-center justify-center">
                         <Key className="w-5 h-5 text-amber-600" />
                       </div>
                       <div>
                         <p className="font-semibold text-sm">Account Password</p>
-                        <p className="text-xs text-slate-500 font-medium">Last changed 3 months ago.</p>
+                        <p className="text-xs text-white0 font-medium">Last changed 3 months ago.</p>
                       </div>
                     </div>
-                    <button className="px-4 py-2 text-sm font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-md transition-colors border-none">
+                    <button className="px-4 py-2 text-sm font-semibold bg-[#1a1d23] hover:bg-[#2a2d33]  rounded-md transition-colors border-none">
                       Change Password
                     </button>
                   </div>
@@ -307,7 +307,7 @@ export default function Settings({ role = 'resident' }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    <div className="space-y-2">
                       <label className="text-sm font-semibold ml-1">Estate ID</label>
-                      <div className="px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 text-muted-foreground text-sm font-mono flex items-center justify-between">
+                      <div className="px-4 py-2.5 rounded-md bg-[#1a1d23] text-muted-foreground text-sm font-mono flex items-center justify-between">
                         {estateData?._id}
                         <button className="text-primary hover:underline text-xs" onClick={() => {
                           navigator.clipboard.writeText(estateData?._id)
@@ -317,7 +317,7 @@ export default function Settings({ role = 'resident' }) {
                    </div>
                    <div className="space-y-2">
                       <label className="text-sm font-semibold ml-1">Registration Date</label>
-                      <div className="px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 text-muted-foreground text-sm">
+                      <div className="px-4 py-2.5 rounded-md bg-[#1a1d23] text-muted-foreground text-sm">
                         {estateData?.createdAt ? new Date(estateData.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' }) : 'N/A'}
                       </div>
                    </div>
@@ -326,7 +326,7 @@ export default function Settings({ role = 'resident' }) {
                       <input
                         disabled
                         value={estateData?.name || ''}
-                        className="w-full px-4 py-2.5 rounded-md bg-slate-200/50 dark:bg-slate-900/50 text-muted-foreground cursor-not-allowed border-none outline-none"
+                        className="w-full px-4 py-2.5 rounded-md bg-[#1a1d23]/50 bg-[#0d0f13]/50 text-muted-foreground cursor-not-allowed border-none outline-none"
                       />
                       <p className="text-[10px] text-muted-foreground ml-1">Estate names can only be changed by super-admins.</p>
                    </div>
@@ -337,7 +337,7 @@ export default function Settings({ role = 'resident' }) {
                         rows={3}
                         value={formData.estateDescription}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary/20 transition-all resize-none outline-none border-none"
+                        className="w-full px-4 py-2.5 rounded-md bg-[#1a1d23] focus:ring-2 focus:ring-primary/20 transition-all resize-none outline-none border-none"
                         placeholder="Briefly describe the estate..."
                       />
                    </div>
@@ -347,7 +347,7 @@ export default function Settings({ role = 'resident' }) {
                         name="timezone"
                         value={formData.timezone}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2.5 rounded-md bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none"
+                        className="w-full px-4 py-2.5 rounded-md bg-[#1a1d23] focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none"
                       >
                         <option>WAT (UTC+1)</option>
                         <option>GMT (UTC+0)</option>
@@ -436,10 +436,10 @@ export default function Settings({ role = 'resident' }) {
             )}
 
             {/* Footer Actions */}
-            <div className="p-6 md:p-8 bg-slate-100 dark:bg-slate-800/50 flex justify-end gap-3">
+            <div className="p-6 md:p-8 bg-[#1a1d23] bg-[#1a1d23]/50 flex justify-end gap-3">
               <button 
                 onClick={loadData}
-                className="px-4 py-2 text-sm font-semibold hover:bg-white dark:hover:bg-slate-800 rounded-md transition-colors border-none"
+                className="px-4 py-2 text-sm font-semibold hover:bg-white  rounded-md transition-colors border-none"
               >
                 Reset Changes
               </button>

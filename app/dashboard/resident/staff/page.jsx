@@ -1,16 +1,17 @@
 'use client';
 import React, { useState } from 'react'
-import { ShieldCheck, Plus, Users } from 'lucide-react'
+import { Plus, Users } from 'lucide-react'
 import AddStaffForm from '@/components/resident/AddStaffForm'
 import { BackButton } from '@/components/ui/BackButton'
 import { PageHeader } from '@/components/ui/PageHeader'
+import { Button } from '@/components/ui/Button'
 
 export default function ResidentStaffPage() {
   const [showAddForm, setShowAddForm] = useState(false)
   const [staffList, setStaffList] = useState([]) // Empty for now
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto pb-12 animate-in fade-in duration-700 space-y-6">
         <PageHeader 
           title="Domestic Staff" 
           description="Manage registration for your maids, drivers, and other household staff."
@@ -18,13 +19,13 @@ export default function ResidentStaffPage() {
           iconColor="blue"
         >
           {!showAddForm && (
-            <button 
-                onClick={() => setShowAddForm(true)}
-                className="flex items-center justify-center gap-2 bg-[#1241a1] hover:brightness-110 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-lg shadow-[#1241a1]/20 active:scale-[0.98] border-none"
+            <Button
+              variant="primary"
+              icon={Plus}
+              onClick={() => setShowAddForm(true)}
             >
-                <Plus className="w-5 h-5" />
-                Add New Staff
-            </button>
+              Add New Staff
+            </Button>
           )}
           <BackButton fallbackRoute="/dashboard/resident" label="Back" />
         </PageHeader>
@@ -42,17 +43,17 @@ export default function ResidentStaffPage() {
                 />
             </div>
         ) : (
-            <div className="bg-white dark:bg-gray-800 rounded-[24px] shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)] p-12 text-center flex flex-col items-center justify-center min-h-[400px]">
-                <div className="w-20 h-20 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-6">
-                    <Users className="w-10 h-10 text-blue-500" />
+            <div className="bg-[#1a1d23] rounded-[24px] shadow-[0_4px_30px_rgb(0,0,0,0.03)] shadow-[0_4px_30px_rgb(0,0,0,0.2)] p-12 text-center flex flex-col items-center justify-center min-h-[400px]">
+                <div className="w-20 h-20 bg-blue-50 bg-blue-900/20 rounded-full flex items-center justify-center mb-6">
+                    <Users className="w-10 h-10 text-[#1241a1]" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white font-heading mb-2">No Staff Registered</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm mb-8">
+                <h3 className="text-xl font-bold text-white text-white font-heading mb-2">No Staff Registered</h3>
+                <p className="text-sm text-[#8a8f98] text-[#8a8f98] max-w-sm mb-8">
                     You haven't registered any domestic staff yet. Register your staff to grant them proper access to the estate.
                 </p>
                 <button 
                     onClick={() => setShowAddForm(true)}
-                    className="flex items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 dark:bg-blue-500/10 dark:hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 px-6 py-3 rounded-xl font-bold transition-all"
+                    className="flex items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 bg-[#1241a1]/10 hover:bg-[#1241a1]/20 text-[#1241a1] text-blue-400 px-6 py-3 rounded-xl font-bold transition-all"
                 >
                     <Plus className="w-5 h-5" />
                     Register Your First Staff

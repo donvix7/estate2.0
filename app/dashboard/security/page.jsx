@@ -38,7 +38,10 @@ import {
   X,
   Plus,
   Share2,
-  Check
+  Check,
+  Sliders,
+  ArrowRight,
+  Sparkles
 } from 'lucide-react'
 import { 
   getGuestCodes,
@@ -54,6 +57,13 @@ import { LoadingState } from '@/components/ui/LoadingState'
 import MetricCard from '@/components/MetricCard'
 import { AlertModal } from '@/components/ui/AlertModal'
 import { PromptModal } from '@/components/ui/PromptModal'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { Button } from '@/components/ui/Button'
+import { SearchInput } from '@/components/ui/SearchInput'
+import { Card, CardHeader, CardTitle, CardBody } from '@/components/ui/Card'
+import { SectionHeader } from '@/components/ui/SectionHeader'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { StatusBadge } from '@/components/ui/StatusBadge'
 
 // Quick action links for security dashboard
 const QUICK_LINKS = [
@@ -63,7 +73,7 @@ const QUICK_LINKS = [
     desc: "Create visitor access codes",
     action: "generate",
     href: "/dashboard/security/scan",
-    bgColor: "bg-blue-600 hover:bg-blue-700"
+    bgColor: "bg-[#1241a1] hover:bg-[#1a51b1]"
   },
   {
     icon: Shield,
@@ -87,36 +97,6 @@ const QUICK_LINKS = [
     action: "logs",
     href: "#recent-activity",
     bgColor: "bg-amber-600 hover:bg-amber-700"
-  }
-]
-
-// Mobile quick links
-const MOBILE_QUICK_LINKS = [
-  {
-    icon: Search,
-    title: 'Lost items',
-    href: '/dashboard/security/lost_and_found',
-    bgColor: 'bg-blue-600'
-  },
-  {
-    icon: Shield,
-    title: 'Verify',
-    href: '/dashboard/admin/scan',
-    bgColor: 'bg-emerald-600'
-  },
-  {
-    icon: Ban,
-    title: 'Blacklist',
-    action: 'blacklist',
-    href: '#blacklist-section',
-    bgColor: 'bg-rose-600'
-  },
-  {
-    icon: Activity,
-    title: 'Logs',
-    action: 'logs',
-    href: '#recent-activity',
-    bgColor: 'bg-amber-600'
   }
 ]
 
@@ -144,7 +124,6 @@ export default function SecurityDashboard() {
   // UI State
   const [searchTerm, setSearchTerm] = useState('')
   const [filterType, setFilterType] = useState('all')
-  const [showFilters, setShowFilters] = useState(false)
   const [selectedPass, setSelectedPass] = useState(null)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [showGenerateModal, setShowGenerateModal] = useState(false)
@@ -218,7 +197,6 @@ export default function SecurityDashboard() {
 
   useEffect(() => {
     loadData()
-    // Auto-refresh every 30 seconds
   }, [])
 
   // Safe Metrics calculations
@@ -250,42 +228,37 @@ export default function SecurityDashboard() {
   const metrics = useMemo(() => [
     {
       icon: <QrCode className="size-5" />,
-      label: "Active Passes",
+      label: "Active Guest Passes",
       value: activePasses,
-      trend: `${passes.length} total`,
+      trend: `${passes.length} Total`,
       trendColor: "text-blue-500",
-      bgColor: "bg-blue-100 dark:bg-blue-900/30",
-      iconColor: "text-blue-600"
+      tone: "blue"
     },
-  
     {
       icon: <Clock className="size-5" />,
-      label: "Pending Verification",
+      label: "Pending Verifications",
       value: pendingVerifications,
-      trend: "Awaiting check-in",
+      trend: "Check-in Queue",
       trendColor: "text-amber-500",
-      bgColor: "bg-amber-100 dark:bg-amber-900/30",
-      iconColor: "text-amber-600"
+      tone: "amber"
     },
     {
       icon: <ShieldAlert className="size-5" />,
       label: "Security Alerts",
       value: highAlerts,
-      trend: highAlerts > 0 ? "High Priority" : "All Clear",
+      trend: highAlerts > 0 ? "Action Required" : "System Clear",
       trendColor: highAlerts > 0 ? "text-rose-500" : "text-emerald-500",
-      bgColor: "bg-rose-100 dark:bg-rose-900/30",
-      iconColor: "text-rose-600"
+      tone: "rose"
     },
     {
       icon: <Ban className="size-5" />,
-      label: "Blacklisted",
+      label: "Blacklist Watch",
       value: blacklist.length,
-      trend: "Restricted access",
+      trend: "Restricted",
       trendColor: "text-rose-500",
-      bgColor: "bg-rose-100 dark:bg-rose-900/30",
-      iconColor: "text-rose-600"
+      tone: "rose"
     }
-  ], [activePasses, passes.length, todayVisitors, visitors.length, pendingVerifications, highAlerts, blacklist.length])
+  ], [activePasses, passes.length, pendingVerifications, highAlerts, blacklist.length])
 
   // Filter and search functions
   const filteredPasses = useMemo(() => {
@@ -335,9 +308,9 @@ export default function SecurityDashboard() {
   }
 
   const getStatusColor = (isActive, isUsed, status) => {
-    if (status === 'used' || isUsed) return 'bg-slate-100 text-slate-600 dark:bg-slate-700/30 dark:text-slate-400'
-    if (status === 'active' || (isActive && !isUsed)) return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-    return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+    if (status === 'used' || isUsed) return 'bg-[#1a1d23] text-[#8a8f98] border border-[#2a2d33]'
+    if (status === 'active' || (isActive && !isUsed)) return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+    return 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
   }
 
   const getStatusText = (isActive, isUsed, status) => {
@@ -392,8 +365,7 @@ export default function SecurityDashboard() {
   }
 
   const handleQuickAction = (action, href) => {
-   
-     if (action === 'blacklist') {
+    if (action === 'blacklist') {
       const el = document.getElementById('blacklist-section')
       if (el) el.scrollIntoView({ behavior: 'smooth' })
     } else if (action === 'logs') {
@@ -466,64 +438,66 @@ export default function SecurityDashboard() {
   }
 
   return (
-    <div className="flex flex-col gap-5 lg:gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-12">
+    <div className="flex flex-col gap-6 lg:gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-7xl mx-auto pb-12">
       
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <h1 className="text-lg lg:text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
-            Security Dashboard
-          </h1>
-          <p className="text-slate-500 font-medium text-sm lg:text-base">
-            Real-time visitor monitoring & access control
-          </p>
-        </div>
-        <div className="flex items-center gap-3 flex-wrap">
-          <button 
-            onClick={handleRefresh}
-            className={`flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-md text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all ${isRefreshing ? 'opacity-50' : ''}`}
-          >
-            <RefreshCw className={`size-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-            Refresh
-          </button>
-          <button className="hidden lg:flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-md text-sm font-semibold text-slate-600 dark:text-slate-300">
-            <Calendar className="size-4" />
-            {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-          </button>
-          <button 
-            onClick={handleExportReport}
-            className="flex items-center gap-2 px-4 py-2 bg-[#1241a1] text-white rounded-md text-sm font-semibold hover:bg-blue-700 transition-all shadow-sm"
-          >
-            <Download className="size-4" />
-            Export Report
-          </button>
-        </div>
-      </div>
+      {/* Header Bar */}
+      <PageHeader
+        title="Gate Security Command"
+        description="Real-time visitor access control & gate management"
+        icon={Shield}
+        iconColor="blue"
+      >
+        <Button
+          variant="secondary"
+          size="md"
+          onClick={handleRefresh}
+          icon={RefreshCw}
+          className={`rounded-full ${isRefreshing ? 'opacity-50' : ''}`}
+        >
+          Refresh Feed
+        </Button>
+        <Button
+          variant="primary"
+          size="md"
+          onClick={handleExportReport}
+          icon={Download}
+          className="rounded-full"
+        >
+          Export Report
+        </Button>
+      </PageHeader>
 
-      {/* Search & Filter Bar (Desktop & Mobile) */}
-      <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between bg-slate-100 dark:bg-slate-800/40 p-3 rounded-lg ">
-        <div className="relative flex-1">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
-            <Search className="size-4 text-slate-400" />
-          </div>
-          <input 
-            className="w-full rounded-md border-none bg-white dark:bg-slate-900 py-2.5 pl-10 pr-4 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:ring-2 focus:ring-[#1241a1]/20 transition-all text-sm outline-none shadow-sm" 
-            placeholder="Search visitors by name, pass code, or phone number..." 
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+      {/* Metrics Row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
+        {metrics.map((metric, index) => (
+          <MetricCard
+            key={index}
+            icon={metric.icon}
+            label={metric.label}
+            value={metric.value}
+            trend={metric.trend}
+            trendColor={metric.trendColor}
+            tone={metric.tone}
           />
-        </div>
-        <div className="flex items-center gap-2 overflow-x-auto">
-          <span className="text-xs font-semibold text-slate-500 whitespace-nowrap hidden sm:inline">Filter Status:</span>
+        ))}
+      </div>      {/* Search & Filter Toolbar */}
+      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-[#1a1d23] backdrop-blur-md p-3 rounded-2xl border-none shadow-sm">
+        <SearchInput
+          value={searchTerm}
+          onChange={setSearchTerm}
+          placeholder="Search visitor by name, access code, or phone number..."
+          className="w-full sm:max-w-md"
+        />
+        <div className="flex items-center gap-1.5 overflow-x-auto">
+          <span className="text-xs font-semibold text-[#8a8f98] whitespace-nowrap mr-1">Status:</span>
           {['all', 'active', 'used', 'expired'].map(type => (
             <button
               key={type}
               onClick={() => setFilterType(type)}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all border-none ${
-                filterType === type 
-                  ? 'text-emerald-700 ' 
-                  : 'text-slate-600 dark:text-slate-300'
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold capitalize transition-all border-none ${
+                filterType === type
+                  ? 'bg-[#1a1d23] text-white shadow-sm'
+                  : 'bg-[#1a1d23]/80 text-[#8a8f98] hover:bg-[#2a2d33]'
               }`}
             >
               {type}
@@ -532,487 +506,345 @@ export default function SecurityDashboard() {
         </div>
       </div>
 
-      {/* Metrics Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
-        {metrics.map((metric, index) => (
-          <MetricCard 
-            key={index} 
-            icon={metric.icon} 
-            label={metric.label} 
-            value={metric.value} 
-            trend={metric.trend} 
-            trendColor={metric.trendColor} 
-            bgColor={'emerald-500'} 
-            iconColor={'emerald-700'} 
-          />
-        ))}
-      </div>
-
-      {/* Mobile Quick Actions */}
-      <section className="lg:hidden">
-        <span className="text-slate-900 dark:text-white text-base font-semibold mb-3 block">Quick Actions</span>
-        <div className="grid grid-cols-4 gap-3">
-          {MOBILE_QUICK_LINKS.map((link, index) => {
-            const Icon = link.icon
-            return (
-              <button 
-                key={index} 
-                onClick={() => handleQuickAction(link.action, link.href)}
-                className="flex flex-col items-center gap-2 group border-none bg-transparent"
-              >
-                <div className={`size-14 rounded-full ${link.bgColor} hover:brightness-110 flex items-center justify-center text-white group-active:scale-95 transition-all shadow-md`}>
-                  <Icon className="size-6" />
-                </div>
-                <span className="text-[11px] font-semibold uppercase text-center text-slate-600 dark:text-slate-300">
-                  {link.title}
-                </span>
-              </button>
-            )
-          })}
-        </div>
-      </section>
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      {/* Main 3-Column Reference Layout Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        {/* Active Passes */}
-        <div id="active-passes" className="xl:col-span-2 bg-[#818b94]/10 rounded-md overflow-hidden">
-          <div className="p-5 flex items-center justify-between border-b border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
-            <div>
-              <h3 className="font-bold text-lg text-slate-900 dark:text-white">Active Visitor Passes</h3>
-              <p className="text-xs text-slate-500">{filteredPasses.length} passes displayed</p>
-            </div>
-            <button 
-              onClick={() => setShowGenerateModal(true)}
-              className="flex items-center gap-1.5 text-xs font-semibold text-white  hover:brightness-150 border-none bg-emerald-700/80 p-2 px-6"
-            >
-              <Plus className="size-4" />
-              New Pass
-            </button>
-          </div>
+        {/* Left Column (4 cols): Quick Pass Generator Form Widget & Gate Shortcuts */}
+        <div className="lg:col-span-4 space-y-6">
           
-          <div className="p-4">
-            {filteredPasses.length > 0 ? (
-              <div className="space-y-3">
-                {filteredPasses.map((pass, idx) => (
-                  <div 
-                    key={pass.id || idx} 
-                    onClick={() => setSelectedPass(pass)}
-                    className="flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-md hover:shadow-md transition-all cursor-pointer border border-slate-100 dark:border-slate-700/50 group"
-                  >
-                    <div className="size-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 flex-shrink-0 group-hover:scale-105 transition-transform">
-                      <QrCode className="size-5" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="font-semibold text-slate-900 dark:text-white truncate">
-                          {pass.guestName || pass.name || pass.visitorName || 'Guest Visitor'}
-                        </p>
-                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${getStatusColor(pass.isActive, pass.isUsed, pass.status)}`}>
-                          {getStatusText(pass.isActive, pass.isUsed, pass.status)}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400 mt-1 flex-wrap">
-                        <span className="font-mono bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-800 dark:text-slate-200 font-semibold">
-                          {pass.code || pass.passCode || 'CODE-N/A'}
-                        </span>
-                        <span>•</span>
-                        <span>{pass.guestPhone || pass.phone || 'No phone'}</span>
-                        {pass.modeOfTransport && (
-                          <>
-                            <span>•</span>
-                            <span className="capitalize">{pass.modeOfTransport}</span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                        {pass.totalAdults || 1} Adult{(pass.totalAdults > 1 || !pass.totalAdults) ? 's' : ''}
-                        {pass.totalChildren > 0 ? `, ${pass.totalChildren} Child` : ''}
-                      </p>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
-                        {formatDate(pass.inviteDate || pass.createdAt)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center p-12 text-center">
-                <QrCode className="size-12 text-slate-300 dark:text-slate-600 mb-3" />
-                <p className="text-slate-500 dark:text-slate-400 font-medium">No visitor passes found</p>
-                <p className="text-xs text-slate-400 mt-1">Generate a new pass to get started</p>
-                <button 
-                  onClick={() => setShowGenerateModal(true)}
-                  className="mt-4 px-4 py-2 bg-emerald-700 text-white rounded-md text-xs font-semibold hover:bg-blue-700 transition-all border-none"
-                >
-                  Generate Visitor Pass
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Quick Actions & Recent Entry/Exit Logs */}
-        <div className="space-y-6">
-          {/* Quick Actions Desktop */}
-          <div className="hidden lg:grid grid-cols-2 gap-3">
-            {QUICK_LINKS.map((link, index) => {
-              const Icon = link.icon
-              return (
-                <button
-                  key={index}
-                  onClick={() => handleQuickAction(link.action, link.href)}
-                  className="group text-left border-none bg-transparent"
-                >
-                  <div className={`${link.bgColor} p-4 rounded-md transition-all text-white h-full flex flex-col items-center text-center shadow-sm`}>
-                    <Icon className="size-8 mb-2 group-hover:scale-110 transition-transform" />
-                    <span className="text-sm font-semibold">{link.title}</span>
-                    <p className="text-[10px] opacity-80 mt-1">{link.desc}</p>
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-
-          {/* Recent Entry/Exit Logs */}
-          <div id="recent-activity" className=" bg-[#818b94]/10 rounded-md overflow-hidden ">
-            <div className="p-4 border-b border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
-              <div className="flex items-center justify-between">
-                <h4 className="font-bold text-sm text-slate-900 dark:text-white">Recent Entry & Exit Activity</h4>
-                <span className="text-xs font-semibold text-slate-400">{filteredLogs.length} recent</span>
-              </div>
-            </div>
-            <div className="p-4 space-y-3 max-h-[420px] overflow-y-auto">
-              {filteredLogs.length > 0 ? (
-                filteredLogs.map((log, idx) => (
-                  <div key={log.id || idx} className="flex items-start gap-3 p-3 bg-white dark:bg-slate-800 rounded-md border border-slate-100 dark:border-slate-700/50">
-                    <div className={`size-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                      log.type === 'entry' || log.action === 'check-in'
-                        ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' 
-                        : 'bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400'
-                    }`}>
-                      {log.type === 'entry' || log.action === 'check-in' ? <LogIn className="size-4" /> : <LogOut className="size-4" />}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
-                        {log.visitor || log.guestName || 'Visitor Check'}
-                      </p>
-                      <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                        <span className="font-mono text-[11px]">{log.passCode || log.code || 'N/A'}</span>
-                        <span>•</span>
-                        <span>{log.verifiedBy || log.guardName || 'Security Gate'}</span>
-                      </div>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold capitalize ${
-                        log.type === 'entry' || log.action === 'check-in'
-                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' 
-                          : 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400'
-                      }`}>
-                        {log.type || log.action || 'Log'}
-                      </span>
-                      <p className="text-[10px] text-slate-400 mt-1">{formatDate(log.timestamp || log.createdAt)}</p>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-slate-400">
-                  <Activity className="size-10 mx-auto mb-2 opacity-40" />
-                  <p className="font-medium text-sm">No recent activity logged</p>
+          {/* Quick Visitor Pass Generator Widget */}
+          <Card>
+            <CardHeader>
+              <CardTitle icon={QrCode} title="Gate Pass Control" subtitle="Issue Guest Access Pass" live={true} />
+            </CardHeader>
+            <CardBody padded={true}>
+              <form onSubmit={handleGeneratePassSubmit} className="space-y-3.5">
+                <div>
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-[#8a8f98] block mb-1">Guest Full Name *</label>
+                  <input 
+                    type="text" 
+                    required
+                    placeholder="e.g. Alex Johnson"
+                    value={newPass.guestName}
+                    onChange={(e) => setNewPass({ ...newPass, guestName: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#1a1d23]/80 border-none text-sm font-medium text-white outline-none focus:ring-2 focus:ring-slate-400/20 shadow-inner"
+                  />
                 </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Security Alerts */}
-      <div id="security-alerts" className=" bg-[#818b94]/10 rounded-md overflow-hidden ">
-        <div className="p-5 flex items-center justify-between border-b border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
-          <div>
-            <h3 className="font-bold text-lg text-slate-900 dark:text-white">Security Alerts & Incidents</h3>
-            <p className="text-xs text-slate-500">
-              {securityLogs.filter(log => log.status !== 'resolved').length} active alerts requiring attention
-            </p>
-          </div>
-        </div>
-        <div className="p-4">
-          {securityLogs.filter(log => log.status !== 'resolved').length > 0 ? (
-            <div className="space-y-3">
-              {securityLogs.filter(log => log.status !== 'resolved').slice(0, 5).map((alert, idx) => (
-                <div key={alert.id || idx} className="flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-md border-l-4 border-rose-500 shadow-sm">
-                  <div className={`size-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                    alert.severity?.toLowerCase() === 'high' 
-                      ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' 
-                      : 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400'
-                  }`}>
-                    <AlertTriangle className="size-5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-slate-900 dark:text-white text-sm">{alert.type || alert.title || 'Security Notice'}</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                      {alert.location || 'Gate 1'} • {formatDate(alert.createdAt || alert.timestamp)}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className={`text-[10px] px-2.5 py-1 rounded-full font-semibold uppercase ${
-                      alert.severity?.toLowerCase() === 'high' 
-                        ? 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400' 
-                        : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
-                    }`}>
-                      {alert.severity || 'Medium'}
-                    </span>
-                    <button 
-                      onClick={() => handleResolveAlert(alert.id)}
-                      className="px-3 py-1.5 bg-[#1241a1] text-white rounded text-xs font-semibold hover:bg-blue-700 transition-all border-none shadow-sm"
+                <div>
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-[#8a8f98] block mb-1">Phone Number *</label>
+                  <input 
+                    type="tel" 
+                    required
+                    placeholder="+234 800 000 0000"
+                    value={newPass.guestPhone}
+                    onChange={(e) => setNewPass({ ...newPass, guestPhone: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#1a1d23]/80 border-none text-sm font-medium text-white outline-none focus:ring-2 focus:ring-slate-400/20 shadow-inner"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#8a8f98] block mb-1">Purpose</label>
+                    <select 
+                      value={newPass.purpose}
+                      onChange={(e) => setNewPass({ ...newPass, purpose: e.target.value })}
+                      className="w-full px-3 py-2.5 rounded-xl bg-[#1a1d23]/80 border-none text-xs font-medium text-white outline-none shadow-inner"
                     >
-                      Resolve
-                    </button>
+                      <option>Personal Guest</option>
+                      <option>Delivery</option>
+                      <option>Maintenance</option>
+                      <option>Official</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#8a8f98] block mb-1">Transport</label>
+                    <select 
+                      value={newPass.modeOfTransport}
+                      onChange={(e) => setNewPass({ ...newPass, modeOfTransport: e.target.value })}
+                      className="w-full px-3 py-2.5 rounded-xl bg-[#1a1d23]/80 border-none text-xs font-medium text-white outline-none shadow-inner"
+                    >
+                      <option value="car">Car</option>
+                      <option value="walk">Walk</option>
+                      <option value="bike">Bike</option>
+                      <option value="taxi">Taxi</option>
+                    </select>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center p-8 text-center">
-              <CheckCircle2 className="size-12 text-emerald-500 mb-2" />
-              <p className="text-slate-900 dark:text-white font-semibold text-base">All Clear</p>
-              <p className="text-sm text-slate-500 mt-0.5">No pending security alerts or incident reports</p>
-            </div>
-          )}
-        </div>
-      </div>
 
-      {/* Blacklist Summary */}
-      <div id="blacklist-section" className=" bg-[#818b94]/10 rounded-md overflow-hidden ">
-        <div className="p-5 flex items-center justify-between border-b border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
-          <div>
-            <h3 className="font-bold text-lg text-slate-900 dark:text-white">Blacklisted Visitors</h3>
-            <p className="text-xs text-slate-500">{blacklist.length} visitors restricted from entry</p>
-          </div>
-        </div>
-        <div className="p-4">
-          {blacklist.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {blacklist.slice(0, 6).map((item, idx) => (
-                <div key={idx} className="flex items-center gap-3 p-3.5 bg-white dark:bg-slate-800 rounded-md border border-slate-100 dark:border-slate-700/50 shadow-sm">
-                  <div className="size-10 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold text-sm flex-shrink-0">
-                    {item.name?.charAt(0) || 'B'}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#8a8f98] block mb-1">Adults</label>
+                    <input 
+                      type="number" 
+                      min="1"
+                      value={newPass.totalAdults}
+                      onChange={(e) => setNewPass({ ...newPass, totalAdults: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#1a1d23]/80 border-none text-xs font-medium text-white shadow-inner"
+                    />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm text-slate-900 dark:text-white truncate">{item.name || 'Restricted Visitor'}</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">{item.reason || 'Restricted by Estate Admin'}</p>
+                  <div>
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#8a8f98] block mb-1">Children</label>
+                    <input 
+                      type="number" 
+                      min="0"
+                      value={newPass.totalChildren}
+                      onChange={(e) => setNewPass({ ...newPass, totalChildren: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#1a1d23]/80 border-none text-xs font-medium text-white shadow-inner"
+                    />
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center p-8 text-center">
-              <Ban className="size-12 text-slate-300 dark:text-slate-600 mb-2" />
-              <p className="text-slate-500 dark:text-slate-400 font-medium">No blacklisted visitors</p>
-              <p className="text-xs text-slate-400 mt-0.5">The estate blacklist is currently empty</p>
-            </div>
-          )}
-        </div>
-      </div>
 
-      <footer className="mt-4 py-6 text-center border-t border-slate-200 dark:border-slate-800">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-slate-400">
-          © {new Date().getFullYear()} Security Dashboard • Real-time Monitoring • <span className="text-emerald-500">System Online</span>
-        </p>
-      </footer>
-
-      {/* Pass Detail Modal */}
-      {selectedPass && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-lg max-w-md w-full p-6 shadow-2xl animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 mb-4">
-              <div className="flex items-center gap-2">
-                <QrCode className="size-6 text-[#1241a1]" />
-                <h3 className="font-bold text-lg text-slate-900 dark:text-white">Visitor Pass Details</h3>
-              </div>
-              <button 
-                onClick={() => setSelectedPass(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 border-none bg-transparent"
-              >
-                <X className="size-5" />
-              </button>
-            </div>
-
-            <div className="space-y-3.5 text-sm">
-              <div className="flex justify-between items-center py-1.5 border-b border-slate-100 dark:border-slate-800">
-                <span className="text-slate-500 font-medium">Guest Name</span>
-                <span className="font-semibold text-slate-900 dark:text-white">{selectedPass.guestName || selectedPass.name || 'Guest'}</span>
-              </div>
-              <div className="flex justify-between items-center py-1.5 border-b border-slate-100 dark:border-slate-800">
-                <span className="text-slate-500 font-medium">Access Code</span>
-                <span className="font-mono font-bold text-[#1241a1] text-base">{selectedPass.code || selectedPass.passCode || 'N/A'}</span>
-              </div>
-              <div className="flex justify-between items-center py-1.5 border-b border-slate-100 dark:border-slate-800">
-                <span className="text-slate-500 font-medium">Phone Number</span>
-                <span className="font-semibold text-slate-900 dark:text-white">{selectedPass.guestPhone || selectedPass.phone || 'N/A'}</span>
-              </div>
-              <div className="flex justify-between items-center py-1.5 border-b border-slate-100 dark:border-slate-800">
-                <span className="text-slate-500 font-medium">Transport Mode</span>
-                <span className="font-semibold capitalize text-slate-900 dark:text-white">{selectedPass.modeOfTransport || 'Car'}</span>
-              </div>
-              <div className="flex justify-between items-center py-1.5 border-b border-slate-100 dark:border-slate-800">
-                <span className="text-slate-500 font-medium">Guests Count</span>
-                <span className="font-semibold text-slate-900 dark:text-white">
-                  {selectedPass.totalAdults || 1} Adult(s), {selectedPass.totalChildren || 0} Child(ren)
-                </span>
-              </div>
-              <div className="flex justify-between items-center py-1.5 border-b border-slate-100 dark:border-slate-800">
-                <span className="text-slate-500 font-medium">Status</span>
-                <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${getStatusColor(selectedPass.isActive, selectedPass.isUsed, selectedPass.status)}`}>
-                  {getStatusText(selectedPass.isActive, selectedPass.isUsed, selectedPass.status)}
-                </span>
-              </div>
-              <div className="flex justify-between items-center py-1.5">
-                <span className="text-slate-500 font-medium">Invite Date</span>
-                <span className="font-semibold text-slate-900 dark:text-white">{formatDate(selectedPass.inviteDate || selectedPass.createdAt)}</span>
-              </div>
-            </div>
-
-            <div className="mt-6 flex gap-3">
-              <button 
-                onClick={() => {
-                  router.push('/dashboard/admin/scan')
-                }}
-                className="flex-1 py-2.5 bg-[#1241a1] text-white font-semibold text-xs rounded-md hover:bg-blue-700 transition-all border-none"
-              >
-                Scan / Check-in
-              </button>
-              <button 
-                onClick={() => setSelectedPass(null)}
-                className="py-2.5 px-4 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border-none"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Generate Pass Modal */}
-      {showGenerateModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-lg max-w-2xl w-full p-6 shadow-2xl animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 mb-4">
-              <div className="flex items-center gap-2">
-                <QrCode className="size-6 text-emerald-700" />
-                <h3 className="font-bold text-lg text-slate-900 dark:text-white">Quick Visitor Pass Generator</h3>
-              </div>
-              <button 
-                onClick={() => setShowGenerateModal(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 border-none bg-transparent"
-              >
-                <X className="size-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleGeneratePassSubmit} className="space-y-4">
-              <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Guest Full Name *</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder="e.g. Samuel Okon"
-                  value={newPass.guestName}
-                  onChange={(e) => setNewPass({ ...newPass, guestName: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm outline-none focus:ring-2 focus:ring-[#1241a1]/30"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Phone Number *</label>
-                <input 
-                  type="tel" 
-                  required
-                  placeholder="+2348000000000"
-                  value={newPass.guestPhone}
-                  onChange={(e) => setNewPass({ ...newPass, guestPhone: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm outline-none focus:ring-2 focus:ring-[#1241a1]/30"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Visit Purpose</label>
-                  <select 
-                    value={newPass.purpose}
-                    onChange={(e) => setNewPass({ ...newPass, purpose: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm outline-none focus:ring-2 focus:ring-[#1241a1]/30"
-                  >
-                    <option>Personal Guest</option>
-                    <option>Delivery / Courier</option>
-                    <option>Maintenance / Service</option>
-                    <option>Official Meeting</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Transport Mode</label>
-                  <select 
-                    value={newPass.modeOfTransport}
-                    onChange={(e) => setNewPass({ ...newPass, modeOfTransport: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm outline-none focus:ring-2 focus:ring-[#1241a1]/30"
-                  >
-                    <option value="car">Car</option>
-                    <option value="walk">Walking</option>
-                    <option value="bike">Bike / Motorcycle</option>
-                    <option value="taxi">Taxi / Uber</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Adults</label>
-                  <input 
-                    type="number" 
-                    min="1"
-                    value={newPass.totalAdults}
-                    onChange={(e) => setNewPass({ ...newPass, totalAdults: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm outline-none focus:ring-2 focus:ring-[#1241a1]/30"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Children</label>
-                  <input 
-                    type="number" 
-                    min="0"
-                    value={newPass.totalChildren}
-                    onChange={(e) => setNewPass({ ...newPass, totalChildren: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm outline-none focus:ring-2 focus:ring-[#1241a1]/30"
-                  />
-                </div>
-              </div>
-
-              <div className="pt-3 flex gap-3">
                 <button 
                   type="submit"
                   disabled={isSubmittingPass}
-                  className="flex-1 py-3 bg-[#1241a1] text-white font-semibold text-sm rounded-md hover:bg-blue-700 transition-all border-none flex items-center justify-center gap-2"
+                  className="w-full py-3 bg-[#1a1d23] text-white font-bold text-xs rounded-full hover:opacity-90 transition-all border-none flex items-center justify-center gap-2 shadow-md mt-2"
                 >
                   {isSubmittingPass ? (
                     <RefreshCw className="size-4 animate-spin" />
                   ) : (
                     <>
                       <QrCode className="size-4" />
-                      Generate Pass
+                      Generate Visitor Pass
                     </>
                   )}
                 </button>
-                <button 
-                  type="button"
-                  onClick={() => setShowGenerateModal(false)}
-                  className="py-3 px-4 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border-none"
-                >
-                  Cancel
-                </button>
+              </form>
+            </CardBody>
+          </Card>
+
+          {/* Gate Verification Shortcuts */}
+          <Card>
+            <CardHeader>
+              <CardTitle icon={Shield} title="Gate Actions" subtitle="Verification & Control" />
+            </CardHeader>
+            <CardBody padded={true} className="grid grid-cols-2 gap-3">
+              <Link href="/dashboard/security/scan" className="p-3.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-xl border-none text-center font-bold text-xs flex flex-col items-center gap-2 transition-all">
+                <Shield className="size-6" />
+                Scan QR Code
+              </Link>
+              <button 
+                onClick={() => handleQuickAction('blacklist')} 
+                className="p-3.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl border-none text-center font-bold text-xs flex flex-col items-center gap-2 transition-all border-none"
+              >
+                <Ban className="size-6" />
+                Blacklist Watch
+              </button>
+            </CardBody>
+          </Card>
+
+        </div>
+
+        {/* Center & Right Column (8 cols): Main Active Visitor Data Table & Activity Feed */}
+        <div className="lg:col-span-8 space-y-6">
+          
+          {/* Active Visitor Passes Data Grid Table */}
+          <Card id="active-passes">
+            <CardHeader>
+              <CardTitle
+                icon={QrCode}
+                title="Active Visitor Access Passes"
+                subtitle={`${filteredPasses.length} visitor passes active in system`}
+                live={true}
+              />
+              <Button variant="success" size="sm" icon={Plus} onClick={() => setShowGenerateModal(true)} className="rounded-full border-none">
+                New Pass
+              </Button>
+            </CardHeader>
+
+            <CardBody padded={false}>
+              {filteredPasses.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm border-collapse">
+                    <thead>
+                      <tr className="bg-[#1a1d23]/50 border-none">
+                        <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-[#8a8f98]">Guest Name</th>
+                        <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-[#8a8f98]">Pass Code</th>
+                        <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-[#8a8f98]">Phone & Transport</th>
+                        <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-[#8a8f98]">Guests</th>
+                        <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-[#8a8f98] text-right">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y-0">
+                      {filteredPasses.map((pass, idx) => (
+                        <tr 
+                          key={pass.id || idx}
+                          onClick={() => setSelectedPass(pass)}
+                          className="hover:bg-[#2a2d33] transition-colors cursor-pointer border-none"
+                        >
+                          <td className="px-5 py-3.5 font-bold text-white text-xs md:text-sm">
+                            {pass.guestName || pass.name || 'Guest Visitor'}
+                          </td>
+                          <td className="px-5 py-3.5">
+                            <span className="font-mono text-xs px-2.5 py-1 rounded-lg bg-[#1a1d23]/90 text-[#8a8f98] font-bold border-none shadow-inner">
+                              {pass.code || pass.passCode || 'CODE-N/A'}
+                            </span>
+                          </td>
+                          <td className="px-5 py-3.5 text-xs text-[#8a8f98]">
+                            {pass.guestPhone || 'No phone'} • <span className="capitalize">{pass.modeOfTransport || 'car'}</span>
+                          </td>
+                          <td className="px-5 py-3.5 text-xs font-semibold text-[#8a8f98]">
+                            {pass.totalAdults || 1} Adult(s) {pass.totalChildren > 0 ? `, ${pass.totalChildren} Child` : ''}
+                          </td>
+                          <td className="px-5 py-3.5 text-right">
+                            <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold uppercase ${getStatusColor(pass.isActive, pass.isUsed, pass.status)}`}>
+                              {getStatusText(pass.isActive, pass.isUsed, pass.status)}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <EmptyState
+                  icon={QrCode}
+                  title="No visitor passes found"
+                  description="Generate a new pass using the control panel to get started"
+                />
+              )}
+            </CardBody>
+          </Card>
+
+          {/* Security Incidents & Blacklist Grid */}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            {/* Recent Entry/Exit Feed */}
+            <Card id="recent-activity">
+              <CardHeader>
+                <CardTitle icon={Activity} title="Gate Entry Activity" subtitle={`${filteredLogs.length} recent logs`} />
+              </CardHeader>
+              <CardBody padded={true} className="space-y-3">
+                {filteredLogs.length > 0 ? (
+                  filteredLogs.map((log, idx) => (
+                    <div key={log.id || idx} className="flex items-center justify-between p-3 bg-[#1a1d23] rounded-xl border border-[#2a2d33]">
+                      <div className="flex items-center gap-3">
+                        <div className={`size-8 rounded-full flex items-center justify-center shrink-0 ${
+                          log.type === 'entry' || log.action === 'check-in'
+                            ? 'bg-emerald-500/10 text-emerald-400' 
+                            : 'bg-rose-500/10 text-rose-400'
+                        }`}>
+                          {log.type === 'entry' || log.action === 'check-in' ? <LogIn className="size-4" /> : <LogOut className="size-4" />}
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-white">{log.visitor || log.guestName || 'Visitor'}</p>
+                          <p className="text-[10px] text-[#8a8f98]">{log.passCode || 'N/A'} • {formatDate(log.timestamp || log.createdAt)}</p>
+                        </div>
+                      </div>
+                      <StatusBadge
+                        status={log.type || log.action || 'Log'}
+                        tone={log.type === 'entry' || log.action === 'check-in' ? 'green' : 'red'}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <EmptyState icon={Activity} title="No recent activity" />
+                )}
+              </CardBody>
+            </Card>
+
+            {/* Blacklisted Watchlist */}
+            <Card id="blacklist-section">
+              <CardHeader>
+                <CardTitle icon={Ban} title="Blacklisted Visitors" subtitle={`${blacklist.length} restricted`} />
+              </CardHeader>
+              <CardBody padded={true} className="space-y-3">
+                {blacklist.length > 0 ? (
+                  blacklist.slice(0, 4).map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-3 p-3 bg-rose-500/5 rounded-xl border border-rose-500/20">
+                      <div className="size-8 rounded-full bg-rose-500/10 text-rose-400 flex items-center justify-center font-bold text-xs shrink-0">
+                        {item.name?.charAt(0) || 'B'}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-xs text-white truncate">{item.name || 'Restricted Visitor'}</p>
+                        <p className="text-[10px] text-[#8a8f98] truncate">{item.reason || 'Restricted by Estate Admin'}</p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <EmptyState icon={Ban} title="No blacklisted visitors" description="Estate watchlist is clean" />
+                )}
+              </CardBody>
+            </Card>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <footer className="mt-6 py-6 text-center border-t border-[#2a2d33]">
+        <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#8a8f98]">
+          © {new Date().getFullYear()} Security Command Portal • Gate Status: <span className="text-emerald-500 font-semibold">Active ● Live</span>
+        </p>
+      </footer>
+
+      {/* Pass Detail Modal */}
+      {selectedPass && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#1a1d23] rounded-2xl max-w-md w-full p-6 shadow-2xl animate-in zoom-in-95 duration-200 border border-[#2a2d33]">
+            <div className="flex items-center justify-between border-b border-[#2a2d33] pb-4 mb-4">
+              <div className="flex items-center gap-2">
+                <QrCode className="size-6 text-[#1241a1]" />
+                <h3 className="font-bold text-lg text-white">Visitor Pass Details</h3>
               </div>
-            </form>
+              <button 
+                onClick={() => setSelectedPass(null)}
+                className="text-[#8a8f98] hover:text-[#8a8f98] border-none bg-transparent"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between items-center py-1.5 border-b border-[#2a2d33]">
+                <span className="text-[#8a8f98] font-medium">Guest Name</span>
+                <span className="font-bold text-white">{selectedPass.guestName || selectedPass.name || 'Guest'}</span>
+              </div>
+              <div className="flex justify-between items-center py-1.5 border-b border-[#2a2d33]">
+                <span className="text-[#8a8f98] font-medium">Access Code</span>
+                <span className="font-mono font-extrabold text-[#1241a1] text-base">{selectedPass.code || selectedPass.passCode || 'N/A'}</span>
+              </div>
+              <div className="flex justify-between items-center py-1.5 border-b border-[#2a2d33]">
+                <span className="text-[#8a8f98] font-medium">Phone Number</span>
+                <span className="font-semibold text-white">{selectedPass.guestPhone || selectedPass.phone || 'N/A'}</span>
+              </div>
+              <div className="flex justify-between items-center py-1.5 border-b border-[#2a2d33]">
+                <span className="text-[#8a8f98] font-medium">Transport Mode</span>
+                <span className="font-semibold capitalize text-white">{selectedPass.modeOfTransport || 'Car'}</span>
+              </div>
+              <div className="flex justify-between items-center py-1.5 border-b border-[#2a2d33]">
+                <span className="text-[#8a8f98] font-medium">Guests Count</span>
+                <span className="font-semibold text-white">
+                  {selectedPass.totalAdults || 1} Adult(s), {selectedPass.totalChildren || 0} Child(ren)
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-1.5">
+                <span className="text-[#8a8f98] font-medium">Status</span>
+                <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold ${getStatusColor(selectedPass.isActive, selectedPass.isUsed, selectedPass.status)}`}>
+                  {getStatusText(selectedPass.isActive, selectedPass.isUsed, selectedPass.status)}
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <button 
+                onClick={() => {
+                  router.push('/dashboard/security/scan')
+                }}
+                className="flex-1 py-2.5 bg-[#1a1d23] text-white font-bold text-xs rounded-full hover:opacity-90 transition-all border-none"
+              >
+                Scan / Verify Entry
+              </button>
+              <button 
+                onClick={() => setSelectedPass(null)}
+                className="py-2.5 px-5 bg-[#1a1d23] text-[#8a8f98] font-bold text-xs rounded-full hover:bg-[#2a2d33] transition-all border-none"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

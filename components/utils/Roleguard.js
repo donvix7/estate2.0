@@ -1,56 +1,46 @@
 "use client";
 
 import { useEffect, useState } from "react";
-//import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
-import { getCurrentSession } from "@/lib/service";
+import UnauthenticatedWithImage from "@/components/UnAuthenticated";
 
-export default function RoleGuard({ user, allowedRoles = [], children }) {
-  const [authorized, setAuthorized] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
-    //const token = user.token;
-    //const role = user.role;
-    const LoadData = async () =>{
-      try {
-        const res = await getCurrentSession()
-        if (res.success) {
-            console.log(res);
-        }
-    } catch (error) {
-        console.log("Authorization check failed:", error);
-        router.push("/");
-        return;
-    }
-        
-  
-    }
+const ROLE_LOAD_TIMEOUT = 4000;
+
+export default function RoleGuard({ role, allowedRoles = [], children }) {
+  const [ready, setReady] = useState(false);
+
+  const allowed = Array.isArray(allowedRoles) ? allowedRoles : [];
+  const authorized = !!role && allowed.includes(role);
+
   useEffect(() => {
-    LoadData();
-
-    // Check if role is authorized
-    if (allowedRoles.includes("admin")) {
-      setAuthorized(true);
-    } else {
-      alert("You are not authorized to access this page.");
-      router.push("/");
+    if (role != null) {
+      setReady(true);
+      return;
     }
 
-    setLoading(false);
-  }, [allowedRoles, router]);
+    const timer = setTimeout(() => setReady(true), ROLE_LOAD_TIMEOUT);
+    return () => clearTimeout(timer);
+  }, [role]);
 
-  // Optional: show loader while verifying
-  if (loading) {
+  if (!ready) {
     return (
       <div className="flex w-full items-center justify-center h-screen">
-        <p className="text-gray-600 text-lg animate-pulse">
-          Checking authorization...
-        </p>
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-[#8a8f98] text-white text-sm font-medium animate-pulse">
+            Verifying access...
+          </p>
+        </div>
       </div>
     );
   }
 
-  return authorized ? children :  (<div className="flex items-center justify-center min-h-screen w-full">
-              <UnauthenticatedWithImage/>
-            </div>)
+  if (authorized) {
+    return children;
+  }
+
+  return (
+    <div className="flex items-center justify-center min-h-screen w-full">
+      <UnauthenticatedWithImage />
+    </div>
+  );
 }

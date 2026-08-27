@@ -1,7 +1,11 @@
 "use client"
 import React, { useState, useEffect } from 'react'
-import { Briefcase } from 'lucide-react'
+import { Briefcase, Users } from 'lucide-react'
 import { getStaffMembers } from '@/lib/service'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { Button } from '@/components/ui/Button'
+import { Card, CardBody } from '@/components/ui/Card'
+import { StatusBadge } from '@/components/ui/StatusBadge'
 
 
 const StaffPage = () => {
@@ -25,54 +29,51 @@ const StaffPage = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0d0f13] border-[#2a2d33]"></div>
       </div>
     )
   }
 
   return (
-    <div>
+    <div className="max-w-7xl mx-auto pb-12 animate-in fade-in duration-700">
         {/* STAFF TAB */}
-            <div className="space-y-6">
-               <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg">
-                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Staff Directory</h2>
-                 <button className="px-4 py-2 bg-gray-900 dark:bg-gray-700 hover:bg-gray-800 dark:hover:bg-gray-600 text-white rounded-lg transition-colors text-sm font-medium">
-                   + Add Staff
-                 </button>
-               </div>
+            <PageHeader
+              title="Staff Directory"
+              description="Manage estate staff profiles, departments, and access."
+              icon={Users}
+            >
+              <Button variant="primary" size="md">
+                + Add Staff
+              </Button>
+            </PageHeader>
                
                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                  {staffMembers.map(staff => (
-                   <div key={staff.id} className="bg-white/90 dark:bg-slate-900/80 p-6 rounded-xl shadow-md hover:shadow-lg transition-all">
-                     <div className="flex items-center gap-4 mb-4">
-                       <div className="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-                         <Briefcase className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+                   <Card key={staff.id} hoverable>
+                     <CardBody>
+                       <div className="flex items-center gap-4 mb-4">
+                         <div className="w-12 h-12 bg-[#1a1d23] rounded-full flex items-center justify-center">
+                           <Briefcase className="w-6 h-6 text-[#8a8f98]" />
+                         </div>
+                         <div>
+                           <h3 className="font-bold text-white">{staff.name}</h3>
+                           <p className="text-sm text-[#8a8f98]">{staff.role}</p>
+                         </div>
                        </div>
-                       <div>
-                         <h3 className="font-bold text-gray-900 dark:text-white">{staff.name}</h3>
-                         <p className="text-sm text-gray-600 dark:text-gray-400">{staff.role}</p>
+                       <div className="space-y-2 text-sm text-[#8a8f98]">
+                         <div className="flex justify-between">
+                           <span>Department:</span>
+                           <span className="text-white text-[#8a8f98]">{staff.department}</span>
+                         </div>
+                         <div className="flex justify-between">
+                           <span>Status:</span>
+                           <StatusBadge status={staff.status} />
+                         </div>
                        </div>
-                     </div>
-                     <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                       <div className="flex justify-between">
-                         <span>Department:</span>
-                         <span className="text-gray-900 dark:text-gray-300">{staff.department}</span>
-                       </div>
-                       <div className="flex justify-between">
-                         <span>Status:</span>
-                         <span className={`px-2 py-0.5 rounded text-xs ${
-                           staff.status === 'active' 
-                             ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' 
-                             : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-400'
-                         }`}>
-                           {staff.status}
-                         </span>
-                       </div>
-                     </div>
-                   </div>
+                     </CardBody>
+                   </Card>
                  ))}
                </div>
-            </div>
     </div>
   )
 }

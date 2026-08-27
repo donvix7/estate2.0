@@ -64,7 +64,7 @@ export default function PaystackPayment() {
             <div className="flex items-center justify-center py-12">
                 <div className="flex items-center gap-3">
                     <div className="size-5 border-2 border-[#1241a1]/20 border-t-[#1241a1] rounded-full animate-spin"></div>
-                    <p className="text-slate-500 font-medium">Loading payment portal...</p>
+                    <p className="text-white0 font-medium">Loading payment portal...</p>
                 </div>
             </div>
         );
@@ -116,7 +116,7 @@ export default function PaystackPayment() {
                         className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
                             activeTab === tab.id
                                 ? 'border-[#1241a1] bg-[#1241a1]/5 text-[#1241a1]'
-                                : 'border-slate-900 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-slate-500'
+                                : 'border-[#2a2d33] border-[#2a2d33] hover:border-[#3a3d43] hover:border-[#2a2d33] text-white0'
                         }`}
                     >
                         {tab.icon}
@@ -129,58 +129,58 @@ export default function PaystackPayment() {
             {activeTab === 'digital' && (
                 <form onSubmit={handleSubmit(handleProceed)} className="space-y-4">
                     {!isConfigValid && (
-                        <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-xl flex items-start gap-3">
+                        <div className="p-4 bg-red-50 bg-red-900/20 border border-red-200 border-red-800/50 rounded-xl flex items-start gap-3">
                             <AlertCircle className="size-5 text-red-500" />
-                            <p className="text-red-700 dark:text-red-300 text-sm font-medium">Payment system is currently unavailable. Contact support.</p>
+                            <p className="text-red-700 text-red-300 text-sm font-medium">Payment system is currently unavailable. Contact support.</p>
                         </div>
                     )}
 
                     <div className="space-y-1.5">
-                        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Cardholder Name</label>
-                        <input type="text" placeholder="John Doe" className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-900 dark:border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition-all text-sm" {...register("name")} />
+                        <label className="block text-sm font-semibold text-white ">Cardholder Name</label>
+                        <input type="text" placeholder="John Doe" className="w-full bg-[#1a1d23] border border-[#2a2d33] border-[#2a2d33] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition-all text-sm" {...register("name")} />
                         {errors.name && <p className="text-red-500 text-xs font-medium">{errors.name.message}</p>}
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Email Address</label>
+                        <label className="block text-sm font-semibold text-white ">Email Address</label>
                         <div className="relative">
-                            <input type="email" placeholder="john@example.com" className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-900 dark:border-slate-700 rounded-xl px-4 py-3 pr-12 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition-all text-sm" {...register("email")} />
-                            <Mail className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 size-4" />
+                            <input type="email" placeholder="john@example.com" className="w-full bg-[#1a1d23] border border-[#2a2d33] border-[#2a2d33] rounded-xl px-4 py-3 pr-12 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition-all text-sm" {...register("email")} />
+                            <Mail className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8a8f98] size-4" />
                         </div>
                         {errors.email && <p className="text-red-500 text-xs font-medium">{errors.email.message}</p>}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Amount (₦)</label>
-                            <input type="number" placeholder="0.00" min="100" max="1000000" className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-900 dark:border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition-all text-sm font-semibold" {...register("amount")} />
+                            <label className="block text-sm font-semibold text-white ">Amount (₦)</label>
+                            <input type="number" placeholder="0.00" min="100" max="1000000" className="w-full bg-[#1a1d23] border border-[#2a2d33] border-[#2a2d33] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition-all text-sm font-semibold" {...register("amount")} />
                             {errors.amount && <p className="text-red-500 text-xs font-medium">{errors.amount.message}</p>}
                         </div>
                         <div className="space-y-1.5">
-                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                            <label className="block text-sm font-semibold text-white  flex items-center justify-between">
                                 Password
-                                <HelpCircle className="size-3.5 text-slate-400" title="Used to verify your identity" />
+                                <HelpCircle className="size-3.5 text-[#8a8f98]" title="Used to verify your identity" />
                             </label>
-                            <input type="password" placeholder="••••••••" className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-900 dark:border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition-all text-sm" {...register("password")} />
+                            <input type="password" placeholder="••••••••" className="w-full bg-[#1a1d23] border border-[#2a2d33] border-[#2a2d33] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition-all text-sm" {...register("password")} />
                             {errors.password && <p className="text-red-500 text-xs font-medium">{errors.password.message}</p>}
                         </div>
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Account Number</label>
-                        <input type="text" placeholder="10-digit building account number" className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-900 dark:border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition-all text-sm" {...register("accountNumber")} />
+                        <label className="block text-sm font-semibold text-white ">Account Number</label>
+                        <input type="text" placeholder="10-digit building account number" className="w-full bg-[#1a1d23] border border-[#2a2d33] border-[#2a2d33] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition-all text-sm" {...register("accountNumber")} />
                         {errors.accountNumber && <p className="text-red-500 text-xs font-medium">{errors.accountNumber.message}</p>}
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Description / Reason</label>
-                        <input type="text" placeholder="e.g. Service Charge for October" className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-900 dark:border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition-all text-sm" {...register("description")} />
+                        <label className="block text-sm font-semibold text-white ">Description / Reason</label>
+                        <input type="text" placeholder="e.g. Service Charge for October" className="w-full bg-[#1a1d23] border border-[#2a2d33] border-[#2a2d33] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#1241a1] focus:border-transparent outline-none transition-all text-sm" {...register("description")} />
                         {errors.description && <p className="text-red-500 text-xs font-medium">{errors.description.message}</p>}
                     </div>
 
                     <div className="flex items-center gap-3 py-2">
-                        <input id="save-card" type="checkbox" checked={saveCard} onChange={e => setSaveCard(e.target.checked)} className="size-4 rounded border-slate-300 dark:border-slate-600 text-[#1241a1] focus:ring-[#1241a1] bg-transparent" />
-                        <label htmlFor="save-card" className="text-sm text-slate-600 dark:text-slate-400 select-none">Save details for future payments</label>
+                        <input id="save-card" type="checkbox" checked={saveCard} onChange={e => setSaveCard(e.target.checked)} className="size-4 rounded border-[#3a3d43] border-[#2a2d33] text-[#1241a1] focus:ring-[#1241a1] bg-transparent" />
+                        <label htmlFor="save-card" className="text-sm text-[#8a8f98] text-[#8a8f98] select-none">Save details for future payments</label>
                     </div>
 
                     <button
@@ -197,68 +197,68 @@ export default function PaystackPayment() {
             {/* ── Bank Tab Placeholder ── */}
             {activeTab === 'bank' && (
                 <div className="flex flex-col items-center justify-center py-12 text-center gap-3">
-                    <div className="size-14 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center">
-                        <Landmark className="size-7 text-slate-400" />
+                    <div className="size-14 bg-[#1a1d23] rounded-2xl flex items-center justify-center">
+                        <Landmark className="size-7 text-[#8a8f98]" />
                     </div>
-                    <p className="font-semibold text-slate-700 dark:text-slate-300">Bank Transfer</p>
-                    <p className="text-sm text-slate-400 max-w-xs">Direct bank payments are coming soon. Use the Card option to pay now.</p>
+                    <p className="font-semibold text-white ">Bank Transfer</p>
+                    <p className="text-sm text-[#8a8f98] max-w-xs">Direct bank payments are coming soon. Use the Card option to pay now.</p>
                 </div>
             )}
 
             {/* ── Digital Wallet Placeholder ── */}
             {activeTab === 'card' && (
                 <div className="flex flex-col items-center justify-center py-12 text-center gap-3">
-                    <div className="size-14 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center">
-                        <Zap className="size-7 text-slate-400" />
+                    <div className="size-14 bg-[#1a1d23] rounded-2xl flex items-center justify-center">
+                        <Zap className="size-7 text-[#8a8f98]" />
                     </div>
-                    <p className="text-sm text-slate-400 max-w-xs">Apple Pay, Google Pay, and USSD options are coming soon.</p>
+                    <p className="text-sm text-[#8a8f98] max-w-xs">Apple Pay, Google Pay, and USSD options are coming soon.</p>
                 </div>
             )}
 
             {/* ── Accepted Providers ── */}
-            <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-900 flex flex-col items-center gap-4">
+            <div className="mt-8 pt-6 border-t border-[#2a2d33] border-[#2a2d33] flex flex-col items-center gap-4">
                 <div className="flex gap-3 opacity-60">
                     {['VISA', 'MASTERCARD', 'VERVE', 'PAYSTACK'].map(brand => (
-                        <div key={brand} className="h-6 px-2 bg-slate-200 dark:bg-slate-700 rounded flex items-center justify-center">
+                        <div key={brand} className="h-6 px-2 bg-[#1a1d23] rounded flex items-center justify-center">
                             <span className="text-[8px] font-black">{brand}</span>
                         </div>
                     ))}
                 </div>
-                <p className="text-[10px] text-center text-slate-500 uppercase tracking-widest leading-loose">
+                <p className="text-[10px] text-center text-white0 uppercase tracking-widest leading-loose">
                     Payments processed securely by Paystack. By confirming, you agree to our terms of service.
                 </p>
             </div>
 
             {/* ── Preview Modal ── */}
             {showPreview && (
-                <div className="fixed inset-0 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm z-50 animate-in fade-in duration-200">
-                    <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-700 dark:border-slate-900 animate-in zoom-in-95 duration-200">
-                        <div className="flex items-center justify-between p-6 border-b border-slate-700 dark:border-slate-900 bg-slate-50/80 dark:bg-slate-800/50">
+                <div className="fixed inset-0 flex items-center justify-center p-4 bg-[#0d0f13]/60 backdrop-blur-sm z-50 animate-in fade-in duration-200">
+                    <div className="bg-[#1a1d23] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-[#2a2d33] border-[#2a2d33] animate-in zoom-in-95 duration-200">
+                        <div className="flex items-center justify-between p-6 border-b border-[#2a2d33] bg-[#1a1d23]">
                             <h3 className="font-bold flex items-center gap-2">
                                 <FileText className="w-5 h-5 text-[#1241a1]" />
                                 Transaction Preview
                             </h3>
-                            <button onClick={() => setShowPreview(false)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-                                <X className="w-5 h-5 text-slate-400" />
+                            <button onClick={() => setShowPreview(false)} className="p-1.5 hover:bg-[#2a2d33]  rounded-lg transition-colors">
+                                <X className="w-5 h-5 text-[#8a8f98]" />
                             </button>
                         </div>
 
                         <div className="p-6 space-y-3">
                             {[
                                 { label: 'Recipient', value: 'Estate Management' },
-                                { label: 'Payer', value: name || <span className="text-slate-400 italic text-sm">Not specified</span> },
-                                { label: 'Description', value: description || <span className="text-slate-400 italic text-sm">Not specified</span> },
+                                { label: 'Payer', value: name || <span className="text-[#8a8f98] italic text-sm">Not specified</span> },
+                                { label: 'Description', value: description || <span className="text-[#8a8f98] italic text-sm">Not specified</span> },
                                 { label: 'Account No.', value: <span className="font-mono text-sm">{accountNumber || '----------'}</span> },
                             ].map(item => (
                                 <div key={item.label} className="flex items-center justify-between py-1.5">
-                                    <span className="text-slate-500 text-sm">{item.label}</span>
+                                    <span className="text-white0 text-sm">{item.label}</span>
                                     <span className="font-semibold text-sm text-right max-w-[60%] truncate">{item.value}</span>
                                 </div>
                             ))}
-                            <div className="bg-[#1241a1]/5 dark:bg-[#1241a1]/10 rounded-xl p-5 mt-2">
+                            <div className="bg-[#1241a1]/5 bg-[#1241a1]/10 rounded-xl p-5 mt-2">
                                 <div className="flex justify-between items-center mb-1">
-                                    <span className="text-slate-600 dark:text-slate-300 font-medium text-sm">Total Amount</span>
-                                    <span className="text-slate-400 text-xs font-bold uppercase">NGN</span>
+                                    <span className="text-[#8a8f98]  font-medium text-sm">Total Amount</span>
+                                    <span className="text-[#8a8f98] text-xs font-bold uppercase">NGN</span>
                                 </div>
                                 <p className="text-3xl font-black text-[#1241a1] text-right">
                                     ₦{Number(amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -280,15 +280,15 @@ export default function PaystackPayment() {
                                     )}
                                 </button>
                             ) : (
-                                <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-xl flex items-center gap-3">
+                                <div className="p-4 bg-red-50 bg-red-900/20 border border-red-200 border-red-800/50 rounded-xl flex items-center gap-3">
                                     <AlertCircle className="size-5 text-red-500" />
-                                    <p className="text-red-700 dark:text-red-300 text-sm font-medium">Payment gateway is not configured.</p>
+                                    <p className="text-red-700 text-red-300 text-sm font-medium">Payment gateway is not configured.</p>
                                 </div>
                             )}
-                            <button onClick={() => setShowPreview(false)} disabled={isLoading} className="w-full py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold rounded-xl transition-all text-sm border border-slate-900 dark:border-slate-700">
+                            <button onClick={() => setShowPreview(false)} disabled={isLoading} className="w-full py-3 bg-[#1a1d23] hover:bg-[#2a2d33]  text-white text-white font-bold rounded-xl transition-all text-sm border border-[#2a2d33] border-[#2a2d33]">
                                 Cancel &amp; Edit Details
                             </button>
-                            <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-400 uppercase tracking-widest">
+                            <div className="flex items-center justify-center gap-1.5 text-[10px] text-[#8a8f98] uppercase tracking-widest">
                                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
                                 Secured by Paystack
                             </div>

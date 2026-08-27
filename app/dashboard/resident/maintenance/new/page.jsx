@@ -1,11 +1,9 @@
 'use client'
 
 import React, { useState, useRef } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify';
 import { 
-  ChevronRight, 
   Info, 
   Calendar, 
   Upload, 
@@ -13,11 +11,14 @@ import {
   X, 
   Image as ImageIcon, 
   ShieldCheck, 
-  ArrowRight 
+  ArrowRight,
+  Wrench
 } from 'lucide-react';
 import { submitMaintenanceRequest } from '@/lib/action';
 import { getResidentData } from '@/lib/service';
 import { useEffect } from 'react';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Card, CardHeader, CardTitle, CardBody } from '@/components/ui/Card';
 
 const CATEGORIES = [
   'Select category',
@@ -129,22 +130,15 @@ export default function NewMaintenanceRequestPage() {
   }
 
   return (
-    <div className="flex flex-col gap-0 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="max-w-4xl mx-auto pb-12 animate-in fade-in duration-700">
 
       {/* ── Header ── */}
-      <div className="mb-10">
-        <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-2">
-          <Link href="/dashboard/resident" className="hover:text-[#1241a1] transition-colors">Dashboard</Link>
-          <ChevronRight className="size-4" />
-          <Link href="/dashboard/resident/maintenance" className="hover:text-[#1241a1] transition-colors">Maintenance</Link>
-          <ChevronRight className="size-4" />
-          <span className="text-[#1241a1] font-semibold">New Request</span>
-        </div>
-        <h2 className="text-3xl font-extrabold tracking-tight">New Maintenance Request</h2>
-        <p className="mt-2 text-slate-500 dark:text-slate-400">
-          Submit a new service ticket for property repairs. We typically respond within 24 hours.
-        </p>
-      </div>
+      <PageHeader
+        title="New Maintenance Request"
+        description="Submit a new service ticket for property repairs. We typically respond within 24 hours."
+        icon={Wrench}
+        iconColor="blue"
+      />
 
       {/* ── Form ── */}
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -152,26 +146,26 @@ export default function NewMaintenanceRequestPage() {
         {/* ── LEFT: Request Details ── */}
         <div className="space-y-6">
 
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm space-y-5">
-            <h3 className="text-base font-bold flex items-center gap-2">
-              <Info className="size-5 text-[#1241a1]" />
-              Request Details
-            </h3>
+          <Card>
+            <CardHeader>
+              <CardTitle icon={Info} title="Request Details" />
+            </CardHeader>
+            <CardBody className="space-y-5">
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Issue Category</label>
+              <label className="block text-sm font-semibold text-white ">Issue Category</label>
               <select
                 name="category"
                 value={form.category}
                 onChange={handleChange}
-                className="w-full bg-slate-50 dark:bg-slate-800 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none appearance-none cursor-pointer"
+                className="w-full bg-[#1a1d23] rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none appearance-none cursor-pointer"
               >
                 {CATEGORIES.map(c => <option key={c} value={c === 'Select category' ? '' : c}>{c}</option>)}
               </select>
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Urgency Level</label>
+              <label className="block text-sm font-semibold text-white ">Urgency Level</label>
               <div className="grid grid-cols-3 gap-2">
                 {URGENCY.map(u => (
                   <button
@@ -181,7 +175,7 @@ export default function NewMaintenanceRequestPage() {
                     className={`py-2 text-xs font-bold rounded-xl transition-all ${
                       form.urgency === u.id
                         ? u.active
-                        : 'bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
+                        : 'bg-[#1a1d23] text-[#8a8f98] text-[#8a8f98]'
                     }`}
                   >
                     {u.label}
@@ -191,58 +185,60 @@ export default function NewMaintenanceRequestPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Detailed Description</label>
+              <label className="block text-sm font-semibold text-white ">Detailed Description</label>
               <textarea
                 name="description"
                 value={form.description}
                 onChange={handleChange}
                 rows={5}
                 placeholder="Describe the issue in detail, including when it started and any troubleshooting steps taken..."
-                className="w-full bg-slate-50 dark:bg-slate-800 rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none resize-none placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                className="w-full bg-[#1a1d23] rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none resize-none placeholder:text-[#8a8f98] placeholder:text-[#8a8f98]"
               />
             </div>
-          </div>
+            </CardBody>
+          </Card>
 
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm space-y-5">
-            <h3 className="text-base font-bold flex items-center gap-2">
-              <Calendar className="size-5 text-[#1241a1]" />
-              Preferred Service Time
-            </h3>
+          <Card>
+            <CardHeader>
+              <CardTitle icon={Calendar} title="Preferred Service Time" />
+            </CardHeader>
+            <CardBody className="space-y-5">
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Date</label>
+              <label className="block text-sm font-semibold text-white ">Date</label>
               <input
                 name="date"
                 type="date"
                 value={form.date}
                 onChange={handleChange}
-                className="w-full bg-slate-50 dark:bg-slate-800 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none"
+                className="w-full bg-[#1a1d23] rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Time Window</label>
+              <label className="block text-sm font-semibold text-white ">Time Window</label>
               <select
                 name="timeWindow"
                 value={form.timeWindow}
                 onChange={handleChange}
-                className="w-full bg-slate-50 dark:bg-slate-800 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none appearance-none cursor-pointer"
+                className="w-full bg-[#1a1d23] rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-[#1241a1] outline-none appearance-none cursor-pointer"
               >
                 {TIME_WINDOWS.map(t => <option key={t}>{t}</option>)}
               </select>
             </div>
-          </div>
+            </CardBody>
+          </Card>
         </div>
 
         {/* ── RIGHT: Photos & Submit ── */}
         <div className="space-y-6 flex flex-col">
 
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm flex flex-col flex-1">
-            <h3 className="text-base font-bold flex items-center gap-2 mb-1">
-              <Upload className="size-5 text-[#1241a1]" />
-              Photos &amp; Videos
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">
+          <Card className="flex-1">
+            <CardHeader>
+              <CardTitle icon={Upload} title="Photos & Videos" />
+            </CardHeader>
+            <CardBody>
+            <p className="text-xs text-[#8a8f98] text-[#8a8f98] mb-5">
               Visual documentation helps our team prepare the right tools.
             </p>
 
@@ -254,7 +250,7 @@ export default function NewMaintenanceRequestPage() {
               className={`flex-1 flex flex-col items-center justify-center rounded-xl p-8 text-center cursor-pointer group transition-all ${
                 dragging
                   ? 'bg-[#1241a1]/5'
-                  : 'bg-slate-50 dark:bg-slate-800/30'
+                  : 'bg-[#1a1d23] bg-[#1a1d23]/30'
               }`}
             >
               <input
@@ -269,10 +265,10 @@ export default function NewMaintenanceRequestPage() {
                 <Plus className="size-10" />
               </div>
               <p className="text-sm font-bold">Drag and drop files here</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">or click to browse from your device</p>
+              <p className="text-xs text-[#8a8f98] text-[#8a8f98] mt-1">or click to browse from your device</p>
               <div className="mt-5 flex flex-wrap justify-center gap-2">
                 {['JPG', 'PNG', 'MP4', 'HEIC'].map(t => (
-                  <span key={t} className="px-2 py-1 bg-slate-200 dark:bg-slate-700 rounded text-[10px] font-bold text-slate-600 dark:text-slate-300">{t}</span>
+                  <span key={t} className="px-2 py-1 bg-[#1a1d23] rounded text-[10px] font-bold text-[#8a8f98] ">{t}</span>
                 ))}
               </div>
             </div>
@@ -293,7 +289,7 @@ export default function NewMaintenanceRequestPage() {
                   </div>
                 ))}
                 {Array.from({ length: Math.max(0, 3 - previews.length) }).map((_, i) => (
-                  <div key={`empty-${i}`} className="aspect-square rounded-xl flex items-center justify-center text-slate-300 dark:text-slate-700">
+                  <div key={`empty-${i}`} className="aspect-square rounded-xl flex items-center justify-center  text-white">
                     <ImageIcon className="size-6" />
                   </div>
                 ))}
@@ -303,20 +299,21 @@ export default function NewMaintenanceRequestPage() {
             {previews.length === 0 && (
               <div className="mt-4 grid grid-cols-3 gap-3">
                 {[0, 1, 2].map(i => (
-                  <div key={i} className="aspect-square rounded-xl flex items-center justify-center text-slate-300 dark:text-slate-700">
+                  <div key={i} className="aspect-square rounded-xl flex items-center justify-center  text-white">
                     <ImageIcon className="size-6" />
                   </div>
                 ))}
               </div>
             )}
-          </div>
+            </CardBody>
+          </Card>
 
-          <div className="bg-[#1241a1]/5 dark:bg-[#1241a1]/10 p-5 rounded-2xl">
+          <div className="bg-[#1241a1]/5 bg-[#1241a1]/10 p-5 rounded-2xl">
             <h4 className="text-sm font-bold flex items-center gap-2 text-[#1241a1] mb-2">
               <ShieldCheck className="size-4" />
               Service Guarantee
             </h4>
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p className="text-xs text-[#8a8f98]  leading-relaxed">
               Our licensed professionals follow strict safety protocols. By submitting this request, you authorize
               our staff to enter the premises during the selected time window.
             </p>
@@ -330,7 +327,7 @@ export default function NewMaintenanceRequestPage() {
         <button
           type="button"
           onClick={() => router.push('/dashboard/resident/maintenance')}
-          className="px-6 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+          className="px-6 py-2.5 rounded-xl text-sm font-semibold text-[#8a8f98] text-[#8a8f98] hover:bg-[#1a1d23]  transition-colors"
         >
           Cancel &amp; Save Draft
         </button>

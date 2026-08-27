@@ -3,17 +3,14 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { 
-  ChevronRight, 
   Plus, 
-  Search, 
   MoreHorizontal, 
   MapPin, 
   Calendar, 
   MessageSquare, 
   Phone, 
   Clock,
-  Wrench,
-  WrenchIcon
+  Wrench
 } from 'lucide-react'
 import { 
   getResidentsMaintenanceRequests, 
@@ -22,28 +19,32 @@ import {
 import { updateMaintenanceRequest } from '@/lib/action'
 import { toast } from 'react-toastify'
 import { PageHeader } from '@/components/ui/PageHeader'
+import { Card } from '@/components/ui/Card'
+import { SearchInput } from '@/components/ui/SearchInput'
+import { StatusBadge } from '@/components/ui/StatusBadge'
 import { LoadingState } from '@/components/ui/LoadingState'
 
 const PRIORITY_STYLES = {
-  High:   'bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400',
-  Medium: 'bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400',
-  Urgent: 'bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400',
-  Low:    'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400',
+  High:   'bg-rose-500/10 text-rose-600 text-rose-400 border-none',
+  Medium: 'bg-amber-500/10 text-amber-600 text-amber-400 border-none',
+  Urgent: 'bg-rose-500/10 text-rose-600 text-rose-400 border-none',
+  Low:    'bg-emerald-500/10 text-emerald-600 text-emerald-400 border-none',
 }
 
 const STATUS_DOT = {
-  'In Progress': 'bg-blue-500',
+  'In Progress': 'bg-amber-500',
   'Scheduled':   'bg-[#1241a1]',
-  'Pending':     'bg-slate-400 dark:bg-slate-600',
+  'Pending':     'bg-[#2a2d33]',
   'Completed':   'bg-emerald-500',
 }
 
 const STATUS_BADGE = {
-  'In Progress': 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400',
-  'Scheduled':   'bg-[#1241a1]/10 text-[#1241a1]',
-  'Pending':     'bg-slate-100 dark:bg-slate-800 text-slate-500',
-  'Completed':   'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400',
+  'In Progress': 'bg-amber-500/10 text-amber-600 text-amber-400 border-none',
+  'Scheduled':   'bg-[#1241a1]/10 text-[#1241a1] text-blue-400 border-none',
+  'Pending':     'bg-[#2a2d33]/10 text-[#8a8f98] border-none',
+  'Completed':   'bg-emerald-500/10 text-emerald-600 text-emerald-400 border-none',
 }
+
 
 const TAB_FILTERS = {
   all:     () => true,
@@ -163,10 +164,11 @@ export default function MaintenanceOverviewPage() {
   )
 
   return (
-    <div className="flex flex-col lg:flex-row -m-4 lg:-m-8 min-h-[calc(100vh-4rem)]">
+    <div className=" pb-12 animate-in fade-in duration-700">
 
       {/* ── Left: Requests List ── */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto p-6 gap-6 bg-slate-50 dark:bg-transparent">
+      <div className="">
+      <div className="flex flex-col gap-6 min-w-0">
 
         <PageHeader 
           title="Maintenance Overview" 
@@ -174,7 +176,7 @@ export default function MaintenanceOverviewPage() {
           icon={Wrench}
         >
           <div className="flex items-center gap-3">
-            <div className="flex bg-slate-100 dark:bg-slate-800/50 p-1 rounded-md gap-0.5">
+            <div className="flex bg-[#1a1d23] bg-[#1a1d23]/50 p-1 rounded-md gap-0.5">
               {[['all', 'All'], ['active', 'Active'], ['history', 'History']].map(([id, label]) => (
                 <button
                   key={id}
@@ -182,7 +184,7 @@ export default function MaintenanceOverviewPage() {
                   className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all border-none ${
                     tab === id
                       ? 'bg-[#1241a1] text-white shadow-none'
-                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      : 'text-[#8a8f98] text-[#8a8f98] hover:text-white hover:text-white'
                   }`}
                 >
                   {label}
@@ -199,33 +201,28 @@ export default function MaintenanceOverviewPage() {
           </div>
         </PageHeader>
 
-        <div className="relative group dark:bg-black/50  px-2">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 size-5 group-focus-within:text-[#1241a1] transition-colors" />
-          <input
-            type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search by issue, ID, or location..."
-            className="w-full bg-white dark:bg-slate-900 rounded-md pl-10 pr-4 py-2.5 text-sm focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all font-semibold"
-          />
-        </div>
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Search by issue, ID, or location..."
+        />
 
-        <div className="bg-slate-100 dark:dark:bg-[#818b94]/10 rounded-md overflow-hidden">
-          <table className="w-full text-left">
-             <thead className="bg-slate-50 dark:bg-slate-800/50 ">
+        <Card>
+        <table className="w-full text-left">
+             <thead className="bg-[#1a1d23] bg-[#1a1d23]/50 ">
                 <tr>
                   {['Request ID', 'Category', 'Description', 'Status'].map((header) => (
                     <th key={header} className="px-6 py-4 text-[12px] uppercase font-semibold">{header}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+              <tbody className="divide-y divide-[#2a2d33] divide-[#2a2d33]">
               {visible.length === 0 ? (
                <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
+                    <td colSpan={4} className="px-6 py-12 text-center text-[#8a8f98] text-[#8a8f98]">
                       <div className="flex flex-col items-center justify-center gap-2">
-                        <Wrench className="size-8 text-slate-300 dark:text-slate-600 mb-2" />
-                        <p className="font-medium text-slate-600 dark:text-slate-300">No active requests</p>
+                        <Wrench className="size-8  text-[#8a8f98] mb-2" />
+                        <p className="font-medium text-[#8a8f98] ">No active requests</p>
                         <p className="text-xs">You have no ongoing service requests at the moment.</p>
                       </div>
                     </td>
@@ -237,28 +234,29 @@ export default function MaintenanceOverviewPage() {
                   onClick={() => handleSelect(req)}
                   className={`cursor-pointer transition-colors group ${
                     (selected?._id || selected?.id) === (req._id || req.id)
-                      ? 'bg-white dark:bg-slate-900'
-                      : 'hover:bg-white/50 dark:hover:bg-slate-800/20'
+                      ? 'bg-[#1a1d23]'
+                      : 'hover:bg-[#1a1d23]/50 hover:bg-[#1a1d23]/20'
                   }`}
                 >
-                  <td className="px-4 py-4 text-sm font-semibold text-slate-900 dark:text-white whitespace-nowrap">{(req._id || req.id || '').substring(0, 8)}</td>
+                  <td className="px-4 py-4 text-sm font-semibold text-white text-white whitespace-nowrap">{(req._id || req.id || '').substring(0, 8)}</td>
                   <td className="px-4 py-4">
                     <div className="flex flex-col">
-                      <span className="text-sm font-semibold text-slate-900 dark:text-white">{req.issue || req.category || 'Service Request'}</span>
-                      <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">{req.subtitle || req.desc}</span>
+                      <span className="text-sm font-semibold text-white text-white">{req.issue || req.category || 'Service Request'}</span>
+                      <span className="text-xs text-[#8a8f98] text-[#8a8f98] font-medium">{req.subtitle || req.desc}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-4 text-sm text-slate-600 dark:text-slate-300 font-medium">{req.type || 'Estate Unit'}</td>
+                  <td className="px-4 py-4 text-sm text-[#8a8f98]  font-medium">{req.type || 'Estate Unit'}</td>
                   <td className="px-4 py-4 text-center">
-                    <span className={`px-2 py-1 text-[10px] font-semibold rounded-full ${PRIORITY_STYLES[req.priority?.charAt(0).toUpperCase() + req.priority?.slice(1)] || 'bg-slate-200 text-slate-500'}`}>{req.priority }</span>
+                    <StatusBadge status={req.priority} />
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <span className={`size-2 rounded-full ${STATUS_DOT[req.status] || 'bg-slate-400'}`} />
-                        <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">{req.status}</span>
-                      </div>
-                      <button className="lg:hidden text-[10px] font-semibold uppercase tracking-widest text-[#1241a1] bg-white dark:bg-slate-900 px-2 py-1 rounded-md border-none">
+                      <StatusBadge
+                        status={req.status}
+                        dot
+                        tone={req.status === 'Completed' ? 'green' : req.status === 'Pending' ? 'amber' : 'blue'}
+                      />
+                      <button className="lg:hidden text-[10px] font-semibold uppercase tracking-widest text-[#1241a1] bg-[#1a1d23] px-2 py-1 rounded-md border-none">
                         Details
                       </button>
                     </div>
@@ -267,45 +265,49 @@ export default function MaintenanceOverviewPage() {
               ))}
             </tbody>
           </table>
+        </Card>
         </div>
-      </div>
 
       {/* ── Right: Detail Panel ── */}
       {selected && (
-        <aside ref={detailRef} className="w-full lg:w-96 shrink-0 bg-white dark:bg-slate-900 overflow-y-auto ">
+        <aside ref={detailRef} className="lg:sticky lg:top-6">
+          <Card className="overflow-hidden">
           <div className="p-6 flex flex-col gap-7">
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between">
-                <span className={`px-2 py-1 text-[10px] font-semibold rounded-md ${STATUS_BADGE[selected.status] || 'bg-slate-100 text-slate-400'}`}>{selected.status}</span>
-                <button className="text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors border-none bg-transparent">
+                <StatusBadge
+                  status={selected.status}
+                  tone={selected.status === 'Completed' ? 'green' : selected.status === 'Pending' ? 'amber' : 'blue'}
+                />
+                <button className="text-[#8a8f98] hover:text-white hover:text-white transition-colors border-none bg-transparent">
                   <MoreHorizontal className="size-5" />
                 </button>
               </div>
               <h3 className="text-lg font-semibold leading-snug">{selected.id}: {selected.issue || selected.category}</h3>
-              <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 font-medium">
+              <div className="flex items-center gap-2 text-sm text-[#8a8f98] text-[#8a8f98] font-medium">
                 <MapPin className="size-4" />
                 {selected.location || 'Estate Unit'}
               </div>
-              <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 font-medium">
+              <div className="flex items-center gap-2 text-sm text-[#8a8f98] text-[#8a8f98] font-medium">
                 <Calendar className="size-4" />
                 Submitted {selected.date || 'Today'}
               </div>
             </div>
 
             <div className="flex flex-col gap-4">
-              <h4 className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Status Timeline</h4>
+              <h4 className="text-[10px] font-semibold uppercase tracking-wider text-[#8a8f98]">Status Timeline</h4>
               <div className="flex flex-col pl-2">
                 {(selected.timeline || []).length > 0 ? selected.timeline.map((step, i) => {
                   const isLast = i === (selected.timeline || []).length - 1
                   return (
                     <div key={step.label} className="relative flex items-start gap-4 pb-6">
-                      {!isLast && <div className="absolute left-[7px] top-4 bottom-0 w-px bg-slate-200 dark:bg-slate-800" />}
+                      {!isLast && <div className="absolute left-[7px] top-4 bottom-0 w-px bg-[#1a1d23]" />}
                       <div className={`z-10 size-4 rounded-full shrink-0 mt-0.5 ${
-                        step.done ? 'bg-emerald-500' : step.current ? 'bg-[#1241a1]' : 'bg-slate-300 dark:bg-slate-700'
+                        step.done ? 'bg-emerald-500' : step.current ? 'bg-[#1241a1]' : 'bg-[#2a2d33]'
                       }`} />
                       <div className="flex flex-col">
                         <p className="text-xs font-semibold">{step.label}</p>
-                        <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">{step.time || 'Status updated'}</p>
+                        <p className="text-[10px] text-[#8a8f98] text-[#8a8f98] font-medium">{step.time || 'Status updated'}</p>
                       </div>
                     </div>
                   )
@@ -314,7 +316,7 @@ export default function MaintenanceOverviewPage() {
                     <div className="z-10 size-4 rounded-full shrink-0 mt-0.5 bg-[#1241a1]" />
                     <div className="flex flex-col">
                       <p className="text-xs font-semibold">{selected.status || 'Request Received'}</p>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Processing maintenance request...</p>
+                      <p className="text-[10px] text-[#8a8f98] text-[#8a8f98] font-medium">Processing maintenance request...</p>
                     </div>
                   </div>
                 )}
@@ -323,27 +325,27 @@ export default function MaintenanceOverviewPage() {
 
             {selected.technician ? (
               <div className="flex flex-col gap-3">
-                <h4 className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Assigned Technician</h4>
-                <div className="bg-slate-100 dark:bg-slate-800/50 rounded-md p-4 flex flex-col gap-4">
+                <h4 className="text-[10px] font-semibold uppercase tracking-wider text-[#8a8f98]">Assigned Technician</h4>
+                <div className="bg-[#1a1d23] bg-[#1a1d23]/50 rounded-md p-4 flex flex-col gap-4">
                   <div className="flex items-center gap-3">
                     <div className={`size-12 rounded-md flex items-center justify-center text-white font-semibold text-base ${selected.technician.color}`}>
                       {selected.technician.initials}
                     </div>
                     <div>
                       <p className="text-sm font-semibold">{selected.technician.name}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{selected.technician.title}</p>
+                      <p className="text-xs text-[#8a8f98] text-[#8a8f98] font-medium">{selected.technician.title}</p>
                     </div>
                   </div>
                   <div className="flex gap-2">
                     <button 
                       onClick={() => setContactType('message')}
-                      className="flex-1 bg-white dark:bg-slate-700 text-xs font-semibold py-2 rounded-md hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors flex items-center justify-center gap-1.5 border-none"
+                      className="flex-1 bg-[#1a1d23] text-xs font-semibold py-2 rounded-md hover:bg-[#1a1d23] hover:bg-[#2a2d33] transition-colors flex items-center justify-center gap-1.5 border-none"
                     >
                       <MessageSquare className="size-4" /> Message
                     </button>
                     <button 
                       onClick={() => setContactType('call')}
-                      className="flex-1 bg-white dark:bg-slate-700 text-xs font-semibold py-2 rounded-md hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors flex items-center justify-center gap-1.5 border-none"
+                      className="flex-1 bg-[#1a1d23] text-xs font-semibold py-2 rounded-md hover:bg-[#1a1d23] hover:bg-[#2a2d33] transition-colors flex items-center justify-center gap-1.5 border-none"
                     >
                       <Phone className="size-4" /> Call
                     </button>
@@ -352,7 +354,7 @@ export default function MaintenanceOverviewPage() {
               </div>
             ) : (
               <div className="bg-amber-500/10 rounded-md p-4">
-                <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                <p className="text-xs font-semibold text-amber-600 text-amber-400 flex items-center gap-2">
                   <Clock className="size-4" />
                   Awaiting technician assignment
                 </p>
@@ -360,9 +362,9 @@ export default function MaintenanceOverviewPage() {
             )}
 
             <div className="flex flex-col gap-3">
-              <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Photos &amp; Files</h4>
+              <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#8a8f98]">Photos &amp; Files</h4>
               <div className="grid grid-cols-3 gap-2">
-                <div className="aspect-square bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                <div className="aspect-square bg-[#1a1d23] rounded-xl flex items-center justify-center text-[#8a8f98] cursor-pointer hover:bg-[#1a1d23]  transition-colors">
                   <Plus className="size-6" />
                 </div>
               </div>
@@ -391,36 +393,39 @@ export default function MaintenanceOverviewPage() {
               >
                 New Request
               </Link>
-              <button className="w-full bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-sm border-none">
+              <button className="w-full bg-[#1a1d23] bg-[#1a1d23]/50 text-[#8a8f98]  font-semibold py-3 rounded-md hover:bg-[#1a1d23]  transition-colors text-sm border-none">
                 Reassign Technician
               </button>
             </div>
           </div>
+          </Card>
         </aside>
       )}
 
+      </div>
+
       {/* Contact Modal */}
       {contactType && selected?.technician && (
-        <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl p-8 shadow-2xl animate-in zoom-in-95 duration-300">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-[#0d0f13]/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-[#1a1d23] w-full max-w-sm rounded-3xl p-8 shadow-2xl animate-in zoom-in-95 duration-300">
             <div className="flex flex-col items-center text-center gap-6">
               <div className={`size-20 rounded-2xl flex items-center justify-center text-white font-black text-2xl ${selected.technician.color} shadow-lg`}>
                 {selected.technician.initials}
               </div>
               <div>
                 <h3 className="text-xl font-bold">{selected.technician.name}</h3>
-                <p className="text-sm text-slate-500">{selected.technician.title}</p>
+                <p className="text-sm text-[#8a8f98]">{selected.technician.title}</p>
               </div>
               
-              <div className="w-full bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4 flex flex-col gap-3">
+              <div className="w-full bg-[#1a1d23] bg-[#1a1d23]/50 rounded-2xl p-4 flex flex-col gap-3">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-500">Contact Method</span>
+                  <span className="text-[#8a8f98]">Contact Method</span>
                   <span className="font-bold uppercase tracking-widest text-[10px] text-[#1241a1] px-2 py-1 bg-[#1241a1]/5 rounded-md">
                     {contactType}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-500">Estate ID</span>
+                  <span className="text-[#8a8f98]">Estate ID</span>
                   <span className="font-bold">E-TECH-842</span>
                 </div>
               </div>
@@ -437,7 +442,7 @@ export default function MaintenanceOverviewPage() {
                 </button>
                 <button 
                   onClick={() => setContactType(null)}
-                  className="w-full font-bold text-slate-400 hover:text-slate-600 py-2 transition-colors text-sm"
+                  className="w-full font-bold text-[#8a8f98] hover:text-[#8a8f98] py-2 transition-colors text-sm"
                 >
                   Cancel
                 </button>

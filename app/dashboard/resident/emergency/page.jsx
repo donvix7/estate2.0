@@ -1,13 +1,14 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
-import { Building, ChevronRight, Eye, Flame, Headset, HeartPulse, HelpCircle, Loader2, Phone, Plus, Send, ShieldAlert, User, UserPlus, Users, X } from 'lucide-react'
+import { Building, Eye, Flame, Headset, HeartPulse, HelpCircle, Loader2, Phone, Plus, Send, ShieldAlert, User, Users, X } from 'lucide-react'
 import { getResidentData, getUserById } from '@/lib/service'
 import { updateEmergencyContacts, sendEmergencyAlert } from '@/lib/action'
 import { toast } from 'react-toastify'
 import { PageHeader } from '@/components/ui/PageHeader'
+import { SectionHeader } from '@/components/ui/SectionHeader'
+import { Card } from '@/components/ui/Card'
 import { LoadingState } from '@/components/ui/LoadingState'
 import { BackButton } from '@/components/ui/BackButton'
 import { useRouter } from 'next/navigation'
@@ -39,9 +40,9 @@ const ESTATE_SERVICES = [
     description: 'Urgent fire safety response and critical infrastructure repair — gas leaks, burst pipes, electrical hazards.',
     icon: Flame,
     badge: 'Critical Infrastructure',
-    badgeClass: 'bg-[#1241a1] text-white',
+    badgeClass: 'bg-amber-700 text-white',
     phone: 'tel:+2348000000003',
-    color: 'text-[#1241a1] bg-blue-50',
+    color: 'text-amber-700 bg-amber-100',
   },
 ]
 
@@ -92,7 +93,7 @@ export default function EmergencyPage() {
   const handleAddContact = async () => {
     if (!newContact.name || !newContact.phone || (!residentData?.id && !residentData?._id)) return
     
-    const colors = ['bg-blue-500', 'bg-emerald-500', 'bg-violet-500', 'bg-rose-500', 'bg-amber-500']
+    const colors = ['bg-[#1241a1]', 'bg-emerald-500', 'bg-violet-500', 'bg-rose-500', 'bg-amber-500']
     const randomColor = colors[Math.floor(Math.random() * colors.length)]
     const initials = newContact.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 
@@ -197,12 +198,7 @@ export default function EmergencyPage() {
   }
 
   return (
-    <div className="animate-in fade-in duration-700">
-       <div className="flex items-center gap-2 text-[10px] uppercase font-semibold tracking-widest text-slate-400 mb-4">
-            <Link href="/dashboard/resident" className="hover:text-[#1241a1] transition-colors">Dashboard</Link>
-            <ChevronRight className="size-3" />
-            <span className="text-[#1241a1]">Emergency Portal</span>
-          </div>
+    <div className="max-w-7xl mx-auto pb-12 animate-in fade-in duration-700">
 
       {/* ── Header ── */}
       <PageHeader 
@@ -218,28 +214,25 @@ export default function EmergencyPage() {
           className="shrink-0 relative group cursor-pointer z-50 pointer-events-auto"
         >
           <div className="relative bg-red-600 hover:brightness-110 text-white font-semibold text-xs uppercase tracking-[0.2em] px-10 py-5 rounded-md transition-all active:scale-95 flex items-center gap-3 border-none">
-            <div className="size-3 bg-white rounded-full animate-ping"></div>
+            <div className="size-3 bg-[#1a1d23] rounded-full animate-ping"></div>
             Panic SOS Report
           </div>
         </div>
       </PageHeader>
 
-      <div className="pb-16 max-w-6xl space-y-14">
+      <div className="space-y-14">
 
         {/* ── Estate Emergency Services ── */}
         <section>
-          <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-            <ShieldAlert className="size-6 text-[#1241a1]" />
-            Estate Emergency Services
-          </h3>
+          <SectionHeader title="Estate Emergency Services" icon={ShieldAlert} />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {ESTATE_SERVICES.map(service => (
-              <div
+              <Card
                 key={service.id}
-                className="bg-slate-100 dark:bg-slate-800/30 rounded-md overflow-hidden flex flex-col transition-all"
+                className="flex flex-col transition-all"
               >
                 {/* Icon Container */}
-                <div className={`h-48 relative group overflow-hidden flex items-center justify-center bg-white dark:bg-slate-900 ${service.color.split(' ')[0]}`}>
+                <div className={`h-48 relative group overflow-hidden flex items-center justify-center bg-[#1a1d23] ${service.color.split(' ')[0]}`}>
                   <service.icon className={`size-20 transition-transform duration-500 group-hover:scale-110 ${service.color.split(' ')[0]}`} />
                   <div className="absolute inset-0 flex items-end p-4">
                     <span className={`px-3 py-1 text-[10px] font-semibold uppercase rounded-full ${service.badgeClass}`}>
@@ -251,41 +244,41 @@ export default function EmergencyPage() {
                 {/* Content */}
                 <div className="p-5 flex-1 flex flex-col">
                   <h4 className="text-lg font-semibold mb-2">{service.name}</h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 flex-1 font-medium">{service.description}</p>
+                  <p className="text-sm text-[#8a8f98] text-[#8a8f98] mb-6 flex-1 font-medium">{service.description}</p>
                   <a
                     href={service.phone}
-                    className="w-full bg-[#1241a1] hover:brightness-110 text-white font-semibold py-3 rounded-md flex items-center justify-center gap-2 transition-all active:scale-95"
+                    className="w-full  bg-[#818b94]/10 hover:brightness-110 text-white font-semibold py-3 rounded-md flex items-center justify-center gap-2 transition-all active:scale-95"
                   >
                     <Phone className="size-5" />
                     Call Now
                   </a>
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         </section>
 
         {/* ── Personal Emergency Contacts ── */}
         <section>
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-2xl font-semibold flex items-center gap-2">
-              <Users className="size-6 text-[#1241a1]" />
-              Personal Emergency Contacts
-            </h3>
-            <button
-              onClick={() => setShowAddContact(true)}
-              className="flex items-center gap-2 text-sm font-semibold text-[#1241a1] hover:bg-[#1241a1]/10 px-4 py-2 rounded-md transition-colors"
-            >
-              <Plus className="size-5" />
-              Add Contact
-            </button>
-          </div>
+          <SectionHeader
+            title="Personal Emergency Contacts"
+            icon={Users}
+            action={
+              <button
+                onClick={() => setShowAddContact(true)}
+                className="flex items-center gap-2 text-sm font-semibold text-[#1241a1] hover:bg-[#1241a1]/10 px-4 py-2 rounded-md transition-colors"
+              >
+                <Plus className="size-5" />
+                Add Contact
+              </button>
+            }
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {contacts.map((contact, index) => (
-              <div
+              <Card
                 key={contact._id || contact.id || index}
-                className="bg-slate-100 dark:bg-slate-800/30 p-4 rounded-md flex items-center gap-4 transition-all group relative overflow-hidden"
+                className="p-4 flex items-center gap-4 transition-all group relative"
               >
                 {/* Avatar / Picture */}
                 <div className={`size-12 rounded-md flex items-center justify-center shrink-0 text-white font-semibold text-xs overflow-hidden ${contact.color || 'bg-[#1241a1]'}`}>
@@ -299,31 +292,28 @@ export default function EmergencyPage() {
                   )}
                 </div>
                 <div className="flex-1 overflow-hidden">
-                  <h5 className="text-xs font-semibold dark:text-white truncate uppercase tracking-tight">{contact.name}</h5>
-                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest truncate">{contact.relation}</p>
+                  <h5 className="text-xs font-semibold text-white truncate uppercase tracking-tight">{contact.name}</h5>
+                  <p className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-widest truncate">{contact.relation}</p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <a href={contact.phone} className="p-2 text-[#1241a1] hover:bg-white/50 dark:hover:bg-slate-800 rounded-md transition-colors">
+                  <a href={contact.phone} className="p-2 text-[#1241a1] hover:bg-[#1a1d23]/50  rounded-md transition-colors">
                     <Phone className="size-5" />
                   </a>
                   <button 
                     onClick={() => openContactDetails(contact)}
-                    className="p-2 text-slate-400 hover:text-[#1241a1] hover:bg-white/50 dark:hover:bg-slate-800 rounded-md transition-colors"
+                    className="p-2 text-[#8a8f98] hover:text-[#1241a1] hover:bg-[#1a1d23]/50  rounded-md transition-colors"
                   >
                     <Eye className="size-5" />
                   </button>
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         </section>
 
         {/* ── Estate Support ── */}
         <section>
-          <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-            <HelpCircle className="size-6 text-[#1241a1]" />
-            Estate Support
-          </h3>
+          <SectionHeader title="Estate Support" icon={HelpCircle} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
@@ -347,16 +337,16 @@ export default function EmergencyPage() {
                 phone: 'tel:+2348000000009',
               },
             ].map(card => (
-              <div
+              <Card
                 key={card.title}
-                className="flex items-start gap-5 p-6 bg-slate-100 dark:bg-slate-800/30 rounded-md"
+                className="flex items-start gap-5 p-6"
               >
-                <div className="p-3 bg-white dark:bg-slate-900 rounded-md text-[#1241a1] shrink-0">
+                <div className="p-3 bg-[#1a1d23] rounded-md text-[#1241a1] shrink-0">
                   <card.icon className="size-8" />
                 </div>
                 <div>
                   <h4 className="text-lg font-semibold mb-1">{card.title}</h4>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 font-medium">{card.desc}</p>
+                  <p className="text-sm text-[#8a8f98] text-[#8a8f98] mb-4 font-medium">{card.desc}</p>
                   <div className="flex gap-3">
                     {card.actions.map(action => (
                       <a key={action.label} href={card.phone}>
@@ -364,7 +354,7 @@ export default function EmergencyPage() {
                           className={`px-5 py-2.5 rounded-md text-[11px] font-semibold uppercase tracking-widest transition-all active:scale-95 border-none ${
                             action.variant === 'primary'
                               ? 'text-white bg-[#1241a1] hover:brightness-110'
-                              : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
+                              : 'bg-[#1a1d23] text-[#8a8f98] text-[#8a8f98] hover:bg-[#1a1d23] '
                           }`}
                         >
                           {action.label}
@@ -373,29 +363,28 @@ export default function EmergencyPage() {
                     ))}
                   </div>
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         </section>
 
-        
       </div>
 
       {/* ── Footer ── */}
       <footer className="px-6 py-6 text-center">
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[#8a8f98]">
           © 2024 Estate Management Portal. All emergency services are monitored for quality assurance.
         </p>
       </footer>
 
       {/* ── Add Contact Modal ── */}
       {showAddContact && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 bg-[#0d0f13]/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-[#1a1d23] rounded-2xl shadow-2xl w-full max-w-md animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between p-6">
               <h3 className="font-semibold text-lg">Add Emergency Contact</h3>
-              <button onClick={() => setShowAddContact(false)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors">
-                <X className="size-5 text-slate-400" />
+              <button onClick={() => setShowAddContact(false)} className="p-1.5 hover:bg-[#1a1d23]  rounded-md transition-colors">
+                <X className="size-5 text-[#8a8f98]" />
               </button>
             </div>
             <div className="p-6 space-y-5">
@@ -405,13 +394,13 @@ export default function EmergencyPage() {
                 { label: 'Relationship', placeholder: 'e.g. Brother, Spouse, Friend', type: 'text', key: 'relation' },
               ].map(field => (
                 <div key={field.label} className="space-y-2">
-                  <label className="block text-[10px] font-semibold uppercase tracking-widest text-slate-400 leading-none">{field.label}</label>
+                  <label className="block text-[10px] font-semibold uppercase tracking-widest text-[#8a8f98] leading-none">{field.label}</label>
                   <input
                     type={field.type}
                     placeholder={field.placeholder}
                     value={newContact[field.key]}
                     onChange={(e) => setNewContact({ ...newContact, [field.key]: e.target.value })}
-                    className="w-full bg-slate-100 dark:bg-slate-800/50 border-none rounded-md px-5 py-4 text-sm font-semibold focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all dark:text-white"
+                    className="w-full bg-[#1a1d23] bg-[#1a1d23]/50 border-none rounded-md px-5 py-4 text-sm font-semibold focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all text-white"
                   />
                 </div>
               ))}
@@ -419,7 +408,7 @@ export default function EmergencyPage() {
             <div className="p-6 pt-0 flex gap-4">
               <button
                 onClick={() => setShowAddContact(false)}
-                className="flex-1 py-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-semibold text-[11px] uppercase tracking-widest rounded-md transition-all border-none"
+                className="flex-1 py-4 bg-[#1a1d23] hover:bg-[#1a1d23]  font-semibold text-[11px] uppercase tracking-widest rounded-md transition-all border-none"
               >
                 Cancel
               </button>
@@ -436,12 +425,12 @@ export default function EmergencyPage() {
 
       {/* ── Contact Details / Edit Modal ── */}
       {showDetailModal && selectedContact && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md animate-in zoom-in-95 duration-200 overflow-hidden">
-            <div className="p-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
+        <div className="fixed inset-0 bg-[#0d0f13]/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-[#1a1d23] rounded-2xl shadow-2xl w-full max-w-md animate-in zoom-in-95 duration-200 overflow-hidden">
+            <div className="p-6 flex items-center justify-between border-b border-[#2a2d33] border-[#2a2d33]">
               <h3 className="font-semibold text-xs uppercase tracking-widest text-[#1241a1]">Contact Profile</h3>
-              <button onClick={() => setShowDetailModal(false)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors">
-                <X className="size-5 text-slate-400" />
+              <button onClick={() => setShowDetailModal(false)} className="p-1.5 hover:bg-[#1a1d23]  rounded-md transition-colors">
+                <X className="size-5 text-[#8a8f98]" />
               </button>
             </div>
 
@@ -452,8 +441,8 @@ export default function EmergencyPage() {
                     {selectedContact.initials}
                   </div>
                   <div>
-                    <h4 className="text-xl font-semibold dark:text-white uppercase tracking-tight">{selectedContact.name}</h4>
-                    <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.2em] mt-1">{selectedContact.relation}</p>
+                    <h4 className="text-xl font-semibold text-white uppercase tracking-tight">{selectedContact.name}</h4>
+                    <p className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-[0.2em] mt-1">{selectedContact.relation}</p>
                     <p className="text-sm font-semibold text-[#1241a1] mt-4 flex items-center justify-center gap-2">
                         <Phone className="size-4" />
                         {selectedContact.phone?.replace('tel:', '')}
@@ -468,13 +457,13 @@ export default function EmergencyPage() {
                     { label: 'Relationship', placeholder: 'e.g. Brother, Spouse, Friend', type: 'text', key: 'relation' },
                   ].map(field => (
                     <div key={field.label} className="space-y-2">
-                      <label className="block text-[10px] font-semibold uppercase tracking-widest text-slate-400 leading-none">{field.label}</label>
+                      <label className="block text-[10px] font-semibold uppercase tracking-widest text-[#8a8f98] leading-none">{field.label}</label>
                       <input
                         type={field.type}
                         placeholder={field.placeholder}
                         value={editContact[field.key]}
                         onChange={(e) => setEditContact({ ...editContact, [field.key]: e.target.value })}
-                        className="w-full bg-slate-100 dark:bg-slate-800/50 border-none rounded-md px-5 py-4 text-sm font-semibold focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all dark:text-white"
+                        className="w-full bg-[#1a1d23] bg-[#1a1d23]/50 border-none rounded-md px-5 py-4 text-sm font-semibold focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all text-white"
                       />
                     </div>
                   ))}
@@ -494,7 +483,7 @@ export default function EmergencyPage() {
                   <div className="flex gap-3">
                     <button 
                       onClick={() => setIsEditing(true)}
-                      className="flex-1 py-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-semibold text-[11px] uppercase tracking-widest rounded-md transition-all border-none"
+                      className="flex-1 py-4 bg-[#1a1d23] hover:bg-[#1a1d23]  font-semibold text-[11px] uppercase tracking-widest rounded-md transition-all border-none"
                     >
                       Edit 
                     </button>
@@ -510,7 +499,7 @@ export default function EmergencyPage() {
                 <div className="flex gap-4">
                   <button 
                     onClick={() => setIsEditing(false)}
-                    className="flex-1 py-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-semibold text-[11px] uppercase tracking-widest rounded-md transition-all border-none"
+                    className="flex-1 py-4 bg-[#1a1d23] hover:bg-[#1a1d23]  font-semibold text-[11px] uppercase tracking-widest rounded-md transition-all border-none"
                   >
                     Cancel
                   </button>
@@ -529,34 +518,34 @@ export default function EmergencyPage() {
       
       {/* ── Report Incident Modal ── */}
       {showReportModal && (
-        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-10000 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-lg animate-in zoom-in-95 duration-200 overflow-hidden">
-            <div className="p-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
+        <div className="fixed inset-0 bg-[#0d0f13]/80 backdrop-blur-md z-10000 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-[#1a1d23] rounded-3xl shadow-2xl w-full max-w-lg animate-in zoom-in-95 duration-200 overflow-hidden">
+            <div className="p-6 flex items-center justify-between border-b border-[#2a2d33] border-[#2a2d33]">
               <div className="flex items-center gap-3">
                 <div className="size-10 bg-red-500/10 rounded-md flex items-center justify-center">
                   <ShieldAlert className="size-6 text-red-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-xs uppercase tracking-widest text-slate-900 dark:text-white">File Incident Report</h3>
-                  <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mt-0.5">Direct link to Security Command</p>
+                  <h3 className="font-semibold text-xs uppercase tracking-widest text-white text-white">File Incident Report</h3>
+                  <p className="text-[9px] font-semibold text-[#8a8f98] uppercase tracking-widest mt-0.5">Direct link to Security Command</p>
                 </div>
               </div>
               <button 
                 onClick={() => setShowReportModal(false)} 
-                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors"
+                className="p-2 hover:bg-[#1a1d23]  rounded-md transition-colors"
                 disabled={isSubmittingReport}
               >
-                <X className="size-5 text-slate-400" />
+                <X className="size-5 text-[#8a8f98]" />
               </button>
             </div>
 
             <div className="p-8 space-y-6">
               <div className="space-y-2">
-                <label className="block text-[10px] font-semibold uppercase tracking-widest text-slate-400 leading-none">Emergency Category</label>
+                <label className="block text-[10px] font-semibold uppercase tracking-widest text-[#8a8f98] leading-none">Emergency Category</label>
                 <select 
                   value={reportData.category}
                   onChange={(e) => setReportData({...reportData, category: e.target.value})}
-                  className="w-full bg-slate-100 dark:bg-slate-800/50 border-none rounded-md px-5 py-4 text-sm font-semibold focus:ring-2 focus:ring-red-500/20 outline-none transition-all dark:text-white appearance-none"
+                  className="w-full bg-[#1a1d23] bg-[#1a1d23]/50 border-none rounded-md px-5 py-4 text-sm font-semibold focus:ring-2 focus:ring-red-500/20 outline-none transition-all text-white appearance-none"
                 >
                   <option>Security</option>
                   <option>Medical</option>
@@ -568,13 +557,13 @@ export default function EmergencyPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="block text-[10px] font-semibold uppercase tracking-widest text-slate-400 leading-none">Detailed Description</label>
+                <label className="block text-[10px] font-semibold uppercase tracking-widest text-[#8a8f98] leading-none">Detailed Description</label>
                 <textarea
                   placeholder="Provide as much detail as possible..."
                   rows={4}
                   value={reportData.description}
                   onChange={(e) => setReportData({...reportData, description: e.target.value})}
-                  className="w-full bg-slate-100 dark:bg-slate-800/50 border-none rounded-md px-5 py-4 text-sm font-semibold focus:ring-2 focus:ring-red-500/20 outline-none transition-all dark:text-white resize-none"
+                  className="w-full bg-[#1a1d23] bg-[#1a1d23]/50 border-none rounded-md px-5 py-4 text-sm font-semibold focus:ring-2 focus:ring-red-500/20 outline-none transition-all text-white resize-none"
                 />
               </div>
             </div>
@@ -583,7 +572,7 @@ export default function EmergencyPage() {
               <button
                 onClick={() => setShowReportModal(false)}
                 disabled={isSubmittingReport}
-                className="flex-1 py-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-semibold text-[11px] uppercase tracking-widest rounded-md transition-all border-none"
+                className="flex-1 py-4 bg-[#1a1d23] hover:bg-[#1a1d23]  font-semibold text-[11px] uppercase tracking-widest rounded-md transition-all border-none"
               >
                 Cancel
               </button>

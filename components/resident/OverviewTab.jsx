@@ -30,12 +30,12 @@ export default function OverviewTab({
         {tabs.map((tab, index) => (
           <div key={index} className="flex flex-col items-center justify-start w-full">
                   <Link href={tab.href} className="flex flex-col items-center gap-2 w-full group">
-                    <TechCard noPadding className="w-[80px] h-[80px] sm:w-[92px] sm:h-[92px] rounded-2xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors flex flex-col items-center justify-center " hoverEffect={false}>
-                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-50/80 dark:bg-blue-900/40 rounded-full flex items-center justify-center">
-                        <tab.icon className="w-6 h-6 sm:w-7 sm:h-7 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+                    <TechCard noPadding className="w-[80px] h-[80px] sm:w-[92px] sm:h-[92px] rounded-2xl cursor-pointer hover:bg-[#2a2d33] hover:bg-[#2a2d33]/50 transition-colors flex flex-col items-center justify-center " hoverEffect={false}>
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-50/80 bg-blue-900/40 rounded-full flex items-center justify-center">
+                        <tab.icon className="w-6 h-6 sm:w-7 sm:h-7 text-blue-600 text-blue-400 group-hover:scale-110 transition-transform duration-300" />
                       </div>
                     </TechCard>
-                    <span className="text-xs sm:text-sm font-bold text-gray-500 font-heading text-center leading-tight group-hover:text-gray-900 dark:group-hover:text-gray-300 transition-colors">{tab.name}</span>
+                    <span className="text-xs sm:text-sm font-bold text-[#8a8f98] font-heading text-center leading-tight group-hover:text-white group-hover:text-white transition-colors">{tab.name}</span>
                   </Link>
                   </div>
         ))}
@@ -52,11 +52,11 @@ export default function OverviewTab({
             <div className="w-8 h-8 md:w-10 md:h-10 bg-blue-50 rounded-lg flex items-center justify-center">
               <tab.icon className="w-5 h-5 md:w-5 md:h-5 text-blue-600" />
             </div>
-            <span className="text-[10px] md:text-xs font-bold uppercase text-gray-400 tracking-wider font-heading">{tab.name}</span>
+            <span className="text-[10px] md:text-xs font-bold uppercase text-[#8a8f98] tracking-wider font-heading">{tab.name}</span>
           </div>
           <div>
-            <div className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 font-heading">{visitorStats.thisMonth}</div>
-            <div className="flex flex-col xl:flex-row xl:items-center gap-1 xl:gap-2 mt-1 text-xs md:text-sm text-gray-500">
+            <div className="text-2xl md:text-3xl font-bold text-white text-gray-100 font-heading">{visitorStats.thisMonth}</div>
+            <div className="flex flex-col xl:flex-row xl:items-center gap-1 xl:gap-2 mt-1 text-xs md:text-sm text-[#8a8f98]">
                <span className="font-medium text-blue-600">{visitorStats.active} Active</span>
                <span className="hidden xl:inline">•</span>
                <span>{visitorStats.pending} Pending</span>

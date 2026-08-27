@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/ui/PageHeader'
 
 export default function ReportIssuePage() {
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto pb-12 animate-in fade-in duration-700 space-y-6">
       <PageHeader 
         title="Report an Issue" 
         description="Log maintenance tickets and report concerns to the estate facility management."

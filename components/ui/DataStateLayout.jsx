@@ -1,5 +1,8 @@
 import React from 'react';
 import { Loader2, AlertCircle } from 'lucide-react';
+import { Card } from './Card';
+import { EmptyState } from './EmptyState';
+import { Button } from './Button';
 
 export function DataStateLayout({ 
   isLoading, 
@@ -11,41 +14,44 @@ export function DataStateLayout({
 }) {
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)] p-16 flex justify-center items-center h-64 border-none">
-        <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
-      </div>
+      <Card className="p-16 flex justify-center items-center h-64">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="size-8 text-[#1241a1] animate-spin" />
+          <span className="text-xs font-semibold uppercase tracking-widest text-[#8a8f98]">Loading</span>
+        </div>
+      </Card>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)] p-12 flex flex-col items-center justify-center text-center border-none">
-        <AlertCircle className="w-12 h-12 text-red-500 opacity-50 mb-4" />
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Error Loading Data</h3>
-        <p className="text-gray-500 dark:text-gray-400 max-w-sm mb-6">{error}</p>
+      <Card className="p-12 flex flex-col items-center justify-center text-center">
+        <AlertCircle className="size-12 text-red-500 opacity-50 mb-4" />
+        <h3 className="text-xl font-bold text-white text-white mb-2">Error Loading Data</h3>
+        <p className="text-[#8a8f98] text-[#8a8f98] max-w-sm mb-6">{error}</p>
         {onRetry && (
-          <button 
-            onClick={onRetry}
-            className="px-6 py-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 font-medium rounded-xl hover:bg-indigo-100 transition-colors"
-          >
+          <Button variant="secondary" size="md" onClick={onRetry}>
             Try Again
-          </button>
+          </Button>
         )}
-      </div>
+      </Card>
     );
   }
 
   if (!hasData) {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)] p-12 flex justify-center items-center text-gray-500 dark:text-gray-400 border-none font-medium text-sm">
-            {emptyStateMessage}
-        </div>
+      <Card>
+        <EmptyState
+          icon={AlertCircle}
+          title={emptyStateMessage}
+        />
+      </Card>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)] border-none overflow-hidden">
+    <Card>
       {children}
-    </div>
+    </Card>
   );
 }

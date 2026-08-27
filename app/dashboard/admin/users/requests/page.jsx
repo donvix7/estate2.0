@@ -4,20 +4,20 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   User, 
-  Search, 
-  Filter, 
   UserPlus,
   Phone,
   Hash,
-  Eye,
-  Check,
-  Clock,
   ArrowLeft
 } from 'lucide-react';
 import { getResidentRequests } from '@/lib/service';
 import { handleResidentRequestDecision } from '@/lib/action';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { CleanTable } from '@/components/ui/CleanTable';
+import { Card } from '@/components/ui/Card';
+import { SearchInput } from '@/components/ui/SearchInput';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { Button } from '@/components/ui/Button';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
@@ -84,20 +84,20 @@ export default function ResidentRequestsPage() {
     }
   };
 
-  const getStatusBadge = (status) => {
-    switch (status?.toLowerCase()) {
-      case 'pending':
-        return <span className="px-3 py-1 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-[10px] font-bold uppercase rounded-full tracking-wider">Pending</span>;
-      case 'recieved':
-        return <span className="px-3 py-1 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-[10px] font-bold uppercase rounded-full tracking-wider">Acknowledge</span>;
-      default:
-        return <span className="px-3 py-1 bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 text-[10px] font-bold uppercase rounded-full tracking-wider">{status || 'Unknown'}</span>;
-    }
-  };
-
   const handlePageChange = (page) => {
     setPage(page);
     
+  };
+
+  const statusBadge = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'pending':
+        return <StatusBadge status="Pending" tone="amber" />;
+      case 'recieved':
+        return <StatusBadge status="Acknowledge" tone="green" />;
+      default:
+        return <StatusBadge status={status || 'Unknown'} />;
+    }
   };
 
   if (isLoading) return <LoadingState message="Fetching requests..." />;
@@ -109,13 +109,13 @@ export default function ResidentRequestsPage() {
       <div className="flex items-center gap-4 mb-2">
         <Link 
           href="/dashboard/admin/users"
-          className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-400 hover:text-[#1241a1]"
+          className="p-2 hover:bg-[#1a1d23] hover:bg-[#2a2d33] rounded-full transition-colors text-[#8a8f98] hover:text-[#1241a1]"
         >
           <ArrowLeft size={20} />
         </Link>
-        <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-[0.2em] text-slate-400">
+        <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-[0.2em] text-[#8a8f98]">
           <Link href="/dashboard/admin/users" className="hover:text-[#1241a1] transition-colors">Users</Link>
-          <span className="text-slate-300">/</span>
+          <span className="text-[#8a8f98]">/</span>
           <span className="text-[#1241a1]">Resident Requests</span>
         </div>
       </div>
@@ -126,25 +126,19 @@ export default function ResidentRequestsPage() {
         icon={UserPlus}
       />
 
-      <div className="bg-slate-50 dark:bg-slate-800/20 rounded-2xl shadow-sm p-6 lg:p-8 space-y-8">
+      <Card className="space-y-8">
         
         {/* Filters and Search */}
         <div className="flex flex-col md:flex-row gap-6">
-          <div className="flex-1 relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-slate-400 group-focus-within:text-[#1241a1] transition-colors" />
-            <input 
-              type="text"
-              placeholder="Search by name, phone or Request ID..."
-              className="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-900 border-none rounded-xl text-sm font-semibold focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all shadow-sm"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+          <SearchInput
+            value={searchTerm}
+            onChange={setSearchTerm}
+            placeholder="Search by name, phone or Request ID..."
+          />
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-4 bg-white dark:bg-slate-900 px-4 py-4 rounded-xl shadow-sm">
-              <Filter className="size-4 text-slate-400" />
+            <div className="flex items-center gap-4 bg-[#0d0f13] px-4 py-4 rounded-xl shadow-sm">
               <select 
-                className="bg-transparent border-none p-0 text-sm font-bold text-slate-600 dark:text-slate-300 focus:ring-0 outline-none cursor-pointer min-w-[120px]"
+                className="bg-transparent border-none p-0 text-sm font-bold text-[#8a8f98] focus:ring-0 outline-none cursor-pointer min-w-[120px]"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
@@ -170,58 +164,55 @@ export default function ResidentRequestsPage() {
               <>
                 <td className="px-6 py-5 whitespace-nowrap">
                   <div className="flex items-center gap-2">
-                    <Hash className="size-3 text-slate-400" />
-                    <span className="font-mono text-xs font-bold text-slate-500 uppercase tracking-tighter">
+                    <Hash className="size-3 text-[#8a8f98]" />
+                    <span className="font-mono text-xs font-bold text-[#8a8f98] uppercase tracking-tighter">
                       {req._id}
                     </span>
                   </div>
                 </td>
                 <td className="px-6 py-5 whitespace-nowrap">
                   <div className="flex items-center gap-4">
-                    <div className="size-10 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center shadow-inner">
-                      <User className="size-5 text-slate-400" />
+                    <div className="size-10 bg-[#1a1d23] rounded-xl flex items-center justify-center shadow-inner">
+                      <User className="size-5 text-[#8a8f98]" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-slate-900 dark:text-white leading-none mb-1.5">{req.name}</p>
-                      <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-tight truncate max-w-[150px]">
+                      <p className="text-sm font-bold text-white leading-none mb-1.5">{req.name}</p>
+                      <p className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-tight truncate max-w-[150px]">
                         {req.email}
                       </p>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-5 whitespace-nowrap">
-                  <div className="flex items-center gap-2.5 text-slate-600 dark:text-slate-300">
-                    <div className="p-1.5 bg-slate-50 dark:bg-slate-800 rounded-md">
-                      <Phone className="size-3.5 text-slate-400" />
+                  <div className="flex items-center gap-2.5 text-[#8a8f98]">
+                    <div className="p-1.5 bg-[#1a1d23] rounded-md">
+                      <Phone className="size-3.5 text-[#8a8f98]" />
                     </div>
                     <span className="text-xs font-bold">{req.phone}</span>
                   </div>
                 </td>
                 <td className="px-6 py-5 whitespace-nowrap">
-                  {getStatusBadge(req.status)}
+                  {statusBadge(req.status)}
                 </td>
                 <td className="px-6 py-5 whitespace-nowrap text-right">
                   <div className="flex items-center justify-end gap-3">
-                       <Link
-                    href={`/dashboard/admin/users/requests/${req._id}`}
-                    className="px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all shadow-sm flex items-center gap-2 bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white active:scale-95"
-                  >
-                  View Details
-                  </Link>
+                    <Button
+                      href={`/dashboard/admin/users/requests/${req._id}`}
+                      variant="secondary"
+                      size="sm"
+                    >
+                      View Details
+                    </Button>
                   </div>
                 </td>
               </>
             )}
             emptyState={
-              <div className="py-24 text-center flex flex-col items-center animate-in fade-in zoom-in duration-500">
-                <div className="size-20 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6 shadow-inner">
-                  <Clock className="size-10 text-slate-200" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Zero Requests Found</h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs mx-auto mt-2 leading-relaxed">
-                  Your request queue is empty. New resident onboarding requests will appear here as they arrive.
-                </p>
-              </div>
+              <EmptyState
+                icon={Clock}
+                title="Zero Requests Found"
+                description="Your request queue is empty. New resident onboarding requests will appear here as they arrive."
+              />
             }
           />
         </div>
@@ -229,48 +220,48 @@ export default function ResidentRequestsPage() {
         {/* Mobile View (Cards) */}
         <div className="grid grid-cols-1 gap-4 md:hidden">
           {filteredRequests.length === 0 ? (
-            <div className="py-12 text-center bg-slate-50 dark:bg-slate-800/50 rounded-2xl">
-              <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">No Requests</p>
+            <div className="py-12 text-center bg-[#1a1d23] rounded-2xl">
+              <p className="text-[#8a8f98] font-bold text-xs uppercase tracking-widest">No Requests</p>
             </div>
           ) : (
             filteredRequests.map((req) => (
-              <div key={req._id} className="bg-slate-50 dark:bg-slate-800/30 p-5 rounded-2xl space-y-4 shadow-sm border border-transparent active:border-[#1241a1]/20 transition-all">
+              <div key={req._id} className="bg-[#1a1d23] p-5 rounded-2xl space-y-4 shadow-sm border border-transparent active:border-[#1241a1]/20 transition-all">
                 <div className="flex justify-between items-start">
                   <div className="flex items-center gap-3">
-                    <div className="size-10 bg-white dark:bg-slate-900 rounded-xl flex items-center justify-center shadow-sm">
-                      <User className="size-5 text-slate-400" />
+                    <div className="size-10 bg-[#0d0f13] rounded-xl flex items-center justify-center shadow-sm">
+                      <User className="size-5 text-[#8a8f98]" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-slate-900 dark:text-white">{req.name}</p>
-                      <p className="text-[10px] font-mono text-slate-400 uppercase tracking-tighter">ID: {req._id}</p>
+                      <p className="text-sm font-bold text-white">{req.name}</p>
+                      <p className="text-[10px] font-mono text-[#8a8f98] uppercase tracking-tighter">ID: {req._id}</p>
                     </div>
                   </div>
-                  {getStatusBadge(req.status)}
+                  {statusBadge(req.status)}
                 </div>
                 <div className="grid grid-cols-2 gap-4 py-3 border-none">
                   <div>
-                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Phone</p>
-                    <p className="text-xs font-bold text-slate-700 dark:text-slate-300">{req.phone}</p>
+                    <p className="text-[9px] font-bold text-[#8a8f98] uppercase tracking-widest mb-1">Phone</p>
+                    <p className="text-xs font-bold text-white text-[#8a8f98]">{req.phone}</p>
                   </div>
                   <div>
-                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Email</p>
-                    <p className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">{req.email}</p>
+                    <p className="text-[9px] font-bold text-[#8a8f98] uppercase tracking-widest mb-1">Email</p>
+                    <p className="text-xs font-bold text-white text-[#8a8f98] truncate">{req.email}</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <Link
+                  <Button
                     href={`/dashboard/admin/users/requests/${req._id}`}
-                    className="flex-1 py-3 bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl disabled:opacity-50 disabled:bg-slate-200 disabled:text-slate-400 shadow-lg shadow-emerald-600/10 active:scale-95 transition-all"
+                    className="flex-1"
                   >
                     View Details
-                  </Link>
+                  </Button>
                 </div>
               </div>
             ))
           )}
         </div>
 
-      </div>
+      </Card>
       <Pagination
         page={page}
         totalPages={totalPages}

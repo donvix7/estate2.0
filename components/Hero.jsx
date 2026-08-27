@@ -97,7 +97,7 @@ const Hero = () => {
             className="text-5xl md:text-7xl lg:text-8xl font-serif font-medium text-white mb-6 leading-tight tracking-tight"
           >
             <span className='text-gray-100 font-serif'>Exclusive Living.</span> <br />
-            <span className="italic text-gray-400 ">Smartly Managed.</span>
+            <span className="italic text-[#8a8f98] ">Smartly Managed.</span>
           </h1>
 
           <p
@@ -116,7 +116,7 @@ const Hero = () => {
             
             className="flex flex-col sm:flex-row items-center justify-center gap-6"
           >
-            <button className="px-10 py-5 bg-white text-gray-900 text-lg font-bold rounded-2xl hover:bg-gray-100 hover:scale-105 transition-all duration-300 min-w-[220px] shadow-xl">
+            <button className="px-10 py-5 bg-white text-white text-lg font-bold rounded-2xl hover:bg-[#2a2d33] hover:scale-105 transition-all duration-300 min-w-[220px] shadow-xl">
               Start Free Trial
             </button>
             

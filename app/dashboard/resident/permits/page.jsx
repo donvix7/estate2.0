@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/ui/PageHeader'
 
 const page = () => {
   return (
-    <div className="p-6">
+    <div className="max-w-7xl mx-auto pb-12 animate-in fade-in duration-700 space-y-6">
         <PageHeader 
           title="Permits" 
           description="The permits application and tracking feature is currently under development."

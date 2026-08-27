@@ -5,6 +5,7 @@ import { Wrench, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import ServicesTable from '@/components/admin/ServicesTable';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { Button } from '@/components/ui/Button';
 import { FilterBar } from '@/components/ui/FilterBar';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
 import { getAllServiceRequests } from '@/lib/service';
@@ -51,17 +52,8 @@ export default function ServicesPage() {
     return matchesSearch && matchesStatus;
   });
 
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
-      case 'in-progress': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
-      case 'completed': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
-    }
-  };
-
   return (
-    <div className="p-6 max-w-7xl mx-auto animate-fade-in">
+    <div className="max-w-7xl mx-auto pb-12 animate-in fade-in duration-700">
       {/* Header */}
       <PageHeader 
         title="Service Requests" 
@@ -69,13 +61,12 @@ export default function ServicesPage() {
         icon={Wrench}
         iconColor="blue"
       >
-        <button 
+        <Button
+          icon={Users}
           onClick={() => router.push('/dashboard/admin/service_workers')}
-          className="flex items-center gap-2 bg-[#1241a1] hover:brightness-110 text-white px-5 py-2.5 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-[#1241a1]/20 border-none"
         >
-          <Users className="size-4" />
           Service Workers
-        </button>
+        </Button>
       </PageHeader>
 
       {/* Toolbar */}
@@ -102,7 +93,6 @@ export default function ServicesPage() {
       >
         <ServicesTable 
           requests={filteredRequests} 
-          getStatusColor={getStatusColor}
         />
       </DataStateLayout>
 

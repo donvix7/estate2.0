@@ -6,7 +6,7 @@ export default function AnnouncementsTab({ announcements = [], markAllAsRead, ma
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-         <h3 className="text-xl font-bold text-gray-900 font-heading">Notices & Updates</h3>
+         <h3 className="text-xl font-bold text-white font-heading">Notices & Updates</h3>
           <button
            onClick={markAllAsRead}
            className="text-sm font-medium text-blue-600 hover:text-blue-700"
@@ -22,7 +22,7 @@ export default function AnnouncementsTab({ announcements = [], markAllAsRead, ma
            className={`transition-all ${
              !announcement.read 
                ? 'bg-blue-50/50 border-blue-100' 
-               : 'bg-white border-gray-200'
+               : 'bg-white border-[#2a2d33]'
            }`}
            hoverEffect={true}
          >
@@ -38,11 +38,11 @@ export default function AnnouncementsTab({ announcements = [], markAllAsRead, ma
                   </div>
                   <div>
                      <div className="flex items-center gap-3">
-                        <h4 className={`font-bold text-base font-heading ${!announcement.read ? 'text-blue-900' : 'text-gray-900'}`}>{announcement.title}</h4>
+                        <h4 className={`font-bold text-base font-heading ${!announcement.read ? 'text-blue-900' : 'text-white'}`}>{announcement.title}</h4>
                         {!announcement.read && <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">New</span>}
                      </div>
-                     <p className="text-gray-600 mt-2 text-sm leading-relaxed">{announcement.content}</p>
-                     <div className="flex items-center gap-4 mt-4 text-xs font-medium text-gray-400 uppercase tracking-wide">
+                     <p className="text-[#8a8f98] mt-2 text-sm leading-relaxed">{announcement.content}</p>
+                     <div className="flex items-center gap-4 mt-4 text-xs font-medium text-[#8a8f98] uppercase tracking-wide">
                         <span>{new Date(announcement.date).toLocaleDateString()}</span>
                         <span>•</span>
                         <span>{announcement.type}</span>
@@ -50,7 +50,7 @@ export default function AnnouncementsTab({ announcements = [], markAllAsRead, ma
                   </div>
                </div>
                {!announcement.read && (
-                   <button onClick={() => markAsRead(announcement.id)} className="text-gray-400 hover:text-blue-600">
+                   <button onClick={() => markAsRead(announcement.id)} className="text-[#8a8f98] hover:text-blue-600">
                       <CheckCircle className="w-5 h-5" />
                    </button>
                )}

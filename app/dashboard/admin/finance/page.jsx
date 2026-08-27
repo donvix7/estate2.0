@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { Receipt, Search, Loader2, ArrowUpRight, CopyPlus, Wallet } from 'lucide-react';
 import FinanceTable from '@/components/admin/FinanceTable';
-import StatsCard from '@/components/StatsCard';
+import MetricCard from '@/components/MetricCard';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { Button } from '@/components/ui/Button';
 import { FilterBar } from '@/components/ui/FilterBar';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
 import { toast } from 'react-toastify';
@@ -68,7 +69,7 @@ export default function FinancePage() {
   const pendingInvoices = invoices.filter(i => i.status !== 'paid').length;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto animate-fade-in">
+    <div className="max-w-7xl mx-auto pb-12 animate-in fade-in duration-700">
       {/* Header */}
       <PageHeader 
         title="Financial Overview" 
@@ -76,34 +77,33 @@ export default function FinancePage() {
         icon={Receipt}
         iconColor="green"
       >
-        <button 
-          className="flex items-center gap-2 bg-[#1241a1] hover:brightness-110 text-white px-5 py-2.5 rounded-md font-semibold transition-all active:scale-95 border-none"
+        <Button
+          icon={CopyPlus}
           onClick={() => toast.info("Select a booking or service from the directory to issue an invoice.")}
         >
-          <CopyPlus className="w-5 h-5" />
           Issue Invoice
-        </button>
+        </Button>
       </PageHeader>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <StatsCard 
-          title="Total Revenue" 
+        <MetricCard 
+          label="Total Revenue" 
           value={`$${totalRevenue.toLocaleString()}`} 
-          icon={Wallet} 
-          color="green" 
+          icon={<Wallet className="size-5" />} 
+          tone="green" 
         />
-        <StatsCard 
-          title="Pending Invoices" 
+        <MetricCard 
+          label="Pending Invoices" 
           value={pendingInvoices} 
-          icon={Receipt} 
-          color="amber" 
+          icon={<Receipt className="size-5" />} 
+          tone="amber" 
         />
-        <StatsCard 
-          title="Recent Transactions" 
+        <MetricCard 
+          label="Recent Transactions" 
           value={transactions.length} 
-          icon={ArrowUpRight} 
-          color="blue" 
+          icon={<ArrowUpRight className="size-5" />} 
+          tone="blue" 
         />
       </div>
 
@@ -113,13 +113,13 @@ export default function FinancePage() {
         onSearchChange={setSearchTerm}
         placeholder={`Search ${activeTab}...`}
       >
-        <div className="flex p-1 bg-slate-100 dark:bg-gray-900/50 rounded-md w-auto overflow-x-auto">
+        <div className="flex p-1 bg-[#1a1d23] rounded-md w-auto overflow-x-auto">
           <button
             onClick={() => setActiveTab('invoices')}
             className={`flex-1 md:flex-none px-6 py-2.5 rounded-md font-semibold text-sm whitespace-nowrap transition-all border-none ${
               activeTab === 'invoices' 
                 ? 'bg-[#1241a1] text-white' 
-                : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                : 'text-[#8a8f98] hover:text-white'
             }`}
           >
             All Invoices
@@ -129,7 +129,7 @@ export default function FinancePage() {
             className={`flex-1 md:flex-none px-6 py-2.5 rounded-md font-semibold text-sm whitespace-nowrap transition-all border-none ${
               activeTab === 'transactions' 
                 ? 'bg-[#1241a1] text-white' 
-                : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                : 'text-[#8a8f98] hover:text-white'
             }`}
           >
             Transactions

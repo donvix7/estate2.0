@@ -1,36 +1,60 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { getResidentData } from '@/lib/service';
+import { updateProfile } from '@/lib/action';
 import { toast } from 'react-toastify';
-import { Camera, BadgeCheck, Mail, ShieldCheck, Settings2, History, ShieldAlert, CheckCircle2, UserPlus, Droplets, Wallet, BellRing, Download, User } from 'lucide-react';
-import { getAdminData } from '@/lib/service';
+import { 
+  Camera, 
+  Mail, 
+  Phone, 
+  ShieldCheck, 
+  Wallet, 
+  BellRing, 
+  ChevronRight,
+  Users,
+  Loader2,
+  User,
+  MapPin,
+  Calendar,
+  CheckCircle,
+  Clock,
+  BadgeCheck,
+  AlertCircle,
+  Settings,
+  Key,
+  Home,
+  Activity,
+  CreditCard,
+  Award
+} from 'lucide-react';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Card, CardHeader, CardBody } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 
-export default function AdminProfilePage() {
-  const [adminData, setAdminData] = useState(null)
-  const [isLoading, setIsLoading] = useState(false) // Set to false since we're using mock admin data for now
+export default function ProfilePage() {
+  const [residentData, setResidentData] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
   const [editForm, setEditForm] = useState({})
   const [saveStatus, setSaveStatus] = useState('')
 
-  // Mock Admin Data
-
+  const loadData = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getResidentData();
+      console.log('Resident Data:', data)
+      setResidentData(data);
+      setEditForm(data);
+    } catch (error) {
+      console.error('Error loading data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadAdminData = async () => {
-      setIsLoading(true);
-      try {
-        const data = await getAdminData();
-        setAdminData(data);
-        setEditForm(data);
-      } catch (error) {
-        console.error('Error loading admin data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadAdminData();
-
+    loadData();
   }, []);
 
   const handleEditProfile = () => {
@@ -40,7 +64,7 @@ export default function AdminProfilePage() {
 
   const handleCancelEdit = () => {
     setIsEditing(false);
-    setEditForm(adminData || {});
+    setEditForm(residentData || {});
     setSaveStatus('');
   }
 
@@ -53,16 +77,52 @@ export default function AdminProfilePage() {
   }
 
   const handleSaveProfile = async () => {
-    setSaveStatus('saving');
-    // Simulate API call
-    setTimeout(() => {
-      setAdminData(editForm);
-      setIsEditing(false);
-      setSaveStatus('success');
-      toast.success('Admin profile updated successfully!');
-      setTimeout(() => setSaveStatus(''), 3000);
-    }, 1000);
+    try {
+      setSaveStatus('saving');
+      const result = await updateProfile({ id: residentData?.id, ...editForm });
+      
+      if (result.success) {
+        setResidentData(result.data);
+        setIsEditing(false);
+        setSaveStatus('success');
+        toast.success('Profile updated successfully!');
+        
+        setTimeout(() => {
+          setSaveStatus('');
+        }, 3000);
+      } else {
+        setSaveStatus('error');
+        toast.error('Failed to update profile.');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      setSaveStatus('error');
+      toast.error('An error occurred while saving.');
+    }
   }
+
+  // Format date helper
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
 
   if (isLoading) {
     return (
@@ -72,187 +132,333 @@ export default function AdminProfilePage() {
     );
   }
 
+  const user = residentData || {};
+
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700 pb-12">
+      {/* Page Header */}
+      <PageHeader 
+        title="Resident Profile" 
+        description="Manage your personal information, contact details, and account security."
+        icon={User}
+        iconColor="blue"
+      />
+
       {/* Profile Header Card */}
-      <div className="bg-slate-100 dark:bg-slate-800/30 p-8 md:p-10 overflow-hidden relative group rounded-md">
+      <section className="bg-[#1a1d23] rounded-md p-8 md:p-10 overflow-hidden relative group">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#1241a1]/5 rounded-full -mr-32 -mt-32 transition-transform duration-700 group-hover:scale-110"></div>
         <div className="relative flex flex-col md:flex-row gap-8 items-center">
+          {/* Avatar */}
           <div className="relative">
-            <div 
-              className="h-32 w-32 rounded-full bg-cover bg-center flex items-center justify-center bg-white dark:bg-slate-800" 
-              style={adminData?.avatar ? { backgroundImage: `url(${adminData?.avatar})` } : {}}
-            >
-              {!adminData?.avatar && <User className="size-12 text-slate-300" />}
-            </div>
-            <button className="absolute bottom-[-10px] right-[-10px] p-2.5 bg-white dark:bg-slate-800 text-[#1241a1] rounded-2xl shadow-xl hover:scale-105 transition-transform">
+            {user.displayImage ? (
+              <div 
+                className="h-32 w-32 rounded-md bg-cover bg-center" 
+                style={{ backgroundImage: `url(${user.displayImage})` }}
+              ></div>
+            ) : (
+              <div className="h-32 w-32 rounded-md bg-[#1a1d23] flex items-center justify-center border-2 border-[#1241a1]/10">
+                <User className="size-16 text-[#1241a1]/30" />
+              </div>
+            )}
+            <button className="absolute bottom-[-10px] right-[-10px] p-2.5 bg-[#1241a1] text-white rounded-md hover:scale-105 transition-transform">
               <Camera className="size-4" />
             </button>
           </div>
           
+          {/* User Info */}
           <div className="flex-1 text-center md:text-left">
-            <h2 className="text-3xl font-bold dark:text-white mb-2 tracking-tight flex items-center justify-center md:justify-start gap-3">
-              {adminData?.name}
-              {adminData?.estateID && (
-                <span className="text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-500 px-2 py-1 rounded-md font-semibold tracking-widest uppercase">
-                  {adminData.estateID}
-                </span>
+            <div className="flex items-center justify-center md:justify-start gap-3 flex-wrap">
+              <h2 className="text-3xl font-semibold text-white mb-2 tracking-tight">
+                {`${user.firstName || 'N/A'} ${user.lastName || 'N/A'}`}
+              </h2>
+              {user.isAccountVerified && (
+                <BadgeCheck className="size-6 text-[#1241a1]" />
               )}
-            </h2>
-            <div className="flex flex-col md:flex-row gap-2 md:gap-6">
-              <p className="text-slate-500 dark:text-slate-400 flex items-center justify-center md:justify-start gap-2 text-sm font-semibold uppercase tracking-widest">
-                <BadgeCheck className="size-4" /> 
-                {adminData?.role}
-              </p>
-              <p className="text-slate-500 dark:text-slate-400 flex items-center justify-center md:justify-start gap-2 text-sm font-medium">
+            </div>
+            <p className="text-[#8a8f98] text-sm font-medium mb-1">
+              @{user.username || 'N/A'}
+            </p>
+            <div className="flex flex-col md:flex-row gap-2 md:gap-6 mt-2">
+              <p className="text-[#8a8f98] flex items-center justify-center md:justify-start gap-2 text-sm font-medium">
                 <Mail className="size-4" /> 
-                {adminData?.email}
+                {user.email || 'N/A'}
+                {user.emailVerified ? (
+                  <CheckCircle className="size-3 text-green-500" />
+                ) : (
+                  <AlertCircle className="size-3 text-amber-500" />
+                )}
+              </p>
+              <p className="text-[#8a8f98] flex items-center justify-center md:justify-start gap-2 text-sm font-medium">
+                <Phone className="size-4" /> 
+                {user.phone || 'N/A'}
               </p>
             </div>
             
+            {/* Action Buttons */}
             <div className="mt-8 flex flex-wrap gap-3 justify-center md:justify-start">
               {!isEditing ? (
-                <button 
-                  onClick={handleEditProfile}
-                  className="px-6 py-2.5 bg-[#1241a1] text-white text-[11px] font-semibold uppercase tracking-widest rounded-md hover:brightness-110 transition-all active:scale-95 border-none"
-                >
-                  Edit Profile
-                </button>
+                <Button onClick={handleEditProfile}>
+                  Edit Details
+                </Button>
               ) : (
                 <div className="flex gap-3">
-                   <button 
-                    onClick={handleSaveProfile}
-                    className="px-6 py-2.5 bg-[#1241a1] text-white text-[11px] font-semibold uppercase tracking-widest rounded-md hover:brightness-110 transition-all active:scale-95 border-none"
-                  >
+                  <Button onClick={handleSaveProfile} disabled={saveStatus === 'saving'}>
                     {saveStatus === 'saving' ? 'Saving...' : 'Save Changes'}
-                  </button>
-                   <button 
-                    onClick={handleCancelEdit}
-                    className="px-6 py-2.5 bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[11px] font-semibold uppercase tracking-widest rounded-md hover:bg-slate-300 dark:hover:bg-slate-700 transition-all active:scale-95 border-none"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
-              <button className="px-6 py-2.5 bg-white dark:bg-slate-800 border-none text-slate-700 dark:text-slate-200 text-[11px] font-semibold uppercase tracking-widest rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                Change Password
-              </button>
+                  </Button>
+              <Button variant="secondary" onClick={handleCancelEdit}>
+                Cancel
+              </Button>
             </div>
+          )}
+          <Button variant="ghost" onClick={() => toast.info('Password change flow coming soon')}>
+            Change Password
+          </Button>
+        </div>
           </div>
         </div>
-      </div>
+      </section>
 
+      {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left: Info Sections */}
+        {/* Left Column */}
         <div className="lg:col-span-1 space-y-8">
-          {/* Admin Information */}
-          <section className="bg-slate-100 dark:bg-slate-800/30 p-8 rounded-md">
-            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1241a1] mb-8 flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-[#1241a1]/10 text-[#1241a1]">
-                <ShieldCheck className="size-5" />
+          {/* Personal Information Section */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-md bg-[#1241a1]/10 text-[#1241a1]">
+                  <User className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-white">Personal Information</h3>
+                  <p className="text-[10px] text-[#8a8f98] font-medium">Your basic profile details</p>
+                </div>
               </div>
-              Admin Info
-            </h3>
-            
-            <div className="space-y-6">
+            </CardHeader>
+            <CardBody className="space-y-6">
               {[
-                { label: 'Employee ID', value: adminData?.id, name: 'id' },
-                { label: 'Department', value: adminData?.department, name: 'department' },
-                { label: 'Access Level', value: adminData?.accessLevel, name: 'accessLevel' },
-                { label: 'Joining Date', value: adminData?.joiningDate, name: 'joiningDate' }
+                { label: 'First Name', value: user.firstName || 'N/A', name: 'firstName' },
+                { label: 'Last Name', value: user.lastName || 'N/A', name: 'lastName' },
+                { label: 'Username', value: user.username || 'N/A', name: 'username' },
+                { label: 'Email', value: user.email || 'N/A', name: 'email' },
+                { label: 'Phone', value: user.phone || 'N/A', name: 'phone' },
               ].map((item, idx) => (
-                <div key={idx} className={`flex flex-col gap-1.5 ${idx !== 3 ? 'pb-5' : ''}`}>
-                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">{item.label}</span>
+                <div key={idx} className={`flex flex-col gap-1.5 ${idx !== 4 ? 'border-b border-[#2a2d33] pb-4' : ''}`}>
+                  <span className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-widest">{item.label}</span>
                   {isEditing && item.name ? (
-                     <input 
-                        name={item.name}
-                        value={editForm[item.name] || ''}
-                        onChange={handleInputChange}
-                        className="bg-white dark:bg-slate-900 border-none rounded-lg p-2 text-sm font-semibold focus:ring-2 focus:ring-[#1241a1]/20 outline-none text-slate-900 dark:text-white"
-                     />
+                    <input 
+                      name={item.name}
+                      value={editForm[item.name] || ''}
+                      onChange={handleInputChange}
+                      className="bg-[#0d0f13] border border-[#2a2d33] rounded-lg p-2 text-sm font-semibold focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all"
+                    />
                   ) : (
-                    <span className="text-sm font-semibold text-slate-900 dark:text-slate-200">{item.value}</span>
+                    <span className="text-sm font-semibold text-white text-[#8a8f98]">{item.value}</span>
                   )}
                 </div>
               ))}
-            </div>
-          </section>
+            </CardBody>
+          </Card>
 
-          {/* System Settings */}
-          <section className="bg-slate-100 dark:bg-slate-800/30 p-8 rounded-md">
-            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1241a1] mb-8 flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-[#1241a1]/10 text-[#1241a1]">
-                <Settings2 className="size-5" />
+          {/* Location Section */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-md bg-[#1241a1]/10 text-[#1241a1]">
+                  <MapPin className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-white">Location</h3>
+                  <p className="text-[10px] text-[#8a8f98] font-medium">Your geographical details</p>
+                </div>
               </div>
-              System Controls
-            </h3>
-            
-            <div className="space-y-6">
+            </CardHeader>
+            <CardBody className="space-y-6">
               {[
-                { title: 'System Notifications', desc: 'Critical alerts & emergency requests', active: true },
-                { title: 'Activity Audit Log', desc: 'Auto-log all admin actions', active: true },
-                { title: 'Maintenance Alerts', desc: 'New service worker requests', active: false }
-              ].map((setting, idx) => (
-                <div key={idx} className="flex items-center justify-between group cursor-pointer">
-                  <div className="flex flex-col">
-                    <span className="text-[13px] font-semibold text-slate-900 dark:text-white group-hover:text-[#1241a1] transition-colors">{setting.title}</span>
-                    <span className="text-[10px] font-medium text-slate-500 uppercase tracking-tight">{setting.desc}</span>
-                  </div>
-                  <div className={`w-10 h-5 rounded-full relative transition-colors ${setting.active ? 'bg-[#1241a1]' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                    <div className={`absolute top-1 h-3 w-3 bg-white rounded-full transition-all ${setting.active ? 'right-1' : 'left-1'}`}></div>
-                  </div>
+                { label: 'Country', value: user.country || 'Not set', name: 'country' },
+                { label: 'Region', value: user.region || 'Not set', name: 'region' },
+                { label: 'City', value: user.city || 'Not set', name: 'city' },
+              ].map((item, idx) => (
+                <div key={idx} className={`flex flex-col gap-1.5 ${idx !== 2 ? 'border-b border-[#2a2d33] pb-4' : ''}`}>
+                  <span className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-widest">{item.label}</span>
+                  {isEditing && item.name ? (
+                    <input 
+                      name={item.name}
+                      value={editForm[item.name] || ''}
+                      onChange={handleInputChange}
+                      className="bg-[#0d0f13] border border-[#2a2d33] rounded-lg p-2 text-sm font-semibold focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all"
+                    />
+                  ) : (
+                    <span className="text-sm font-semibold text-white text-[#8a8f98]">{item.value}</span>
+                  )}
                 </div>
               ))}
-            </div>
-          </section>
+            </CardBody>
+          </Card>
+
+          {/* Account Status Section */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-md bg-[#1241a1]/10 text-[#1241a1]">
+                  <ShieldCheck className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-white">Account Status</h3>
+                  <p className="text-[10px] text-[#8a8f98] font-medium">Your account verification & balance</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardBody className="space-y-6">
+              <div className="flex flex-col gap-1.5 border-b border-[#2a2d33] pb-4">
+                <span className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-widest">Account Verified</span>
+                <span className={`text-sm font-semibold ${user.isAccountVerified ? 'text-green-600' : 'text-amber-600'}`}>
+                  {user.isAccountVerified ? '✅ Verified' : '❌ Not Verified'}
+                </span>
+              </div>
+              <div className="flex flex-col gap-1.5 border-b border-[#2a2d33] pb-4">
+                <span className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-widest">Email Verified</span>
+                <span className={`text-sm font-semibold ${user.emailVerified ? 'text-green-600' : 'text-amber-600'}`}>
+                  {user.emailVerified ? '✅ Verified' : '❌ Not Verified'}
+                </span>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-widest">Wallet Balance</span>
+                <span className="text-sm font-semibold text-white text-[#8a8f98]">
+                  ${user.walletBalance?.toFixed(2) || '0.00'}
+                </span>
+              </div>
+            </CardBody>
+          </Card>
         </div>
 
-        {/* Right: Activity Timeline */}
-        <div className="lg:col-span-2">
-          <section className="bg-slate-100 dark:bg-slate-800/30 p-8 h-full rounded-md">
-            <div className="flex items-center justify-between mb-10">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1241a1] flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-[#1241a1]/10 text-[#1241a1]">
-                  <History className="size-5" />
+        {/* Right Column */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Recent Activity Section */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-md bg-[#1241a1]/10 text-[#1241a1]">
+                  <Activity className="size-5" />
                 </div>
-                Administrative Logs
-              </h3>
-              <button className="text-[11px] font-semibold uppercase tracking-widest text-[#1241a1] hover:underline">View Full Audit</button>
-            </div>
-            
-            <div className="space-y-10 relative before:absolute before:inset-0 before:ml-6 before:-translate-x-px before:h-full before:w-0.5 before:bg-linear-to-b before:from-white before:via-white/50 before:to-transparent dark:before:from-slate-800 dark:before:via-slate-800">
-              {[
-                { icon: ShieldCheck, title: 'System Approval', time: '45m ago', desc: 'Approved visitor registration for Block A - House 42B', status: 'Completed', statusColor: 'emerald' },
-                { icon: ShieldAlert, title: 'Emergency Coordination', time: '2h ago', desc: 'Coordinated response for Medical Alert #9012 at West Gate', iconType: 'emergency' },
-                { icon: CheckCircle2, title: 'Security Protocol Update', time: '1 day ago', desc: 'Updated QR scanning protocols for Night Watch patrol' },
-                { icon: UserPlus, title: 'New Staff Onboarding', time: '3 days ago', desc: 'Approved access for 2 new service worker profiles', status: 'Verified', statusColor: 'blue' }
-              ].map((activity, idx) => (
-                <div key={idx} className="relative flex items-start gap-8 group">
-                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-lg z-10 transition-transform group-hover:scale-110 ${
-                    activity.iconType === 'emergency' ? 'bg-red-500/10 text-red-500' : 'bg-[#1241a1]/10 text-[#1241a1]'
-                  }`}>
-                    <activity.icon className="size-6" />
+                <div>
+                  <h3 className="text-sm font-semibold text-white">Recent Activity</h3>
+                  <p className="text-[10px] text-[#8a8f98] font-medium">Your latest account activities</p>
+                </div>
+              </div>
+              <button className="text-[11px] font-semibold uppercase tracking-widest text-[#8a8f98] hover:text-[#1241a1] transition-colors">
+                View All
+              </button>
+            </CardHeader>
+            <CardBody className="space-y-6">
+              {user.lastLoginAt && (
+                <div className="relative flex items-start gap-6 group p-4 bg-[#0d0f13] rounded-md hover:shadow-sm transition-shadow">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[#1241a1]/10 text-[#1241a1] group-hover:bg-[#1241a1] group-hover:text-white transition-colors">
+                    <Clock className="size-6" />
                   </div>
-                  
-                  <div className="flex-1 pt-1 text-left">
+                  <div className="flex-1 pt-1">
                     <div className="flex items-center justify-between mb-1">
-                      <p className="text-sm font-semibold dark:text-white uppercase tracking-tight">{activity.title}</p>
-                      <time className="text-[10px] font-medium text-slate-400 italic">{activity.time}</time>
+                      <p className="text-sm font-semibold text-white">Last Login</p>
+                      <time className="text-[10px] font-medium text-[#8a8f98]">{formatDateTime(user.lastLoginAt)}</time>
                     </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">{activity.desc}</p>
-                    
-                    {activity.status && (
-                      <span className={`mt-3 inline-flex items-center px-3 py-1 rounded-md text-[9px] font-semibold uppercase tracking-widest ${
-                        activity.statusColor === 'emerald' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-[#1241a1]/10 text-[#1241a1]'
-                      }`}>
-                        {activity.status}
-                      </span>
-                    )}
+                    <p className="text-xs text-[#8a8f98] font-medium">
+                      Last active: {formatDateTime(user.lastActiveAt)}
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </section>
+              )}
+
+              {user.createdAt && (
+                <div className="relative flex items-start gap-6 group p-4 bg-[#0d0f13] rounded-md hover:shadow-sm transition-shadow">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[#1241a1]/10 text-[#1241a1] group-hover:bg-[#1241a1] group-hover:text-white transition-colors">
+                    <Calendar className="size-6" />
+                  </div>
+                  <div className="flex-1 pt-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="text-sm font-semibold text-white">Account Created</p>
+                      <time className="text-[10px] font-medium text-[#8a8f98]">{formatDate(user.createdAt)}</time>
+                    </div>
+                    <p className="text-xs text-[#8a8f98] font-medium">
+                      Member since {formatDate(user.createdAt)}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </CardBody>
+          </Card>
+
+          {/* Quick Actions Section */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-md bg-[#1241a1]/10 text-[#1241a1]">
+                  <Settings className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-white">Quick Actions</h3>
+                  <p className="text-[10px] text-[#8a8f98] font-medium">Frequently used profile actions</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardBody>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  { icon: ShieldCheck, label: 'Security Settings', desc: 'Update security preferences', color: 'blue' },
+                  { icon: BellRing, label: 'Notifications', desc: 'Manage alert preferences', color: 'purple' },
+                  { icon: Users, label: 'Family Members', desc: 'Add or remove family members', color: 'green' },
+                  { icon: Key, label: 'Change Password', desc: 'Update your password', color: 'red' },
+                  { icon: Home, label: 'Property Info', desc: 'View your property details', color: 'orange' },
+                  { icon: CreditCard, label: 'Payments', desc: 'View payment history', color: 'emerald' },
+                ].map((action, idx) => (
+                  <button key={idx} className="flex items-center gap-4 p-4 bg-[#0d0f13] rounded-md hover:shadow-md transition-all group text-left border border-[#2a2d33]">
+                    <div className={`p-2.5 rounded-md bg-${action.color}-500/10 text-${action.color}-500 group-hover:bg-[#1241a1] group-hover:text-white transition-colors`}>
+                      <action.icon className="size-5" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-white">{action.label}</p>
+                      <p className="text-[10px] text-[#8a8f98] font-medium">{action.desc}</p>
+                    </div>
+                    <ChevronRight className="size-4 text-[#8a8f98] group-hover:text-[#1241a1] transition-colors" />
+                  </button>
+                ))}
+              </div>
+            </CardBody>
+          </Card>
+
+          {/* Stats Section */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-md bg-[#1241a1]/10 text-[#1241a1]">
+                  <Award className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-white">Account Stats</h3>
+                  <p className="text-[10px] text-[#8a8f98] font-medium">Your account at a glance</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardBody>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-[#0d0f13] p-4 rounded-md text-center">
+                  <p className="text-2xl font-bold text-[#1241a1]">1</p>
+                  <p className="text-[10px] text-[#8a8f98] font-medium uppercase tracking-wider">Properties</p>
+                </div>
+                <div className="bg-[#0d0f13] p-4 rounded-md text-center">
+                  <p className="text-2xl font-bold text-[#1241a1]">0</p>
+                  <p className="text-[10px] text-[#8a8f98] font-medium uppercase tracking-wider">Visitors</p>
+                </div>
+                <div className="bg-[#0d0f13] p-4 rounded-md text-center">
+                  <p className="text-2xl font-bold text-[#1241a1]">0</p>
+                  <p className="text-[10px] text-[#8a8f98] font-medium uppercase tracking-wider">Requests</p>
+                </div>
+                <div className="bg-[#0d0f13] p-4 rounded-md text-center">
+                  <p className="text-2xl font-bold text-[#1241a1]">${user.walletBalance?.toFixed(2) || '0.00'}</p>
+                  <p className="text-[10px] text-[#8a8f98] font-medium uppercase tracking-wider">Balance</p>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
         </div>
       </div>
     </div>

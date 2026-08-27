@@ -112,18 +112,18 @@ export default function CommunityChat({
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] grid grid-cols-1 lg:grid-cols-2 bg-gray-50 dark:bg-gray-900 animate-fade-in overflow-hidden">
+    <div className="h-[calc(100vh-4rem)] grid grid-cols-1 lg:grid-cols-2 bg-[#1a1d23] animate-fade-in overflow-hidden">
       {/* Sidebar - Channels & DMs */}
-      <div className={`w-full lg:w-80 bg-white dark:bg-gray-800 flex-col h-full shrink-0 relative overflow-hidden ${isMobileChatOpen ? 'hidden lg:flex' : 'flex'}`}>
+      <div className={`w-full lg:w-80 bg-[#1a1d23] flex-col h-full shrink-0 relative overflow-hidden ${isMobileChatOpen ? 'hidden lg:flex' : 'flex'}`}>
         {/* Sidebar Header */}
-        <div className="p-4 bg-gray-50/50 dark:bg-gray-800/50 flex justify-between items-center z-10 shrink-0">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+        <div className="p-4 bg-[#1a1d23] flex justify-between items-center z-10 shrink-0">
+          <h2 className="text-lg font-bold text-white text-white flex items-center gap-2">
             <MessageSquare className="w-5 h-5 text-blue-500" />
             Community Chat
           </h2>
           <button 
             onClick={() => setShowCreateModal(true)}
-            className="p-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg text-gray-600 dark:text-gray-300 transition-colors"
+            className="p-1.5 bg-[#1a1d23] hover:bg-[#2a2d33] rounded-lg text-[#8a8f98] text-white transition-colors"
           >
             <Plus className="w-4 h-4" />
           </button>
@@ -131,13 +131,13 @@ export default function CommunityChat({
 
         {/* Sidebar Search */}
         <div className="p-4 shrink-0">
-          <div className="relative  bg-gray-200 dark:bg-gray-800 rounded-lg text-center">
+          <div className="relative  bg-[#1a1d23] rounded-lg text-center">
             <input 
               type="text" 
               placeholder="Search channels..." 
-              className="w-full bg-gray-100 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-800 rounded-lg pl-9 pr-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
+              className="w-full bg-[#0d0f13] border border-[#2a2d33] rounded-lg pl-9 pr-4 py-2 text-sm text-white text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
             />
-            <Search className="w-5 h-5 font-bold text-gray-400 absolute right-3 top-0" />
+            <Search className="w-5 h-5 font-bold text-[#8a8f98] absolute right-3 top-0" />
           </div>
         </div>
 
@@ -146,7 +146,7 @@ export default function CommunityChat({
           
           {/* Channels List */}
           <div>
-            <div className="px-2 mb-2 flex items-center justify-between text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <div className="px-2 mb-2 flex items-center justify-between text-xs font-semibold text-[#8a8f98] text-[#8a8f98] uppercase tracking-wider">
               <span>Channels</span>
             </div>
             <div className="space-y-1">
@@ -156,15 +156,15 @@ export default function CommunityChat({
                   onClick={() => selectChat(channel)}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm transition-all duration-200 ${
                     activeChat.id === channel.id && activeChat.type === 'channel'
-                      ? 'bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-400 font-semibold shadow-sm '
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm '
+                      ? 'bg-blue-50 bg-blue-900 text-blue-700 text-blue-400 font-semibold shadow-sm '
+                      : 'text-[#8a8f98] text-white hover:bg-[#2a2d33] hover:bg-[#2a2d33] hover:shadow-sm '
                   }`}
                 >
                   <div className="flex items-center gap-3 truncate">
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
                        activeChat.id === channel.id && activeChat.type === 'channel' 
-                         ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400' 
-                         : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
+                         ? 'bg-blue-100 bg-blue-900/50 text-blue-600 text-blue-400' 
+                         : 'bg-[#1a1d23] text-[#8a8f98] text-[#8a8f98]'
                     }`}>
                        <Hash className="w-4 h-4" />
                     </div>
@@ -182,7 +182,7 @@ export default function CommunityChat({
 
           {/* DMs List */}
           <div>
-             <div className="px-2 mb-2 flex items-center justify-between text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+             <div className="px-2 mb-2 flex items-center justify-between text-xs font-semibold text-[#8a8f98] text-[#8a8f98] uppercase tracking-wider">
               <span>Direct Messages</span>
             </div>
             <div className="space-y-1">
@@ -192,16 +192,16 @@ export default function CommunityChat({
                   onClick={() => selectChat(dm)}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm transition-all duration-200 ${
                     activeChat.id === dm.id && activeChat.type === 'dm'
-                      ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-semibold shadow-sm '
-                      : 'text-gray-700 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm '
+                      ? 'bg-blue-50 bg-blue-900/30 text-blue-700 text-blue-400 font-semibold shadow-sm '
+                      : 'text-[#8a8f98] text-[#8a8f98] hover:bg-[#2a2d33] hover:bg-[#2a2d33] hover:shadow-sm '
                   }`}
                 >
                   <div className="flex items-center gap-3 truncate">
                     <div className="relative shrink-0">
-                      <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center text-xs font-bold text-gray-700 dark:text-gray-300 ring-2 ring-white dark:ring-gray-800">
+                      <div className="w-8 h-8 rounded-full bg-[#1a1d23] flex items-center justify-center text-xs font-bold text-[#8a8f98] text-white ring-2 ring-white ring-gray-800">
                         {dm.name.charAt(0)}
                       </div>
-                      <div className={`absolute -right-0.5 -bottom-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-gray-800 ${dm.online ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                      <div className={`absolute -right-0.5 -bottom-0.5 w-3 h-3 rounded-full border-2 border-[#2a2d33] ${dm.online ? 'bg-green-500' : 'bg-[#2a2d33]'}`}></div>
                     </div>
                     <span className="truncate">{dm.name}</span>
                   </div>
@@ -219,14 +219,14 @@ export default function CommunityChat({
       </div>
 
       {/* Main Chat Area */}
-      <div className={`flex-1 flex-col h-full bg-slate-50 dark:bg-[#0B1120] min-w-0 ${!isMobileChatOpen ? 'hidden lg:flex' : 'flex'}`}>
+      <div className={`flex-1 flex-col h-full bg-[#0d0f13] min-w-0 ${!isMobileChatOpen ? 'hidden lg:flex' : 'flex'}`}>
         
         {/* Chat Header */}
-        <div className="px-4 py-3 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md flex justify-between items-center sticky top-0 z-10 shrink-0 shadow-sm">
+        <div className="px-4 py-3 bg-white/80 bg-[#0d0f13]/80 backdrop-blur-md flex justify-between items-center sticky top-0 z-10 shrink-0 shadow-sm">
           <div className="flex items-center gap-3">
              <button 
                 onClick={() => setIsMobileChatOpen(false)}
-                className="lg:hidden p-2 -ml-2 mr-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-gray-500 dark:text-gray-400"
+                className="lg:hidden p-2 -ml-2 mr-1 hover:bg-[#2a2d33]  rounded-lg transition-colors text-[#8a8f98] text-[#8a8f98]"
              >
                 <ArrowLeft className="w-5 h-5" />
              </button>
@@ -240,34 +240,34 @@ export default function CommunityChat({
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 text-white flex items-center justify-center font-bold text-lg shadow-inner">
                   {activeChat.name.charAt(0)}
                 </div>
-                 <div className={`absolute -right-1 -bottom-1 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-gray-900 ${activeChat.online ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                 <div className={`absolute -right-1 -bottom-1 w-3.5 h-3.5 rounded-full border-2 border-[#2a2d33] ${activeChat.online ? 'bg-green-500' : 'bg-[#2a2d33]'}`}></div>
               </div>
             )}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-1.5">
-                {activeChat.type === 'channel' && <Hash className="w-4 h-4 text-gray-400" />}
+              <h2 className="text-lg font-bold text-white text-white flex items-center gap-1.5">
+                {activeChat.type === 'channel' && <Hash className="w-4 h-4 text-[#8a8f98]" />}
                 {activeChat.name}
               </h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1.5 font-medium">
+              <p className="text-xs text-[#8a8f98] text-[#8a8f98] flex items-center gap-1.5 font-medium">
                 {activeChat.type === 'channel' ? (
                   <><Users className="w-3.5 h-3.5" /> 24 members • General Discussion</>
                 ) : (
                   <>
-                     <span className={`w-1.5 h-1.5 rounded-full ${activeChat.online ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                     <span className={`w-1.5 h-1.5 rounded-full ${activeChat.online ? 'bg-green-500' : 'bg-[#2a2d33]'}`}></span>
                      {activeChat.online ? 'Active Now' : 'Offline'}
                   </>
                 )}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-1 sm:gap-2 text-gray-500 dark:text-gray-400">
-             <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white rounded-lg transition-colors hidden sm:block">
+          <div className="flex items-center gap-1 sm:gap-2 text-[#8a8f98] text-[#8a8f98]">
+             <button className="p-2 hover:bg-[#2a2d33]  hover:text-white hover:text-white rounded-lg transition-colors hidden sm:block">
                 <Search className="w-5 h-5" />
              </button>
-             <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white rounded-lg transition-colors">
+             <button className="p-2 hover:bg-[#2a2d33]  hover:text-white hover:text-white rounded-lg transition-colors">
                 <Bell className="w-5 h-5" />
              </button>
-             <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white rounded-lg transition-colors">
+             <button className="p-2 hover:bg-[#2a2d33]  hover:text-white hover:text-white rounded-lg transition-colors">
                 <MoreVertical className="w-5 h-5" />
              </button>
           </div>
@@ -277,7 +277,7 @@ export default function CommunityChat({
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
           
           <div className="flex justify-center sticky top-2 z-0">
-            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 bg-white/90 dark:bg-gray-800/90 backdrop-blur shadow-sm px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700/50">
+            <span className="text-xs font-semibold text-[#8a8f98] text-[#8a8f98] bg-white/90 bg-[#1a1d23]/90 backdrop-blur shadow-sm px-4 py-1.5 rounded-full border border-[#2a2d33] border-gray-700/50">
               Today, August 24th
             </span>
           </div>
@@ -287,21 +287,21 @@ export default function CommunityChat({
               
               <div className={`flex max-w-[85%] sm:max-w-[75%] ${msg.isMe ? 'flex-row-reverse' : 'flex-row'} gap-2`}>
                  {!msg.isMe && (
-                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 flex items-center justify-center text-xs font-bold shrink-0 mt-auto mb-1 mx-2 shadow-sm ">
+                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 from-gray-700 to-gray-800 text-[#8a8f98] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-auto mb-1 mx-2 shadow-sm ">
                      {msg.picture}
                    </div>
                  )}
                  
                  <div className={`flex flex-col ${msg.isMe ? 'items-end ml-2' : 'items-start mr-2'}`}>
                    <div className="flex items-baseline gap-2 mb-1 mx-1 px-1">
-                     {!msg.isMe && <span className="text-xs font-bold text-gray-700 dark:text-gray-300">{msg.sender}</span>}
-                     <span className="text-[10px] font-medium text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">{msg.timestamp}</span>
+                     {!msg.isMe && <span className="text-xs font-bold text-[#8a8f98] text-white">{msg.sender}</span>}
+                     <span className="text-[10px] font-medium text-[#8a8f98] opacity-0 group-hover:opacity-100 transition-opacity">{msg.timestamp}</span>
                    </div>
                    
                    <div className={`px-4 py-2.5 shadow-sm text-[15px] leading-relaxed relative ${
                      msg.isMe 
-                       ? 'bg-blue-600 dark:bg-blue-600 text-white rounded-2xl rounded-tr-sm' 
-                       : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-2xl rounded-tl-sm'
+                       ? 'bg-blue-600 bg-blue-600 text-white rounded-2xl rounded-tr-sm' 
+                       : 'bg-[#1a1d23] text-gray-800 text-gray-100 rounded-2xl rounded-tl-sm'
                    }`}>
                      {msg.text}
                    </div>
@@ -309,11 +309,11 @@ export default function CommunityChat({
               </div>
             </div>
           )) : (
-            <div className="flex flex-col items-center justify-center h-full text-center text-gray-400 dark:text-gray-500 fade-in">
-              <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800/50 flex items-center justify-center mb-4">
-                 <MessageSquare className="w-8 h-8 text-gray-300 dark:text-gray-600" />
+            <div className="flex flex-col items-center justify-center h-full text-center text-[#8a8f98] text-[#8a8f98] fade-in">
+              <div className="w-16 h-16 rounded-full bg-[#1a1d23] flex items-center justify-center mb-4">
+                 <MessageSquare className="w-8 h-8 text-white text-[#8a8f98]" />
               </div>
-              <h3 className="text-gray-900 dark:text-white font-semibold mb-1">It&apos;s quiet in here</h3>
+              <h3 className="text-white text-white font-semibold mb-1">It&apos;s quiet in here</h3>
               <p className="text-sm max-w-[200px]">Send a message to start the conversation.</p>
             </div>
           )}
@@ -321,12 +321,12 @@ export default function CommunityChat({
         </div>
 
         {/* Message Composer */}
-        <div className="p-4 bg-white dark:bg-gray-900  shrink-0 shadow-[0_-4px_20px_-15px_rgba(0,0,0,0.1)] z-10">
+        <div className="p-4 bg-[#1a1d23]  shrink-0 shadow-[0_-4px_20px_-15px_rgba(0,0,0,0.1)] z-10">
           <form 
             onSubmit={handleSendMessage}
-            className="flex items-end gap-2 bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-1.5 transition-all focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:border-blue-500 focus-within:bg-white dark:focus-within:bg-gray-800 shadow-inner"
+            className="flex items-end gap-2 bg-[#1a1d23] rounded-2xl p-1.5 transition-all focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:border-blue-500 focus-within:bg-[#1a1d23] shadow-inner"
           >
-            <button type="button" className="p-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors shrink-0">
+            <button type="button" className="p-2.5 text-[#8a8f98] hover:text-white hover:text-white hover:bg-[#2a2d33] hover:bg-[#2a2d33] rounded-xl transition-colors shrink-0">
               <Paperclip className="w-5 h-5" />
             </button>
             <textarea
@@ -339,11 +339,11 @@ export default function CommunityChat({
                 }
               }}
               placeholder={`Message ${activeChat.type === 'channel' ? '#' : ''}${activeChat.name}...`}
-              className="flex-1 max-h-32 min-h-[44px] bg-transparent resize-none outline-none text-[15px] text-gray-900 dark:text-white py-3 px-2 placeholder:text-gray-400 font-medium"
+              className="flex-1 max-h-32 min-h-[44px] bg-transparent resize-none outline-none text-[15px] text-white text-white py-3 px-2 placeholder:text-[#8a8f98] font-medium"
               rows="1"
             />
             <div className="flex items-center gap-1 shrink-0 pb-0.5 pr-0.5">
-              <button type="button" className="p-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors hidden sm:block">
+              <button type="button" className="p-2.5 text-[#8a8f98] hover:text-white hover:text-white hover:bg-[#2a2d33] hover:bg-[#2a2d33] rounded-xl transition-colors hidden sm:block">
                 <Smile className="w-5 h-5" />
               </button>
               <button 
@@ -355,8 +355,8 @@ export default function CommunityChat({
               </button>
             </div>
           </form>
-          <div className="hidden lg:block text-[10px] font-medium text-gray-400 dark:text-gray-500 text-center mt-3">
-             <span className="font-bold">Enter</span> to send, <span className="font-bold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded ml-1">Shift + Enter</span> for new line.
+          <div className="hidden lg:block text-[10px] font-medium text-[#8a8f98] text-[#8a8f98] text-center mt-3">
+             <span className="font-bold">Enter</span> to send, <span className="font-bold text-[#8a8f98] text-[#8a8f98] bg-[#1a1d23] px-1 py-0.5 rounded ml-1">Shift + Enter</span> for new line.
           </div>
         </div>
 

@@ -75,7 +75,7 @@ const FAQ = () => {
           <div className="space-y-6">
             {faqs.map((category, categoryIndex) => (
               <div key={categoryIndex}>
-                <h3 className="text-lg font-bold text-gray-900 mb-3">
+                <h3 className="text-lg font-bold text-white mb-3">
                   {category.category}
                 </h3>
                 <div className="space-y-4">
@@ -83,15 +83,15 @@ const FAQ = () => {
                     const isOpen = openIndex === `${categoryIndex}-${questionIndex}`
                     
                     return (
-                      <div key={questionIndex} className=" border-gray-200">
+                      <div key={questionIndex} className=" border-[#2a2d33]">
                         <button
                           onClick={() => toggleQuestion(categoryIndex, questionIndex)}
-                          className="w-full p-4 text-left flex justify-between items-center hover:bg-gray-50"
+                          className="w-full p-4 text-left flex justify-between items-center hover:bg-[#2a2d33]"
                         >
-                          <span className="font-medium text-gray-900">
+                          <span className="font-medium text-white">
                             {item.question}
                           </span>
-                          <span className="text-gray-600">
+                          <span className="text-[#8a8f98]">
                             {isOpen ? (
                               <ChevronUp className="w-5 h-5" />
                             ) : (
@@ -102,7 +102,7 @@ const FAQ = () => {
                         
                         {isOpen && (
                           <div className="p-4 pt-0">
-                            <p className="text-gray-600">
+                            <p className="text-[#8a8f98]">
                               {item.answer}
                             </p>
                           </div>
@@ -119,14 +119,14 @@ const FAQ = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a
                 href="mailto:support@estatesecure.com"
-                className="flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-semibold hover:bg-gray-800 transition-colors"
+                className="flex items-center gap-2 px-6 py-3 bg-[#1a1d23] text-white font-semibold  transition-colors"
               >
                 <Mail className="w-4 h-4" />
                 Email Support
               </a>
               <a
                 href="tel:+18001234567"
-                className="flex items-center gap-2 px-6 py-3 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-2 px-6 py-3 border-gray-300 text-[#8a8f98] font-semibold hover:bg-[#2a2d33] transition-colors"
               >
                 <Phone className="w-4 h-4" />
                 Call Support

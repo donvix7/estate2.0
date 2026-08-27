@@ -10,11 +10,11 @@ function ResourceItem({ icon, name, status, color, active }) {
         </div>
         <div>
           <p className="text-xs font-black">{name}</p>
-          <p className={`text-[10px] ${active ? 'text-red-500 font-black' : 'text-slate-500 font-bold'}`}>{status}</p>
+          <p className={`text-[10px] ${active ? 'text-red-500 font-black' : 'text-white0 font-bold'}`}>{status}</p>
         </div>
       </div>
-      <button className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-        <MoreVertical className="w-4 h-4 text-slate-400" />
+      <button className="p-1 hover:bg-[#2a2d33]  rounded-lg transition-colors">
+        <MoreVertical className="w-4 h-4 text-[#8a8f98]" />
       </button>
     </div>
   );

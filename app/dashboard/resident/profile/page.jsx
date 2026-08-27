@@ -8,28 +8,28 @@ import {
   Camera, 
   Mail, 
   Phone, 
-  Building2, 
   ShieldCheck, 
-  History, 
-  UserPlus, 
-  Droplets, 
   Wallet, 
   BellRing, 
-  Download,
   ChevronRight,
-  ShieldAlert,
   Users,
-  HelpCircle,
-  Plus,
-  Eye,
-  Building,
-  Headset,
-  Send,
   Loader2,
-  X,
-  User
+  User,
+  MapPin,
+  Calendar,
+  CheckCircle,
+  Clock,
+  BadgeCheck,
+  AlertCircle,
+  Settings,
+  Key,
+  Home,
+  Activity,
+  CreditCard,
+  Award
 } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 
 export default function ProfilePage() {
   const [residentData, setResidentData] = useState(null)
@@ -38,20 +38,21 @@ export default function ProfilePage() {
   const [editForm, setEditForm] = useState({})
   const [saveStatus, setSaveStatus] = useState('')
 
+  const loadData = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getResidentData();
+      console.log('Resident Data:', data)
+      setResidentData(data);
+      setEditForm(data);
+    } catch (error) {
+      console.error('Error loading data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      try {
-        const data = await getResidentData();
-        console.log(data)
-        setResidentData(data);
-        setEditForm(data);
-      } catch (error) {
-        console.error('Error loading data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     loadData();
   }, []);
 
@@ -77,7 +78,7 @@ export default function ProfilePage() {
   const handleSaveProfile = async () => {
     try {
       setSaveStatus('saving');
-      const result = await updateProfile({ id: residentData?.id || 1, ...editForm });
+      const result = await updateProfile({ id: residentData?.id, ...editForm });
       
       if (result.success) {
         setResidentData(result.data);
@@ -85,7 +86,6 @@ export default function ProfilePage() {
         setSaveStatus('success');
         toast.success('Profile updated successfully!');
         
-        // Clear success message after 3 seconds
         setTimeout(() => {
           setSaveStatus('');
         }, 3000);
@@ -100,6 +100,29 @@ export default function ProfilePage() {
     }
   }
 
+  // Format date helper
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -108,27 +131,32 @@ export default function ProfilePage() {
     );
   }
 
+  const user = residentData || {};
+
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700 pb-12">
+      {/* Page Header */}
       <PageHeader 
         title="Resident Profile" 
         description="Manage your personal information, contact details, and account security."
         icon={User}
         iconColor="blue"
       />
+
       {/* Profile Header Card */}
-      <div className="bg-slate-100 dark:bg-slate-800/30 rounded-md p-8 md:p-10 overflow-hidden relative group">
+      <section className="bg-[#1a1d23] bg-[#1a1d23]/30 rounded-md p-8 md:p-10 overflow-hidden relative group">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#1241a1]/5 rounded-full -mr-32 -mt-32 transition-transform duration-700 group-hover:scale-110"></div>
         <div className="relative flex flex-col md:flex-row gap-8 items-center">
+          {/* Avatar */}
           <div className="relative">
-            {residentData?.picture ? (
+            {user.displayImage ? (
               <div 
                 className="h-32 w-32 rounded-md bg-cover bg-center" 
-                style={{ backgroundImage: `url(${residentData.picture})` }}
+                style={{ backgroundImage: `url(${user.displayImage})` }}
               ></div>
             ) : (
-              <div className="h-32 w-32 rounded-md bg-white dark:bg-slate-800 flex items-center justify-center">
-                <User className="size-16 text-[#1241a1]/20" />
+              <div className="h-32 w-32 rounded-md bg-[#1a1d23] flex items-center justify-center border-2 border-[#1241a1]/10">
+                <User className="size-16 text-[#1241a1]/30" />
               </div>
             )}
             <button className="absolute bottom-[-10px] right-[-10px] p-2.5 bg-[#1241a1] text-white rounded-md hover:scale-105 transition-transform">
@@ -136,21 +164,36 @@ export default function ProfilePage() {
             </button>
           </div>
           
+          {/* User Info */}
           <div className="flex-1 text-center md:text-left">
-            <h2 className="text-3xl font-semibold dark:text-white mb-2 tracking-tight">
-              {`${residentData?.firstName || 'N/A'} ${residentData?.lastName || 'N/A'}`}
-            </h2>
-            <div className="flex flex-col md:flex-row gap-2 md:gap-6">
-              <p className="text-slate-500 dark:text-slate-400 flex items-center justify-center md:justify-start gap-2 text-sm font-medium">
+            <div className="flex items-center justify-center md:justify-start gap-3 flex-wrap">
+              <h2 className="text-3xl font-semibold text-white mb-2 tracking-tight">
+                {`${user.firstName || 'N/A'} ${user.lastName || 'N/A'}`}
+              </h2>
+              {user.isAccountVerified && (
+                <BadgeCheck className="size-6 text-[#1241a1]" />
+              )}
+            </div>
+            <p className="text-[#8a8f98] text-[#8a8f98] text-sm font-medium mb-1">
+              @{user.username || 'N/A'}
+            </p>
+            <div className="flex flex-col md:flex-row gap-2 md:gap-6 mt-2">
+              <p className="text-[#8a8f98] text-[#8a8f98] flex items-center justify-center md:justify-start gap-2 text-sm font-medium">
                 <Mail className="size-4" /> 
-                {residentData?.email || 'N/A'}
+                {user.email || 'N/A'}
+                {user.emailVerified ? (
+                  <CheckCircle className="size-3 text-green-500" />
+                ) : (
+                  <AlertCircle className="size-3 text-amber-500" />
+                )}
               </p>
-              <p className="text-slate-500 dark:text-slate-400 flex items-center justify-center md:justify-start gap-2 text-sm font-medium">
+              <p className="text-[#8a8f98] text-[#8a8f98] flex items-center justify-center md:justify-start gap-2 text-sm font-medium">
                 <Phone className="size-4" /> 
-                {residentData?.phone || 'N/A'}
+                {user.phone || 'N/A'}
               </p>
             </div>
             
+            {/* Action Buttons */}
             <div className="mt-8 flex flex-wrap gap-3 justify-center md:justify-start">
               {!isEditing ? (
                 <button 
@@ -161,150 +204,275 @@ export default function ProfilePage() {
                 </button>
               ) : (
                 <div className="flex gap-3">
-                   <button 
+                  <button 
                     onClick={handleSaveProfile}
-                    className="px-6 py-2.5 bg-[#1241a1] text-white text-[13px] font-semibold uppercase tracking-widest rounded-md hover:brightness-110 transition-all active:scale-95"
+                    disabled={saveStatus === 'saving'}
+                    className="px-6 py-2.5 bg-[#1241a1] text-white text-[13px] font-semibold uppercase tracking-widest rounded-md hover:brightness-110 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {saveStatus === 'saving' ? 'Saving...' : 'Save Changes'}
+                    {saveStatus === 'saving' ? (
+                      <span className="flex items-center gap-2">
+                        <Loader2 className="size-4 animate-spin" />
+                        Saving...
+                      </span>
+                    ) : 'Save Changes'}
                   </button>
-                   <button 
+                  <button 
                     onClick={handleCancelEdit}
-                    className="px-6 py-2.5 bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[13px] font-semibold uppercase tracking-widest rounded-md hover:bg-slate-300 dark:hover:bg-slate-700 transition-all active:scale-95"
+                    className="px-6 py-2.5 bg-[#1a1d23] text-[#8a8f98]  text-[13px] font-semibold uppercase tracking-widest rounded-md hover:bg-[#3a3d43]  transition-all active:scale-95"
                   >
                     Cancel
                   </button>
                 </div>
               )}
-              <button className="px-6 py-2.5 bg-white dark:bg-slate-800 border-none text-slate-700 dark:text-slate-200 text-[13px] font-semibold uppercase tracking-widest rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+              <button className="px-6 py-2.5 bg-[#1a1d23] border border-[#2a2d33] border-[#2a2d33] text-white text-white text-[13px] font-semibold uppercase tracking-widest rounded-md hover:bg-[#1a1d23]  transition-colors">
                 Change Password
               </button>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
+      {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left: Info Sections */}
+        {/* Left Column */}
         <div className="lg:col-span-1 space-y-8">
-          {/* Property Information */}
-          <section className="bg-slate-100 dark:bg-slate-800/30 rounded-md p-8">
-            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1241a1] mb-8 flex items-center gap-3">
-              <div className="p-2 rounded-md bg-white dark:bg-slate-800 text-[#1241a1]">
-                <Building2 className="size-5" />
+          {/* Personal Information Section */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-md bg-[#1241a1]/10 text-[#1241a1]">
+                  <User className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-white text-white">Personal Information</h3>
+                  <p className="text-[10px] text-[#8a8f98] font-medium">Your basic profile details</p>
+                </div>
               </div>
-              Property Info
-            </h3>
-            
-            <div className="space-y-6">
+            </CardHeader>
+            <CardBody className="space-y-6">
               {[
-                { label: 'Unit Number', value: residentData?.unitNumber || '1204 - Penthouse Level', name: 'unitNumber' },
-                { label: 'Block', value: residentData?.building || 'Block A - North Wing', name: 'building' },
-                { label: 'Residency Type', value: 'Owner-Occupied' },
-                { label: 'Move-in Date', value: 'October 12, 2021' }
+                { label: 'First Name', value: user.firstName || 'N/A', name: 'firstName' },
+                { label: 'Last Name', value: user.lastName || 'N/A', name: 'lastName' },
+                { label: 'Username', value: user.username || 'N/A', name: 'username' },
+                { label: 'Email', value: user.email || 'N/A', name: 'email' },
+                { label: 'Phone', value: user.phone || 'N/A', name: 'phone' },
               ].map((item, idx) => (
-                <div key={idx} className={`flex flex-col gap-1.5 ${idx !== 3 ? 'border-b border-white dark:border-slate-800/50 pb-5' : ''}`}>
-                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">{item.label}</span>
+                <div key={idx} className={`flex flex-col gap-1.5 ${idx !== 4 ? 'border-b border-[#2a2d33] border-[#2a2d33]/50 pb-4' : ''}`}>
+                  <span className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-widest">{item.label}</span>
                   {isEditing && item.name ? (
-                     <input 
-                        name={item.name}
-                        value={editForm[item.name] || ''}
-                        onChange={handleInputChange}
-                        className="bg-white dark:bg-slate-900 border-none rounded-lg p-2 text-sm font-semibold focus:ring-2 focus:ring-[#1241a1]/20 outline-none"
-                     />
+                    <input 
+                      name={item.name}
+                      value={editForm[item.name] || ''}
+                      onChange={handleInputChange}
+                      className="bg-[#1a1d23] border border-[#2a2d33] border-[#2a2d33] rounded-lg p-2 text-sm font-semibold focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all"
+                    />
                   ) : (
-                    <span className="text-sm font-semibold text-slate-900 dark:text-slate-200">{item.value}</span>
+                    <span className="text-sm font-semibold text-white text-white">{item.value}</span>
                   )}
                 </div>
               ))}
-            </div>
-          </section>
+            </CardBody>
+          </Card>
 
-          {/* Security & Privacy Settings */}
-          <section className="bg-slate-100 dark:bg-slate-800/30 rounded-md p-8">
-            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1241a1] mb-8 flex items-center gap-3">
-              <div className="p-2 rounded-md bg-white dark:bg-slate-800 text-[#1241a1]">
-                <ShieldCheck className="size-5" />
+          {/* Location Section */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-md bg-[#1241a1]/10 text-[#1241a1]">
+                  <MapPin className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-white text-white">Location</h3>
+                  <p className="text-[10px] text-[#8a8f98] font-medium">Your geographical details</p>
+                </div>
               </div>
-              Security & Privacy
-            </h3>
-            
-            <div className="space-y-6">
+            </CardHeader>
+            <CardBody className="space-y-6">
               {[
-                { title: 'Two-Factor Auth', desc: 'Enhanced account security', active: true },
-                { title: 'Email Notifications', desc: 'Updates on requests', active: true },
-                { title: 'Visitor Alerts', desc: 'Push notification for arrivals', active: false }
-              ].map((setting, idx) => (
-                <div key={idx} className="flex items-center justify-between group cursor-pointer">
-                  <div className="flex flex-col">
-                    <span className="text-[13px] font-semibold text-slate-900 dark:text-white group-hover:text-[#1241a1] transition-colors">{setting.title}</span>
-                    <span className="text-[10px] font-medium text-slate-500 uppercase tracking-tight">{setting.desc}</span>
-                  </div>
-                  <div className={`w-10 h-5 rounded-full relative transition-colors ${setting.active ? 'bg-[#1241a1]' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                    <div className={`absolute top-1 h-3 w-3 bg-white rounded-full transition-all ${setting.active ? 'right-1' : 'left-1'}`}></div>
-                  </div>
+                { label: 'Country', value: user.country || 'Not set', name: 'country' },
+                { label: 'Region', value: user.region || 'Not set', name: 'region' },
+                { label: 'City', value: user.city || 'Not set', name: 'city' },
+              ].map((item, idx) => (
+                <div key={idx} className={`flex flex-col gap-1.5 ${idx !== 2 ? 'border-b border-[#2a2d33] border-[#2a2d33]/50 pb-4' : ''}`}>
+                  <span className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-widest">{item.label}</span>
+                  {isEditing && item.name ? (
+                    <input 
+                      name={item.name}
+                      value={editForm[item.name] || ''}
+                      onChange={handleInputChange}
+                      className="bg-[#1a1d23] border border-[#2a2d33] border-[#2a2d33] rounded-lg p-2 text-sm font-semibold focus:ring-2 focus:ring-[#1241a1]/20 outline-none transition-all"
+                    />
+                  ) : (
+                    <span className="text-sm font-semibold text-white text-white">{item.value}</span>
+                  )}
                 </div>
               ))}
-            </div>
-          </section>
+            </CardBody>
+          </Card>
+
+          {/* Account Status Section */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-md bg-[#1241a1]/10 text-[#1241a1]">
+                  <ShieldCheck className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-white text-white">Account Status</h3>
+                  <p className="text-[10px] text-[#8a8f98] font-medium">Your account verification & balance</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardBody className="space-y-6">
+              <div className="flex flex-col gap-1.5 border-b border-[#2a2d33] border-[#2a2d33]/50 pb-4">
+                <span className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-widest">Account Verified</span>
+                <span className={`text-sm font-semibold ${user.isAccountVerified ? 'text-green-600' : 'text-amber-600'}`}>
+                  {user.isAccountVerified ? '✅ Verified' : '❌ Not Verified'}
+                </span>
+              </div>
+              <div className="flex flex-col gap-1.5 border-b border-[#2a2d33] border-[#2a2d33]/50 pb-4">
+                <span className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-widest">Email Verified</span>
+                <span className={`text-sm font-semibold ${user.emailVerified ? 'text-green-600' : 'text-amber-600'}`}>
+                  {user.emailVerified ? '✅ Verified' : '❌ Not Verified'}
+                </span>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-widest">Wallet Balance</span>
+                <span className="text-sm font-semibold text-white text-white">
+                  ${user.walletBalance?.toFixed(2) || '0.00'}
+                </span>
+              </div>
+            </CardBody>
+          </Card>
         </div>
 
-        {/* Right: Activity Timeline */}
-        <div className="lg:col-span-2">
-          <section className="bg-slate-100 dark:bg-slate-800/30 rounded-md p-8 h-full">
-            <div className="flex items-center justify-between mb-10">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1241a1] flex items-center gap-3">
-                <div className="p-2 rounded-md bg-white dark:bg-slate-800 text-[#1241a1]">
-                  <History className="size-5" />
+        {/* Right Column */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Recent Activity Section */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-md bg-[#1241a1]/10 text-[#1241a1]">
+                  <Activity className="size-5" />
                 </div>
-                Recent Activity
-              </h3>
-              <button className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 hover:text-[#1241a1] transition-colors">View All</button>
-            </div>
-            
-            <div className="space-y-8">
-              {[
-                { icon: UserPlus, title: 'Visitor Entry Registered', time: '2h ago', desc: 'Guest: John Smith (Delivery Service)', status: 'Approved', statusType: 'success' },
-                { icon: Droplets, title: 'Maintenance Ticket Update', time: 'Yesterday, 14:30', desc: "Leaking tap request #MR-9021 status changed to 'In Progress'", comment: 'Technician scheduled for visit tomorrow at 10 AM', iconType: 'warning' },
-                { icon: Wallet, title: 'Service Charge Paid', time: '3 days ago', desc: 'Payment of $450.00 confirmed for Oct 2023', action: 'Download Receipt' },
-                { icon: BellRing, title: 'Estate Announcement', time: '1 week ago', desc: 'Annual fire safety drill scheduled for November 15th.' }
-              ].map((activity, idx) => (
-                <div key={idx} className="relative flex items-start gap-6 group">
-                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-md transition-colors group-hover:bg-[#1241a1] group-hover:text-white ${
-                    activity.iconType === 'warning' ? 'bg-amber-500/10 text-amber-500' : 'bg-white dark:bg-slate-800 text-[#1241a1]'
-                  }`}>
-                    <activity.icon className="size-6" />
+                <div>
+                  <h3 className="text-sm font-semibold text-white text-white">Recent Activity</h3>
+                  <p className="text-[10px] text-[#8a8f98] font-medium">Your latest account activities</p>
+                </div>
+              </div>
+              <button className="text-[11px] font-semibold uppercase tracking-widest text-[#8a8f98] hover:text-[#1241a1] transition-colors">
+                View All
+              </button>
+            </CardHeader>
+            <CardBody className="space-y-6">
+              {user.lastLoginAt && (
+                <div className="relative flex items-start gap-6 group p-4 bg-[#1a1d23] rounded-md hover:shadow-sm transition-shadow">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[#1241a1]/10 text-[#1241a1] group-hover:bg-[#1241a1] group-hover:text-white transition-colors">
+                    <Clock className="size-6" />
                   </div>
-                  
                   <div className="flex-1 pt-1">
                     <div className="flex items-center justify-between mb-1">
-                      <p className="text-sm font-semibold dark:text-white uppercase tracking-tight">{activity.title}</p>
-                      <time className="text-[10px] font-medium text-slate-400 italic">{activity.time}</time>
+                      <p className="text-sm font-semibold text-white">Last Login</p>
+                      <time className="text-[10px] font-medium text-[#8a8f98]">{formatDateTime(user.lastLoginAt)}</time>
                     </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">{activity.desc}</p>
-                    
-                    {activity.status && (
-                      <span className="mt-3 inline-flex items-center px-3 py-1 rounded-md text-[10px] font-semibold uppercase tracking-widest bg-emerald-500/10 text-emerald-500">
-                        {activity.status}
-                      </span>
-                    )}
-                    
-                    {activity.comment && (
-                      <div className="mt-4 p-4 bg-white dark:bg-slate-900 rounded-md border-none">
-                        <p className="text-xs italic text-slate-500 font-medium">"{activity.comment}"</p>
-                      </div>
-                    )}
-                    
-                    {activity.action && (
-                      <button className="mt-4 text-[11px] font-semibold uppercase tracking-widest text-[#1241a1] flex items-center gap-2 hover:underline">
-                        <Download className="size-3.5" /> 
-                        {activity.action}
-                      </button>
-                    )}
+                    <p className="text-xs text-[#8a8f98] text-[#8a8f98] font-medium">
+                      Last active: {formatDateTime(user.lastActiveAt)}
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </section>
+              )}
+
+              {user.createdAt && (
+                <div className="relative flex items-start gap-6 group p-4 bg-[#1a1d23] rounded-md hover:shadow-sm transition-shadow">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[#1241a1]/10 text-[#1241a1] group-hover:bg-[#1241a1] group-hover:text-white transition-colors">
+                    <Calendar className="size-6" />
+                  </div>
+                  <div className="flex-1 pt-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="text-sm font-semibold text-white">Account Created</p>
+                      <time className="text-[10px] font-medium text-[#8a8f98]">{formatDate(user.createdAt)}</time>
+                    </div>
+                    <p className="text-xs text-[#8a8f98] text-[#8a8f98] font-medium">
+                      Member since {formatDate(user.createdAt)}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </CardBody>
+          </Card>
+
+          {/* Quick Actions Section */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-md bg-[#1241a1]/10 text-[#1241a1]">
+                  <Settings className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-white text-white">Quick Actions</h3>
+                  <p className="text-[10px] text-[#8a8f98] font-medium">Frequently used profile actions</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardBody>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  { icon: ShieldCheck, label: 'Security Settings', desc: 'Update security preferences', color: 'blue' },
+                  { icon: BellRing, label: 'Notifications', desc: 'Manage alert preferences', color: 'purple' },
+                  { icon: Users, label: 'Family Members', desc: 'Add or remove family members', color: 'green' },
+                  { icon: Key, label: 'Change Password', desc: 'Update your password', color: 'red' },
+                  { icon: Home, label: 'Property Info', desc: 'View your property details', color: 'orange' },
+                  { icon: CreditCard, label: 'Payments', desc: 'View payment history', color: 'emerald' },
+                ].map((action, idx) => (
+                  <button key={idx} className="flex items-center gap-4 p-4 bg-[#1a1d23] rounded-md hover:shadow-md transition-all group text-left border border-[#2a2d33] border-[#2a2d33]">
+                    <div className={`p-2.5 rounded-md bg-${action.color}-500/10 text-${action.color}-500 group-hover:bg-[#1241a1] group-hover:text-white transition-colors`}>
+                      <action.icon className="size-5" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-white text-white">{action.label}</p>
+                      <p className="text-[10px] text-[#8a8f98] font-medium">{action.desc}</p>
+                    </div>
+                    <ChevronRight className="size-4  group-hover:text-[#1241a1] transition-colors" />
+                  </button>
+                ))}
+              </div>
+            </CardBody>
+          </Card>
+
+          {/* Stats Section */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-md bg-[#1241a1]/10 text-[#1241a1]">
+                  <Award className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-white text-white">Account Stats</h3>
+                  <p className="text-[10px] text-[#8a8f98] font-medium">Your account at a glance</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardBody>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-[#1a1d23] p-4 rounded-md text-center">
+                  <p className="text-2xl font-bold text-[#1241a1]">1</p>
+                  <p className="text-[10px] text-[#8a8f98] font-medium uppercase tracking-wider">Properties</p>
+                </div>
+                <div className="bg-[#1a1d23] p-4 rounded-md text-center">
+                  <p className="text-2xl font-bold text-[#1241a1]">0</p>
+                  <p className="text-[10px] text-[#8a8f98] font-medium uppercase tracking-wider">Visitors</p>
+                </div>
+                <div className="bg-[#1a1d23] p-4 rounded-md text-center">
+                  <p className="text-2xl font-bold text-[#1241a1]">0</p>
+                  <p className="text-[10px] text-[#8a8f98] font-medium uppercase tracking-wider">Requests</p>
+                </div>
+                <div className="bg-[#1a1d23] p-4 rounded-md text-center">
+                  <p className="text-2xl font-bold text-[#1241a1]">${user.walletBalance?.toFixed(2) || '0.00'}</p>
+                  <p className="text-[10px] text-[#8a8f98] font-medium uppercase tracking-wider">Balance</p>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
         </div>
       </div>
     </div>

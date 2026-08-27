@@ -114,19 +114,19 @@ export default function MapComponent({ role = 'resident' }) {
   const searchPlaceholder = role === 'admin' ? "Search estate locations..." : "Search our estate..."
 
   return (
-    <div className="flex flex-col h-full bg-slate-50 dark:bg-slate-900/40 sm:rounded-3xl overflow-hidden shadow-2xl">
+    <div className="flex flex-col h-full bg-[#0d0f13]/40 sm:rounded-3xl overflow-hidden shadow-2xl">
       
       {/* ── Top Header ── */}
-      <header className="h-20 shrink-0 flex items-center justify-between px-4 sm:px-8 bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl">
-        <h2 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">{title}</h2>
+      <header className="h-20 shrink-0 flex items-center justify-between px-4 sm:px-8 bg-white/50 bg-[#0d0f13]/50 backdrop-blur-xl">
+        <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white text-white">{title}</h2>
         <div className="relative w-48 sm:w-96 group hidden xs:block">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1241a1] transition-colors" size={18} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8f98] group-focus-within:text-[#1241a1] transition-colors" size={18} />
           <input 
             type="text" 
             placeholder={searchPlaceholder}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-slate-100 dark:bg-slate-800/80 rounded-2xl py-2.5 pl-12 pr-4 text-sm focus:ring-4 focus:ring-[#1241a1]/10 outline-none transition-all border-none dark:text-white"
+            className="w-full bg-[#1a1d23] bg-[#1a1d23]/80 rounded-2xl py-2.5 pl-12 pr-4 text-sm focus:ring-4 focus:ring-[#1241a1]/10 outline-none transition-all border-none text-white"
           />
         </div>
       </header>
@@ -134,7 +134,7 @@ export default function MapComponent({ role = 'resident' }) {
       <div className="flex-1 flex overflow-hidden">
         
         {/* ── Main Map Canvas ── */}
-        <main className="flex-1 relative bg-slate-100 dark:bg-slate-950 overflow-hidden group/map min-h-[500px] h-[calc(100vh-140px)] lg:h-auto">
+        <main className="flex-1 relative bg-[#1a1d23] bg-[#0d0f13] overflow-hidden group/map min-h-[500px] h-[calc(100vh-140px)] lg:h-auto">
           
           {isLoaded ? (
             <GoogleMap
@@ -191,21 +191,21 @@ export default function MapComponent({ role = 'resident' }) {
                   onCloseClick={() => setHoveredLocation(null)}
                 >
                   <div className="p-1 px-2">
-                    <p className="text-[10px] font-black uppercase text-slate-900">{hoveredLocation.name}</p>
-                    <p className="text-[8px] text-slate-500">{hoveredLocation.category}</p>
+                    <p className="text-[10px] font-black uppercase text-white">{hoveredLocation.name}</p>
+                    <p className="text-[8px] text-white0">{hoveredLocation.category}</p>
                   </div>
                 </InfoWindow>
               )}
             </GoogleMap>
           ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center gap-4 bg-slate-950">
+            <div className="w-full h-full flex flex-col items-center justify-center gap-4 bg-[#0d0f13]">
               <div className="size-16 border-4 border-[#1241a1]/20 border-t-[#1241a1] rounded-full animate-spin"></div>
-              <p className="text-slate-400 font-bold tracking-widest uppercase text-xs">Loading Live Maps...</p>
+              <p className="text-[#8a8f98] font-bold tracking-widest uppercase text-xs">Loading Live Maps...</p>
             </div>
           )}
 
           {/* Category Filters Overlay */}
-          <div className="absolute top-4 sm:top-8 left-1/2 -translate-x-1/2 flex gap-1 p-1 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl shadow-2xl z-10 max-w-[90vw] overflow-x-auto no-scrollbar">
+          <div className="absolute top-4 sm:top-8 left-1/2 -translate-x-1/2 flex gap-1 p-1 bg-white/80 bg-[#0d0f13]/80 backdrop-blur-xl rounded-2xl shadow-2xl z-10 max-w-[90vw] overflow-x-auto no-scrollbar">
             {MAP_CATEGORIES.map(cat => (
               <button
                 key={cat}
@@ -213,7 +213,7 @@ export default function MapComponent({ role = 'resident' }) {
                 className={`px-4 sm:px-5 py-2 text-[10px] sm:text-xs font-bold rounded-xl whitespace-nowrap transition-all ${
                   activeCategory === cat 
                     ? 'bg-[#1241a1] text-white shadow-lg shadow-[#1241a1]/20' 
-                    : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    : 'text-white0 hover:bg-[#2a2d33] '
                 }`}
               >
                 {cat}
@@ -225,13 +225,13 @@ export default function MapComponent({ role = 'resident' }) {
           <div className="absolute bottom-4 sm:bottom-8 left-4 sm:left-8 flex flex-col gap-2 z-10">
             <button 
               onClick={zoomIn}
-              className="size-10 sm:size-12 bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#1241a1] transition-all shadow-xl active:scale-95"
+              className="size-10 sm:size-12 bg-[#1a1d23] rounded-2xl flex items-center justify-center text-[#8a8f98] hover:text-[#1241a1] transition-all shadow-xl active:scale-95"
             >
               <Plus size={20} />
             </button>
             <button 
               onClick={zoomOut}
-              className="size-10 sm:size-12 bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#1241a1] transition-all shadow-xl active:scale-95"
+              className="size-10 sm:size-12 bg-[#1a1d23] rounded-2xl flex items-center justify-center text-[#8a8f98] hover:text-[#1241a1] transition-all shadow-xl active:scale-95"
             >
               <Minus size={20} />
             </button>
@@ -246,17 +246,17 @@ export default function MapComponent({ role = 'resident' }) {
 
         {/* ── Detail Sidebar ── */}
         <aside 
-          className={`fixed lg:relative inset-y-0 right-0 z-100 bg-white dark:bg-slate-900 flex flex-col transition-all duration-500 ease-in-out shadow-[-20px_0_50px_rgba(0,0,0,0.1)] lg:shadow-none ${
+          className={`fixed lg:relative inset-y-0 right-0 z-100 bg-[#1a1d23] flex flex-col transition-all duration-500 ease-in-out shadow-[-20px_0_50px_rgba(0,0,0,0.1)] lg:shadow-none ${
             selectedLocation ? 'w-full sm:w-[400px] translate-x-0' : 'w-0 translate-x-full overflow-hidden'
           }`}
         >
           {selectedLocation && (
             <div className="p-6 sm:p-8 flex flex-col gap-6 sm:gap-8 h-full overflow-y-auto min-w-full sm:min-w-[400px]">
               <div className="flex items-center justify-between shrink-0">
-                <h3 className="text-xl font-black text-slate-900 dark:text-white">Location Intel</h3>
+                <h3 className="text-xl font-black text-white text-white">Location Intel</h3>
                 <button 
                   onClick={() => setSelectedLocation(null)}
-                  className="size-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                  className="size-10 bg-[#1a1d23] rounded-full flex items-center justify-center text-[#8a8f98] hover:text-white hover:text-white transition-colors"
                 >
                   <X size={20} />
                 </button>
@@ -283,45 +283,45 @@ export default function MapComponent({ role = 'resident' }) {
 
               {/* Description */}
               <div className="space-y-4">
-                <h4 className="text-2xl font-black text-slate-900 dark:text-white leading-tight">{selectedLocation.name}</h4>
-                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                <h4 className="text-2xl font-black text-white text-white leading-tight">{selectedLocation.name}</h4>
+                <p className="text-white0 text-[#8a8f98] text-sm leading-relaxed">
                   {selectedLocation.desc}
                 </p>
               </div>
 
               {/* Status Tags */}
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl">
-                  <p className="text-[10px] uppercase text-slate-400 font-black mb-1.5 tracking-widest">Operational Status</p>
+                <div className="bg-[#1a1d23]/50 p-4 rounded-2xl">
+                  <p className="text-[10px] uppercase text-[#8a8f98] font-black mb-1.5 tracking-widest">Operational Status</p>
                   <div className="flex items-center gap-2">
                     <span className={`size-2 rounded-full animate-pulse ${selectedLocation.status === 'Active' || selectedLocation.status === 'Secure' ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
                     <span className={`text-sm font-bold ${selectedLocation.status === 'Active' || selectedLocation.status === 'Secure' ? 'text-emerald-500' : 'text-red-500'}`}>{selectedLocation.status}</span>
                   </div>
                 </div>
-                <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl">
-                  <p className="text-[10px] uppercase text-slate-400 font-black mb-1.5 tracking-widest">Activity Metric</p>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">{selectedLocation.crowd}</p>
+                <div className="bg-[#1a1d23]/50 p-4 rounded-2xl">
+                  <p className="text-[10px] uppercase text-[#8a8f98] font-black mb-1.5 tracking-widest">Activity Metric</p>
+                  <p className="text-sm font-bold text-white text-white">{selectedLocation.crowd}</p>
                 </div>
               </div>
 
               {/* Meta Info */}
               <div className="space-y-3">
-                <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800/30 rounded-2xl group transition-colors hover:bg-[#1241a1]/5">
-                  <div className="size-10 rounded-xl bg-white dark:bg-slate-800 flex items-center justify-center text-[#1241a1] shadow-sm group-hover:scale-110 transition-transform">
+                <div className="flex items-center gap-4 p-4 bg-[#1a1d23]/30 rounded-2xl group transition-colors hover:bg-[#1241a1]/5">
+                  <div className="size-10 rounded-xl bg-[#1a1d23] flex items-center justify-center text-[#1241a1] shadow-sm group-hover:scale-110 transition-transform">
                     <Clock size={18} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Operating Window</p>
-                    <p className="text-sm font-bold text-slate-900 dark:text-white">{selectedLocation.hours}</p>
+                    <p className="text-[10px] font-black text-[#8a8f98] uppercase tracking-widest">Operating Window</p>
+                    <p className="text-sm font-bold text-white text-white">{selectedLocation.hours}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800/30 rounded-2xl group transition-colors hover:bg-[#1241a1]/5">
-                  <div className="size-10 rounded-xl bg-white dark:bg-slate-800 flex items-center justify-center text-[#1241a1] shadow-sm group-hover:scale-110 transition-transform">
+                <div className="flex items-center gap-4 p-4 bg-[#1a1d23]/30 rounded-2xl group transition-colors hover:bg-[#1241a1]/5">
+                  <div className="size-10 rounded-xl bg-[#1a1d23] flex items-center justify-center text-[#1241a1] shadow-sm group-hover:scale-110 transition-transform">
                     <Info size={18} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Access Protocol</p>
-                    <p className="text-sm font-bold text-slate-900 dark:text-white">Resident ID Verification Required</p>
+                    <p className="text-[10px] font-black text-[#8a8f98] uppercase tracking-widest">Access Protocol</p>
+                    <p className="text-sm font-bold text-white text-white">Resident ID Verification Required</p>
                   </div>
                 </div>
               </div>

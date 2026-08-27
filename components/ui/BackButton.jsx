@@ -24,7 +24,7 @@ export function BackButton({
   return (
     <button
       onClick={handleBack}
-      className={`group flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors mb-6 pb-2 border-none bg-transparent cursor-pointer ${className}`}
+      className={`group flex items-center gap-2 text-[#8a8f98] hover:text-white text-[#8a8f98] hover:text-white transition-colors mb-6 pb-2 border-none bg-transparent cursor-pointer ${className}`}
     >
       <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
       <span className="font-medium text-sm">{label}</span>

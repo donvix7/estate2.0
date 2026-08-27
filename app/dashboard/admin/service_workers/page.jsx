@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Wrench, Search, Plus, Loader2 } from 'lucide-react';
+import { Wrench, Plus, Loader2 } from 'lucide-react';
 import ServiceWorkersTable from '@/components/admin/ServiceWorkersTable';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { Button } from '@/components/ui/Button';
 import { FilterBar } from '@/components/ui/FilterBar';
 import { DataStateLayout } from '@/components/ui/DataStateLayout';
 import { LoadingState } from '@/components/ui/LoadingState';
@@ -47,7 +48,7 @@ export default function ServiceWorkersPage() {
   });
 
   return (
-    <div className="p-6 max-w-7xl mx-auto animate-fade-in">
+    <div className="max-w-7xl mx-auto pb-12 animate-in fade-in duration-700">
       {/* Header */}
       <PageHeader 
         title="Service Workers" 
@@ -55,13 +56,12 @@ export default function ServiceWorkersPage() {
         icon={Wrench}
         iconColor="blue"
       >
-        <button 
-          className="flex items-center gap-2 bg-[#1241a1] hover:brightness-110 text-white px-5 py-2.5 rounded-md font-semibold transition-all active:scale-95 border-none"
+        <Button
+          icon={Plus}
           onClick={() => router.push('/dashboard/admin/service_workers/add')}
         >
-          <Plus className="w-5 h-5" />
           Add Worker
-        </button>
+        </Button>
       </PageHeader>
 
       {/* Toolbar */}

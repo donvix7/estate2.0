@@ -17,14 +17,14 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
       case 'paid':
       case 'completed':
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 text-emerald-400 border-none">
             <CheckCircle2 className="w-3.5 h-3.5" />
             {status.charAt(0).toUpperCase() + status.slice(1)}
           </span>
         );
       case 'pending':
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-600 text-amber-400 border-none">
             <Clock className="w-3.5 h-3.5" />
             Pending
           </span>
@@ -32,19 +32,20 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
       case 'overdue':
       case 'failed':
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-600 text-rose-400 border-none">
             <AlertCircle className="w-3.5 h-3.5" />
             {status.charAt(0).toUpperCase() + status.slice(1)}
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#2a2d33]/10 text-white0 border-none">
             {status}
           </span>
         );
     }
   };
+
 
   const renderRow = (item) => {
     if (isInvoice) {
@@ -52,23 +53,23 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
         <>
           <td className="px-6 py-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-md bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 transition-colors group-hover:bg-[#1241a1] group-hover:text-white">
+              <div className="w-10 h-10 rounded-md bg-blue-50 bg-blue-900/30 flex items-center justify-center text-blue-600 text-blue-400 shrink-0 transition-colors group-hover:bg-[#1241a1] group-hover:text-white">
                 <FileText className="w-5 h-5" />
               </div>
               <div>
-                <div className="font-semibold text-gray-900 dark:text-white">{item._id}</div>
-                <div className="text-xs text-gray-500 mt-0.5 truncate max-w-[150px] font-medium" title={item.description}>{item.description}</div>
+                <div className="font-semibold text-white text-white">{item._id}</div>
+                <div className="text-xs text-white0 mt-0.5 truncate max-w-[150px] font-medium" title={item.description}>{item.description}</div>
               </div>
             </div>
           </td>
           <td className="px-6 py-4">
-            <div className="font-semibold text-gray-900 dark:text-white">{item.residentID}</div>
-            <div className="text-xs text-gray-500 mt-0.5 font-medium">{item.unit}</div>
+            <div className="font-semibold text-white text-white">{item.residentID}</div>
+            <div className="text-xs text-white0 mt-0.5 font-medium">{item.unit}</div>
           </td>
           <td className="px-6 py-4">
-            <div className="font-bold text-gray-900 dark:text-white">${item.amount.toLocaleString()}</div>
+            <div className="font-bold text-white text-white">${item.amount.toLocaleString()}</div>
           </td>
-          <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 font-medium">
+          <td className="px-6 py-4 text-sm text-white0 text-[#8a8f98] font-medium">
             <div>Issued: {new Date(item.dateIssued).toLocaleDateString()}</div>
             <div className={item.status === 'overdue' ? 'text-red-500 font-semibold' : ''}>
               Due: {new Date(item.dueDate).toLocaleDateString()}
@@ -87,26 +88,26 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
         <td className="px-6 py-4">
           <div className="flex items-center space-x-3">
             
-            <div className="w-10 h-10 rounded-md bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 transition-colors group-hover:bg-[#1241a1] group-hover:text-white">
+            <div className="w-10 h-10 rounded-md bg-emerald-50 bg-emerald-900/30 flex items-center justify-center text-emerald-600 text-emerald-400 shrink-0 transition-colors group-hover:bg-[#1241a1] group-hover:text-white">
                {item.type.includes('Payment') ? <ArrowDownRight className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
             </div>
 
             <div>
-              <div className="font-semibold text-gray-900 dark:text-white">{item._id}</div>
-              <div className="font-semibold text-gray-900 dark:text-white">{item.description}</div>
+              <div className="font-semibold text-white text-white">{item._id}</div>
+              <div className="font-semibold text-white text-white">{item.description}</div>
 
             </div>
           </div>
         </td>
         <td className="px-6 py-4">
-            <div className="font-semibold text-gray-900 dark:text-white">{item.residentID}</div>
+            <div className="font-semibold text-white text-white">{item.residentID}</div>
         </td>
         <td className="px-6 py-4">
-          <div className="font-bold text-gray-900 dark:text-white">${item.amount.toLocaleString()}</div>
+          <div className="font-bold text-white text-white">${item.amount.toLocaleString()}</div>
         </td>
         <td className="px-6 py-4 font-medium">
-              <div className="text-xs text-gray-500 mt-0.5">{new Date(item.createdAt).toLocaleString()}</div>
-          <div className="text-xs text-gray-500 mt-0.5">Ref: {item.reference}</div>
+              <div className="text-xs text-white0 mt-0.5">{new Date(item.createdAt).toLocaleString()}</div>
+          <div className="text-xs text-white0 mt-0.5">Ref: {item.reference}</div>
         </td>
         <td className="px-6 py-4">
           {getStatusBadge(item.status)}
@@ -131,7 +132,7 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
       {/* Mobile Card View */}
       <div className="md:hidden flex flex-col gap-4">
         {items.length === 0 ? (
-          <div className="p-8 text-center text-gray-500 italic">
+          <div className="p-8 text-center text-white0 italic">
             No {type} found matching your criteria.
           </div>
         ) : (
@@ -139,18 +140,18 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
             <div 
               key={item._id || item.id || index}
               onClick={onRowClick ? () => onRowClick(item) : undefined}
-              className={`group bg-slate-100 dark:bg-slate-800/30 rounded-md p-4 space-y-4 hover:bg-white dark:hover:bg-slate-800 transition-all ${onRowClick ? 'cursor-pointer' : ''}`}
+              className={`group bg-[#1a1d23] bg-[#1a1d23]/30 rounded-md p-4 space-y-4 hover:bg-white  transition-all ${onRowClick ? 'cursor-pointer' : ''}`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-md flex items-center justify-center shrink-0 transition-colors group-hover:bg-[#1241a1] group-hover:text-white ${
-                    isInvoice ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
+                    isInvoice ? 'bg-blue-50 bg-blue-900/30 text-blue-600 text-blue-400' : 'bg-emerald-50 bg-emerald-900/30 text-emerald-600 text-emerald-400'
                   }`}>
                     {isInvoice ? <FileText className="w-5 h-5" /> : (item.type?.includes('Payment') ? <ArrowDownRight className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />)}
                   </div>
                   <div className="min-w-0">
-                    <h4 className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1">{item.id}</h4>
-                    <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">{isInvoice ? item.description : item.method}</p>
+                    <h4 className="text-sm font-semibold text-white text-white line-clamp-1">{item.id}</h4>
+                    <p className="text-[10px] text-white0 font-semibold uppercase tracking-wider">{isInvoice ? item.description : item.method}</p>
                   </div>
                 </div>
                 <div className="shrink-0">
@@ -160,14 +161,14 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
 
               <div className="flex items-end justify-between pt-2">
                 <div className="space-y-1">
-                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Resident</p>
-                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">{item.residentID}</p>
-                  <p className="text-[10px] text-slate-500 font-medium italic">{item.unit}</p>
+                  <p className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-widest">Resident</p>
+                  <p className="text-xs font-semibold text-white text-white">{item.residentID}</p>
+                  <p className="text-[10px] text-white0 font-medium italic">{item.unit}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1">{isInvoice ? 'Due Date' : 'Transaction Date'}</p>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">${item.amount.toLocaleString()}</p>
-                  <p className="text-[10px] text-slate-500 font-medium">
+                  <p className="text-[10px] font-semibold text-[#8a8f98] uppercase tracking-widest mb-1">{isInvoice ? 'Due Date' : 'Transaction Date'}</p>
+                  <p className="text-sm font-bold text-white text-white">${item.amount.toLocaleString()}</p>
+                  <p className="text-[10px] text-white0 font-medium">
                     {new Date(isInvoice ? item.dueDate : item.date).toLocaleDateString()}
                   </p>
                 </div>

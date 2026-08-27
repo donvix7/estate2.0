@@ -22,11 +22,149 @@ import {
   Zap,
   Check,
   Sparkles,
-  Wallet
+  Wallet,
+  MoreHorizontal,
+  Circle,
+  CheckCircle2
 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import StatsCard from '@/components/StatsCard'
 import { getSubscriptions } from '@/lib/service'
+
+// Trading-style stat card component
+const StatCard = ({ label, value, icon, change }) => {
+  const isPositive = change && change > 0;
+  const isNegative = change && change < 0;
+  
+  return (
+    <div className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] p-4">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-xs font-medium text-[#8a8f98] uppercase tracking-wider">{label}</span>
+        <span className="text-[#8a8f98]">{icon}</span>
+      </div>
+      <div className="flex items-end gap-2">
+        <span className="text-xl font-bold text-white">{value}</span>
+        {change !== undefined && change !== null && (
+          <span className={`text-xs font-semibold ${isPositive ? 'text-green-400' : isNegative ? 'text-red-400' : 'text-[#8a8f98]'}`}>
+            {isPositive ? '+' : ''}{change}%
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Trust indicator component
+const TrustIndicator = ({ icon: Icon, label, sub }) => (
+  <div className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] p-4 text-center">
+    <Icon className="w-5 h-5 text-[#1241a1] mx-auto mb-2" />
+    <p className="text-xs font-semibold text-white">{label}</p>
+    <p className="text-[10px] text-[#8a8f98]">{sub}</p>
+  </div>
+);
+
+// Plan card component
+const PlanCard = ({ plan, isSelected, billingCycle, onSelect }) => {
+  const displayPrice = billingCycle === 'monthly' ? plan.monthlyPrice : plan.yearlyPrice
+  const isFree = displayPrice === 0
+  const isPopular = plan.popular
+
+  return (
+    <div className={`relative rounded-xl border transition-all duration-300 ${
+      isPopular
+        ? 'bg-[#1a1d23] border-[#1241a1] shadow-lg shadow-[#1241a1]/10'
+        : 'bg-[#1a1d23] border-[#2a2d33] hover:border-[#3a3d43]'
+    } ${isPopular ? 'lg:scale-105' : ''}`}>
+      
+      {/* Popular Badge */}
+      {isPopular && plan.badge && (
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+          <span className="bg-[#1241a1] text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-wider shadow-lg shadow-[#1241a1]/30">
+            {plan.badge}
+          </span>
+        </div>
+      )}
+
+      <div className="p-6 flex flex-col h-full">
+        {/* Plan Header */}
+        <div className="mb-4">
+          <div className="flex items-center gap-3 mb-2">
+            <div className={`p-2 rounded-xl ${
+              isPopular 
+                ? 'bg-[#1241a1]/20' 
+                : 'bg-[#2a2d33]'
+            }`}>
+              <plan.icon className={`w-5 h-5 ${
+                isPopular ? 'text-[#1241a1]' : 'text-[#8a8f98]'
+              }`} />
+            </div>
+            <span className={`text-lg font-bold text-white`}>
+              {plan.name}
+            </span>
+          </div>
+          <p className={`text-sm text-[#8a8f98]`}>
+            {plan.description}
+          </p>
+        </div>
+
+        {/* Price */}
+        <div className="mb-6 flex items-baseline gap-1">
+          <span className={`text-3xl font-bold text-white`}>
+            {isFree ? 'Free' : `$${displayPrice}`}
+          </span>
+          {!isFree && (
+            <span className={`text-sm text-[#8a8f98]`}>
+              {billingCycle === 'monthly' ? '/month' : '/year'}
+            </span>
+          )}
+          {billingCycle === 'yearly' && !isFree && (
+            <span className="ml-2 text-[10px] font-bold text-green-400 bg-green-500/20 px-2 py-0.5 rounded-full">
+              Save 20%
+            </span>
+          )}
+        </div>
+
+        {/* Features */}
+        <div className="space-y-2.5 flex-1 mb-6">
+          {plan.features.map((feature, idx) => (
+            <div key={idx} className="flex items-start gap-2.5">
+              {feature.included ? (
+                <Check className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#1241a1]" />
+              ) : (
+                <div className="w-4 h-4 border-2 border-[#2a2d33] rounded-full flex-shrink-0 mt-0.5" />
+              )}
+              <span className={`text-sm ${
+                feature.included ? 'text-white' : 'text-[#8a8f98]'
+              }`}>
+                {feature.name}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Select Button */}
+        <button
+          onClick={() => onSelect(plan.id)}
+          className={`w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-95 border-none ${
+            isSelected
+              ? 'bg-[#1241a1] text-white'
+              : isPopular
+              ? 'bg-[#1241a1] hover:bg-[#1a51b1] text-white'
+              : 'bg-[#2a2d33] hover:bg-[#3a3d43] text-white'
+          }`}
+        >
+          {isSelected ? '✓ Current Plan' : isFree ? 'Get Started' : 'Select Plan'}
+        </button>
+
+        {/* Guarantee */}
+        <p className={`text-[10px] text-center mt-3 text-[#8a8f98]`}>
+          <Lock className="w-3 h-3 inline mr-1" />
+          Secure. Cancel anytime.
+        </p>
+      </div>
+    </div>
+  )
+};
 
 export default function SubscriptionPlansPage() {
   const [billingCycle, setBillingCycle] = useState('monthly')
@@ -43,7 +181,6 @@ export default function SubscriptionPlansPage() {
       }
     } catch (error) {
       console.error(error);
-      
     } finally {
       setLoading(false)
     }
@@ -52,321 +189,151 @@ export default function SubscriptionPlansPage() {
   useEffect(() => {
     loadData()
   }, [])
-/*
-  const plans = [
-    {
-      id: 'essential',
-      name: 'Essential',
-      price: 0,
-      monthlyPrice: 0,
-      yearlyPrice: 0,
-      description: 'Essential features for individual residents',
-      icon: Home,
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'bg-white dark:bg-gray-800/50',
-      borderColor: 'border-gray-200 dark:border-gray-700',
-      popular: false,
-      features: [
-        { name: 'Access to resident portal', included: true },
-        { name: 'Pay service charges', included: true },
-        { name: 'View announcements', included: true },
-        { name: 'Submit maintenance requests', included: true },
-        { name: '24/7 emergency support', included: true },
-        { name: 'Visitor management', included: false },
-        { name: 'Premium support', included: false },
-      ]
-    },
-    {
-      id: 'premium',
-      name: 'Premium',
-      price: 4.99,
-      monthlyPrice: 4.99,
-      yearlyPrice: 3.99,
-      description: 'Enhanced features for active community members',
-      icon: Star,
-      color: 'from-amber-500 to-amber-600',
-      bgColor: 'bg-[#1241a1] dark:bg-[#1241a1]',
-      borderColor: 'border-[#1241a1]',
-      popular: true,
-      badge: 'Most Popular',
-      features: [
-        { name: 'Access to resident portal', included: true },
-        { name: 'Pay service charges', included: true },
-        { name: 'View announcements', included: true },
-        { name: 'Submit maintenance requests', included: true },
-        { name: '24/7 emergency support', included: true },
-        { name: 'Visitor management', included: true },
-        { name: 'Premium support', included: true },
-      ]
-    },
-    {
-      id: 'enterprise',
-      name: 'Enterprise',
-      price: 9.99,
-      monthlyPrice: 9.99,
-      yearlyPrice: 7.99,
-      description: 'Complete solution for property owners and investors',
-      icon: Building2,
-      color: 'from-purple-500 to-purple-600',
-      bgColor: 'bg-white dark:bg-gray-800/50',
-      borderColor: 'border-gray-200 dark:border-gray-700',
-      popular: false,
-      features: [
-        { name: 'Access to resident portal', included: true },
-        { name: 'Pay service charges', included: true },
-        { name: 'View announcements', included: true },
-        { name: 'Submit maintenance requests', included: true },
-        { name: '24/7 emergency support', included: true },
-        { name: 'Visitor management', included: true },
-        { name: 'Premium support', included: true },
-      ]
-    }
-  ]
-*/
-  const getDisplayPrice = (plan) => {
-    if (billingCycle === 'monthly') {
-      return plan.monthlyPrice
-    }
-    return plan.yearlyPrice
-  }
-
-  const getPriceLabel = () => {
-    return billingCycle === 'monthly' ? '/month' : '/year'
-  }
 
   const getSavings = () => {
-    return billingCycle === 'yearly' ? 'Save 20%' : 'Cancel anytime'
+    return billingCycle === 'yearly' ? 'Save 20% with annual billing' : 'Cancel anytime, no fees'
   }
 
   const handleSelectPlan = (planId) => {
     setSelectedPlan(planId)
-    // Navigate to checkout or open modal
     console.log(`Selected plan: ${planId}`)
   }
 
-  // Calculate stats
+  // Stats
   const totalSubscribers = 1247
   const avgRating = 4.9
   const satisfactionRate = 98
 
   return (
-    <div className="p-6 mmx-auto animate-fade-in bg-white dark:bg-black">
+    <div className="min-h-screen bg-[#0d0f13] p-6 animate-in fade-in duration-700 space-y-6">
+      
       {/* Header */}
-      <PageHeader 
-        title="Subscription Plans" 
-        description="Choose the perfect plan for your estate living experience."
-        icon={Crown}
-        iconColor="amber"
-      >
-        <a 
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Subscription Plans</h1>
+          <p className="text-[#8a8f98] text-sm font-medium">Choose the perfect plan for your estate living experience.</p>
+        </div>
+        <Link 
           href="/dashboard"
-          className="flex items-center gap-2 bg-amber-700 hover:brightness-110 text-white px-5 py-2.5 rounded-md font-semibold transition-all active:scale-95 border-none"
-         
+          className="flex items-center gap-2 bg-[#1241a1] hover:bg-[#1a51b1] text-white px-5 py-2.5 rounded-xl font-semibold transition-all border-none"
         >
           <Sparkles className="w-5 h-5" />
           Compare Plans
-        </a>
-      </PageHeader>
-{/* Trust Indicators */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        {[
-          { icon: ShieldCheck, label: 'Secure Payments', sub: '256-bit encryption' },
-          { icon: Clock, label: '24/7 Support', sub: 'Always here to help' },
-          { icon: RefreshCw, label: 'Flexible Plans', sub: 'Change anytime' },
-          { icon: Heart, label: '100% Satisfaction', sub: 'Love it or get refund' }
-        ].map((item, idx) => (
-          <div key={idx} className="rounded-md p-4 text-center bg-slate-600/20">
-            <item.icon className="w-6 h-6 text-amber-700 mx-auto mb-2" />
-            <p className="text-xs font-semibold text-gray-900 dark:text-white">{item.label}</p>
-            <p className="text-[10px] text-gray-400 dark:text-gray-500">{item.sub}</p>
-          </div>
-        ))}
+        </Link>
       </div>
-     
+
+      {/* Trust Indicators */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <TrustIndicator icon={ShieldCheck} label="Secure Payments" sub="256-bit encryption" />
+        <TrustIndicator icon={Clock} label="24/7 Support" sub="Always here to help" />
+        <TrustIndicator icon={RefreshCw} label="Flexible Plans" sub="Change anytime" />
+        <TrustIndicator icon={Heart} label="100% Satisfaction" sub="Love it or get refund" />
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <StatCard 
+          label="Active Subscribers" 
+          value={totalSubscribers.toLocaleString()} 
+          icon={<Users className="size-4" />}
+          change={12.5}
+        />
+        <StatCard 
+          label="Average Rating" 
+          value={`${avgRating}/5`} 
+          icon={<Star className="size-4" />}
+          change={4.8}
+        />
+        <StatCard 
+          label="Satisfaction Rate" 
+          value={`${satisfactionRate}%`} 
+          icon={<Heart className="size-4" />}
+          change={2.3}
+        />
+      </div>
 
       {/* Billing Toggle */}
-      <div className="flex flex-col items-center gap-4 mb-12">
-        <div className="p-1 rounded-md inline-flex items-center borderborder-amber-700 gap-1">
+      <div className="flex flex-col items-center gap-3">
+        <div className="bg-[#1a1d23] border border-[#2a2d33] rounded-xl p-1 inline-flex">
           <button
             onClick={() => setBillingCycle('monthly')}
-            className={`px-6 py-2.5 rounded-md text-sm font-semibold transition-all border-none ${
+            className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all border-none ${
               billingCycle === 'monthly'
-                ? 'bg-amber-700 text-white '
-                : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                ? 'bg-[#1241a1] text-white'
+                : 'text-[#8a8f98] hover:text-white'
             }`}
           >
             Monthly
           </button>
           <button
             onClick={() => setBillingCycle('yearly')}
-            className={`px-6 py-2.5 rounded-md text-sm font-semibold transition-all border-none flex items-center gap-2 ${
+            className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all border-none flex items-center gap-2 ${
               billingCycle === 'yearly'
-                ? 'bg-amber-700 text-white'
-                : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                ? 'bg-[#1241a1] text-white'
+                : 'text-[#8a8f98] hover:text-white'
             }`}
           >
             Yearly
+            <span className="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full">
+              Save 20%
+            </span>
           </button>
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          {getSavings()}
-        </p>
+        <p className="text-xs text-[#8a8f98]">{getSavings()}</p>
       </div>
 
       {/* Plans Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {plans.length > 0 ? ( plans.map((plan) => {
-          const isSelected = selectedPlan === plan.id
-          const displayPrice = getDisplayPrice(plan)
-          const isFree = displayPrice === 0
-
-          return (
-            <div
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {plans.length > 0 ? (
+          plans.map((plan) => (
+            <PlanCard
               key={plan.id}
-              className={`relative rounded-md transition-all duration-300 ${
-                plan.popular
-                  ? 'bg-slate-900 dark:bg-white/20 text-white  shadow-lg shadow-slate-900/20'
-                  : 'bg-slate-800/30 dark:bg-slate-500/20 border '
-              } ${plan.popular ? 'lg:scale-105' : ''}`}
-            >
-              {/* Popular Badge */}
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-amber-700 text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-wider shadow-lg shadow-amber-500/30">
-                    {plan.badge}
-                  </span>
-                </div>
-              )}
-
-              <div className="p-6 flex flex-col h-full">
-                {/* Plan Header */}
-                <div className="mb-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className={`p-2 rounded-md ${
-                      plan.popular 
-                        ? 'bg-white/20' 
-                        : 'bg-[#1241a1]/10 dark:bg-slate-900'
-                    }`}>
-                      <plan.icon className={`w-5 h-5 ${
-                        plan.popular ? 'text-white' : 'text-slate-900 dark:text-slate-100'
-                      }`} />
-                    </div>
-                    <span className={`text-lg font-bold ${
-                      plan.popular ? 'text-white' : 'text-gray-900 dark:text-white'
-                    }`}>
-                      {plan.name}
-                    </span>
-                  </div>
-                  <p className={`text-sm ${
-                    plan.popular ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'
-                  }`}>
-                    {plan.description}
-                  </p>
-                </div>
-
-                {/* Price */}
-                <div className="mb-6 flex items-baseline gap-1">
-                  <span className={`text-3xl font-bold ${
-                    plan.popular ? 'text-white' : 'text-gray-900 dark:text-white'
-                  }`}>
-                    {isFree ? 'Free' : `$${displayPrice}`}
-                  </span>
-                  {!isFree && (
-                    <span className={`text-sm ${
-                      plan.popular ? 'text-white/70' : 'text-gray-500 dark:text-gray-400'
-                    }`}>
-                      {getPriceLabel()}
-                    </span>
-                  )}
-                </div>
-
-                {/* Features */}
-                <div className="space-y-3 flex-1 mb-6">
-                  {plan.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-start gap-3">
-                      {feature.included ? (
-                        <Check className={`w-4 h-4 flex-shrink-0 mt-0.5 ${
-                          plan.popular ? 'text-white' : 'text-amber-700'
-                        }`} />
-                      ) : (
-                        <div className={`w-4 h-4 border-2 rounded-full flex-shrink-0 mt-0.5 ${
-                          plan.popular ? 'border-white/40' : 'border-gray-300 dark:border-gray-600'
-                        }`} />
-                      )}
-                      <span className={`text-sm ${
-                        feature.included
-                          ? plan.popular ? 'text-white' : 'text-gray-700 dark:text-gray-300'
-                          : plan.popular ? 'text-white/50' : 'text-gray-400 dark:text-gray-500'
-                      }`}>
-                        {feature.name}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Select Button */}
-                <button
-                  onClick={() => handleSelectPlan(plan.id)}
-                  className={`w-full py-3 rounded-md font-semibold text-sm transition-all active:scale-95 border-none ${
-                    isSelected
-                      ? 'bg-amber-700 text-white hover:bg-amber-700'
-                      : plan.popular
-                      ? 'bg-amber-700 hover:bg-amber-800'
-                      : 'bg-slate-900 text-white hover:bg-amber-700 hover:text-white'
-                  }`}
-                >
-                  {isSelected ? '✓ Current Plan' : isFree ? 'Get Started' : 'Select Plan'}
-                </button>
-
-                {/* Guarantee */}
-                <p className={`text-[10px] text-center mt-3 ${
-                  plan.popular ? 'text-white/60' : 'text-gray-400 dark:text-gray-500'
-                }`}>
-                  <Lock className="w-3 h-3 inline mr-1" />
-                  Secure. Cancel anytime.
-                </p>
-              </div>
+              plan={plan}
+              isSelected={selectedPlan === plan.id}
+              billingCycle={billingCycle}
+              onSelect={handleSelectPlan}
+            />
+          ))
+        ) : (
+          <div className="col-span-3 bg-[#1a1d23] rounded-xl border border-[#2a2d33] p-16 text-center">
+            <div className="flex flex-col items-center gap-3">
+              <Crown className="size-12 text-[#8a8f98] opacity-30" />
+              <p className="font-bold text-white">No plans found</p>
+              <p className="text-sm text-[#8a8f98]">Subscription plans will appear here</p>
             </div>
-          )
-        }))
-        :(<div className="flex items-center col-span-3 bg-slate-600/20 dark:bg-slate-600/10 justify-center h-64">
-          <p className="text-white">No plans found</p>
-        </div>)}
+          </div>
+        )}
       </div>
 
       {/* Comparison Table */}
-      <div className="bg-white dark:bg-gray-600/10 rounded-md overflow-hidden mb-8">
-        <div className="p-6">
+      <div className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] overflow-hidden">
+        <div className="p-4 border-b border-[#2a2d33]">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-lg font-bold text-gray-900 dark:text-white">Compare Plans</span>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                Find the perfect fit for your needs
-              </p>
+              <h3 className="font-bold text-lg text-white flex items-center gap-2">
+                <TrendingUp className="size-5 text-[#1241a1]" />
+                Compare Plans
+              </h3>
+              <p className="text-sm text-[#8a8f98] mt-0.5">Find the perfect fit for your needs</p>
             </div>
-            <TrendingUp className="w-6 h-6 text-emerald-700" />
           </div>
         </div>
         
-        <div className="overflow-x-auto p-6">
-          <table className="w-full dark:bg-slate-800">
-            <thead>
-              <tr className="">
-                <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-[#2a2d33]">
+              <tr>
+                <th className="text-left py-3 px-4 text-[10px] font-bold text-[#8a8f98] uppercase tracking-wider">
                   Features
                 </th>
                 {plans.map((plan) => (
-                  <th key={plan.id} className="text-center py-3 px-4 text-sm font-semibold">
+                  <th key={plan.id} className="text-center py-3 px-4 text-[10px] font-bold text-[#8a8f98] uppercase tracking-wider">
                     <div className="flex items-center justify-center gap-2">
-                      <plan.icon className={`w-4 h-4 ${
-                        plan.popular ? 'text-slate-900' : 'text-gray-500'
-                      }`} />
-                      <span className={plan.popular ? 'text-slate-900' : 'text-gray-700 dark:text-gray-300'}>
-                        {plan.name}
-                      </span>
+                      <plan.icon className="w-4 h-4 text-[#1241a1]" />
+                      <span className="text-white">{plan.name}</span>
                     </div>
                     {plan.popular && (
-                      <span className="text-[10px] bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded-full font-semibold block mt-1">
+                      <span className="text-[10px] bg-[#1241a1]/20 text-[#1241a1] px-2 py-0.5 rounded-full font-bold block mt-1">
                         ★ Popular
                       </span>
                     )}
@@ -374,7 +341,7 @@ export default function SubscriptionPlansPage() {
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-[#2a2d33]">
               {[
                 'Access to resident portal',
                 'Pay service charges',
@@ -384,8 +351,8 @@ export default function SubscriptionPlansPage() {
                 'Visitor management',
                 'Premium support',
               ].map((feature, idx) => (
-                <tr key={idx} className="border-b dark:border-gray-400 ">
-                  <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">
+                <tr key={idx} className="hover:bg-[#2a2d33]/30 transition-colors">
+                  <td className="py-3 px-4 text-sm text-[#8a8f98] font-medium">
                     {feature}
                   </td>
                   {plans.map((plan) => {
@@ -393,9 +360,9 @@ export default function SubscriptionPlansPage() {
                     return (
                       <td key={plan.id} className="text-center py-3 px-4">
                         {included ? (
-                          <Check className="w-5 h-5 text-amber-700 mx-auto" />
+                          <Check className="w-5 h-5 text-[#1241a1] mx-auto" />
                         ) : (
-                          <span className="text-gray-300 dark:text-gray-600">—</span>
+                          <span className="text-[#2a2d33]">—</span>
                         )}
                       </td>
                     )
@@ -408,15 +375,20 @@ export default function SubscriptionPlansPage() {
       </div>
 
       {/* FAQ Section */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-[#1241a1]/10 dark:bg-[#1241a1]/20 rounded-md">
-            <MessageSquare className="w-5 h-5 text-amber-700" />
+      <div className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] overflow-hidden">
+        <div className="p-4 border-b border-[#2a2d33]">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-[#1241a1]/10 rounded-xl">
+              <MessageSquare className="w-5 h-5 text-[#1241a1]" />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg text-white">Frequently Asked Questions</h3>
+              <p className="text-sm text-[#8a8f98]">Quick answers to common questions</p>
+            </div>
           </div>
-          <span className="text-lg font-bold text-gray-900 dark:text-white">Frequently Asked Questions</span>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-4">
           {[
             {
               q: 'Can I change my plan later?',
@@ -437,54 +409,35 @@ export default function SubscriptionPlansPage() {
           ].map((faq, idx) => (
             <div 
               key={idx}
-              className="bg-slate-200/70 dark:bg-slate-600/20 rounded-md p-5 transition-colors"
+              className="bg-[#2a2d33] rounded-xl p-4 hover:bg-[#3a3d43] transition-colors"
             >
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-4 h-4 text-amber-700 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="w-4 h-4 text-[#1241a1] flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-semibold text-sm text-slate-900 dark:text-white mb-1">{faq.q}</span>
-                  <p className="text-sm text-slate-900 dark:text-slate-400">{faq.a}</p>
+                  <p className="font-bold text-sm text-white mb-1">{faq.q}</p>
+                  <p className="text-sm text-[#8a8f98] leading-relaxed">{faq.a}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
-       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <StatsCard 
-          title="Active Subscribers" 
-          value={totalSubscribers.toLocaleString()} 
-          icon={Users} 
-          color="blue" 
-        />
-        <StatsCard 
-          title="Average Rating" 
-          value={`${avgRating}/5`} 
-          icon={Star} 
-          color="amber" 
-        />
-        <StatsCard 
-          title="Satisfaction Rate" 
-          value={`${satisfactionRate}%`} 
-          icon={Heart} 
-          color="green" 
-        />
-      </div>
-
-      
-
 
       {/* CTA Section */}
-      <div className="bg-slate-600/20 rounded-md p-8 text-slate-900 dark:text-slate-400 text-center">
-        <span className="text-2xl font-bold mb-2 text-slate-900 dark:text-white">Ready to upgrade your experience?</span>
-        <p className="text-slate-900 dark:text-slate-400 mb-6 ">
-          Join thousands of satisfied residents enjoying premium estate management services.
-        </p>
-        <button className="bg-slate-600/20 dark:bg-slate-800 text-slate-900 dark:text-white px-8 py-3 rounded-md font-semibold hover:bg-amber-700 transition-all active:scale-95">
-          Get Started Today
-          <ArrowRight className="w-4 h-4 inline ml-2" />
-        </button>
+      <div className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] p-8 text-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="p-3 bg-[#1241a1]/10 rounded-full">
+            <Crown className="w-8 h-8 text-[#1241a1]" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-white">Ready to upgrade your experience?</h2>
+            <p className="text-[#8a8f98] mt-1">Join thousands of satisfied residents enjoying premium estate management services.</p>
+          </div>
+          <button className="bg-[#1241a1] hover:bg-[#1a51b1] text-white px-8 py-3 rounded-xl font-bold transition-all border-none flex items-center gap-2">
+            Get Started Today
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </div>
   )
