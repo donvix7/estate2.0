@@ -24,6 +24,7 @@ import BottomNav from '@/components/dashboard/BottomNav'
 import RoleGuard from '@/components/utils/Roleguard'
 import { getRole } from '@/lib/action'
 import { useTokenRefresh } from '@/lib/hooks/useTokenRefresh'
+import { toast } from 'react-toastify'
 
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
@@ -57,7 +58,7 @@ export default function AdminLayout({ children }) {
         const data = await getAdminData();
         setUserData(data);
       } catch (error) {
-        console.error('Failed to fetch admin data:', error);
+        toast.error('Failed to load dashboard data. Showing cached info.');
       }
     };
     fetchAdminData();

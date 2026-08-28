@@ -23,6 +23,7 @@ import BottomNav from '@/components/dashboard/BottomNav'
 import { getRole } from '@/lib/action'
 import RoleGuard from '@/components/utils/Roleguard'
 import { useTokenRefresh } from '@/lib/hooks/useTokenRefresh'
+import { toast } from 'react-toastify'
 
 export default function ResidentLayout({ children }) {
   const pathname = usePathname();
@@ -67,8 +68,12 @@ export default function ResidentLayout({ children }) {
     const loadUserData = async () => {
       const role = await getRole();
       setRole(role);
-      const data = await getResidentData();
-      setUserData(data);
+      try {
+        const data = await getResidentData();
+        setUserData(data);
+      } catch (error) {
+        toast.error('Failed to load dashboard data. Showing cached info.');
+      }
     };
     loadUserData();
   }, []);

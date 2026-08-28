@@ -18,6 +18,7 @@ import {
 import { getAdminData } from '@/lib/service'
 import BottomNav from '@/components/dashboard/BottomNav'
 import { useTokenRefresh } from '@/lib/hooks/useTokenRefresh'
+import { toast } from 'react-toastify'
 
 export default function SecurityLayout({ children }) {
   const pathname = usePathname();
@@ -42,7 +43,7 @@ export default function SecurityLayout({ children }) {
         const data = await getAdminData();
         setUserData(data);
       } catch (error) {
-        console.error('Failed to fetch security data:', error);
+        toast.error('Failed to load security data. Showing cached info.');
       }
     };
     fetchAdminData();

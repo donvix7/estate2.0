@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import { 
   Building2, 
   UserCheck, 
@@ -98,12 +97,12 @@ const QRScanner = ({ onScan, onClose }) => {
       <div className="relative w-full max-w-2xl bg-[#1a1d23] rounded-2xl overflow-hidden shadow-2xl border border-[#2a2d33]">
         <div className="flex items-center justify-between p-4 border-b border-[#2a2d33]">
           <div className="flex items-center gap-2 text-white">
-            <Scan className="size-5 text-[#1241a1]" />
-            <h3 className="font-semibold">Scan QR Code</h3>
+            <Scan className="size-5 text-gray-400" />
+            <span className="font-semibold">Scan QR Code</span>
           </div>
           <button 
             onClick={onClose}
-            className="text-[#8a8f98] hover:text-white transition-colors p-1 rounded-lg hover:bg-[#2a2d33]"
+            className="text-gray-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-[#2a2d33]"
           >
             <X className="size-5" />
           </button>
@@ -164,8 +163,6 @@ export default function LoginPage() {
     resident: {
       title: 'Welcome Home',
       subtitle: 'Access your estate management dashboard',
-      image: '/images/resident-bg.jpg',
-      fallbackImage: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=2000&auto=format&fit=crop',
       icon: Home,
       features: [
         'View your property details',
@@ -179,8 +176,6 @@ export default function LoginPage() {
     security: {
       title: 'Security Command',
       subtitle: 'Scan QR code for instant access',
-      image: '/images/security-bg.jpg',
-      fallbackImage: 'https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=2000&auto=format&fit=crop',
       icon: Shield,
       features: [
         'QR code authentication',
@@ -194,8 +189,6 @@ export default function LoginPage() {
     admin: {
       title: 'Admin Control Center',
       subtitle: 'Full estate management suite',
-      image: '/images/admin-bg.jpg',
-      fallbackImage: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2000&auto=format&fit=crop',
       icon: Building2,
       features: [
         'Resident management',
@@ -283,11 +276,12 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center p-4 overflow-hidden bg-[#0d0f13] font-sans">
-      {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 z-0 bg-center bg-cover bg-no-repeat opacity-20 transition-all duration-700"
-        style={{ backgroundImage: `url("${currentConfig.fallbackImage}")` }}
-      />
+      {/* Decorative Background */}
+      <div className="absolute inset-0 z-0 opacity-20 transition-all duration-700 pointer-events-none select-none">
+        <RoleIcon className="absolute -top-32 -right-32 size-96" strokeWidth={0.5} />
+        <RoleIcon className="absolute -bottom-40 -left-40 size-[28rem]" strokeWidth={0.5} />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(18,65,161,0.25),transparent_50%),radial-gradient(circle_at_80%_80%,rgba(18,65,161,0.15),transparent_50%)]" />
+      </div>
       <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#0d0f13]/80 via-[#0d0f13] to-[#0d0f13]" />
       
       {/* Main Login Card */}
@@ -295,19 +289,13 @@ export default function LoginPage() {
         
         {/* Left Side: Dynamic Visual Context */}
         <div className="hidden md:flex flex-1 flex-col justify-between p-10 relative min-h-[500px] overflow-hidden transition-all duration-700">
-          {/* Dynamic Background Image */}
-          <div className="absolute inset-0 z-0 transition-all duration-700">
-            <Image 
-              src={currentConfig.image}
-              alt={`${userType} background`}
-              fill
-              className="object-cover transition-all duration-700"
-              priority
-              onError={(e) => {
-                e.currentTarget.src = currentConfig.fallbackImage
-              }}
-            />
-            <div className={`absolute inset-0 bg-gradient-to-br ${currentConfig.gradient} transition-all duration-700`} />
+          {/* Decorative Icon Background */}
+          <div className={`absolute inset-0 z-0 bg-gradient-to-br ${currentConfig.gradient} transition-all duration-700`} />
+          <div className="absolute -top-10 -right-10 z-0 opacity-10 pointer-events-none select-none">
+            <RoleIcon className="size-72" strokeWidth={0.5} />
+          </div>
+          <div className="absolute -bottom-16 -left-16 z-0 opacity-5 pointer-events-none select-none">
+            <RoleIcon className="size-80" strokeWidth={0.5} />
           </div>
           
           {/* Content */}

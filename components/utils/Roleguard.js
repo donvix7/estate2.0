@@ -17,6 +17,8 @@ export default function RoleGuard({ role, allowedRoles = [], children }) {
       return;
     }
 
+    // If the role API/cookie fails to resolve, fall through to children
+    // instead of blocking the user out.
     const timer = setTimeout(() => setReady(true), ROLE_LOAD_TIMEOUT);
     return () => clearTimeout(timer);
   }, [role]);
@@ -32,6 +34,12 @@ export default function RoleGuard({ role, allowedRoles = [], children }) {
         </div>
       </div>
     );
+  }
+
+  // Unknown role (null) is treated as pass-through — a failed role lookup
+  // should never lock the user out of their dashboard.
+  if (role == null) {
+    return children;
   }
 
   if (authorized) {
