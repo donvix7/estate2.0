@@ -19,9 +19,10 @@ import {
   Scan,
   CheckCircle,
   Loader2,
-  Home
+  Home,
+  KeyRound
 } from 'lucide-react'
-import { handleAdminLogin, handleSecurityLogin, handleUserLogin } from '@/lib/action'
+import { handleAdminLogin, handleSecurityLogin, handleUserLogin, setRole } from '@/lib/action'
 import { Html5Qrcode } from 'html5-qrcode'
 
 // QR Scanner component
@@ -115,6 +116,9 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showQRScanner, setShowQRScanner] = useState(false)
   const [scanSuccess, setScanSuccess] = useState(false)
+  const [pendingQrLogin, setPendingQrLogin] = useState(null)
+  const [qrPin, setQrPin] = useState('')
+  const [qrPinError, setQrPinError] = useState('')
   const router = useRouter()
 
   // Role-specific content configuration
@@ -200,47 +204,63 @@ export default function LoginPage() {
   const handleQRScan = async (scannedData) => {
     try {
       // Parse QR code data — expected JSON payload:
-      // { "username": "gate_guard_01", "pin": "123456", "gateId": "..." }
-      let username, pin, gateId
+      // { "username": "gate_guard_01", "gateId": "..." }
+      let username, gateId
 
       try {
         const payload = JSON.parse(scannedData)
         username = payload.username
-        pin = payload.pin
         gateId = payload.gateId
       } catch (e) {
-        // Legacy fallback: email|gateId|token
-        const [parsedEmail, parsedGateId, token] = scannedData.split('|')
-        username = parsedEmail
-        pin = token
+        // Legacy fallback: username|gateId
+        const [parsedUsername, parsedGateId] = scannedData.split('|')
+        username = parsedUsername
         gateId = parsedGateId
       }
 
-      if (!username || !pin || !gateId) {
+      if (!username || !gateId) {
         setError('Invalid QR code format')
         setShowQRScanner(false)
         return
       }
 
       setScanSuccess(true)
-
-      // Auto-login after successful scan
-      setIsLoading(true)
-      
-      const result = await handleSecurityLogin(username, pin, gateId)
-      
-      if (result.success) {
-        router.push('/auth/proceed?role=security')
-      } else {
-        setError(result.errors?.[0] || result.message || 'Security login failed')
-        setIsLoading(false)
-        setScanSuccess(false)
-      }
+      setQrPin('')
+      setQrPinError('')
+      setPendingQrLogin({ username, gateId })
     } catch (error) {
       setError('Failed to process QR code')
-      setIsLoading(false)
     } finally {
       setShowQRScanner(false)
+    }
+  }
+
+  // Trigger the security login with the scanned username/gateId + entered PIN
+  const handleSecurityLoginSubmit = async (e) => {
+    e.preventDefault()
+    if (!pendingQrLogin) return
+
+    if (!qrPin || qrPin.length < 6) {
+      setQrPinError('Please enter your 6-digit PIN')
+      return
+    }
+
+    setQrPinError('')
+    setIsLoading(true)
+
+    try {
+      const result = await handleSecurityLogin(pendingQrLogin.username, qrPin, pendingQrLogin.gateId)
+
+      if (result.success) {
+        await setRole('security')
+        router.push('/dashboard/security')
+      } else {
+        setQrPinError(result.errors?.[0] || result.message || 'Security login failed')
+        setIsLoading(false)
+      }
+    } catch (error) {
+      setQrPinError('Failed to process login')
+      setIsLoading(false)
     }
   }
 
@@ -515,6 +535,79 @@ export default function LoginPage() {
             setScanSuccess(false)
           }}
         />
+      )}
+
+      {/* PIN Entry Modal — shown after scanning the login QR */}
+      {pendingQrLogin && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className="relative w-full max-w-sm bg-[#1a1d23] rounded-2xl overflow-hidden shadow-2xl border border-[#2a2d33]">
+            <div className="flex items-center justify-between p-4 border-b border-[#2a2d33]">
+              <div className="flex items-center gap-2 text-white">
+                <KeyRound className="size-5 text-[#1241a1]" />
+                <h3 className="font-semibold">Enter Security PIN</h3>
+              </div>
+              <button
+                onClick={() => {
+                  setPendingQrLogin(null)
+                  setQrPinError('')
+                  setScanSuccess(false)
+                }}
+                className="text-[#8a8f98] hover:text-white transition-colors p-1 rounded-lg hover:bg-[#2a2d33]"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSecurityLoginSubmit} className="p-6 space-y-5">
+              <div className="bg-[#0d0f13] rounded-xl p-4 border border-[#2a2d33] space-y-1.5">
+                <div className="flex items-center justify-between gap-3 text-sm">
+                  <span className="text-[#8a8f98]">Guard</span>
+                  <span className="text-white font-bold font-mono truncate">{pendingQrLogin.username}</span>
+                </div>
+                <div className="flex items-center justify-between gap-3 text-sm">
+                  <span className="text-[#8a8f98]">Gate</span>
+                  <span className="text-white font-bold truncate">{pendingQrLogin.gateId}</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-[#8a8f98] ml-1 mb-1.5 block">
+                  PIN (6 digits)
+                </label>
+                <input
+                  type="password"
+                  value={qrPin}
+                  onChange={(e) => setQrPin(e.target.value)}
+                  placeholder="••••••"
+                  maxLength={6}
+                  pattern="[0-9]{6}"
+                  inputMode="numeric"
+                  autoFocus
+                  className="w-full bg-[#0d0f13] text-white text-center tracking-[0.5em] font-mono text-xl border border-[#2a2d33] py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] focus:border-[#1241a1] outline-none transition-all placeholder:text-[#8a8f98]"
+                />
+                {qrPinError && (
+                  <p className="mt-2 text-xs text-red-400 flex items-center gap-1">
+                    <AlertCircle className="size-3.5 shrink-0" />
+                    {qrPinError}
+                  </p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-3.5 bg-[#1241a1] hover:bg-[#1a51b1] text-white font-bold rounded-xl transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-[#1241a1]/30 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <Loader2 className="size-5 animate-spin" />
+                ) : (
+                  <Shield className="size-5" />
+                )}
+                {isLoading ? 'Verifying PIN...' : 'Sign In & Enter Dashboard'}
+              </button>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   )

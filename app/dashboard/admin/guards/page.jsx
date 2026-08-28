@@ -371,10 +371,9 @@ export default function GuardsManagementPage() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // Build the login payload embedded in the QR code
+// Build the login payload embedded in the QR code (PIN intentionally excluded — entered on the guard's device)
   const buildLoginPayload = (guard) => ({
     username: guard.username,
-    pin: guard.pin,
     gateId: guard.gateId || guard.assignedGate || ''
   });
 
@@ -382,7 +381,7 @@ export default function GuardsManagementPage() {
   const generateLoginQR = async (guard) => {
     const payload = buildLoginPayload(guard);
     if (!payload.username || !payload.gateId) {
-      toast.error('Guard is missing username, PIN, or gate assignment');
+      toast.error('Guard is missing username or gate assignment');
       return;
     }
 
@@ -1116,12 +1115,12 @@ export default function GuardsManagementPage() {
                       <span className="text-white font-bold">{qrGuard.payload.username}</span>
                     </div>
                     <div className="flex items-center justify-between gap-3">
-                      <span className="text-[#8a8f98]">PIN</span>
-                      <span className="text-white font-bold tracking-widest">{qrGuard.payload.pin}</span>
-                    </div>
-                    <div className="flex items-center justify-between gap-3">
                       <span className="text-[#8a8f98]">Gate</span>
                       <span className="text-white font-bold">{getGateName(qrGuard.payload.gateId)}</span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-[#8a8f98]">PIN</span>
+                      <span className="text-amber-400 font-bold text-[10px]">Entered on device</span>
                     </div>
                   </div>
 
