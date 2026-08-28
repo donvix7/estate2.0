@@ -461,7 +461,7 @@ export default function LoginPage() {
       {/* PIN Entry Modal — shown after scanning the gate QR */}
       {pendingQrLogin && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300">
-          <div className="relative w-full max-w-sm bg-[#1a1d23] rounded-2xl overflow-hidden shadow-2xl border border-[#2a2d33]">
+          <div className="relative w-full max-w-2xl bg-[#1a1d23] rounded-2xl overflow-hidden shadow-2xl border border-[#2a2d33]">
             <div className="flex items-center justify-between p-4 border-b border-[#2a2d33]">
               <div className="flex items-center gap-2 text-white">
                 <KeyRound className="size-5 text-[#1241a1]" />
