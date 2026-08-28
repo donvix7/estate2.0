@@ -219,7 +219,6 @@ export default function LoginPage() {
           router.push('/auth/proceed?role=admin')
         }
       } 
-      
       else if (userType === 'resident') {
         const result = await handleUserLogin(email, password)
         console.log(result)
@@ -466,12 +465,12 @@ export default function LoginPage() {
                     Email Address
                   </label>
                   <div className="relative group">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8f98] group-focus-within:text-[#1241a1] size-5 transition-colors" />
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8f98] group-focus-within:text-cyan-500 size-5 transition-colors" />
                     <input 
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-[#0d0f13] text-white border border-[#2a2d33] pl-14 pr-4 py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] focus:border-[#1241a1] outline-none transition-all placeholder:text-[#8a8f98]"
+                      className="w-full bg-[#0d0f13] text-white border border-[#2a2d33] pl-14 pr-4 py-3.5 rounded-xl focus:ring-2 focus:ring-cyan-800 focus:border-cyan-800 outline-none transition-all placeholder:text-[#8a8f98]"
                       placeholder={userType === 'resident' ? 'resident@demo.com' : 'admin@demo.com'}
                       required
                       disabled={isLoading}
@@ -482,12 +481,12 @@ export default function LoginPage() {
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-semibold text-[#8a8f98] ml-1">Password</label>
                   <div className="relative group">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8f98] group-focus-within:text-[#1241a1] size-5 transition-colors" />
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8f98] group-focus-within:text-cyan-500 size-5 transition-colors" />
                     <input 
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full bg-[#0d0f13] text-white border border-[#2a2d33] pl-14 pr-14 py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] focus:border-[#1241a1] outline-none transition-all placeholder:text-[#8a8f98]"
+                      className="w-full bg-[#0d0f13] text-white border border-[#2a2d33] pl-14 pr-14 py-3.5 rounded-xl focus:ring-2 focus:ring-cyan-800 focus:border-cyan-800 outline-none transition-all placeholder:text-[#8a8f98]"
                       placeholder="••••••••"
                       required
                       disabled={isLoading}
@@ -495,7 +494,7 @@ export default function LoginPage() {
                     <button 
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8a8f98] hover:text-[#1241a1] transition-colors"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8a8f98] hover:text-cyan-500 transition-colors"
                       disabled={isLoading}
                     >
                       {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
