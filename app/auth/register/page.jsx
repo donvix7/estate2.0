@@ -180,11 +180,11 @@ export default function EstateRegistrationPage() {
             </div>
 
             <div className="text-center lg:text-left mb-8">
-                <h1 className="text-3xl lg:text-4xl font-bold text-gray-700 mb-3 tracking-tight">
+                <span className="text-3xl lg:text-4xl font-bold text-gray-700 mb-3 tracking-tight">
                     {step === 1 && 'Tell us about your estate'}
                     {step === 2 && 'Who will manage this account?'}
                     {step === 3 && 'Configure your security'}
-                </h1>
+                </span>
                 <p className="text-gray-500 mt-2 text-lg">
                     {step === 1 && 'We need some basic details to get you set up.'}
                     {step === 2 && 'Provide contact details for the primary administrator.'}

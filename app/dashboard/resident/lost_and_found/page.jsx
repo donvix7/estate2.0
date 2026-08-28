@@ -165,7 +165,7 @@ export default function LostAndFoundPage() {
  {/* Header */}
  <div className="flex items-center justify-between flex-wrap gap-4">
  <div>
- <h1 className="text-2xl font-bold text-white">Lost & Found</h1>
+ <span className="text-2xl font-bold text-white">Lost & Found</span>
  <p className="text-[#8a8f98] text-sm font-medium">Browse reported items across the estate. Help reunite lost items with their owners.</p>
  </div>
  <div className="flex items-center gap-3">

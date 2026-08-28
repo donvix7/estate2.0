@@ -10,6 +10,7 @@ const iconToneMap = {
   red: 'bg-red-500/10 text-red-400 border-none',
   orange: 'bg-orange-500/10 text-orange-400 border-none',
   slate: 'bg-[#2a2d33]/10 text-[#8a8f98] border-none',
+  cyan: 'bg-cyan-500/10 text-cyan-500 border-none',
 };
 
 export default function MetricCard({ color, tone, icon, label, value, trend, trendColor = 'text-emerald-500' }) {

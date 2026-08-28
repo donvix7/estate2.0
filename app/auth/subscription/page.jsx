@@ -210,7 +210,7 @@ export default function SubscriptionPlansPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Subscription Plans</h1>
+          <span className="text-2xl font-bold text-white">Subscription Plans</span>
           <p className="text-[#8a8f98] text-sm font-medium">Choose the perfect plan for your estate living experience.</p>
         </div>
         <Link 

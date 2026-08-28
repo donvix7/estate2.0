@@ -252,7 +252,7 @@ export default function AnnouncementsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Announcements</h1>
+          <span className="text-2xl font-bold text-white">Announcements</span>
           <p className="text-[#8a8f98] text-sm font-medium">Stay updated with the latest community news and system updates.</p>
         </div>
         <div className="flex items-center gap-3">

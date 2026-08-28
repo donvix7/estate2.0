@@ -513,12 +513,12 @@ export default function HomePage() {
           <div className="absolute top-24 -right-40 w-[380px] h-[380px] md:w-[520px] md:h-[520px] bg-emerald-200/40 dark:bg-emerald-900/20 rounded-full blur-[110px] animate-pulse pointer-events-none" style={{ animationDuration: '10s' }} />
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[260px] bg-amber-100/50 dark:bg-amber-900/10 rounded-full blur-[100px] pointer-events-none" />
 
-          <h1 className="text-[32px] sm:text-[48px] md:text-[64px] lg:text-[82px] leading-[1.05] tracking-[-0.03em] sm:tracking-[-0.04em] font-bold text-balance max-w-4xl mb-4 sm:mb-6 lg:mb-8 text-text animate-in fade-in slide-in-from-bottom-6 duration-700">
+          <span className="text-[32px] sm:text-[48px] md:text-[64px] lg:text-[82px] leading-[1.05] tracking-[-0.03em] sm:tracking-[-0.04em] font-bold text-balance max-w-4xl mb-4 sm:mb-6 lg:mb-8 text-text animate-in fade-in slide-in-from-bottom-6 duration-700">
             Bring every estate into{' '}
             <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500 bg-clip-text text-transparent">
               focus
             </span>
-          </h1>
+          </span>
           <p className="text-base sm:text-lg md:text-body-lg text-muted max-w-2xl mb-6 sm:mb-8 lg:mb-10 px-2 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-150">
             Streamline property management, visitor control, and billing collections. Bring absolute clarity to your community&apos;s safety and operations.
           </p>

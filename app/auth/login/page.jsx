@@ -22,82 +22,60 @@ import {
   Home
 } from 'lucide-react'
 import { handleAdminLogin, handleSecurityLogin, handleUserLogin } from '@/lib/action'
+import { Html5Qrcode } from 'html5-qrcode'
 
 // QR Scanner component
 const QRScanner = ({ onScan, onClose }) => {
-  const videoRef = useRef(null)
-  const canvasRef = useRef(null)
   const [scanning, setScanning] = useState(true)
   const [error, setError] = useState('')
+  const scannerRef = useRef(null)
+  const regionId = 'qr-login-scan-region'
 
   useEffect(() => {
-    let stream = null
-    let animationFrame = null
+    let active = true
 
-    const startCamera = async () => {
+    const startScanner = async () => {
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ 
-          video: { facingMode: 'environment' } 
-        })
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream
-          await videoRef.current.play()
-          scanQRCode()
+        if (scannerRef.current) {
+          scannerRef.current.stop().catch(() => {})
         }
+        scannerRef.current = new Html5Qrcode(regionId)
+
+        await scannerRef.current.start(
+          { facingMode: 'environment' },
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          (decodedText) => {
+            if (!active) return
+            setScanning(false)
+            scannerRef.current.stop().catch(() => {})
+            onScan(decodedText)
+          },
+          () => {}
+        )
       } catch (err) {
-        setError('Unable to access camera. Please ensure camera permissions are granted.')
-        console.error('Camera error:', err)
-      }
-    }
-
-    const scanQRCode = () => {
-      if (!videoRef.current || !canvasRef.current || !scanning) return
-
-      const video = videoRef.current
-      const canvas = canvasRef.current
-      const context = canvas.getContext('2d')
-
-      if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        canvas.width = video.videoWidth
-        canvas.height = video.videoHeight
-        context.drawImage(video, 0, 0, canvas.width, canvas.height)
-        
-        const imageData = context.getImageData(0, 0, canvas.width, canvas.height)
-        const code = decodeQRCode(imageData)
-        
-        if (code) {
-          setScanning(false)
-          onScan(code)
-          return
+        if (active) {
+          setError('Unable to access camera. Please ensure camera permissions are granted.')
+          console.error('Camera error:', err)
         }
       }
-
-      animationFrame = requestAnimationFrame(scanQRCode)
     }
 
-    startCamera()
+    if (scanning) startScanner()
 
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop())
-      }
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame)
+      active = false
+      if (scannerRef.current) {
+        scannerRef.current.stop().catch(() => {})
       }
     }
-  }, [onScan, scanning])
-
-  const decodeQRCode = (imageData) => {
-    // Placeholder - use a proper QR library in production
-    return null
-  }
+  }, [scanning, onScan])
 
   return (
     <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300">
       <div className="relative w-full max-w-2xl bg-[#1a1d23] rounded-2xl overflow-hidden shadow-2xl border border-[#2a2d33]">
         <div className="flex items-center justify-between p-4 border-b border-[#2a2d33]">
           <div className="flex items-center gap-2 text-white">
-            <Scan className="size-5 text-gray-400" />
+            <Scan className="size-5 text-[#1241a1]" />
             <span className="font-semibold">Scan QR Code</span>
           </div>
           <button 
@@ -108,26 +86,7 @@ const QRScanner = ({ onScan, onClose }) => {
           </button>
         </div>
 
-        <div className="relative aspect-square bg-black">
-          <video 
-            ref={videoRef} 
-            className="w-full h-full object-cover"
-            playsInline
-          />
-          <canvas ref={canvasRef} className="hidden" />
-          
-          <div className="absolute inset-0 border-2 border-white/30 rounded-lg m-8 pointer-events-none">
-            <div className="absolute inset-0 border-2 border-[#1241a1]/50 animate-pulse rounded-lg" />
-            <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-[#1241a1]" />
-            <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-[#1241a1]" />
-            <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-[#1241a1]" />
-            <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-[#1241a1]" />
-          </div>
-          
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#1241a1] to-transparent animate-scanner" />
-          </div>
-        </div>
+        <div id={regionId} className="relative aspect-square w-full bg-black" />
 
         <div className="p-4 border-t border-[#2a2d33]">
           {error ? (
@@ -240,10 +199,24 @@ export default function LoginPage() {
   // Handle QR code scan - ONLY for security
   const handleQRScan = async (scannedData) => {
     try {
-      // Parse QR code data (expected format: email|gateId|token)
-      const [scannedEmail, scannedGateId, token] = scannedData.split('|')
-      
-      if (!scannedEmail || !scannedGateId || !token) {
+      // Parse QR code data — expected JSON payload:
+      // { "username": "gate_guard_01", "pin": "123456", "gateId": "..." }
+      let username, pin, gateId
+
+      try {
+        const payload = JSON.parse(scannedData)
+        username = payload.username
+        pin = payload.pin
+        gateId = payload.gateId
+      } catch (e) {
+        // Legacy fallback: email|gateId|token
+        const [parsedEmail, parsedGateId, token] = scannedData.split('|')
+        username = parsedEmail
+        pin = token
+        gateId = parsedGateId
+      }
+
+      if (!username || !pin || !gateId) {
         setError('Invalid QR code format')
         setShowQRScanner(false)
         return
@@ -254,12 +227,12 @@ export default function LoginPage() {
       // Auto-login after successful scan
       setIsLoading(true)
       
-      const result = await handleSecurityLogin(scannedEmail, token, scannedGateId)
+      const result = await handleSecurityLogin(username, pin, gateId)
       
       if (result.success) {
         router.push('/auth/proceed?role=security')
       } else {
-        setError(result.errors?.[0] || 'Security login failed')
+        setError(result.errors?.[0] || result.message || 'Security login failed')
         setIsLoading(false)
         setScanSuccess(false)
       }
@@ -304,7 +277,7 @@ export default function LoginPage() {
                 <div className="p-2 bg-white/20 backdrop-blur rounded-lg text-white shadow-lg group-hover:scale-110 transition-transform">
                   <Building2 className="size-6" />
                 </div>
-                <h1 className="text-2xl font-bold tracking-tight text-white">EMSS</h1>
+                <span className="text-2xl font-bold tracking-tight text-white">EMSS</span>
               </div>
               
               <div className="flex items-center gap-3 mb-3">

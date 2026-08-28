@@ -42,9 +42,9 @@ export default function DashboardSidebar({ links, user, role, estateName }) {
             <Building2 className="size-6" />
           </div>
           <div>
-            <h1 className="text-lg font-bold leading-tight tracking-tight text-white">
+            <span className="text-lg font-bold leading-tight tracking-tight text-white">
               EMSS
-            </h1>
+            </span>
             <p className="text-[#8a8f98] text-xs font-semibold tracking-widest">
               {getRoleDisplay()}
             </p>

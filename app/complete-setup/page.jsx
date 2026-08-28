@@ -139,10 +139,10 @@ export default function EstateRegistrationPage() {
             
 
             <div className="text-center lg:text-left mb-8">
-                <h1 className="text-3xl lg:text-4xl font-bold text-gray-700 mb-3 tracking-tight">
+                <span className="text-3xl lg:text-4xl font-bold text-gray-700 mb-3 tracking-tight">
                     {step === 1 && 'Complete your setup'}
 
-                </h1>
+                </span>
                 <p className="text-gray-500 mt-2 text-lg">
                     {step === 1 && 'Fill in your details to complete your registration.'}
 

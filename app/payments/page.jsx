@@ -848,9 +848,9 @@ export default function PaymentPage() {
             <div className="lg:col-span-2">
               <div className="bg-white border-gray-200">
                 <div className="p-6 border-b border-gray-200">
-                  <h1 className="text-2xl font-bold text-gray-900">
+                  <span className="text-2xl font-bold text-gray-900">
                     Complete Your Payment
-                  </h1>
+                  </span>
                   <p className="text-gray-600 mt-2">
                     Secure payment powered by multiple payment gateways
                   </p>

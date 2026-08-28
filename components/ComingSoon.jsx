@@ -11,9 +11,9 @@ const ComingSoon = ({
       <div className="w-24 h-24 bg-[#1a1d23] rounded-full flex items-center justify-center mb-6 shadow-sm ">
         <Icon className="w-12 h-12 text-blue-500" />
       </div>
-      <h1 className="text-3xl font-bold text-white text-white mb-4">
+      <span className="text-3xl font-bold text-white text-white mb-4">
         {title}
-      </h1>
+      </span>
       <p className="text-[#8a8f98] text-[#8a8f98]  mx-auto text-lg leading-relaxed">
         {description}
       </p>

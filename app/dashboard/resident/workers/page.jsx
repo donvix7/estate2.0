@@ -188,7 +188,7 @@ export default function WorkersDirectoryPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Estate Services Directory</h1>
+          <span className="text-2xl font-bold text-white">Estate Services Directory</span>
           <p className="text-[#8a8f98] text-sm font-medium">Browse verified professionals for all your estate maintenance needs.</p>
         </div>
         <button className="bg-[#1241a1] hover:bg-[#1a51b1] text-white px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all border-none">

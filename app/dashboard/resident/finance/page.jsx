@@ -368,7 +368,7 @@ export default function FinancePage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Bills & Invoices</h1>
+          <span className="text-2xl font-bold text-white">Bills & Invoices</span>
           <p className="text-[#8a8f98] text-sm font-medium">Manage your property payments and view transaction history.</p>
         </div>
         <div className="flex items-center gap-4">

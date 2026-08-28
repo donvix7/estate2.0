@@ -10,7 +10,7 @@ export default function ResumePreview({ data, template }) {
       <div className="h-full bg-white p-8 font-sans flex flex-col">
         {/* Header */}
         <header className="border-b-4 border-[#1241a1] pb-6 mb-6">
-          <h1 className="text-4xl font-black text-white tracking-tight uppercase">{personal.fullName || 'Your Name'}</h1>
+          <span className="text-4xl font-black text-white tracking-tight uppercase">{personal.fullName || 'Your Name'}</span>
           <p className="text-xl font-bold text-[#1241a1] mt-1">{personal.jobTitle || 'Your Profession'}</p>
           
           <div className="flex flex-wrap gap-4 mt-4 text-[10px] font-bold text-white0 uppercase tracking-widest">
@@ -107,7 +107,7 @@ export default function ResumePreview({ data, template }) {
     classic: (
         <div className="h-full bg-white p-12 font-serif">
             <div className="text-center border-b border-[#2a2d33] pb-8 mb-8">
-                <h1 className="text-3xl font-black">{personal.fullName || 'Your Name'}</h1>
+                <span className="text-3xl font-black">{personal.fullName || 'Your Name'}</span>
                 <div className="flex justify-center flex-wrap gap-4 mt-2 text-xs">
                     <span>{personal.email}</span>
                     <span>{personal.phone}</span>
@@ -156,7 +156,7 @@ export default function ResumePreview({ data, template }) {
     minimal: (
       <div className="h-full bg-white p-10 font-sans flex flex-col">
         <header className="mb-10">
-          <h1 className="text-2xl font-light text-white tracking-tight">{personal.fullName || 'Your Name'}</h1>
+          <span className="text-2xl font-light text-white tracking-tight">{personal.fullName || 'Your Name'}</span>
           <p className="text-sm text-[#8a8f98] mt-1">{personal.jobTitle || 'Your Profession'}</p>
           <div className="flex gap-4 mt-2 text-[10px] text-[#8a8f98]">
              <span>{personal.email}</span>

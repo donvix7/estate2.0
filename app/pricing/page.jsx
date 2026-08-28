@@ -639,7 +639,7 @@ export default function PricingPage() {
             <span className="text-sm font-medium text-gray-700">TRANSPARENT PRICING</span>
           </div>
           
-          <h1 
+          <span 
             
             
             
@@ -651,7 +651,7 @@ export default function PricingPage() {
             <span  className="block text-gray-900">
               Pricing
             </span>
-          </h1>
+          </span>
           
           <p 
             

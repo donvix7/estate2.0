@@ -214,7 +214,7 @@ export default function SecurityPage() {
       certification: "Level 1 Service Provider",
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10span8M7 15spanm4 0spanm-7 4span2a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
         </svg>
       )
     }
@@ -282,10 +282,10 @@ export default function SecurityPage() {
             <Shield className="w-4 h-4" />
             Enterprise Security Solutions
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+          <span className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             Comprehensive Security Infrastructure
             <span className="block text-red-600 mt-2">For Modern Communities</span>
-          </h1>
+          </span>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             End-to-end security platform integrating cutting-edge surveillance, access control, and monitoring technologies with military-grade encryption and AI-powered threat detection.
           </p>

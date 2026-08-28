@@ -90,7 +90,7 @@ const Hero = () => {
           </div>
 
           {/* Main Headline - Editorial Style */}
-          <h1
+          <span
             
             
             
@@ -98,7 +98,7 @@ const Hero = () => {
           >
             <span className='text-gray-100 font-serif'>Exclusive Living.</span> <br />
             <span className="italic text-[#8a8f98] ">Smartly Managed.</span>
-          </h1>
+          </span>
 
           <p
             

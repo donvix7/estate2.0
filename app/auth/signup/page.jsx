@@ -145,7 +145,7 @@ export default function EstateOnboardingPage() {
   <div className="relative z-10 p-10 flex flex-col justify-center items-center h-full">
     {/* ... your content ... */}
     <div className="border border-slate-400/50 bg-white/10 backdrop-blur-md p-10 rounded-xl text-white">
-      <h1 className="text-3xl md:text-4xl text-center font-bold text-white">Welcome to <span className='text-slate-900'>EMSS</span></h1>
+      <span className="text-3xl md:text-4xl text-center font-bold text-white">Welcome to <span className='text-slate-900'>EMSS</span></span>
       <p className="text-center text-white mt-4 text-sm md:text-base">The best platform for estate management and community living</p>
       
     </div>
@@ -159,7 +159,7 @@ export default function EstateOnboardingPage() {
               <div className="p-2 bg-[#1241a1] rounded-lg text-white shadow-lg group-hover:scale-110 transition-transform">
                 <Building2 className="size-6" />
               </div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100">EMSS</h1>
+              <span className="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100">EMSS</span>
             </div>
             <span className="text-2xl font-bold text-slate-900 dark:text-slate-200">Create Account</span>
             <p className="text-slate-600 dark:text-slate-300 text-sm">Step {currentStep} of {totalSteps}</p>

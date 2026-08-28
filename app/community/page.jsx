@@ -259,10 +259,10 @@ export default function CommunityPage() {
             <Users className="w-4 h-4" />
             Community Engagement Platform
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+          <span className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             Transform Your Neighborhood
             <span className="block text-green-600 mt-2">Into a Connected Community</span>
-          </h1>
+          </span>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             The all-in-one platform that combines communication, event management, resource sharing, and governance tools to build stronger, more engaged neighborhoods.
           </p>
