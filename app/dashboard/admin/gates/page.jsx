@@ -24,9 +24,13 @@ import {
   RefreshCw,
   Lock,
   Building2,
-  MoreHorizontal
+  MoreHorizontal,
+  QrCode,
+  Download,
+  Loader2
 } from 'lucide-react';
 import { toast } from 'react-toastify';
+import QRCode from 'qrcode';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { BackButton } from '@/components/ui/BackButton';
 import { Button } from '@/components/ui/Button';
@@ -71,6 +75,11 @@ export default function GatesManagementPage() {
   // Delete Confirmation Modal State
   const [deletingGate, setDeletingGate] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Gate Login QR Modal State
+  const [qrGate, setQrGate] = useState(null);
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
+  const [qrLoading, setQrLoading] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -210,6 +219,54 @@ export default function GatesManagementPage() {
     setCopiedId(id);
     toast.info(`Copied gate code: ${code}`);
     setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  // Build the gate login payload — QR only carries the gateId. The guard
+  // enters their username + PIN on the device after scanning.
+  const buildGatePayload = (gate) => ({
+    gateId: gate.id || gate._id || gate.code || gate.gateId || ''
+  });
+
+  // Generate a login QR code for a gate
+  const generateGateQR = async (gate) => {
+    const payload = buildGatePayload(gate);
+    if (!payload.gateId) {
+      toast.error('Gate is missing an ID');
+      return;
+    }
+
+    setQrLoading(true);
+    try {
+      const dataUrl = await QRCode.toDataURL(JSON.stringify(payload), {
+        width: 400,
+        margin: 2,
+        color: { dark: '#0d0f13', light: '#ffffff' }
+      });
+      setQrCodeDataUrl(dataUrl);
+      setQrGate({ ...gate, payload });
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+      toast.error('Failed to generate QR code');
+    } finally {
+      setQrLoading(false);
+    }
+  };
+
+  // Download the QR as a PNG image
+  const downloadQR = () => {
+    if (!qrCodeDataUrl || !qrGate) return;
+    const link = document.createElement('a');
+    link.href = qrCodeDataUrl;
+    link.download = `${qrGate.name || qrGate.gateName || 'gate'}-login-qr.png`;
+    link.click();
+    toast.success('QR code downloaded');
+  };
+
+  // Copy the raw JSON payload
+  const copyQrPayload = () => {
+    if (!qrGate?.payload) return;
+    navigator.clipboard.writeText(JSON.stringify(qrGate.payload));
+    toast.info('Gate payload copied to clipboard');
   };
 
   // Filtered Gates
@@ -423,6 +480,13 @@ export default function GatesManagementPage() {
                 {/* Actions */}
                 <div className="mt-4 pt-4 flex items-center justify-end gap-2">
                   <button
+                    onClick={() => generateGateQR(gate)}
+                    className="p-2 text-[#8a8f98] hover:text-cyan-500 hover:bg-cyan-500/10 rounded-lg transition-all border-none bg-transparent cursor-pointer"
+                    title="Generate Gate Login QR Code"
+                  >
+                    <QrCode className="size-4" />
+                  </button>
+                  <button
                     onClick={() => handleOpenEditModal(gate)}
                     className="p-2 text-[#8a8f98] hover:text-[#1241a1] hover:bg-[#1241a1]/10 rounded-lg transition-all border-none bg-transparent cursor-pointer"
                     title="Edit Gate"
@@ -477,6 +541,13 @@ export default function GatesManagementPage() {
                         </td>
                         <td className="px-6 py-4 text-right">
                           <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => generateGateQR(gate)}
+                              className="p-1.5 text-cyan-500 hover:bg-[#1241a1]/10 rounded-lg transition-all border-none bg-transparent cursor-pointer"
+                              title="Generate Gate Login QR Code"
+                            >
+                              <QrCode className="size-4" />
+                            </button>
                             <button
                               onClick={() => handleOpenEditModal(gate)}
                               className="p-1.5 text-[#8a8f98] hover:text-[#1241a1] hover:bg-[#1241a1]/10 rounded-lg transition-all border-none bg-transparent cursor-pointer"
@@ -659,6 +730,107 @@ export default function GatesManagementPage() {
               >
                 {isDeleting ? 'Deleting...' : 'Confirm Delete'}
               </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* GATE LOGIN QR MODAL */}
+      {qrGate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0d0f13]/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div
+            className="bg-[#0d0f13] rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="p-5 flex items-center justify-between bg-[#1241a1] sticky top-0 z-10">
+              <div className="flex items-center gap-3">
+                <div className="p-2 text-white bg-[#1241a1] rounded-xl">
+                  <QrCode className="size-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg text-white">{qrGate.name || qrGate.gateName || 'Gate'} Login QR</h3>
+                  <p className="text-[11px] text-white/70 font-medium">
+                    Guards scan this at the gate to log in
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setQrGate(null)}
+                className="p-2 text-white hover:text-white rounded-full transition-colors border-none bg-transparent cursor-pointer"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              {qrLoading ? (
+                <div className="py-12 flex flex-col items-center justify-center gap-3">
+                  <Loader2 className="size-8 text-[#1241a1] animate-spin" />
+                  <p className="text-xs text-[#8a8f98] font-medium">Generating QR code...</p>
+                </div>
+              ) : (
+                <>
+                  {/* QR Code Image */}
+                  <div className="bg-white rounded-2xl p-4 flex items-center justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={qrCodeDataUrl}
+                      alt={`Login QR for ${qrGate.name || qrGate.gateName || 'gate'}`}
+                      className="w-56 h-56 object-contain"
+                    />
+                  </div>
+
+                  {/* Gate Summary */}
+                  <div className="bg-[#1a1d23] rounded-xl p-4 space-y-2 font-mono text-xs">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-[#8a8f98]">Gate</span>
+                      <span className="text-white font-bold">{qrGate.name || qrGate.gateName || 'Unnamed Gate'}</span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-[#8a8f98]">Gate ID</span>
+                      <span className="text-white font-bold">{qrGate.payload.gateId}</span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-[#8a8f98]">Guard Login</span>
+                      <span className="text-amber-400 font-bold text-[10px]">Username + PIN entered on device</span>
+                    </div>
+                  </div>
+
+                  {/* Payload Preview */}
+                  <div className="bg-[#0d0f13] border border-[#2a2d33] rounded-xl p-4">
+                    <p className="text-[10px] text-[#8a8f98] font-bold uppercase tracking-wider mb-2">
+                      Encoded Payload
+                    </p>
+                    <pre className="text-[11px] leading-relaxed text-[#1241a1] whitespace-pre-wrap break-all">
+                      {JSON.stringify(qrGate.payload, null, 2)}
+                    </pre>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-3">
+                    <button
+                      onClick={copyQrPayload}
+                      className="flex-1 py-2.5 rounded-xl border border-[#2a2d33] text-[#8a8f98] hover:text-white hover:bg-[#2a2d33] transition-colors text-sm font-semibold flex items-center justify-center gap-2 border-none"
+                    >
+                      <Copy className="size-4" />
+                      Copy JSON
+                    </button>
+                    <button
+                      onClick={downloadQR}
+                      className="flex-1 py-2.5 rounded-xl bg-[#1241a1] hover:bg-[#1a51b1] text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                    >
+                      <Download className="size-4" />
+                      Download
+                    </button>
+                  </div>
+
+                  <p className="text-[10px] text-center text-amber-500/80 flex items-center justify-center gap-1">
+                    <AlertTriangle className="size-3" />
+                    Print and display at this gate — guards scan it to authenticate.
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>

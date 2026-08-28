@@ -14,13 +14,16 @@ import {
  Ticket, 
  Car, 
  XOctagon, 
- CheckCircle2, 
+CheckCircle2, 
  QrCode, 
- Lock
+ Lock,
+ Check,
+ Scan
 } from 'lucide-react';
 import { getScanHistory } from '@/lib/service';
-import { validatePass, addToScanHistory } from '@/lib/action';
+import { validatePass, addToScanHistory, refreshSecurityToken } from '@/lib/action';
 import Pagination from '@/components/pagination';
+import QRScanner from '@/components/ui/QRScanner';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card } from '@/components/ui/Card';
 
@@ -40,9 +43,13 @@ export default function QRScanPage() {
  const [licensePlate, setLicensePlate] = useState('');
  const [isProcessing, setIsProcessing] = useState(false);
  const [currentResult, setCurrentResult] = useState(null);
+ const [showQRModal, setShowQRModal] = useState(false);
+ const [resultModal, setResultModal] = useState(null);
  const [scanHistory, setScanHistory] = useState([]);
  const [page, setPage] = useState(1);
  const [totalPages, setTotalPages] = useState(1);
+ const isProcessingRef = useRef(false);
+ const restartTimerRef = useRef(null);
 
  useEffect(() => {
  setHasMounted(true);
@@ -88,6 +95,7 @@ export default function QRScanPage() {
  getCameras();
 
  return () => {
+ if (restartTimerRef.current) clearTimeout(restartTimerRef.current);
  stopScanner();
  };
  }, []);
@@ -152,7 +160,8 @@ export default function QRScanPage() {
  // Briefly stop to avoid spamming multiple detections
  await stopScanner();
  
- setTimeout(() => {
+ if (restartTimerRef.current) clearTimeout(restartTimerRef.current);
+ restartTimerRef.current = setTimeout(() => {
  if (cameras.length > 0 && cameras[currentCameraIndex]) {
  startScanner(cameras[currentCameraIndex].id);
  } else {
@@ -194,8 +203,9 @@ export default function QRScanPage() {
 
  const processQRCode = async (qrData) => {
  
- console.log("Processing Scanned Data:", qrData);
- 
+ // Only one verification request at a time
+ if (isProcessingRef.current) return;
+ isProcessingRef.current = true;
  setIsProcessing(true);
  
  const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
@@ -225,8 +235,20 @@ export default function QRScanPage() {
  const response = await validatePass(codeToVerify, extractedPin);
  
  if (!response.success) {
+ const message = response.message || 'ACCESS DENIED: Invalid or expired QR code';
  setCurrentResult({
  status: 'denied',
+ timestamp,
+ zone: 'Zone 1 - Main North',
+ name: qrData.substring(0, 12),
+ type: 'Security Alert',
+ message,
+ rawData: qrData
+ });
+ setResultModal({
+ status: 'denied',
+ title: 'ACCESS DENIED',
+ message,
  timestamp,
  zone: 'Zone 1 - Main North',
  name: qrData.substring(0, 12),
@@ -244,13 +266,23 @@ export default function QRScanPage() {
  qrCode: qrData.substring(0, 15) + '...'
  });
 
- toast.error(response.message || 'ACCESS DENIED: Invalid or expired QR code');
-
  } else {
 
  const pass = response.data;
+ const message = `ACCESS GRANTED: Welcome, ${pass.visitorName || 'Visitor'}`;
  setCurrentResult({
  status: 'authorized',
+ timestamp,
+ zone: 'Zone 1 - Main North',
+ name: pass.visitorName || 'Authorized User',
+ type: pass.purpose || 'Visitor/Pass',
+ message,
+ rawData: qrData
+ });
+ setResultModal({
+ status: 'authorized',
+ title: 'ACCESS GRANTED',
+ message,
  timestamp,
  zone: 'Zone 1 - Main North',
  name: pass.visitorName || 'Authorized User',
@@ -267,17 +299,32 @@ export default function QRScanPage() {
  time: timestamp,
  qrCode: qrData.substring(0, 15) + '...'
  });
-
- toast.success(`ACCESS GRANTED: Welcome, ${pass.visitorName}`);
  
  }
  
  const history = await getScanHistory();
- setScanHistory(history?.docs || []);
+ setScanHistory(Array.isArray(history) ? history : (history?.docs || []));
  } catch (err) {
  console.error("Scan error:", err);
- toast.error("System error during verification");
+ setCurrentResult({
+ status: 'denied',
+ timestamp,
+ zone: 'Zone 1 - Main North',
+ name: qrData.substring(0, 12),
+ type: 'System Error'
+ });
+ setResultModal({
+ status: 'denied',
+ title: 'SYSTEM ERROR',
+ message: 'System error during verification',
+ timestamp,
+ zone: 'Zone 1 - Main North',
+ name: qrData.substring(0, 12),
+ type: 'System Error',
+ rawData: qrData
+ });
  } finally {
+ isProcessingRef.current = false;
  setIsProcessing(false);
  }
  };
@@ -286,23 +333,37 @@ export default function QRScanPage() {
  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
  };
 
- const handleManualVerify = async () => {
+const handleManualVerify = async () => {
  if (!passCode && !licensePlate) {
  toast.warning('Please enter a Pass Code or License Plate');
  return;
  }
-
+ 
+ // Only one verification request at a time
+ if (isProcessingRef.current) return;
+ isProcessingRef.current = true;
  setIsProcessing(true);
  const code = passCode || licensePlate;
  const vPin = pin; // Use entered pin
  const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-
+ 
  try {
  const response = await validatePass(code, vPin);
  
  if (!response.success) {
+ const message = response.message || 'ACCESS DENIED: Credentials invalid or expired';
  setCurrentResult({
  status: 'denied',
+ timestamp,
+ zone: 'Zone 1 - Main North',
+ name: code,
+ type: passCode ? 'Pass Verification' : 'Vehicle Scan',
+ message
+ });
+ setResultModal({
+ status: 'denied',
+ title: 'ACCESS DENIED',
+ message,
  timestamp,
  zone: 'Zone 1 - Main North',
  name: code,
@@ -317,12 +378,21 @@ export default function QRScanPage() {
  statusColor: 'text-red-500 bg-red-500/10',
  time: timestamp
  });
-
- toast.error(response.message || 'ACCESS DENIED: Credentials invalid or expired');
  } else {
  const pass = response.data;
+ const message = `ACCESS GRANTED: Welcome to EMSS`;
  setCurrentResult({
  status: 'authorized',
+ timestamp,
+ zone: 'Zone 1 - Main North',
+ name: pass.visitorName || code,
+ type: passCode ? 'Manual/Pass' : 'Vehicle/Verified',
+ message
+ });
+ setResultModal({
+ status: 'authorized',
+ title: 'ACCESS GRANTED',
+ message,
  timestamp,
  zone: 'Zone 1 - Main North',
  name: pass.visitorName || code,
@@ -337,20 +407,48 @@ export default function QRScanPage() {
  statusColor: 'text-emerald-500 bg-emerald-500/10',
  time: timestamp
  });
-
- toast.success(`ACCESS GRANTED: Welcome to EMSS`);
  setPassCode('');
  setPin('');
  setLicensePlate('');
  }
-
+ 
  const history = await getScanHistory();
- setScanHistory(history?.docs || []);
+ setScanHistory(Array.isArray(history) ? history : (history?.docs || []));
  } catch (err) {
  toast.error('Verification failed');
+ setResultModal({
+ status: 'denied',
+ title: 'SYSTEM ERROR',
+ message: 'System error during verification',
+ timestamp,
+ zone: 'Zone 1 - Main North',
+ name: code,
+ type: 'System Error'
+ });
  } finally {
+ isProcessingRef.current = false;
  setIsProcessing(false);
  }
+ };
+
+ // Close result modal and rescan immediately (cancels any pending auto-restart)
+ const handleRetryScan = () => {
+ setResultModal(null);
+ if (restartTimerRef.current) {
+ clearTimeout(restartTimerRef.current);
+ restartTimerRef.current = null;
+ }
+ if (cameras.length > 0 && cameras[currentCameraIndex]) {
+ startScanner(cameras[currentCameraIndex].id);
+ } else {
+ startScanner({ facingMode: 'environment' });
+ }
+ };
+
+ // Shared modal scanner — approves a guest by validating their pass QR
+ const handleModalScan = async (decodedText) => {
+ setShowQRModal(false);
+ await processQRCode(decodedText);
  };
 
  return (
@@ -360,10 +458,14 @@ export default function QRScanPage() {
  icon={QrCode}
  iconColor="blue"
  >
- <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-500 text-[10px] font-black uppercase tracking-wider flex items-center gap-2">
- <span className="size-1.5 bg-emerald-500 rounded-full animate-pulse"></span> System Live
- </span>
- <div className="hidden md:flex items-center gap-2 text-[#8a8f98]">
+<span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-500 text-[10px] font-black uppercase tracking-wider flex items-center gap-2">
+  <span className="size-1.5 bg-emerald-500 rounded-full animate-pulse"></span> System Live
+  </span>
+  <button onClick={() => setShowQRModal(true)} className="bg-[#1241a1] hover:bg-[#1a51b1] text-white text-[10px] font-black uppercase tracking-widest px-4 py-2.5 rounded-full transition-all shadow-lg shadow-[#1241a1]/20 active:scale-95 flex items-center gap-2">
+  <Scan className="size-4" />
+  Scan Visitor QR
+  </button>
+  <div className="hidden md:flex items-center gap-2 text-[#8a8f98]">
  <Clock className="size-4" />
  <p suppressHydrationWarning className="text-xs font-bold uppercase tracking-widest leading-none">
  {hasMounted ? formatTime(currentTime) : '--:--:--'}
@@ -575,6 +677,79 @@ export default function QRScanPage() {
  object-fit: cover !important;
  }
  `}</style>
+
+ {resultModal && (
+ <div className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300">
+ <div className="relative w-full max-w-2xl bg-[#1a1d23] rounded-2xl overflow-hidden shadow-2xl border border-[#2a2d33]">
+ <div className={`absolute top-0 left-0 right-0 h-1.5 ${resultModal.status === 'authorized' ? 'bg-emerald-500' : 'bg-red-500'}`} />
+ <div className="p-8 text-center space-y-5">
+ <div className={`mx-auto size-20 rounded-full flex items-center justify-center shadow-lg ${resultModal.status === 'authorized' ? 'bg-emerald-500/10 shadow-emerald-500/5' : 'bg-red-500/10 shadow-red-500/5'}`}>
+ {resultModal.status === 'authorized' ? (
+ <CheckCircle2 className="size-11 text-emerald-500" />
+ ) : (
+ <XOctagon className="size-11 text-red-500" />
+ )}
+ </div>
+ <div>
+ <h2 className={`text-2xl font-black uppercase tracking-tighter ${resultModal.status === 'authorized' ? 'text-emerald-500' : 'text-red-500'}`}>
+ {resultModal.title}
+ </h2>
+ <p className="text-[#8a8f98] font-bold text-xs uppercase tracking-widest mt-2">{resultModal.message}</p>
+ </div>
+ <div className="space-y-2.5 text-left bg-[#0d0f13] rounded-2xl p-5 border border-[#2a2d33]">
+ <div className="flex justify-between items-center gap-3 text-sm">
+ <span className="text-[10px] uppercase font-black tracking-widest text-[#8a8f98]">Guest</span>
+ <span className="text-sm font-black text-white truncate">{resultModal.name}</span>
+ </div>
+ <div className="flex justify-between items-center gap-3 text-sm">
+ <span className="text-[10px] uppercase font-black tracking-widest text-[#8a8f98]">Type</span>
+ <span className="text-xs font-bold text-white truncate">{resultModal.type}</span>
+ </div>
+ <div className="flex justify-between items-center gap-3 text-sm">
+ <span className="text-[10px] uppercase font-black tracking-widest text-[#8a8f98]">Zone</span>
+ <span className="text-xs font-bold text-white truncate">{resultModal.zone}</span>
+ </div>
+ <div className="flex justify-between items-center gap-3 text-sm">
+ <span className="text-[10px] uppercase font-black tracking-widest text-[#8a8f98]">Time</span>
+ <span className="text-xs font-black text-[#1241a1]">{resultModal.timestamp}</span>
+ </div>
+ {resultModal.rawData && (
+ <p className="text-[8px] text-[#8a8f98] truncate opacity-60 pt-1 border-t border-[#2a2d33]">QR: {resultModal.rawData}</p>
+ )}
+ </div>
+ <button
+ onClick={resultModal.status === 'authorized' ? () => setResultModal(null) : handleRetryScan}
+ className={`w-full py-3.5 text-white font-black text-xs uppercase tracking-widest rounded-xl transition-all active:scale-95 shadow-lg flex items-center justify-center gap-2 ${
+ resultModal.status === 'authorized'
+ ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'
+ : 'bg-[#1241a1] hover:bg-[#1a51b1] shadow-[#1241a1]/20'
+ }`}
+ >
+ {resultModal.status === 'authorized' ? (
+ <>
+ <Check className="size-4" />
+ Confirm & Continue
+ </>
+ ) : (
+ <>
+ <RefreshCcw className="size-4" />
+ Scan Again
+ </>
+ )}
+ </button>
+ </div>
+ </div>
+ </div>
+ )}
+
+ {showQRModal && (
+ <QRScanner
+ title="Scan Visitor QR"
+ description="Position the guest's pass QR code within the frame to verify approval..."
+ onScan={handleModalScan}
+ onClose={() => setShowQRModal(false)}
+ />
+ )}
  </div>
  );
 }

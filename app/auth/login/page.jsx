@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { 
@@ -16,96 +16,13 @@ import {
   Shield,
   QrCode,
   X,
-  Scan,
   CheckCircle,
   Loader2,
   Home,
   KeyRound
 } from 'lucide-react'
 import { handleAdminLogin, handleSecurityLogin, handleUserLogin, setRole } from '@/lib/action'
-import { Html5Qrcode } from 'html5-qrcode'
-
-// QR Scanner component
-const QRScanner = ({ onScan, onClose }) => {
-  const [scanning, setScanning] = useState(true)
-  const [error, setError] = useState('')
-  const scannerRef = useRef(null)
-  const regionId = 'qr-login-scan-region'
-
-  useEffect(() => {
-    let active = true
-
-    const startScanner = async () => {
-      try {
-        if (scannerRef.current) {
-          scannerRef.current.stop().catch(() => {})
-        }
-        scannerRef.current = new Html5Qrcode(regionId)
-
-        await scannerRef.current.start(
-          { facingMode: 'environment' },
-          { fps: 10, qrbox: { width: 250, height: 250 } },
-          (decodedText) => {
-            if (!active) return
-            setScanning(false)
-            scannerRef.current.stop().catch(() => {})
-            onScan(decodedText)
-          },
-          () => {}
-        )
-      } catch (err) {
-        if (active) {
-          setError('Unable to access camera. Please ensure camera permissions are granted.')
-          console.error('Camera error:', err)
-        }
-      }
-    }
-
-    if (scanning) startScanner()
-
-    return () => {
-      active = false
-      if (scannerRef.current) {
-        scannerRef.current.stop().catch(() => {})
-      }
-    }
-  }, [scanning, onScan])
-
-  return (
-    <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300">
-      <div className="relative w-full max-w-2xl bg-[#1a1d23] rounded-2xl overflow-hidden shadow-2xl border border-[#2a2d33]">
-        <div className="flex items-center justify-between p-4 border-b border-[#2a2d33]">
-          <div className="flex items-center gap-2 text-white">
-            <Scan className="size-5 text-[#1241a1]" />
-            <span className="font-semibold">Scan QR Code</span>
-          </div>
-          <button 
-            onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-[#2a2d33]"
-          >
-            <X className="size-5" />
-          </button>
-        </div>
-
-        <div id={regionId} className="relative aspect-square w-full bg-black" />
-
-        <div className="p-4 border-t border-[#2a2d33]">
-          {error ? (
-            <div className="flex items-center gap-2 text-red-400">
-              <AlertCircle className="size-4" />
-              <p className="text-sm">{error}</p>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 text-[#8a8f98]">
-              <Loader2 className="size-4 animate-spin" />
-              <p className="text-sm">Position QR code within the frame to scan...</p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
+import QRScanner from '@/components/ui/QRScanner'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -117,6 +34,7 @@ export default function LoginPage() {
   const [showQRScanner, setShowQRScanner] = useState(false)
   const [scanSuccess, setScanSuccess] = useState(false)
   const [pendingQrLogin, setPendingQrLogin] = useState(null)
+  const [qrUsername, setQrUsername] = useState('')
   const [qrPin, setQrPin] = useState('')
   const [qrPinError, setQrPinError] = useState('')
   const router = useRouter()
@@ -200,34 +118,32 @@ export default function LoginPage() {
     }
   }
 
-  // Handle QR code scan - ONLY for security
+  // Handle QR code scan - ONLY for security.
+  // The gate QR code now only carries the gateId — the guard types in
+  // their username and PIN, and the gateId is loaded from the scan.
   const handleQRScan = async (scannedData) => {
     try {
-      // Parse QR code data — expected JSON payload:
-      // { "username": "gate_guard_01", "gateId": "..." }
-      let username, gateId
+      let gateId = null
 
       try {
         const payload = JSON.parse(scannedData)
-        username = payload.username
-        gateId = payload.gateId
+        gateId = payload.gateId || payload.id || null
       } catch (e) {
-        // Legacy fallback: username|gateId
-        const [parsedUsername, parsedGateId] = scannedData.split('|')
-        username = parsedUsername
-        gateId = parsedGateId
+        // Not JSON — treat the raw scanned value as the gate id
+        gateId = scannedData || null
       }
 
-      if (!username || !gateId) {
+      if (!gateId) {
         setError('Invalid QR code format')
         setShowQRScanner(false)
         return
       }
 
       setScanSuccess(true)
+      setQrUsername('')
       setQrPin('')
       setQrPinError('')
-      setPendingQrLogin({ username, gateId })
+      setPendingQrLogin({ gateId })
     } catch (error) {
       setError('Failed to process QR code')
     } finally {
@@ -235,10 +151,15 @@ export default function LoginPage() {
     }
   }
 
-  // Trigger the security login with the scanned username/gateId + entered PIN
+  // Trigger the security login with the typed username/PIN + scanned gateId
   const handleSecurityLoginSubmit = async (e) => {
     e.preventDefault()
     if (!pendingQrLogin) return
+
+    if (!qrUsername.trim()) {
+      setQrPinError('Please enter your username')
+      return
+    }
 
     if (!qrPin || qrPin.length < 6) {
       setQrPinError('Please enter your 6-digit PIN')
@@ -249,7 +170,7 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      const result = await handleSecurityLogin(pendingQrLogin.username, qrPin, pendingQrLogin.gateId)
+      const result = await handleSecurityLogin(qrUsername.trim(), qrPin, pendingQrLogin.gateId)
 
       if (result.success) {
         await setRole('security')
@@ -537,14 +458,14 @@ export default function LoginPage() {
         />
       )}
 
-      {/* PIN Entry Modal — shown after scanning the login QR */}
+      {/* PIN Entry Modal — shown after scanning the gate QR */}
       {pendingQrLogin && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300">
           <div className="relative w-full max-w-sm bg-[#1a1d23] rounded-2xl overflow-hidden shadow-2xl border border-[#2a2d33]">
             <div className="flex items-center justify-between p-4 border-b border-[#2a2d33]">
               <div className="flex items-center gap-2 text-white">
                 <KeyRound className="size-5 text-[#1241a1]" />
-                <h3 className="font-semibold">Enter Security PIN</h3>
+                <h3 className="font-semibold">Gate Login</h3>
               </div>
               <button
                 onClick={() => {
@@ -559,15 +480,26 @@ export default function LoginPage() {
             </div>
 
             <form onSubmit={handleSecurityLoginSubmit} className="p-6 space-y-5">
-              <div className="bg-[#0d0f13] rounded-xl p-4 border border-[#2a2d33] space-y-1.5">
-                <div className="flex items-center justify-between gap-3 text-sm">
-                  <span className="text-[#8a8f98]">Guard</span>
-                  <span className="text-white font-bold font-mono truncate">{pendingQrLogin.username}</span>
-                </div>
-                <div className="flex items-center justify-between gap-3 text-sm">
-                  <span className="text-[#8a8f98]">Gate</span>
-                  <span className="text-white font-bold truncate">{pendingQrLogin.gateId}</span>
-                </div>
+              <div className="bg-[#0d0f13] rounded-xl p-4 border border-[#2a2d33] flex items-center justify-between gap-3 text-sm">
+                <span className="text-[#8a8f98] flex items-center gap-2">
+                  <Building2 className="size-4 text-[#1241a1]" />
+                  Gate
+                </span>
+                <span className="text-white font-bold font-mono truncate">{pendingQrLogin.gateId}</span>
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-[#8a8f98] ml-1 mb-1.5 block">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  value={qrUsername}
+                  onChange={(e) => setQrUsername(e.target.value)}
+                  placeholder="Enter your username"
+                  autoComplete="username"
+                  className="w-full bg-[#0d0f13] text-white font-mono border border-[#2a2d33] px-4 py-3.5 rounded-xl focus:ring-2 focus:ring-[#1241a1] focus:border-[#1241a1] outline-none transition-all placeholder:text-[#8a8f98]"
+                />
               </div>
 
               <div>
