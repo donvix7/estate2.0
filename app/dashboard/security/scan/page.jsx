@@ -21,7 +21,7 @@ CheckCircle2,
  Scan
 } from 'lucide-react';
 import { getScanHistory } from '@/lib/service';
-import { validatePass, addToScanHistory, refreshSecurityToken } from '@/lib/action';
+import { validatePass, addToScanHistory, refreshSecurityToken, verifyVisitorPass } from '@/lib/action';
 import Pagination from '@/components/pagination';
 import QRScanner from '@/components/ui/QRScanner';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -155,8 +155,6 @@ export default function QRScanPage() {
  console.log(`Scan success: ${decodedText}`);
  processQRCode(decodedText);
 
- await refreshSecurityToken(decodedText)
- 
  // Briefly stop to avoid spamming multiple detections
  await stopScanner();
  
@@ -210,97 +208,116 @@ export default function QRScanPage() {
  
  const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
  
- // Attempt to parse PIN and actual code from QR payload if it's JSON
- 
- let extractedPin = '';
- let codeToVerify = qrData; 
+ // Attempt to parse the gate payload from the QR.
+ // Guest pass QR payload: { "code": "OT-YFKBMW", "action": "CHECK_IN|CHECK_OUT" }
+ // Legacy payloads ({ passCode, id, pin }) remain supported.
+
+let codeToVerify = qrData;
+ let action = 'CHECK_IN'; // verifyVisitorPass expects CHECK_IN | CHECK_OUT; entry is the gate default
 
  try {
- 
+
  const parsed = JSON.parse(qrData);
- 
+
  console.log("Parsed QR Payload:", parsed);
- 
- // Prioritize explicit passCode or id from the object
- if (parsed.passCode) codeToVerify = parsed.passCode;
+
+ // Guest pass QR payload: { "code": "OT-YFKBMW", "action": "CHECK_IN|CHECK_OUT" }
+ // Legacy payloads ({ passCode, id }) remain supported via fallbacks.
+ if (parsed.code) codeToVerify = parsed.code;
+ else if (parsed.passCode) codeToVerify = parsed.passCode;
  else if (parsed.id) codeToVerify = parsed.id;
- 
- if (parsed.pin) extractedPin = parsed.pin;
- 
+
+ if (parsed.action) {
+ const parsedAction = String(parsed.action).toUpperCase();
+ if (parsedAction === 'CHECK_IN' || parsedAction === 'CHECK_OUT') action = parsedAction;
+ }
+
  } catch (e) {
  // Not JSON, continue with raw data
  }
 
+ const isCheckIn = action === 'CHECK_IN';
+ const isCheckOut = action === 'CHECK_OUT';
+ const actionLabel = isCheckIn ? 'Check In' : 'Check Out';
+
  try {
- const response = await validatePass(codeToVerify, extractedPin);
+ const response = await verifyVisitorPass(codeToVerify, action);
  
  if (!response.success) {
  const message = response.message || 'ACCESS DENIED: Invalid or expired QR code';
+ const denyType = actionLabel ? `Security Alert • ${actionLabel}` : 'Security Alert';
+ const denyTarget = isCheckIn ? 'Entry Denied' : (isCheckOut ? 'Exit Denied' : 'Access Denied');
+ const denyTitle = isCheckIn ? 'CHECK-IN DENIED' : (isCheckOut ? 'CHECK-OUT DENIED' : 'ACCESS DENIED');
  setCurrentResult({
  status: 'denied',
  timestamp,
  zone: 'Zone 1 - Main North',
  name: qrData.substring(0, 12),
- type: 'Security Alert',
+ type: denyType,
  message,
  rawData: qrData
  });
  setResultModal({
  status: 'denied',
- title: 'ACCESS DENIED',
+ title: denyTitle,
  message,
  timestamp,
  zone: 'Zone 1 - Main North',
  name: qrData.substring(0, 12),
- type: 'Security Alert',
+ type: denyType,
  rawData: qrData
  });
 
- await addToScanHistory({
+await addToScanHistory({
  name: 'Invalid/Flagged QR',
- type: 'Security Alert',
- target: 'Access Denied',
+ type: denyType,
+ target: denyTarget,
  status: 'Denied',
  statusColor: 'text-red-500 bg-red-500/10',
  time: timestamp,
  qrCode: qrData.substring(0, 15) + '...'
  });
 
- } else {
+} else {
 
  const pass = response.data;
- const message = `ACCESS GRANTED: Welcome, ${pass.visitorName || 'Visitor'}`;
+ const guestName = pass.visitorName || pass.name || 'Authorized User';
+ const resultType = actionLabel || pass.purpose || 'Visitor/Pass';
+ const title = isCheckIn ? 'CHECK-IN GRANTED' : (isCheckOut ? 'CHECK-OUT CONFIRMED' : 'ACCESS GRANTED');
+ const message = isCheckIn
+ ? `Welcome, ${guestName}. Entry approved.`
+ : (isCheckOut ? `Farewell, ${guestName}. Exit confirmed.` : `ACCESS GRANTED: Welcome, ${guestName}`);
  setCurrentResult({
  status: 'authorized',
  timestamp,
  zone: 'Zone 1 - Main North',
- name: pass.visitorName || 'Authorized User',
- type: pass.purpose || 'Visitor/Pass',
+ name: guestName,
+ type: resultType,
  message,
  rawData: qrData
  });
  setResultModal({
  status: 'authorized',
- title: 'ACCESS GRANTED',
+ title,
  message,
  timestamp,
  zone: 'Zone 1 - Main North',
- name: pass.visitorName || 'Authorized User',
- type: pass.purpose || 'Visitor/Pass',
+ name: guestName,
+ type: resultType,
  rawData: qrData
  });
 
- await addToScanHistory({
- name: pass.visitorName || 'QR Scan Entry',
- type: 'QR Verification',
- target: pass.unitNumber || 'Main Estate',
+await addToScanHistory({
+ name: guestName,
+ type: `QR ${actionLabel}`,
+ target: isCheckIn ? 'Entry' : (pass.unitNumber || 'Main Estate'),
  status: 'Authorized',
  statusColor: 'text-emerald-500 bg-emerald-500/10',
  time: timestamp,
  qrCode: qrData.substring(0, 15) + '...'
  });
- 
- }
+
+}
  
  const history = await getScanHistory();
  setScanHistory(Array.isArray(history) ? history : (history?.docs || []));
@@ -697,10 +714,7 @@ const handleManualVerify = async () => {
  <p className="text-[#8a8f98] font-bold text-xs uppercase tracking-widest mt-2">{resultModal.message}</p>
  </div>
  <div className="space-y-2.5 text-left bg-[#0d0f13] rounded-2xl p-5 border border-[#2a2d33]">
- <div className="flex justify-between items-center gap-3 text-sm">
- <span className="text-[10px] uppercase font-black tracking-widest text-[#8a8f98]">Guest</span>
- <span className="text-sm font-black text-white truncate">{resultModal.name}</span>
- </div>
+
  <div className="flex justify-between items-center gap-3 text-sm">
  <span className="text-[10px] uppercase font-black tracking-widest text-[#8a8f98]">Type</span>
  <span className="text-xs font-bold text-white truncate">{resultModal.type}</span>
