@@ -20,7 +20,7 @@ export default function ProfileTab({
                  <User className="w-10 h-10" />
              </div>
              <div className="text-center md:text-left flex-1">
-                 <pclassName="text-2xl font-bold text-white text-white font-heading">{residentData?.name}</pp
+                 <className="text-2xl font-bold text-white text-white font-heading">{residentData?.name}</pp
                  <p className="text-[#8a8f98] text-[#8a8f98] flex items-center justify-center md:justify-start gap-2 mt-1">
                      <span className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
                      Active Resident
