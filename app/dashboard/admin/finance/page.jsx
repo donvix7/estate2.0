@@ -140,7 +140,7 @@ export default function FinancePage() {
       {/* Data Section */}
       {isLoading ? (
         <div className="py-20">
-          <LoadingState message="Processing Financial Data..." />
+          <LoadingState message="Processing financial data..." inline />
         </div>
       ) : (
         <DataStateLayout 

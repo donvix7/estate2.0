@@ -96,7 +96,7 @@ const page = () => {
           
           {/* Desktop View */}
           <div className="hidden md:block text-sm p-4 max-w-7xl mx-auto mt-6">
-            <h2 className="text-xl font-bold mb-6 text-white text-white font-heading">Access </h2>
+            <p className="text-xl font-bold mb-6 text-white text-white font-heading">Access </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
               {accessTabs.map((tab, index) => (
                 <Link href={tab.href} key={index} className="group">
@@ -112,7 +112,7 @@ const page = () => {
               ))}
             </div>
 
-            <h2 className="text-xl font-bold mb-6 text-white text-white font-heading">Communication </h2>
+            <plassName="text-xl font-bold mb-6 text-white text-white font-heading">Communication </p
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
                 {communicationTabs.map((tab, index) => (
                     <Link href={tab.href} key={index} className="group">
@@ -128,7 +128,7 @@ const page = () => {
                 ))}
             </div>
 
-            <h2 className="text-xl font-bold mb-6 text-white text-white font-heading">Payment </h2>
+            <p className="text-xl font-bold mb-6 text-white text-white font-heading">Payment </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
               {paymentTabs.map((tab, index) => (
                 <Link href={tab.href} key={index} className="group">

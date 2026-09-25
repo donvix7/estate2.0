@@ -76,19 +76,11 @@ const JoinRequestPage = () => {
   const selectedEstateName = estates.find(e => e.id === formData.estate)?.estateName || '';
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center justify-center p-4 overflow-hidden bg-slate-50 dark:bg-slate-950 font-sans">
-      {/* Background Image with Overlay */}
-      <div
-        className="absolute inset-0 z-0 bg-center bg-cover bg-no-repeat opacity-20"
-        style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2000&auto=format&fit=crop")' }}
-      />
-      <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-900/80 via-slate-900 to-slate-900" />
-
-      {/* Main Card */}
-      <div className="relative z-20 w-full max-w-[960px] flex flex-col md:flex-row bg-white/95 min-h-[500px] dark:bg-slate-900/90 backdrop-blur-xl rounded-xl overflow-hidden shadow-2xl">
+    <div className="flex min-h-screen w-full items-center justify-center bg-slate-50 p-4 font-sans dark:bg-slate-950 sm:p-8">
+      <div className="w-full max-w-4xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 md:flex">
 
         {/* Left Side: User Profile Info */}
-        <div className="md:flex flex-1 flex-col justify-between p-10 bg-[#1241a1]/10">
+        <div className="hidden flex-none flex-col justify-between border-b border-slate-200 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-800/30 md:flex md:w-64 md:border-b-0 md:border-r md:p-7">
           <div className="space-y-4">
             <div className="mt-4">
               <div className="flex items-center justify-between mb-5">
@@ -158,14 +150,14 @@ const JoinRequestPage = () => {
         </div>
 
         {/* Right Side: Main Form */}
-        <div className="flex-1 p-6 md:p-10 flex flex-col">
+        <div className="flex min-w-0 flex-1 flex-col p-5 sm:p-7 lg:p-9">
           {/* Header */}
           <div className="mb-6">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
-              <Home className="size-6 text-[#1241a1]" />
+            <p className="mb-1 flex items-center gap-2 text-xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-2xl">
+              <Home className="size-5 text-[#1241a1]" />
               Request to Join Estate
-            </h3>
-            <p className="text-slate-500 dark:text-slate-400 text-sm">
+            </p>
+            <p className="text-sm leading-6 text-slate-500 dark:text-slate-400">
               Select an estate from the dropdown and submit your join request
             </p>
           </div>

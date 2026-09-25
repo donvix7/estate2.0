@@ -309,7 +309,7 @@ export default function SecurityPage() {
         {/* Security Architecture Overview */}
         <div className="max-w-6xl mx-auto mb-20">
           <div className=" border-gray-300 bg-white p-8 mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Multi-Layered Security Architecture</h2>
+            <p className="text-3xl font-bold text-gray-900 mb-2">Multi-Layered Security Architecture</p>
             <p className="text-gray-600 mb-8 max-w-3xl">
               Our defense-in-depth approach ensures comprehensive protection through multiple, redundant security layers.
             </p>
@@ -351,7 +351,7 @@ export default function SecurityPage() {
 
           {/* Detailed Features Grid */}
           <div className="mb-20">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center">Advanced Security Capabilities</h2>
+            <p className="text-3xl font-bold text-gray-900 mb-2 text-center">Advanced Security Capabilities</p>
             <p className="text-gray-600 mb-12 text-center max-w-3xl mx-auto">
               Comprehensive suite of security technologies designed for maximum protection and operational efficiency.
             </p>
@@ -396,7 +396,7 @@ export default function SecurityPage() {
         {/* Compliance & Certifications */}
         <div className="max-w-6xl mx-auto mb-20">
           <div className=" border-gray-300 bg-white p-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Compliance & Certifications</h2>
+            <p className="text-3xl font-bold text-gray-900 mb-2">Compliance & Certifications</p>
             <p className="text-gray-600 mb-8 max-w-3xl">
               Our security platform meets and exceeds global compliance standards, ensuring your organization remains protected and compliant.
             </p>
@@ -456,7 +456,7 @@ export default function SecurityPage() {
 
         {/* Implementation Process */}
         <div className="max-w-6xl mx-auto mb-20">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center">Implementation Process</h2>
+          <p className="text-3xl font-bold text-gray-900 mb-2 text-center">Implementation Process</p>
           <p className="text-gray-600 mb-12 text-center max-w-3xl mx-auto">
             Structured deployment methodology ensuring seamless integration with existing infrastructure.
           </p>
@@ -492,7 +492,7 @@ export default function SecurityPage() {
           <div className=" border-red-300 bg-linear-to-r from-red-600 to-orange-600 p-12">
             <div className="max-w-3xl mx-auto text-center">
               <AlertTriangle className="w-16 h-16 text-white mx-auto mb-6" />
-              <h2 className="text-3xl font-bold text-white mb-4">Enterprise-Grade Security Assessment</h2>
+              <p className="text-3xl font-bold text-white mb-4">Enterprise-Grade Security Assessment</p>
               <p className="text-gray-100 mb-8 text-lg">
                 Schedule a comprehensive security audit with our certified experts. Receive a detailed risk assessment, compliance review, and customized security roadmap.
               </p>

@@ -222,7 +222,7 @@ const TeamMemberCard = memo(({ member }) => {
                 className="text-blue-600 hover:text-blue-800 overflow-hidden"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0span.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0span.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24p0.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                 </svg>
               </a>
             )}
@@ -524,7 +524,7 @@ export default function AboutPage() {
             <div  className=" border-gray-200 p-8">
               <div className="flex items-center gap-3 mb-6">
                 <TargetIcon className="w-6 h-6 text-gray-900" />
-                <h2 className="text-2xl font-bold text-gray-900">Our Mission</h2>
+                <p className="text-2xl font-bold text-gray-900">Our Mission</p>
               </div>
               <p className="text-gray-600 mb-6">
                 To make enterprise-grade security accessible and affordable for every residential 
@@ -560,7 +560,7 @@ export default function AboutPage() {
             <div  className=" border-gray-200 p-8">
               <div className="flex items-center gap-3 mb-6">
                 <Lightbulb className="w-6 h-6 text-gray-900" />
-                <h2 className="text-2xl font-bold text-gray-900">Our Vision</h2>
+                <p className="text-2xl font-bold text-gray-900">Our Vision</p>
               </div>
               <p className="text-gray-600 mb-6">
                 To become the world&apos;s most trusted community security platform, protecting 
@@ -601,7 +601,7 @@ export default function AboutPage() {
             
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold mb-4">Our Impact in Numbers</h2>
+            <p className="text-3xl font-bold mb-4">Our Impact in Numbers</p>
             <p className="text-gray-600 max-w-2xl mx-auto">
               The scale of our mission and the trust communities place in us
             </p>
@@ -624,7 +624,7 @@ export default function AboutPage() {
             
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold mb-4">Our Journey</h2>
+            <p className="text-3xl font-bold mb-4">Our Journey</p>
             <p className="text-gray-600 max-w-2xl mx-auto">
               From a simple idea to securing thousands of communities
             </p>
@@ -652,7 +652,7 @@ export default function AboutPage() {
       >
         <div className="container mx-auto">
           <div  className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Our Core Values</h2>
+            <p className="text-3xl font-bold mb-4">Our Core Values</p>
             <p className="text-gray-600 max-w-2xl mx-auto">
               The principles that guide every decision we make
             </p>
@@ -681,7 +681,7 @@ export default function AboutPage() {
               <span className="text-sm font-medium text-gray-700">MEET THE TEAM</span>
             </div>
             
-            <h2 className="text-3xl font-bold mb-4">Leadership Team</h2>
+            <p className="text-3xl font-bold mb-4">Leadership Team</p>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Experts from security, technology, and community management working together
             </p>
@@ -719,7 +719,7 @@ export default function AboutPage() {
       >
         <div className="container mx-auto">
           <div  className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Awards & Recognition</h2>
+            <p className="text-3xl font-bold mb-4">Awards & Recognition</p>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Recognition from industry leaders for our innovation and impact
             </p>
@@ -791,7 +791,7 @@ export default function AboutPage() {
       >
         <div className="container mx-auto">
           <div  className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Beyond Security</h2>
+            <p className="text-3xl font-bold mb-4">Beyond Security</p>
             <p className="text-gray-600 max-w-2xl mx-auto">
               How we&apos;re building stronger, more connected communities
             </p>
@@ -859,7 +859,7 @@ export default function AboutPage() {
             <span className="text-sm font-medium text-gray-300">JOIN OUR MISSION</span>
           </div>
           
-          <h2 
+          <p 
             
             
             
@@ -868,7 +868,7 @@ export default function AboutPage() {
           >
             <span className="block">Ready to Secure</span>
             <span className="block">Your Community?</span>
-          </h2>
+          </p>
           
           <p 
             

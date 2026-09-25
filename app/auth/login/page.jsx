@@ -47,9 +47,7 @@ export default function LoginPage() {
       icon: Home,
       features: [
         'View your property details',
-        'Submit maintenance requests',
-        'Pay association fees',
-        'Access community amenities'
+        'Manage requests and payments'
       ],
       gradient: 'from-[#1241a1]/60 via-[#0d0f13]/80 to-[#0d0f13]/90',
       buttonColor: 'bg-[#1241a1] hover:bg-[#1a51b1] shadow-[#1241a1]/30'
@@ -60,9 +58,7 @@ export default function LoginPage() {
       icon: Shield,
       features: [
         'QR code authentication',
-        'Real-time access monitoring',
-        'Visitor management system',
-        'Emergency response coordination'
+        'Visitor access management'
       ],
       gradient: 'from-[#1241a1]/60 via-[#0d0f13]/80 to-[#0d0f13]/90',
       buttonColor: 'bg-[#1241a1] hover:bg-[#1a51b1] shadow-[#1241a1]/30'
@@ -73,9 +69,7 @@ export default function LoginPage() {
       icon: Building2,
       features: [
         'Resident management',
-        'Staff administration',
-        'Financial reporting',
-        'System configuration'
+        'Operations and reporting'
       ],
       gradient: 'from-[#1241a1]/60 via-[#0d0f13]/80 to-[#0d0f13]/90',
       buttonColor: 'bg-[#1241a1] hover:bg-[#1a51b1] shadow-[#1241a1]/30'
@@ -188,20 +182,20 @@ export default function LoginPage() {
   const RoleIcon = currentConfig.icon
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center justify-center p-4 overflow-hidden bg-[#0d0f13] font-sans">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#0d0f13] p-4 font-sans sm:p-8">
       {/* Decorative Background */}
-      <div className="absolute inset-0 z-0 opacity-20 transition-all duration-700 pointer-events-none select-none">
+      <div className="pointer-events-none absolute inset-0 z-0 hidden select-none opacity-20 transition-all duration-700">
         <RoleIcon className="absolute -top-32 -right-32 size-96" strokeWidth={0.5} />
         <RoleIcon className="absolute -bottom-40 -left-40 size-[28rem]" strokeWidth={0.5} />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(18,65,161,0.25),transparent_50%),radial-gradient(circle_at_80%_80%,rgba(18,65,161,0.15),transparent_50%)]" />
       </div>
-      <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#0d0f13]/80 via-[#0d0f13] to-[#0d0f13]" />
+      <div className="absolute inset-0 z-10 bg-[#0d0f13]/90" />
       
       {/* Main Login Card */}
-      <div className="relative z-20 w-full max-w-[960px] flex flex-col md:flex-row bg-[#1a1d23]/95 backdrop-blur-xl rounded-xl overflow-hidden shadow-2xl border border-[#2a2d33]">
+      <div className="relative z-20 flex w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-[#2a2d33] bg-[#15171c] shadow-2xl md:flex-row">
         
         {/* Left Side: Dynamic Visual Context */}
-        <div className="hidden md:flex flex-1 flex-col justify-between p-10 relative min-h-[500px] overflow-hidden transition-all duration-700">
+        <div className="relative hidden min-h-[480px] flex-none flex-col justify-between overflow-hidden p-8 transition-all duration-700 md:flex md:w-[42%] xl:p-10">
           {/* Decorative Icon Background */}
           <div className={`absolute inset-0 z-0 bg-gradient-to-br ${currentConfig.gradient} transition-all duration-700`} />
           <div className="absolute -top-10 -right-10 z-0 opacity-10 pointer-events-none select-none">
@@ -213,7 +207,7 @@ export default function LoginPage() {
           
           {/* Content */}
           <div className="relative z-10 flex flex-col justify-center h-full">
-            <div className="bg-white/10 backdrop-blur-md p-10 rounded-xl text-white transition-all duration-500">
+            <div className="rounded-xl border border-white/10 bg-white/5 p-7 text-white transition-all duration-500">
               <div className="flex items-center gap-2 mb-8 cursor-pointer group" onClick={() => router.push('/')}>
                 <div className="p-2 bg-white/20 backdrop-blur rounded-lg text-white shadow-lg group-hover:scale-110 transition-transform">
                   <Building2 className="size-6" />
@@ -223,9 +217,9 @@ export default function LoginPage() {
               
               <div className="flex items-center gap-3 mb-3">
                
-                <h2 className="text-3xl font-bold leading-tight text-white italic">
+                <p className="text-3xl font-bold leading-tight text-white italic">
                   {currentConfig.title}
-                </h2>
+                </p>
               </div>
               
               <p className="text-white/80 text-lg leading-relaxed">
@@ -234,7 +228,7 @@ export default function LoginPage() {
             </div>
             
             {/* Role-specific features */}
-            <div className="space-y-3 mt-8 transition-all duration-500">
+            <div className="mt-7 space-y-3 transition-all duration-500">
               {currentConfig.features.map((feature, index) => (
                 <div 
                   key={index}
@@ -250,14 +244,17 @@ export default function LoginPage() {
         </div>
 
         {/* Right Side: Login Form */}
-        <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
-          <div className="mb-8 text-center md:text-left">
-            <span className="text-2xl font-bold text-white mb-2">
+        <div className="flex flex-1 flex-col justify-center p-6 sm:p-8 md:p-10">
+          <div className="mb-7 text-center md:text-left">
+            <Link href="/" className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-white md:hidden">
+              <Building2 className="size-5 text-blue-300" /> EMSS
+            </Link>
+            <p className="mb-2 text-2xl font-bold text-white">
               {userType === 'resident' ? 'Welcome Home' : 
                userType === 'security' ? 'Security Access' : 
                'Admin Access'}
-            </span>
-            <p className="text-[#8a8f98]">
+            </p>
+            <p className="text-sm leading-6 text-[#a4a7af]">
               {userType === 'resident' ? 'Sign in to your resident dashboard' : 
                userType === 'security' ? 'Scan QR code for instant access' : 
                'Sign in to admin control panel'}
@@ -265,7 +262,7 @@ export default function LoginPage() {
           </div>
 
           {/* Role Selector */}
-          <div className="flex h-12 w-full items-center justify-center rounded-xl bg-[#0d0f13] border border-[#2a2d33] p-1 mb-8 shadow-inner">
+          <div className="mb-7 flex h-11 w-full items-center justify-center rounded-xl border border-[#2a2d33] bg-[#0d0f13] p-1">
             <button 
               type="button"
               onClick={() => {
@@ -432,7 +429,7 @@ export default function LoginPage() {
             )}
           </form>
 
-          <div className="mt-8 text-center pt-8 border-t border-[#2a2d33]">
+          <div className="mt-7 border-t border-[#2a2d33] pt-5 text-center">
             <p className="text-[#8a8f98] text-sm">
               {userType === 'security' ? (
                 'Contact your administrator for QR code assignment'
@@ -465,7 +462,7 @@ export default function LoginPage() {
             <div className="flex items-center justify-between p-4 border-b border-[#2a2d33]">
               <div className="flex items-center gap-2 text-white">
                 <KeyRound className="size-5 text-[#1241a1]" />
-                <h3 className="font-semibold">Gate Login</h3>
+                <p className="font-semibold">Gate Login</p>
               </div>
               <button
                 onClick={() => {

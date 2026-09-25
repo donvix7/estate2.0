@@ -105,9 +105,9 @@ export default function ItemDetailModal({ item, onClose }) {
                 <Tag size={12} />
                 {item.category}
               </div>
-              <h2 className="text-2xl font-black tracking-tight text-white text-white leading-tight">
+              <p className="text-2xl font-black tracking-tight text-white text-white leading-tight">
                 {item.name}
-              </h2>
+              </p>
             </div>
 
             <div className="grid grid-cols-1 gap-4">

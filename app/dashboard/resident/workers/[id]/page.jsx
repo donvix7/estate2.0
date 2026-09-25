@@ -28,6 +28,7 @@ import { PageHeader } from '@/components/ui/PageHeader'
 import { getWorkerById, getResidentData } from '@/lib/service'
 import { bookService } from '@/lib/action'
 import { toast } from 'react-toastify'
+import { LoadingState } from '@/components/ui/LoadingState'
 
 
 export default function WorkerProfilePage() {
@@ -92,11 +93,7 @@ export default function WorkerProfilePage() {
     }
   }
 
-  if (loading) return (
-    <div className="flex items-center justify-center py-20">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#1241a1]"></div>
-    </div>
-  )
+  if (loading) return <LoadingState message="Loading service provider..." />
 
   if (!worker) return (
     <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
@@ -144,9 +141,9 @@ export default function WorkerProfilePage() {
           
           <div className="flex-1 text-center md:text-left">
             <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mb-2">
-              <h2 className="text-3xl font-semibold text-white tracking-tight">
+              <p className="text-3xl font-semibold text-white tracking-tight">
                 {worker.name}
-              </h2>
+              </p>
               {worker.verified ? (
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1241a1]/10 text-[#1241a1] rounded-md text-[10px] font-bold uppercase tracking-widest w-fit mx-auto md:mx-0">
                   <CheckCircle2 className="size-3.5" />

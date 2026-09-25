@@ -116,9 +116,9 @@ export default function ResolveEmergencyModal({ emergency, onClose, onResolve })
                {isResolved ? <CheckCircle2 className="w-7 h-7" /> : <ShieldAlert className="w-7 h-7" />}
             </div>
             <div>
-              <h2 className="text-2xl font-black tracking-tight text-white text-white">
+              <p className="text-2xl font-black tracking-tight text-white text-white">
                 {isResolved ? 'Incident Resolved' : 'Emergency Response'}
-              </h2>
+              </p>
               <p className="text-sm font-bold text-white0 text-[#8a8f98] mt-0.5 flex items-center gap-2 uppercase tracking-widest">
                 ID: {emergency._id || emergency.id}
                 <span className="size-1 rounded-full bg-[#2a2d33]"></span>

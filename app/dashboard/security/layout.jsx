@@ -22,7 +22,7 @@ import { toast } from 'react-toastify'
 
 export default function SecurityLayout({ children }) {
   const pathname = usePathname();
-  useTokenRefresh();
+  const { prompt: sessionRefreshPrompt } = useTokenRefresh();
 
   const securityLinks = [
     { href: '/dashboard/security', label: 'Dashboard', icon: LayoutDashboard },
@@ -50,13 +50,14 @@ export default function SecurityLayout({ children }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0d0f13] text-white font-sans transition-colors duration-200 flex flex-col lg:flex-row">
+    <div className="flex min-h-screen flex-col bg-[#111318] font-sans text-white lg:flex-row">
+      {sessionRefreshPrompt}
       <DashboardSidebar links={securityLinks} user={userData} role="security" estateName="Lekki Phase 1" />
 
-      <div className="flex flex-col flex-1 min-w-0 h-screen overflow-y-scroll">
+      <div className="flex h-screen min-w-0 flex-1 flex-col overflow-y-auto">
         <DashboardMobileNav links={securityLinks} user={userData} role="security" estateName="Lekki Phase 1" />
 
-        <main className="flex-1 overflow-y-auto p-3 lg:p-8 pb-32 lg:pb-8">
+        <main className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto p-4 pb-32 sm:p-6 sm:pb-32 lg:p-8">
           {children}
         </main>
 

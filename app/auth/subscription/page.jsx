@@ -430,7 +430,7 @@ export default function SubscriptionPlansPage() {
             <Crown className="w-8 h-8 text-[#1241a1]" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-white">Ready to upgrade your experience?</h2>
+            <p className="text-2xl font-bold text-white">Ready to upgrade your experience?</p>
             <p className="text-[#8a8f98] mt-1">Join thousands of satisfied residents enjoying premium estate management services.</p>
           </div>
           <button className="bg-[#1241a1] hover:bg-[#1a51b1] text-white px-8 py-3 rounded-xl font-bold transition-all border-none flex items-center gap-2">

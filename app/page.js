@@ -579,9 +579,9 @@ export default function HomePage() {
         {/* 4. Floating Visual Collage */}
         <section className="min-h-[900px] sm:min-h-[1100px] md:min-h-[1250px] w-full max-w-[1728px] mx-auto relative overflow-hidden bg-page-bg py-6 sm:py-8 md:py-10 border-t border-line/20">
           <div className="absolute inset-0 flex justify-center items-center pointer-events-none mt-10 sm:mt-16 md:mt-20">
-            <h2 className="text-[60px] sm:text-[80px] md:text-[100px] lg:text-[120px] font-bold text-text tracking-tighter leading-[0.9] text-center opacity-[0.9]">
+            <p className="text-[60px] sm:text-[80px] md:text-[100px] lg:text-[120px] font-bold text-text tracking-tighter leading-[0.9] text-center opacity-[0.9]">
               Smart<br />Living
-            </h2>
+            </p>
           </div>
 
           <div className="hidden sm:block">
@@ -844,7 +844,7 @@ export default function HomePage() {
         {/* 8. Interactive Feature Console */}
         <section id="console" className="py-[60px] sm:py-[80px] md:py-[120px] px-4 sm:px-6 md:px-10 max-w-[1728px] mx-auto bg-page-bg border-t border-line/20 scroll-mt-20 sm:scroll-mt-24">
           <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12 md:mb-16">
-            <h2 className="text-[24px] sm:text-[28px] md:text-[32px] leading-[1.2] tracking-[-0.02em] font-bold text-text mb-3 sm:mb-4">Experience the Live Console</h2>
+            <p className="text-[24px] sm:text-[28px] md:text-[32px] leading-[1.2] tracking-[-0.02em] font-bold text-text mb-3 sm:mb-4">Experience the Live Console</p>
             <p className="text-sm sm:text-base md:text-body-lg text-muted leading-relaxed px-2">Toggle between features below to test-drive how safety, collections, and management run on EstateEase.</p>
           </div>
 
@@ -971,7 +971,7 @@ export default function HomePage() {
             <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-20 items-center">
               <AnimatedSection className="space-y-6 sm:space-y-8 md:space-y-10">
                 <div>
-                  <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-muted mb-3 sm:mb-4">Mobile Experience</h2>
+                  <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-muted mb-3 sm:mb-4">Mobile Experience</p>
                   <h3 className="text-[24px] sm:text-[28px] md:text-[32px] leading-[1.2] tracking-[-0.02em] font-bold text-text">Estate Management in Your Pocket</h3>
                   <p className="text-sm sm:text-base md:text-body-lg text-muted leading-relaxed mt-3 sm:mt-4">Download the resident app to request visitor entry codes, receive push panic notifications, check payment logs, or file facilities maintenance reports.</p>
                 </div>
@@ -1033,7 +1033,7 @@ export default function HomePage() {
         {/* 12. FAQ Section */}
         <section id="faq" className="py-[60px] sm:py-[80px] md:py-28 px-4 sm:px-6 md:px-10 max-w-[1200px] mx-auto bg-page-bg border-t border-line/30 scroll-mt-20 sm:scroll-mt-24">
           <div className="text-center mb-4 sm:mb-6">
-            <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-muted mb-3 sm:mb-4">Support Hub</h2>
+            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-muted mb-3 sm:mb-4">Support Hub</p>
             <h3 className="text-[24px] sm:text-[28px] md:text-[32px] leading-[1.2] tracking-[-0.02em] font-bold text-text">Frequently Asked Questions</h3>
           </div>
           <AnimatedSection>

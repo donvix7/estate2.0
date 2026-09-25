@@ -8,7 +8,7 @@ export default function DashboardHeader({ userName, estateName, onMenuClick, has
     <header className="flex items-center justify-between px-8 py-4 bg-[#0d0f13] border-b border-[#2a2d33] sticky top-0 backdrop-blur-md z-40 transition-colors">
       <div className="flex items-center gap-4">
         <div>
-          <h2 className="text-xl font-black tracking-tight text-white">Hello, {userName?.split(' ')[0] || 'User'}</h2>
+          <p className="text-xl font-black tracking-tight text-white">Hello, {userName?.split(' ')[0] || 'User'}</p>
           {estateName && (
             <div className="flex items-center gap-2 text-[10px] font-bold text-[#8a8f98] uppercase tracking-widest mt-0.5">
               <span>{estateName}</span>

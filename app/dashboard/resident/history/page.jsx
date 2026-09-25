@@ -6,6 +6,7 @@ import { TechCard } from '@/components/ui/TechCard'
 import { CleanTable } from '@/components/ui/CleanTable'
 import { BackButton } from '@/components/ui/BackButton'
 import { PageHeader } from '@/components/ui/PageHeader'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 const HistoryPage = () => {
   const [activeTab, setActiveTab] = useState('history')
@@ -72,7 +73,7 @@ const HistoryPage = () => {
                    )}
                  />
                  {visitors.length === 0 && (
-                    <div className="p-8 text-center text-[#8a8f98] text-[#8a8f98] text-sm">No visitor history found.</div>
+                    <EmptyState icon={History} title="No visitor history" description="Past visitor activity will appear here." compact />
                  )}
                </div>
              </div>

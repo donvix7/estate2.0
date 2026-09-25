@@ -150,9 +150,9 @@ export default function ServiceRequestAssignmentPage({ params: paramsPromise }) 
                   {request.status || 'Pending'}
                 </span>
                 </div>
-                <h2 className="text-2xl font-bold tracking-tight text-white">
+                <p className="text-2xl font-bold tracking-tight text-white">
                   {request.title || request.category || 'Service Request'}
-                </h2>
+                </p>
               </div>
             </div>
           </CardBody>
@@ -246,7 +246,7 @@ export default function ServiceRequestAssignmentPage({ params: paramsPromise }) 
         <Card className="sticky top-4 h-[calc(100vh-9rem)] flex flex-col">
           <div className="p-6 space-y-5">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">Assign Professional</h2>
+              <p className="text-lg font-bold text-white">Assign Professional</p>
               <button className="size-10 rounded-xl bg-[#1a1d23] flex items-center justify-center text-[#8a8f98] hover:text-[#1241a1] transition-colors border-none">
                 <Filter className="size-5" />
               </button>

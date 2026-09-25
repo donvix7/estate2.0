@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
+import { LoadingState } from '@/components/ui/LoadingState';
 
 export default function ProfilePage() {
   const [residentData, setResidentData] = useState(null)
@@ -123,13 +124,7 @@ export default function ProfilePage() {
     });
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1241a1]"></div>
-      </div>
-    );
-  }
+  if (isLoading) return <LoadingState message="Loading profile..." />;
 
   const user = residentData || {};
 
@@ -167,9 +162,9 @@ export default function ProfilePage() {
           {/* User Info */}
           <div className="flex-1 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-3 flex-wrap">
-              <h2 className="text-3xl font-semibold text-white mb-2 tracking-tight">
+              <p className="text-3xl font-semibold text-white mb-2 tracking-tight">
                 {`${user.firstName || 'N/A'} ${user.lastName || 'N/A'}`}
-              </h2>
+              </p>
               {user.isAccountVerified && (
                 <BadgeCheck className="size-6 text-[#1241a1]" />
               )}

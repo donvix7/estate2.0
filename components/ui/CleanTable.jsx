@@ -1,4 +1,5 @@
 import React from 'react';
+import { EmptyState } from './EmptyState';
 
 /**
  * Clean, minimalist table component.
@@ -13,8 +14,10 @@ import React from 'react';
 export function CleanTable({ headers, data, renderRow, className = '', emptyState, onRowClick }) {
   if (!data || data.length === 0) {
     return (
-      <div className={`p-8 text-center text-white0 italic ${className}`}>
-        {emptyState || 'No data available'}
+      <div className={className}>
+        {React.isValidElement(emptyState)
+          ? emptyState
+          : <EmptyState title={emptyState || 'No data available'} />}
       </div>
     );
   }

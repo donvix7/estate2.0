@@ -1,7 +1,7 @@
 'use client';
 import { 
   Edit, 
-  Trash2, 
+  Trasp, 
   ShieldCheck, 
   Mail, 
   Phone, 
@@ -91,7 +91,7 @@ export default function ProfileDetails({
                   className="p-2.5 bg-white/10 flex gap-2 backdrop-blur-md text-white rounded-xl hover:bg-red-500 transition-all duration-200"
                   title="Delete User"
                 >
-                  <Trash2 className="w-5 h-5" />
+                  <Trasp className="w-5 h-5" />
                   Delete
                 </button>
               </div>
@@ -402,7 +402,7 @@ export default function ProfileDetails({
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0d0f13]/60 backdrop-blur-md animate-in fade-in duration-300">
           <div className="bg-[#1a1d23] rounded-3xl p-8 max-w-sm w-full shadow-2xl relative animate-in zoom-in-95 duration-300">
             <div className="w-16 h-16 rounded-2xl bg-rose-50 bg-rose-900/20 flex items-center justify-center text-rose-600 text-rose-400 mb-6 mx-auto shadow-sm">
-              <Trash2 className="w-8 h-8" />
+              <Trasp className="w-8 h-8" />
             </div>
             <h3 className="text-2xl font-black text-center text-white text-white mb-2">Purge Identity</h3>
             <p className="text-white0 text-[#8a8f98] text-center mb-8 font-medium">Are you certain you wish to permanently remove <span className="text-white text-white font-bold">{selectedProfile?.name}</span>? This action is irreversible.</p>

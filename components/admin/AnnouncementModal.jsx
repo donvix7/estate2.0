@@ -59,12 +59,12 @@ export default function AnnouncementModal({ isOpen, onClose, onAnnouncementCreat
         <div className="flex items-center justify-between p-8 bg-[#1a1d23] border-none relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-[#1241a1] opacity-10"></div>
           <div>
-            <h2 className="text-2xl font-semibold text-white text-white flex items-center gap-3 tracking-tight">
+            <p className="text-2xl font-semibold text-white text-white flex items-center gap-3 tracking-tight">
               <div className="p-2.5 rounded-md bg-[#1a1d23] text-[#1241a1]">
                 <Megaphone className="size-6" />
               </div>
               Broadcast Announcement
-            </h2>
+            </p>
             <p className="text-xs font-semibold text-[#8a8f98] uppercase tracking-widest mt-1.5 ml-1">Community Outreach</p>
           </div>
           <button 

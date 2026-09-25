@@ -74,7 +74,7 @@ export default function ServiceWorkersPage() {
       {/* Data Section */}
       {isLoading ? (
         <div className="py-20">
-          <LoadingState message="Syncing Service Workforce..." />
+          <LoadingState message="Syncing service workforce..." inline />
         </div>
       ) : (
         <DataStateLayout 

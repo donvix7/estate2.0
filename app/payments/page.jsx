@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, memo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { LoadingState } from '@/components/ui/LoadingState'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/Footer'
 import {
@@ -809,11 +810,7 @@ export default function PaymentPage() {
   }
 
   if (!isClient || isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    )
+    return <LoadingState message="Preparing payment options..." />
   }
 
   return (
@@ -858,9 +855,9 @@ export default function PaymentPage() {
 
                 {/* Payment Methods Selection */}
                 <div className="p-6 border-b border-gray-200">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  <p className="text-lg font-semibold text-gray-900 mb-4">
                     Select Payment Method
-                  </h2>
+                  </p>
                   
                   <div className="space-y-3">
                     {PAYMENT_METHODS.map((method) => (

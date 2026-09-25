@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react';
-import { X, Calendar, User, Tag, Megaphone, Wrench, Shield, Users, Info, Subject, Trash2 } from 'lucide-react';
+import { X, Calendar, User, Tag, Megaphone, Wrench, Shield, Users, Info, Subject, Trasp } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export default function ViewAnnouncementModal({ isOpen, onClose, announcement, isAdmin, onDelete }) {
@@ -37,9 +37,9 @@ export default function ViewAnnouncementModal({ isOpen, onClose, announcement, i
                   {announcement.type || 'General'}
                 </span>
               </div>
-              <h2 className="text-3xl font-semibold text-white text-white leading-tight tracking-tight">
+              <p className="text-3xl font-semibold text-white text-white leading-tight tracking-tight">
                 {announcement.title}
-              </h2>
+              </p>
             </div>
           </div>
           <button 
@@ -99,7 +99,7 @@ export default function ViewAnnouncementModal({ isOpen, onClose, announcement, i
             <Button
               variant="danger"
               size="lg"
-              icon={Trash2}
+              icon={Trasp}
               className="mr-auto"
               onClick={() => {
                 if (window.confirm('Secure Action: Are you sure you want to delete this broadcast?')) {

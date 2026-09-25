@@ -27,6 +27,7 @@ import {
 import { getActiveSessions, getAdminSecurityLogs, getSecurityGuards } from '@/lib/service'
 import { approveSecurityLogin, rejectSecurityLogin, logSecurityIncident } from '@/lib/action'
 import { LoadingState } from '@/components/ui/LoadingState'
+import { EmptyState } from '@/components/ui/EmptyState'
 import MetricCard from '../MetricCard'
 
 const SEVERITY_STYLES = {
@@ -265,27 +266,19 @@ export default function ActivityPage() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[{label: 'Total Attempts', value: totalAttempts, icon: <LogIn className="size-5" />, color: 'indigo'},
+        {label: 'Security Guards', value: guards.length, icon: <PersonStanding className="size-5" />, color: 'indigo'},
+        {label: 'Resolved', value: resolved, icon: <CheckCircle2 className="size-5" />, color: 'indigo'},
+
+      ].map((stat, index) => (
         <MetricCard
-          icon={<LogIn className="size-5" />}
-          label="Total Attempts"
-          value={totalAttempts}
-          color='indigo'
+          key={index}
+          icon={stat.icon}
+          label={stat.label}
+          value={stat.value}
+          color={stat.color}
         />
-        <MetricCard
-          icon={<PersonStanding className="size-5" />}
-          label="Security Guards"
-          value={guards.length}
-          color={'indigo'}
-          
-        />
-      
-        <MetricCard
-          icon={<CheckCircle2 className="size-5" />}
-          label="Resolved"
-          value={resolved}
-          color={'indigo'}
-          
-        />
+        ))}
       </div>
 
       {/* Logs Table */}
@@ -294,7 +287,7 @@ export default function ActivityPage() {
         {/* Table toolbar */}
         <div className="p-4 flex flex-wrap gap-4 items-center justify-between border-b border-[#2a2d33] border-[#2a2d33]">
           <div className="flex flex-wrap gap-3 items-center flex-1">
-            <div className="relative flex-1 max-w-sm group">
+            <div className="relative flex-1 w-full group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a8f98] size-5 group-focus-within:text-[#1241a1] transition-colors" />
               <input
                 type="text"
@@ -376,7 +369,7 @@ export default function ActivityPage() {
             </thead>
             <tbody>
               {paginatedLogs.length === 0 ? (
-                <tr><td colSpan={6} className="px-6 py-12 text-center text-[#8a8f98] text-sm font-medium">No logs found.</td></tr>
+                <tr><td colSpan={6}><EmptyState icon={ShieldAlert} title="No logs found" description="Security activity will appear here." compact /></td></tr>
               ) : paginatedLogs.map((log, i) => {
                 const Icon = LOG_ICONS[log.icon] || ShieldAlert
                 const severityClass = SEVERITY_STYLES[log.severity] || SEVERITY_STYLES.Low
@@ -429,7 +422,7 @@ export default function ActivityPage() {
         {/* Card View (Mobile) */}
         <div className="md:hidden flex flex-col divide-y divide-[#2a2d33] bg-[#818b94]/10">
           {paginatedLogs.length === 0 ? (
-            <div className="p-8 text-center text-[#8a8f98] text-sm font-medium">No logs found.</div>
+            <EmptyState icon={ShieldAlert} title="No logs found" description="Security activity will appear here." compact />
           ) : paginatedLogs.map((log, i) => {
             const Icon = LOG_ICONS[log.icon] || ShieldAlert
             const severityClass = SEVERITY_STYLES[log.severity] || SEVERITY_STYLES.Low
@@ -509,7 +502,7 @@ export default function ActivityPage() {
       {showEntryModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#0d0f13]/40 backdrop-blur-sm animate-in fade-in duration-300">
           <div className="bg-[#1a1d23] w-full max-w-md rounded-md p-8 animate-in zoom-in-95 duration-300">
-            <h2 className="text-2xl font-semibold mb-6">Create Security Entry</h2>
+            <p className="text-2xl font-semibold mb-6">Create Security Entry</p>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold uppercase tracking-widest text-[#8a8f98]">Incident Type</label>

@@ -119,7 +119,7 @@ export default function EmergencyForm({ caseType }) {
               <Icon className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white text-white">Report {title}</h2>
+              <p className="text-xl font-bold text-white text-white">Report {title}</p>
               <p className="text-sm text-[#8a8f98] text-[#8a8f98] mt-0.5">Alerting estate security & rescue teams</p>
             </div>
           </div>

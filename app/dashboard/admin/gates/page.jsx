@@ -6,7 +6,7 @@ import {
   Plus, 
   Search, 
   Edit3, 
-  Trash2, 
+  Trasp, 
   Shield, 
   ShieldCheck, 
   ShieldAlert, 
@@ -676,7 +676,7 @@ export default function GatesManagementPage() {
                  <Button
                     onClick={() => setDeletingGate(gate)}
                     variant="danger"
-                    icon={Trash2}
+                    icon={Trasp}
                     title="Delete"
                   >
                     Delete Gate
@@ -704,7 +704,7 @@ export default function GatesManagementPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="size-14 bg-rose-500/10 text-rose-600 rounded-2xl mx-auto flex items-center justify-center">
-              <Trash2 className="size-7" />
+              <Trasp className="size-7" />
             </div>
 
             <div>

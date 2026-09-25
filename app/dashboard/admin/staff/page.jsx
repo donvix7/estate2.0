@@ -6,6 +6,7 @@ import { PageHeader } from '@/components/ui/PageHeader'
 import { Button } from '@/components/ui/Button'
 import { Card, CardBody } from '@/components/ui/Card'
 import { StatusBadge } from '@/components/ui/StatusBadge'
+import { LoadingState } from '@/components/ui/LoadingState'
 
 
 const StaffPage = () => {
@@ -26,13 +27,7 @@ const StaffPage = () => {
     loadStaff()
   }, [])
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center py-20">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0d0f13] border-[#2a2d33]"></div>
-      </div>
-    )
-  }
+  if (isLoading) return <LoadingState message="Loading staff directory..." />
 
   return (
     <div className="max-w-7xl mx-auto pb-12 animate-in fade-in duration-700">

@@ -3,12 +3,12 @@ import Link from 'next/link';
 
 export function SectionHeader({color, title, subtitle, icon: Icon, action, actionHref, className = '' }) {
   return (
-    <div className={`flex items-center justify-between gap-4 mb-4 ${className}`}>
+    <div className={`mb-4 flex items-center justify-between gap-4 ${className}`}>
       <div className="flex items-center gap-2 min-w-0">
-        {Icon && <Icon className="size-4 text-[#8a8f98] shrink-0" />}
+        {Icon && <Icon className="size-4 shrink-0 text-[#8a8f98]" />}
         <div className="min-w-0">
-          <h3 className="text-sm md:text-base font-bold text-white text-white tracking-tight truncate">{title}</h3>
-          {subtitle && <p className="text-xs text-white0 text-[#8a8f98] mt-0.5 truncate">{subtitle}</p>}
+          <h3 className="truncate text-sm font-semibold tracking-tight text-white md:text-base">{title}</h3>
+          {subtitle && <p className="mt-1 truncate text-xs text-[#8a8f98]">{subtitle}</p>}
         </div>
       </div>
       {actionHref ? (

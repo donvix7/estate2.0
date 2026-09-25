@@ -12,6 +12,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { SearchInput } from '@/components/ui/SearchInput';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { EmptyState } from '@/components/ui/EmptyState';
 import Pagination from '@/components/pagination';
 
 
@@ -226,16 +227,13 @@ export default function AnnouncementsPage() {
                 {isLoading ? (
                   <tr>
                     <td colSpan={5} className="px-6 py-12 text-center text-[#8a8f98]">
-                      <LoadingState message="Broadcasting Community Updates..." />
+                      <LoadingState message="Loading community updates..." inline />
                     </td>
                   </tr>
                 ) : filteredAnnouncements.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="px-6 py-12 text-center text-[#8a8f98]">
-                      <div className="flex flex-col items-center gap-3">
-                        <BellRing className="size-12 opacity-20" />
-                        <p className="text-sm font-semibold">No announcements found matching your criteria.</p>
-                      </div>
+                      <EmptyState icon={BellRing} title="No announcements found" description="No announcements match your current filters." compact />
                     </td>
                   </tr>
                 ) : (
@@ -290,13 +288,10 @@ export default function AnnouncementsPage() {
           <div className="md:hidden divide-y divide-[#2a2d33] border-[#2a2d33]">
             {isLoading ? (
               <div className="p-8 text-center">
-                <LoadingState message="Broadcasting..." />
+                <LoadingState message="Loading announcements..." inline />
               </div>
             ) : filteredAnnouncements.length === 0 ? (
-              <div className="p-8 text-center text-[#8a8f98]">
-                <BellRing className="size-12 opacity-20 mx-auto mb-3" />
-                <p className="text-sm font-semibold">No announcements found.</p>
-              </div>
+              <EmptyState icon={BellRing} title="No announcements found" description="There are no announcements to show." compact />
             ) : (
               announcements.map((ann, idx) => (
                 <div key={ann._id || ann.id || idx} className="group p-4 space-y-3 bg-[#1a1d23] transition-all mb-4">

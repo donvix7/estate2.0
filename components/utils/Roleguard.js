@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import UnauthenticatedWithImage from "@/components/UnAuthenticated";
+import { LoadingState } from "@/components/ui/LoadingState";
 
 const ROLE_LOAD_TIMEOUT = 4000;
 
@@ -24,16 +25,7 @@ export default function RoleGuard({ role, allowedRoles = [], children }) {
   }, [role]);
 
   if (!ready) {
-    return (
-      <div className="flex w-full items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-[#8a8f98] text-white text-sm font-medium animate-pulse">
-            Verifying access...
-          </p>
-        </div>
-      </div>
-    );
+    return <LoadingState message="Verifying your access..." />;
   }
 
   // Unknown role (null) is treated as pass-through — a failed role lookup

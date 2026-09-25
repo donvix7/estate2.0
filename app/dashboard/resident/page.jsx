@@ -389,9 +389,9 @@ export default function ResidentDashboard() {
                 </CardHeader>
                 <CardBody padded={true}>
                   <p className="text-xs font-semibold uppercase tracking-wider text-[#8a8f98] text-[#8a8f98]">Total Outstanding</p>
-                  <h2 className="text-3xl font-extrabold text-white text-white mt-1 mb-4">
+                  <p className="text-3xl font-extrabold text-white text-white mt-1 mb-4">
                     ${totalOutstanding}.00
-                  </h2>
+                  </p>
                   <div className="space-y-2.5">
                     {outstandingServices.slice(0, 3).map((service) => (
                       <BillItem

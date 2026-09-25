@@ -1,6 +1,6 @@
 'use client'
 
-import { Plus, Trash2, ChevronDown, ChevronUp } from 'lucide-react'
+import { Plus, Trasp, ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 
 export default function ResumeForm({ data, setData }) {
@@ -155,7 +155,7 @@ export default function ResumeForm({ data, setData }) {
                   onClick={() => removeExperience(exp.id)}
                   className="absolute top-4 right-4 text-red-500 hover:bg-red-50 p-2 rounded-lg transition-all"
                 >
-                  <Trash2 className="size-4" />
+                  <Trasp className="size-4" />
                 </button>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                    <div className="space-y-2">
@@ -220,7 +220,7 @@ export default function ResumeForm({ data, setData }) {
                   onClick={() => removeEducation(edu.id)}
                   className="absolute top-4 right-4 text-red-500 hover:bg-red-50 p-2 rounded-lg transition-all"
                 >
-                  <Trash2 className="size-4" />
+                  <Trasp className="size-4" />
                 </button>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                    <div className="space-y-2">

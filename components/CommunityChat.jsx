@@ -117,10 +117,10 @@ export default function CommunityChat({
       <div className={`w-full lg:w-80 bg-[#1a1d23] flex-col h-full shrink-0 relative overflow-hidden ${isMobileChatOpen ? 'hidden lg:flex' : 'flex'}`}>
         {/* Sidebar Header */}
         <div className="p-4 bg-[#1a1d23] flex justify-between items-center z-10 shrink-0">
-          <h2 className="text-lg font-bold text-white text-white flex items-center gap-2">
+          <p className="text-lg font-bold text-white text-white flex items-center gap-2">
             <MessageSquare className="w-5 h-5 text-blue-500" />
             Community Chat
-          </h2>
+          </p>
           <button 
             onClick={() => setShowCreateModal(true)}
             className="p-1.5 bg-[#1a1d23] hover:bg-[#2a2d33] rounded-lg text-[#8a8f98] text-white transition-colors"
@@ -244,10 +244,10 @@ export default function CommunityChat({
               </div>
             )}
             <div>
-              <h2 className="text-lg font-bold text-white text-white flex items-center gap-1.5">
+              <p className="text-lg font-bold text-white text-white flex items-center gap-1.5">
                 {activeChat.type === 'channel' && <Hash className="w-4 h-4 text-[#8a8f98]" />}
                 {activeChat.name}
-              </h2>
+              </p>
               <p className="text-xs text-[#8a8f98] text-[#8a8f98] flex items-center gap-1.5 font-medium">
                 {activeChat.type === 'channel' ? (
                   <><Users className="w-3.5 h-3.5" /> 24 members • General Discussion</>

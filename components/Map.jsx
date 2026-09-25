@@ -118,7 +118,7 @@ export default function MapComponent({ role = 'resident' }) {
       
       {/* ── Top Header ── */}
       <header className="h-20 shrink-0 flex items-center justify-between px-4 sm:px-8 bg-white/50 bg-[#0d0f13]/50 backdrop-blur-xl">
-        <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white text-white">{title}</h2>
+        <p className="text-xl sm:text-2xl font-black tracking-tight text-white text-white">{title}</p>
         <div className="relative w-48 sm:w-96 group hidden xs:block">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8f98] group-focus-within:text-[#1241a1] transition-colors" size={18} />
           <input 

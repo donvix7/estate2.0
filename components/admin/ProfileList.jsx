@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { Search, User, MoreHorizontal, Eye, Edit, Trash2, Users, Home, Wrench, ShieldCheck } from 'lucide-react';
+import { Search, User, MoreHorizontal, Eye, Edit, Trasp, Users, Home, Wrench, ShieldCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CleanTable } from '@/components/ui/CleanTable';
 import { AlertModal } from '@/components/ui/AlertModal';
@@ -10,6 +10,7 @@ import { deleteProfile } from '@/lib/action';
 import { toast } from 'react-toastify';
 import MetricCard from '@/components/MetricCard';
 import { LoadingState } from '@/components/ui/LoadingState';
+import { EmptyState } from '@/components/ui/EmptyState';
 import Pagination from '@/components/pagination';
 
 
@@ -180,7 +181,7 @@ export default function ProfileList() {
   const menuOptions = [
     { label: 'View Details', action: 'view', icon: <Eye /> },
     { label: 'Edit Profile', action: 'edit', icon: <Edit /> },
-    { label: 'Delete User', action: 'delete', icon: <Trash2 /> },
+    { label: 'Delete User', action: 'delete', icon: <Trasp /> },
   ];
 
   return (
@@ -265,15 +266,7 @@ export default function ProfileList() {
         {/* Mobile View (Cards) */}
         <div className="grid grid-cols-1 gap-4 md:hidden">
           {filteredProfiles.length === 0 ? (
-            <div className="py-12 text-center bg-[#1a1d23]/50 rounded-xl">
-              <div className="w-16 h-16 bg-[#1a1d23] rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">👥</span>
-              </div>
-              <p className="text-white0 text-[#8a8f98] text-lg">No people found</p>
-              <p className="text-[#8a8f98] text-white0 text-sm mt-1">
-                {searchTerm ? 'Try a different search term' : 'Add new people to get started'}
-              </p>
-            </div>
+            <EmptyState icon={Users} title="No people found" description={searchTerm ? 'Try a different search term.' : 'Add people to your estate to get started.'} className="rounded-xl bg-[#15171c]" />
           ) : (
             filteredProfiles.map((profile, index) => (
               <div 
@@ -339,17 +332,7 @@ export default function ProfileList() {
             headers={['Profile', 'ID', 'Contact',  '']}
             data={filteredProfiles}
             onRowClick={handleProfileSelect}
-            emptyState={
-              <div className="py-12 text-center">
-                <div className="w-16 h-16 bg-[#1a1d23] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">👥</span>
-                </div>
-                <p className="text-white0 text-[#8a8f98] text-lg">No people found</p>
-                <p className="text-[#8a8f98] text-white0 text-sm mt-1">
-                  {searchTerm ? 'Try a different search term' : 'Add new people to get started'}
-                </p>
-              </div>
-            }
+            emptyState={searchTerm ? 'No people match your search.' : 'No people found'}
             renderRow={(profile) => (
               <>
                 <td className="px-6 py-4 whitespace-nowrap">

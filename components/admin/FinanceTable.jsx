@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CleanTable } from '../ui/CleanTable';
+import { EmptyState } from '../ui/EmptyState';
 import { FileText, ArrowUpRight, ArrowDownRight, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
@@ -132,9 +133,7 @@ export default function FinanceTable({ items, type = 'invoices', onRowClick }) {
       {/* Mobile Card View */}
       <div className="md:hidden flex flex-col gap-4">
         {items.length === 0 ? (
-          <div className="p-8 text-center text-white0 italic">
-            No {type} found matching your criteria.
-          </div>
+          <EmptyState icon={FileText} title={`No ${type} found`} description="Try adjusting your search or filters." />
         ) : (
           items.map((item, index) => (
             <div 

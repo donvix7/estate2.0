@@ -41,10 +41,10 @@ export default function LostAndFoundList({
       {/* Header */}
       <div className="p-4 flex items-center justify-between border-b border-[#2a2d33]">
         <div>
-          <h2 className="font-bold text-lg text-white flex items-center gap-2">
+          <p className="font-bold text-lg text-white flex items-center gap-2">
             <Tag className="size-5 text-[#1241a1]" />
             Items
-          </h2>
+          </p>
           <p className="text-xs text-[#8a8f98] font-medium">{totalItems} total items</p>
         </div>
         <div className="flex items-center gap-2">

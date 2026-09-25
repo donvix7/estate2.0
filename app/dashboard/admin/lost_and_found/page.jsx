@@ -22,6 +22,7 @@ import {
   CheckCircle2
 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { Button } from '@/components/ui/Button'
 import { SearchInput } from '@/components/ui/SearchInput'
 import ItemDetailModal from '@/components/modals/ItemDetailModal'
@@ -144,13 +145,7 @@ export default function LostAndFoundPage() {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
-          <div className="size-16 bg-[#1a1d23] rounded-2xl flex items-center justify-center text-[#8a8f98]">
-            <SearchX size={32} />
-          </div>
-          <p className="font-bold text-white text-[#8a8f98]">No items found</p>
-          <p className="text-sm text-[#8a8f98]">Try adjusting your search or filters.</p>
-        </div>
+        <EmptyState icon={SearchX} title="No items found" description="Try adjusting your search or filters." />
       ) : (
         <LostAndFoundList 
           items={currentItems}

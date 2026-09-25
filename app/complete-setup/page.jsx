@@ -167,7 +167,7 @@ export default function EstateRegistrationPage() {
                     <div className="gap-6">
                           
                      <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-                         <h2 className='text-xl font-semibold text-gray-800 mb-4 col-span-2'>Estate Information</h2>
+                         <p className='text-xl font-semibold text-gray-800 mb-4 col-span-2'>Estate Information</p>
                         <div className="space-y-2">
                             <label className="text-sm font-medium text-gray-700">Email <span className="text-red-500">*</span></label>
                             <input
@@ -197,7 +197,7 @@ export default function EstateRegistrationPage() {
                             {errors.phone && <p className="text-red-600 text-xs">{errors.phone}</p>}
                         </div>
                     </div>
-                    <h2 className='text-xl font-semibold text-gray-800 mb-2 mt-4'>Address</h2>
+                    <p className='text-xl font-semibold text-gray-800 mb-2 mt-4'>Address</p>
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-700">Address <span className="text-red-500">*</span></label>
@@ -244,7 +244,7 @@ export default function EstateRegistrationPage() {
                         {errors.state && <p className="text-red-600 text-xs">{errors.state}</p>}
                       </div>
                        </div>
-                     <h2 className='text-xl font-semibold text-gray-800 mb-2 mt-4'>Account Security</h2>
+                     <p className='text-xl font-semibold text-gray-800 mb-2 mt-4'>Account Security</p>
                      <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                        <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-700">Password <span className="text-red-500">*</span></label>
@@ -344,10 +344,10 @@ export default function EstateRegistrationPage() {
       </div>
       {/* Left Side - Image & Branding (Matching Login) */}
       <AuthCarousel>
-        <h2 className="text-4xl font-bold mb-6 leading-tight">
+        <p className="text-4xl font-bold mb-6 leading-tight">
           Secure Living,<br />
           Simplified Management.
-        </h2>
+        </p>
         <p className="text-lg text-white/80 leading-relaxed mb-8 font-light">
           Experience the next generation of community living. 
           Advanced security, seamless payments, and instant communication 

@@ -14,7 +14,7 @@ import {
   Eye,
   Edit2,
   UserX,
-  Trash2,
+  Trasp,
   ShieldCheck
 } from 'lucide-react';
 
@@ -188,7 +188,7 @@ export default function ServiceWorkersTable({ workers, onRowClick, onEdit, onDel
                   onClick={(e) => { e.stopPropagation(); onDelete?.(worker); setActiveMenu(null); }}
                   className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-500 hover:bg-red-50 hover:bg-red-500/10 rounded-xl transition-colors text-left"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trasp className="w-4 h-4" />
                   Delete Staff
                 </button>
               </div>

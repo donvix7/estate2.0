@@ -813,7 +813,7 @@ export default function PricingPage() {
             
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold mb-4">Plan Comparison</h2>
+            <p className="text-3xl font-bold mb-4">Plan Comparison</p>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Detailed breakdown of features across all plans
             </p>
@@ -877,7 +877,7 @@ export default function PricingPage() {
       >
         <div className="container mx-auto">
           <div  className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Add-on Services</h2>
+            <p className="text-3xl font-bold mb-4">Add-on Services</p>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Enhance your security setup with our additional services
             </p>
@@ -917,7 +917,7 @@ export default function PricingPage() {
             <span className="text-sm font-medium text-gray-300">READY TO GET STARTED?</span>
           </div>
           
-          <h2 
+          <p 
             
             
             
@@ -926,7 +926,7 @@ export default function PricingPage() {
           >
             <span className="block">Secure Your Community</span>
             <span className="block">Today</span>
-          </h2>
+          </p>
           
           <p 
             

@@ -9,6 +9,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { Button } from '@/components/ui/Button';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { LoadingState } from '@/components/ui/LoadingState';
 
 export default function UserProfilePage() {    
     const router = useRouter();
@@ -120,13 +121,7 @@ export default function UserProfilePage() {
         });
     };
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-[60vh]">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1241a1]"></div>
-            </div>
-        );
-    }
+    if (isLoading) return <LoadingState message="Loading resident profile..." />;
 
     if (!selectedProfile) return null;
 
@@ -175,9 +170,9 @@ export default function UserProfilePage() {
                     
                     <div className="flex-1">
                         <div className="flex flex-col md:flex-row items-center md:items-end gap-3 mb-2">
-                            <h2 className="text-3xl font-bold text-white tracking-tight">
+                            <p className="text-3xl font-bold text-white tracking-tight">
                                 {selectedProfile.name}
-                            </h2>
+                            </p>
                             <span className="text-[10px] bg-[#1a1d23] text-[#8a8f98] px-2 py-1 rounded-md font-semibold tracking-widest uppercase mb-1.5">
                                 {selectedProfile.id || selectedProfile._id}
                             </span>

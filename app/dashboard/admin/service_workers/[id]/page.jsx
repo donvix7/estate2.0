@@ -97,9 +97,9 @@ export default function ServiceWorkerDetailPage({ params: paramsPromise }) {
           
           <div className="flex-1 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
-              <h2 className="text-3xl font-black text-white tracking-tight uppercase">
+              <p className="text-3xl font-black text-white tracking-tight uppercase">
                 {worker.name}
-              </h2>
+              </p>
               <span className="text-[10px] bg-[#1a1d23] text-[#8a8f98] px-3 py-1 rounded-lg font-black tracking-widest uppercase shadow-sm">
                 {worker._id || worker.id}
               </span>

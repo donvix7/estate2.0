@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { Html5Qrcode } from 'html5-qrcode';
 import { 
  Clock, 
@@ -587,9 +588,9 @@ const handleManualVerify = async () => {
  )}
  </div>
  <div>
- <h2 className={`text-3xl font-black tracking-tighter uppercase ${currentResult.status === 'denied' ? 'text-red-500' : 'text-emerald-500'}`}>
+ <p className={`text-3xl font-black tracking-tighter uppercase ${currentResult.status === 'denied' ? 'text-red-500' : 'text-emerald-500'}`}>
  {currentResult.status === 'denied' ? 'ACCESS DENIED' : 'AUTHORIZED'}
- </h2>
+ </p>
  <p className="text-[#8a8f98] font-bold text-xs uppercase tracking-widest mt-2">{currentResult.status === 'denied' ? 'Security flag or invalid pass' : `Access granted to ${currentResult.zone}`}</p>
  {currentResult.rawData && <p className="text-[8px] text-[#8a8f98] mt-2 truncate max-w-full">QR: {currentResult.rawData}</p>}
  </div>
@@ -648,13 +649,7 @@ const handleManualVerify = async () => {
  </div>
  ))
  ) : (
- <div className="flex flex-col items-center justify-center py-12 text-center">
- <div className="size-16 rounded-full bg-[#1a1d23] flex items-center justify-center mb-4">
- <QrCode className="size-8 text-[#8a8f98]" />
- </div>
- <p className="text-sm font-bold text-[#8a8f98]">No scans yet</p>
- <p className="text-[10px] text-[#8a8f98] uppercase tracking-widest mt-1">Verification logs will appear here</p>
- </div>
+ <EmptyState icon={QrCode} title="No scans yet" description="Verification logs will appear here." compact />
  )}
  </div>
  
@@ -708,9 +703,9 @@ const handleManualVerify = async () => {
  )}
  </div>
  <div>
- <h2 className={`text-2xl font-black uppercase tracking-tighter ${resultModal.status === 'authorized' ? 'text-emerald-500' : 'text-red-500'}`}>
+ <p className={`text-2xl font-black uppercase tracking-tighter ${resultModal.status === 'authorized' ? 'text-emerald-500' : 'text-red-500'}`}>
  {resultModal.title}
- </h2>
+ </p>
  <p className="text-[#8a8f98] font-bold text-xs uppercase tracking-widest mt-2">{resultModal.message}</p>
  </div>
  <div className="space-y-2.5 text-left bg-[#0d0f13] rounded-2xl p-5 border border-[#2a2d33]">

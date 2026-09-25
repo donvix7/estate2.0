@@ -30,6 +30,7 @@ import { bookService } from '@/lib/action';
 import { toast } from 'react-toastify';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SearchInput } from '@/components/ui/SearchInput';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 const CATEGORIES = [
   { id: 'all',         label: 'All Services',  icon: Briefcase },
@@ -274,17 +275,7 @@ export default function WorkersDirectoryPage() {
 
       {/* Worker Grid */}
       {filtered.length === 0 ? (
-        <div className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] p-16 text-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="size-16 bg-[#2a2d33] rounded-full flex items-center justify-center">
-              <UserSearch className="size-8 text-[#8a8f98]" />
-            </div>
-            <div>
-              <p className="font-bold text-white text-lg">No professionals found</p>
-              <p className="text-sm text-[#8a8f98]">Try adjusting your search or filters.</p>
-            </div>
-          </div>
-        </div>
+        <div className="rounded-xl border border-[#2a2d33] bg-[#15171c]"><EmptyState icon={UserSearch} title="No professionals found" description="Try adjusting your search or filters." /></div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filtered.map((worker, index) => (

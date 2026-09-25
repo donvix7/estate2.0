@@ -49,9 +49,9 @@ export function WalletCard({ balance = 0, currency = "$" }) {
           <p className="text-amber-200/80 text-amber-300/70 text-xs uppercase tracking-[0.2em] font-semibold mb-2 drop-shadow-sm">Available Balance</p>
           <div className="flex items-baseline gap-1.5">
              <span className="text-3xl font-semibold text-white drop-shadow-md">{currency}</span>
-             <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight text-white drop-shadow-lg">
+             <p className="text-4xl sm:text-5xl font-semibold tracking-tight text-white drop-shadow-lg">
                {showBalance ? formattedBalance : '••••••••'}
-             </h2>
+             </p>
           </div>
           {/* Subtle balance indicator */}
           <div className="mt-2 flex items-center gap-2">

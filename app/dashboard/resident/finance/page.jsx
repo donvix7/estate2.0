@@ -21,7 +21,7 @@ import {
   Map,
   UserPlus2,
   User2,
-  Trash2,
+  Trasp,
   X,
   Check,
   Mail,
@@ -43,6 +43,7 @@ import { WalletCard } from '@/components/resident/WalletCard'
 import { getActiveBills, getServiceRequests, getRecentTransactions, getResidentTransactions, getFamilyMembers, getSubscriptions, getFamilyInvitations } from '@/lib/service'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { LoadingState } from '@/components/ui/LoadingState'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { BackButton } from '@/components/ui/BackButton'
 import { Card, CardHeader, CardTitle, CardBody } from '@/components/ui/Card'
 import Pagination from '@/components/pagination'
@@ -131,13 +132,7 @@ const Table = ({ headers, data, onRowClick, renderStatus, renderAction }) => {
           ) : (
             <tr>
               <td colSpan={headers.length} className="px-4 py-12 text-center">
-                <div className="flex flex-col items-center gap-2">
-                  <div className="size-12 bg-[#2a2d33] rounded-full flex items-center justify-center">
-                    <Wrench className="size-6 text-[#8a8f98]" />
-                  </div>
-                  <p className="font-medium text-white">No data available</p>
-                  <p className="text-xs text-[#8a8f98]">No records found for this section</p>
-                </div>
+                <EmptyState icon={Wrench} title="No data available" description="No records found for this section." compact />
               </td>
             </tr>
           )}
@@ -421,10 +416,10 @@ export default function FinancePage() {
       <section className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] overflow-hidden">
         <div className="p-4 flex items-center justify-between border-b border-[#2a2d33]">
           <div>
-            <h2 className="font-bold text-lg text-white flex items-center gap-2">
+            <p className="font-bold text-lg text-white flex items-center gap-2">
               <Clock className="size-5 text-[#1241a1]" />
               Active Bills
-            </h2>
+            </p>
             <p className="text-xs text-[#8a8f98] font-medium">{activeBills.length} outstanding bills</p>
           </div>
           <button className="p-2 hover:bg-[#2a2d33] rounded-lg transition-colors">
@@ -457,11 +452,11 @@ export default function FinancePage() {
       <section className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] overflow-hidden">
         <div className="p-4 flex items-center justify-between border-b border-[#2a2d33]">
           <div>
-            <h2 className="font-bold text-lg text-white flex items-center gap-2">
+            <p className="font-bold text-lg text-white flex items-center gap-2">
               <Users className="size-5 text-[#1241a1]" />
               Family Members
               <span className="text-xs text-[#8a8f98] font-medium ml-2">({familyMembers.length})</span>
-            </h2>
+            </p>
           </div>
           <div className="flex gap-2">
             <button 
@@ -511,10 +506,10 @@ export default function FinancePage() {
       <section className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] overflow-hidden">
         <div className="p-4 flex items-center justify-between border-b border-[#2a2d33]">
           <div>
-            <h2 className="font-bold text-lg text-white flex items-center gap-2">
+            <p className="font-bold text-lg text-white flex items-center gap-2">
               <Crown className="size-5 text-[#1241a1]" />
               Subscriptions
-            </h2>
+            </p>
             <p className="text-xs text-[#8a8f98] font-medium">{subscriptions.length} active subscriptions</p>
           </div>
           <button 
@@ -539,7 +534,7 @@ export default function FinancePage() {
           renderStatus={(item) => <StatusBadge status={item.status} />}
           renderAction={() => (
             <button className="text-[#8a8f98] hover:text-red-400 transition-colors border-none bg-transparent">
-              <Trash2 className="size-4" />
+              <Trasp className="size-4" />
             </button>
           )}
         />
@@ -549,10 +544,10 @@ export default function FinancePage() {
       <section className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] overflow-hidden">
         <div className="p-4 flex items-center justify-between border-b border-[#2a2d33]">
           <div>
-            <h2 className="font-bold text-lg text-white flex items-center gap-2">
+            <p className="font-bold text-lg text-white flex items-center gap-2">
               <History className="size-5 text-[#1241a1]" />
               Recent Transactions
-            </h2>
+            </p>
             <p className="text-xs text-[#8a8f98] font-medium">{recentTransactions.length} total transactions</p>
           </div>
           <button 

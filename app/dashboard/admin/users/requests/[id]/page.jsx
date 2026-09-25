@@ -138,7 +138,7 @@ export default function RequestDetailsPage({ params }) {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <h2 className="text-3xl font-bold text-white tracking-tight">{request.name}</h2>
+                  <p className="text-3xl font-bold text-white tracking-tight">{request.name}</p>
                   <div className={`size-2 rounded-full animate-pulse ${request.status === 'pending' ? 'bg-amber-500' : 'bg-emerald-500'}`} />
                 </div>
                 <div className="flex flex-wrap items-center gap-3">

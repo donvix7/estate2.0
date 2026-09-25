@@ -6,6 +6,7 @@ import ViewAnnouncementModal from '@/components/admin/ViewAnnouncementModal';
 import { getAnnouncements, getResidentData } from '@/lib/service';
 import { readAnnouncement } from '@/lib/action';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { Card } from '@/components/ui/Card';
 import Pagination from '@/components/pagination';
 
@@ -156,11 +157,7 @@ const Table = ({ headers, data, onRowClick, renderStatus, renderBadge }) => {
           ) : (
             <tr>
               <td colSpan={headers.length} className="px-4 py-12 text-center">
-                <div className="flex flex-col items-center gap-3">
-                  <BellRing className="size-12 text-[#8a8f98] opacity-30" />
-                  <p className="font-medium text-white">No announcements found</p>
-                  <p className="text-xs text-[#8a8f98]">No announcements matching your criteria</p>
-                </div>
+                <EmptyState icon={BellRing} title="No announcements found" description="No announcements match your current filters." compact />
               </td>
             </tr>
           )}
@@ -306,10 +303,10 @@ export default function AnnouncementsPage() {
       <div className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] overflow-hidden">
         <div className="p-4 flex items-center justify-between border-b border-[#2a2d33]">
           <div>
-            <h2 className="font-bold text-lg text-white flex items-center gap-2">
+            <p className="font-bold text-lg text-white flex items-center gap-2">
               <Megaphone className="size-5 text-[#1241a1]" />
               Announcements
-            </h2>
+            </p>
             <p className="text-xs text-[#8a8f98] font-medium">{filteredAnnouncements.length} total announcements</p>
           </div>
           <button className="p-2 hover:bg-[#2a2d33] rounded-lg transition-colors border-none bg-transparent">

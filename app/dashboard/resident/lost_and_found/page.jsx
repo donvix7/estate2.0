@@ -24,6 +24,7 @@ import {
 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { SearchInput } from '@/components/ui/SearchInput'
+import { EmptyState } from '@/components/ui/EmptyState'
 import ItemDetailModal from '@/components/modals/ItemDetailModal'
 import { getLostAndFound } from '@/lib/service'
 import LostAndFoundList from '@/components/resident/LostAndFoundList'
@@ -259,17 +260,7 @@ export default function LostAndFoundPage() {
  </div>
  </div>
  ) : items.length === 0 ? (
- <div className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] p-16 text-center">
- <div className="flex flex-col items-center gap-4">
- <div className="size-16 bg-[#2a2d33] rounded-full flex items-center justify-center">
- <SearchX className="size-8 text-[#8a8f98]" />
- </div>
- <div>
- <p className="font-bold text-white text-lg">No items found</p>
- <p className="text-sm text-[#8a8f98]">Try adjusting your search or filters.</p>
- </div>
- </div>
- </div>
+ <div className="rounded-xl border border-[#2a2d33] bg-[#15171c]"><EmptyState icon={SearchX} title="No items found" description="Try adjusting your search or filters." /></div>
  ) : (
  <LostAndFoundList 
  items={items}

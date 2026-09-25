@@ -142,9 +142,9 @@ export default function EstateSelectionPage() {
 
   const getRoleBadge = (role) => {
     const styles = {
-      admin: 'bg-purple-500/10 text-purple-500 border border-purple-500/30',
-      security: 'bg-gray-500/10 text-gray-500 border border-gray-500/30',
-      resident: 'bg-cyan-500/10 text-cyan-500 border border-cyan-500/30'
+      admin: 'bg-violet-500/10 text-violet-300 ring-1 ring-inset ring-violet-500/20',
+      security: 'bg-slate-500/10 text-slate-300 ring-1 ring-inset ring-slate-500/20',
+      resident: 'bg-sky-500/10 text-sky-300 ring-1 ring-inset ring-sky-500/20'
     }
     return styles[role] || styles.resident
   }
@@ -173,31 +173,34 @@ export default function EstateSelectionPage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#0d0f13]">
+    <div className="min-h-screen w-full bg-[#111318] text-white">
       {/* Top Header */}
-      <div className="border-b border-[#2a2d33] bg-[#0d0f13]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5 flex items-center justify-between gap-3">
+      <div className="border-b border-[#262a32] bg-[#0d0f13]">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="p-2.5 bg-slate-500/30 rounded-xl shrink-0">
-              <Building2 className="size-5 text-slate-500" />
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#1241a1]/15 text-blue-300">
+              <Building2 className="size-5" />
             </div>
             <div className="min-w-0">
-              <span className="text-base sm:text-lg font-bold text-white truncate block">Available Estates</span>
-              <p className="text-[11px] sm:text-xs text-slate-500 truncate">Browse and manage your estate memberships</p>
+              <span className="block truncate text-base font-semibold text-white">EMSS</span>
+              <p className="truncate text-xs text-[#8a8f98]">Estate management</p>
             </div>
           </div>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shrink-0">
-            <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            Active
+          <span className="shrink-0 rounded-full border border-[#2a2d33] bg-[#15171c] px-3 py-1.5 text-xs font-medium capitalize text-[#c6c8ce]">
+            {selectedrole || 'Account'}
           </span>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <main className="mx-auto max-w-6xl space-y-6 px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+        <div className="mb-2">
+          <p className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">Choose an estate</p>
+          <p className="mt-2 text-sm leading-6 text-[#a4a7af]">Access an estate you belong to, or request to join a new one.</p>
+        </div>
         {/* Notification */}
         {notification && (
-          <div className={`p-4 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2 border ${
+          <div className={`flex items-center gap-3 rounded-xl border p-3.5 animate-in fade-in slide-in-from-top-2 ${
             notification.type === 'success' 
               ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
               : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
@@ -212,8 +215,8 @@ export default function EstateSelectionPage() {
         )}
 
         {/* Filters */}
-        <div className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] p-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+        <div className="rounded-2xl border border-[#2a2d33] bg-[#15171c] p-3 sm:p-4">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center">
             {/* Search */}
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-[#8a8f98]" />
@@ -222,18 +225,18 @@ export default function EstateSelectionPage() {
                 placeholder="Search estates..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-[#0d0f13] border border-[#2a2d33] rounded-lg text-sm text-white placeholder:text-[#8a8f98] focus:outline-none focus:ring-2 focus:ring-[#1241a1] focus:border-[#1241a1] transition-all"
+                className="w-full rounded-xl border border-[#30343d] bg-[#0d0f13] py-3 pl-10 pr-4 text-sm text-white placeholder:text-[#858a95] transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
 
-            <div className="flex items-center gap-3 sm:shrink-0">
+            <div className="flex items-center gap-3 md:shrink-0">
               {/* Status Filter */}
-              <div className="flex items-center gap-2 flex-1 sm:flex-none">
+              <div className="flex flex-1 items-center gap-2 md:flex-none">
                 <SlidersHorizontal className="size-4 text-[#8a8f98] shrink-0" />
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="w-full sm:w-auto px-4 py-2.5 bg-[#0d0f13] border border-[#2a2d33] rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#1241a1] focus:border-[#1241a1] transition-all cursor-pointer"
+                  className="w-full cursor-pointer rounded-xl border border-[#30343d] bg-[#0d0f13] px-4 py-3 text-sm text-white transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 md:w-auto"
                 >
                   <option value="all">All Estates</option>
                   <option value="joined">Joined</option>
@@ -245,47 +248,47 @@ export default function EstateSelectionPage() {
               {(searchTerm || filterStatus !== 'all') && (
                 <button
                   onClick={clearFilters}
-                  className="px-3 py-2.5 text-sm text-[#8a8f98] hover:text-white hover:bg-[#2a2d33] rounded-lg transition-colors whitespace-nowrap"
+                  className="whitespace-nowrap rounded-lg px-3 py-2.5 text-sm text-[#a4a7af] transition-colors hover:bg-[#242730] hover:text-white"
                 >
                   Clear
                 </button>
               )}
 
               {/* Results count */}
-              <div className="flex items-center text-sm text-[#8a8f98] whitespace-nowrap ml-auto sm:ml-0">
-                <span className="font-medium text-white">{filteredEstates.length}</span>
-                <span className="ml-1">estates</span>
+              <div className="ml-auto whitespace-nowrap text-sm text-[#8a8f98] md:ml-0">
+                <span className="font-medium text-white">{filteredEstates.length}</span>{' '}
+                {filteredEstates.length === 1 ? 'estate' : 'estates'}
               </div>
             </div>
           </div>
         </div>
 
         {/* Estates Table (sm+) */}
-        <div className="hidden sm:block bg-[#1a1d23] rounded-xl border border-[#2a2d33] overflow-hidden">
+        <div className="hidden overflow-hidden rounded-2xl border border-[#2a2d33] bg-[#15171c] sm:block">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[#2a2d33] bg-[#0d0f13]">
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-[#8a8f98] uppercase tracking-wider">
+                <tr className="border-b border-[#2a2d33] bg-[#15171c]">
+                  <th className="px-6 py-3.5 text-left text-xs font-semibold text-[#a4a7af]">
                     Estate Name
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-semibold text-[#8a8f98] uppercase tracking-wider">
+                  <th className="px-6 py-3.5 text-center text-xs font-semibold text-[#a4a7af]">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-semibold text-[#8a8f98] uppercase tracking-wider">
+                  <th className="px-6 py-3.5 text-center text-xs font-semibold text-[#a4a7af]">
                     Your Role
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-semibold text-[#8a8f98] uppercase tracking-wider">
+                  <th className="px-6 py-3.5 text-right text-xs font-semibold text-[#a4a7af]">
                     Action
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#2a2d33]">
+              <tbody className="divide-y divide-[#2a2d33]/70">
                 {filteredEstates.length === 0 ? (
                   <tr>
-                    <td colSpan="4" className="px-6 py-12 text-center">
+                    <td colSpan="4" className="px-6 py-16 text-center">
                       <div className="flex flex-col items-center">
-                        <Building2 className="size-12 text-[#8a8f98] opacity-30 mb-3" />
+                        <Building2 className="mb-3 size-10 text-[#8a8f98] opacity-40" />
                         <p className="text-sm font-medium text-white">No estates found</p>
                         <p className="text-xs text-[#8a8f98] mt-1">Try adjusting your search or filters</p>
                         {(searchTerm || filterStatus !== 'all') && (
@@ -305,24 +308,18 @@ export default function EstateSelectionPage() {
                     const joined = isMember(estate.id)
                     
                     return (
-                      <tr key={estate.id} className="hover:bg-[#2a2d33]/30 transition-colors">
-                        <td className="px-6 py-4">
+                      <tr key={estate.id} className="transition-colors hover:bg-white/[0.025]">
+                        <td className="px-6 py-5">
                           <div className="flex items-center gap-3">
-                            <div className={`p-2 rounded-lg ${
-                              joined 
-                                ? 'bg-slate-500/30' 
-                                : 'bg-[#0d0f13]'
-                            }`}>
-                              <Building2 className={`size-4 ${
-                                joined ? 'text-slate-500' : 'text-[#8a8f98]'
-                              }`} />
+                            <div className="flex size-10 items-center justify-center rounded-xl bg-[#1241a1]/10">
+                              <Building2 className="size-[18px] text-blue-300" />
                             </div>
                             <div>
                               <p className="font-medium text-white">
                                 {estate.estateName}
                               </p>
                               {estate.location && (
-                                <p className="text-xs text-[#8a8f98] flex items-center gap-1">
+                                <p className="mt-1 flex items-center gap-1 text-xs text-[#8a8f98]">
                                   <MapPin className="size-3" />
                                   {estate.location}
                                 </p>
@@ -332,12 +329,12 @@ export default function EstateSelectionPage() {
                         </td>
                         <td className="px-6 py-4 text-center">
                           {joined ? (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-600/10 text-green-500 rounded-full text-xs font-medium border border-[#1241a1]/20">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300 ring-1 ring-inset ring-emerald-500/20">
                               <BadgeCheck className="size-3.5" />
                               Joined
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#0d0f13] text-[#8a8f98] rounded-full text-xs font-medium border border-[#2a2d33]">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#20232a] px-3 py-1 text-xs font-medium text-[#a4a7af]">
                               Available
                             </span>
                           )}
@@ -355,7 +352,7 @@ export default function EstateSelectionPage() {
                           {joined ? (
                             <button
                               onClick={() => handleEstateClick(member)}
-                              className="px-4 py-2 bg-slate-500/10 hover:bg-slate-500 text-white rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ml-auto"
+                              className="ml-auto inline-flex items-center gap-2 rounded-xl border border-[#343944] px-3.5 py-2 text-sm font-medium text-[#e4e5e8] transition-colors hover:bg-[#242730]"
                             >
                               <Eye className="size-4" />
                               Access
@@ -363,7 +360,7 @@ export default function EstateSelectionPage() {
                           ) : (
                             <button
                               onClick={() => handleJoinEstate(estate.id)}
-                              className="px-4 py-2 bg-[#2a2d33] hover:bg-[#3a3d43] text-white rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ml-auto"
+                              className="ml-auto inline-flex items-center gap-2 rounded-xl bg-[#1241a1] px-3.5 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
                             >
                               <PlusCircle className="size-4" />
                               Join
@@ -382,8 +379,8 @@ export default function EstateSelectionPage() {
         {/* Estates Cards (mobile only) */}
         <div className="sm:hidden space-y-3">
           {filteredEstates.length === 0 ? (
-            <div className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] px-6 py-12 flex flex-col items-center text-center">
-              <Building2 className="size-12 text-[#8a8f98] opacity-30 mb-3" />
+            <div className="flex flex-col items-center rounded-2xl border border-[#2a2d33] bg-[#15171c] px-6 py-12 text-center">
+              <Building2 className="mb-3 size-10 text-[#8a8f98] opacity-40" />
               <p className="text-sm font-medium text-white">No estates found</p>
               <p className="text-xs text-[#8a8f98] mt-1">Try adjusting your search or filters</p>
               {(searchTerm || filterStatus !== 'all') && (
@@ -401,22 +398,18 @@ export default function EstateSelectionPage() {
               const joined = isMember(estate.id)
 
               return (
-                <div key={estate.id} className="bg-[#1a1d23] rounded-xl border border-[#2a2d33] p-4 transition-colors">
+                <div key={estate.id} className="rounded-2xl border border-[#2a2d33] bg-[#15171c] p-4 transition-colors">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className={`p-2 rounded-lg shrink-0 ${
-                        joined ? 'bg-slate-500/30' : 'bg-[#0d0f13]'
-                      }`}>
-                        <Building2 className={`size-5 ${
-                          joined ? 'text-slate-500' : 'text-[#8a8f98]'
-                        }`} />
+                      <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#1241a1]/10">
+                        <Building2 className="size-[18px] text-blue-300" />
                       </div>
                       <div className="min-w-0">
                         <p className="font-medium text-white truncate">
                           {estate.estateName}
                         </p>
                         {estate.location && (
-                          <p className="text-xs text-[#8a8f98] flex items-center gap-1">
+                          <p className="mt-1 flex items-center gap-1 text-xs text-[#8a8f98]">
                             <MapPin className="size-3 shrink-0" />
                             <span className="truncate">{estate.location}</span>
                           </p>
@@ -425,12 +418,12 @@ export default function EstateSelectionPage() {
                     </div>
 
                     {joined ? (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-600/10 text-green-500 rounded-full text-xs font-medium border border-[#1241a1]/20 shrink-0">
+                      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300 ring-1 ring-inset ring-emerald-500/20">
                         <BadgeCheck className="size-3.5" />
                         Joined
                       </span>
                     ) : (
-                      <span className="inline-flex items-center px-3 py-1 bg-[#0d0f13] text-[#8a8f98] rounded-full text-xs font-medium border border-[#2a2d33] shrink-0">
+                      <span className="inline-flex shrink-0 items-center rounded-full bg-[#20232a] px-3 py-1 text-xs font-medium text-[#a4a7af]">
                         Available
                       </span>
                     )}
@@ -450,7 +443,7 @@ export default function EstateSelectionPage() {
                     {joined ? (
                       <button
                         onClick={() => handleEstateClick(member)}
-                        className="px-4 py-2 bg-slate-500/10 hover:bg-slate-500 text-white rounded-lg text-sm font-medium transition-all flex items-center gap-1.5"
+                        className="inline-flex items-center gap-2 rounded-xl border border-[#343944] px-3.5 py-2 text-sm font-medium text-[#e4e5e8] transition-colors hover:bg-[#242730]"
                       >
                         <Eye className="size-4" />
                         Access
@@ -458,7 +451,7 @@ export default function EstateSelectionPage() {
                     ) : (
                       <button
                         onClick={() => handleJoinEstate(estate.id)}
-                        className="px-4 py-2 bg-[#2a2d33] hover:bg-[#3a3d43] text-white rounded-lg text-sm font-medium transition-all flex items-center gap-1.5"
+                        className="inline-flex items-center gap-2 rounded-xl bg-[#1241a1] px-3.5 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
                       >
                         <PlusCircle className="size-4" />
                         Join
@@ -472,49 +465,45 @@ export default function EstateSelectionPage() {
         </div>
 
         {/* Footer */}
-        <div className="pt-6 border-t border-[#2a2d33] flex flex-wrap items-center justify-between gap-3">
-          <Link href="/" className="text-sm text-[#8a8f98] hover:text-white transition-colors flex items-center gap-1">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#2a2d33] pt-5">
+          <Link href="/" className="flex items-center gap-1 text-sm text-[#8a8f98] transition-colors hover:text-white">
             <ArrowRight className="size-4 rotate-180" />
             Back to Home
           </Link>
-          <div className="flex items-center gap-4 text-xs text-[#8a8f98]">
-            <span>Secure Connection</span>
-            <span className="w-1 h-1 rounded-full bg-[#2a2d33]" />
-            <span>v2.0</span>
-          </div>
         </div>
-      </div>
+      </main>
 
       {/* Join Estate Modal */}
       {showJoinModal && pendingEstateId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-[#1a1d23] rounded-2xl shadow-2xl overflow-y-auto max-h-[90vh] border border-[#2a2d33] animate-in slide-in-from-bottom-4 duration-300">
-            <div className="p-6 border-b border-[#2a2d33]">
+          <div role="dialog" aria-modal="true" aria-labelledby="join-estate-title" className="w-full max-w-2xl overflow-y-auto rounded-2xl border border-[#30343d] bg-[#15171c] shadow-2xl max-h-[90vh] animate-in slide-in-from-bottom-4 duration-300">
+            <div className="border-b border-[#2a2d33] p-5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2.5 bg-[#1241a1]/20 rounded-xl">
                     <Building2 className="size-5 text-[#1241a1]" />
                   </div>
-                  <h3 className="font-semibold text-white">Join Estate</h3>
+                  <p id="join-estate-title" className="font-semibold text-white">Request to join</p>
                 </div>
                 <button
                   onClick={cancelJoinEstate}
-                  className="p-1 rounded-lg hover:bg-[#2a2d33] transition-colors"
+                  aria-label="Close dialog"
+                  className="rounded-lg p-2 transition-colors hover:bg-[#242730]"
                 >
                   <X className="size-4 text-[#8a8f98] hover:text-white" />
                 </button>
               </div>
             </div>
 
-            <div className="p-6 space-y-4">
-              <div className="bg-[#0d0f13] rounded-xl p-4 border border-[#2a2d33]">
-                <p className="text-xs text-[#8a8f98] mb-1">Estate</p>
+            <div className="space-y-4 p-5">
+              <div className="rounded-xl border border-[#2a2d33] bg-[#0d0f13] p-4">
+                <p className="mb-1 text-xs text-[#8a8f98]">Estate</p>
                 <p className="font-medium text-white">
                   {estates.find(e => e.id === pendingEstateId)?.estateName}
                 </p>
               </div>
 
-              <div className="p-3 bg-amber-500/10 rounded-xl border border-amber-500/20">
+              <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-3">
                 <div className="flex items-start gap-2">
                   <HelpCircle className="size-4 text-amber-400 mt-0.5 shrink-0" />
                   <p className="text-xs text-amber-300">
@@ -524,16 +513,16 @@ export default function EstateSelectionPage() {
               </div>
             </div>
 
-            <div className="flex gap-3 p-6 pt-0">
+            <div className="flex gap-3 p-5 pt-0">
               <button
                 onClick={cancelJoinEstate}
-                className="flex-1 py-2.5 rounded-xl border border-[#2a2d33] text-[#8a8f98] hover:text-white hover:bg-[#2a2d33] transition-colors text-sm font-medium"
+                className="flex-1 rounded-xl border border-[#343944] py-2.5 text-sm font-medium text-[#c6c8ce] transition-colors hover:bg-[#242730] hover:text-white"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmJoinEstate}
-                className="flex-1 py-2.5 rounded-xl bg-[#1241a1] hover:bg-[#1a51b1] text-white text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#1241a1] py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
               >
                 <CheckCircle2 className="size-4" />
                 Confirm
@@ -546,26 +535,27 @@ export default function EstateSelectionPage() {
       {/* Access Estate Modal */}
       {showConfirmModal && selectedMembership && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-2xl bg-[#1a1d23] rounded-2xl shadow-2xl overflow-y-auto max-h-[90vh] border border-[#2a2d33] animate-in slide-in-from-bottom-4 duration-300">
-            <div className="p-6 border-b border-[#2a2d33]">
+          <div role="dialog" aria-modal="true" aria-labelledby="access-estate-title" className="w-full max-w-2xl overflow-y-auto rounded-2xl border border-[#30343d] bg-[#15171c] shadow-2xl max-h-[90vh] animate-in slide-in-from-bottom-4 duration-300">
+            <div className="border-b border-[#2a2d33] p-5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2.5 bg-slate-500/20 rounded-xl">
                     <Shield className="size-5 text-slate-500" />
                   </div>
-                  <span className="font-semibold text-white">Access Estate</span>
+                  <p id="access-estate-title" className="font-semibold text-white">Access estate</p>
                 </div>
                 <button
                   onClick={cancelConfirmEstate}
-                  className="p-1 rounded-lg hover:bg-[#2a2d33] transition-colors"
+                  aria-label="Close dialog"
+                  className="rounded-lg p-2 transition-colors hover:bg-[#242730]"
                 >
                   <X className="size-4 text-[#8a8f98] hover:text-white" />
                 </button>
               </div>
             </div>
 
-            <div className="p-6 space-y-4">
-              <div className="bg-[#0d0f13] rounded-xl p-4 border border-[#2a2d33] space-y-3">
+            <div className="space-y-4 p-5">
+              <div className="space-y-3 rounded-xl border border-[#2a2d33] bg-[#0d0f13] p-4">
                 <div>
                   <p className="text-xs text-[#8a8f98]">Estate</p>
                   <p className="font-medium text-white">{selectedMembership.estate.estateName}</p>
@@ -578,7 +568,7 @@ export default function EstateSelectionPage() {
                 </div>
               </div>
 
-              <div className="p-3 bg-[#0d0f13] rounded-xl border border-[#2a2d33]">
+              <div className="rounded-xl border border-[#2a2d33] bg-[#0d0f13] p-3">
                 <div className="flex items-start gap-2">
                   <Shield className="size-4 text-[#8a8f98] mt-0.5 shrink-0" />
                   <p className="text-xs text-[#8a8f98]">
@@ -588,16 +578,16 @@ export default function EstateSelectionPage() {
               </div>
             </div>
 
-            <div className="flex gap-3 p-6 pt-0">
+            <div className="flex gap-3 p-5 pt-0">
               <button
                 onClick={cancelConfirmEstate}
-                className="flex-1 py-2.5 rounded-xl border border-[#2a2d33] text-[#8a8f98] hover:text-white hover:bg-[#2a2d33] transition-colors text-sm font-medium"
+                className="flex-1 rounded-xl border border-[#343944] py-2.5 text-sm font-medium text-[#c6c8ce] transition-colors hover:bg-[#242730] hover:text-white"
               >
                 Cancel
               </button>
               <button
                 onClick={handleProceed}
-                className="flex-1 py-2.5 rounded-xl bg-[#1241a1] hover:bg-[#1a51b1] text-white text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#1241a1] py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
               >
                 <LogIn className="size-4" />
                 Continue

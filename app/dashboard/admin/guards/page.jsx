@@ -7,7 +7,7 @@ import {
   Plus, 
   Search, 
   Edit3, 
-  Trash2, 
+  Trasp, 
   UserCheck, 
   UserX, 
   UserPlus,
@@ -694,7 +694,7 @@ export default function GuardsManagementPage() {
                     className="p-2 text-[#8a8f98] hover:text-red-600 hover:bg-red-500/10 rounded-xl transition-all border-none bg-transparent cursor-pointer"
                     title="Remove Guard"
                   >
-                    <Trash2 className="size-4" />
+                    <Trasp className="size-4" />
                   </button>
                 </div>
               </div>

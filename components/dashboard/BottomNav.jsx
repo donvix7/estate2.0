@@ -1,199 +1,55 @@
 'use client'
 
-import { LayoutDashboard, Logs, Menu, Settings, Users, X, Home, CreditCard, Shield, Bell, BarChart3, HelpCircle, FileText, UserPlus, Building2, Megaphone, MessageCircle } from 'lucide-react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Menu, X } from 'lucide-react'
 
-const BottomNav = ({ pathname, links, role = 'admin' }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const navStyle = {
-    active: 'text-[#1241a1]',
-    hover: 'hover:text-[#1241a1]',
-    bg: 'bg-[#1241a1]',
-    shadow: 'shadow-[#1241a1]/20',
-    activeBg: 'bg-[#1241a1]',
-    menuButton: 'bg-[#1241a1] text-white hover:bg-[#1a51b1]',
-  }
-
-  const defaultLinks = [
-    { href: '/dashboard/admin/', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/dashboard/admin/users', label: 'Logs', icon: Logs },
-    { href: '/dashboard/admin/security', label: 'Residents', icon: Users },
-    { href: '/dashboard/admin/finance', label: 'Settings', icon: Settings },
-  ]
-
-  const navLinks = links && links.length > 0 ? links : defaultLinks
-
-  const moreLinks = [
-    { href: '/dashboard/admin/analytics', label: 'Analytics', icon: BarChart3 },
-    { href: '/dashboard/admin/notifications', label: 'Notifications', icon: Bell },
-    { href: '/dashboard/admin/payments', label: 'Payments', icon: CreditCard },
-    { href: '/dashboard/admin/security', label: 'Security', icon: Shield },
-    { href: '/dashboard/admin/residents', label: 'Residents', icon: UserPlus },
-    { href: '/dashboard/admin/reports', label: 'Reports', icon: FileText },
-    { href: '/dashboard/admin/settings', label: 'Settings', icon: Settings },
-    { href: '/dashboard/admin/help', label: 'Help & Support', icon: HelpCircle },
-    { href: '/dashboard/admin/community', label: 'Community', icon: Building2 },
-  ]
-
-  const visibleLinks = navLinks.slice(0, 4)
-  const allLinks = [...visibleLinks, ...moreLinks]
+export default function BottomNav({ pathname: currentPath, links = [] }) {
+  const [isOpen, setIsOpen] = useState(false)
+  const routerPath = usePathname()
+  const pathname = currentPath || routerPath
+  const visibleLinks = links.slice(0, 4)
+  const hasMore = links.length > visibleLinks.length
 
   return (
-    <div>
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0d0f13] rounded-2xl backdrop-blur-md shadow-lg m-4 border border-[#2a2d33] pb-safe">
-        <div className="flex items-center justify-around h-20 mx-auto">
-          {visibleLinks.map((link, index) => {
-            const Icon = link.icon
-            const isActive = pathname === link.href
+    <>
+      <nav aria-label="Primary navigation" className="fixed bottom-3 left-3 right-3 z-40 rounded-2xl border border-[#2a2d33] bg-[#111318]/95 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-xl backdrop-blur lg:hidden">
+        <div className="flex h-[4.25rem] items-center justify-around">
+          {visibleLinks.map(({ href, label, icon: Icon }, index) => {
+            const active = pathname === href || pathname?.startsWith(`${href}/`)
             return (
-              <Link 
-                key={index} 
-                href={link.href} 
-                className={`flex flex-col items-center gap-1 transition-all duration-200 group relative ${
-                  isActive ? navStyle.active : 'text-[#8a8f98]'
-                } ${navStyle.hover}`}
-              >
-                <div className={`p-2 rounded-lg transition-all duration-200 ${
-                  isActive 
-                    ? 'bg-[#1241a1]/10 scale-110' 
-                    : 'group-hover:bg-[#1a1d23]'
-                }`}>
-                  <Icon className={`size-6 transition-all duration-200 ${
-                    isActive ? 'scale-110' : 'group-hover:scale-110'
-                  }`} />
-                </div>
-                <span className={`text-[10px] font-bold transition-colors ${
-                  isActive ? navStyle.active : 'text-[#8a8f98]'
-                }`}>
-                  {link.label}
-                </span>
-                {isActive && (
-                  <div className={`absolute -top-1 w-8 h-1 rounded-full ${navStyle.bg}`} />
-                )}
+              <Link key={`${href}-${index}`} href={href} aria-current={active ? 'page' : undefined} className={`flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-xl py-2 text-[10px] font-medium ${active ? 'text-blue-300' : 'text-[#8a8f98] hover:text-white'}`}>
+                {Icon && <Icon className="size-5" />}
+                <span className="max-w-full truncate px-1">{label}</span>
               </Link>
             )
           })}
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className={`flex flex-col items-center gap-1 ${navStyle.menuButton} p-4 h-14 w-14 font-bold rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg ${navStyle.shadow}`}
-          >
-            <Menu className="size-5" />
-          </button>
+          {hasMore && <button type="button" onClick={() => setIsOpen(true)} aria-label="More pages" className="flex min-w-12 flex-col items-center justify-center gap-1 rounded-xl py-2 text-[#8a8f98] hover:text-white"><Menu className="size-5" /><span className="text-[10px]">More</span></button>}
         </div>
       </nav>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[100] bg-[#0d0f13] animate-in fade-in duration-300">
-          <div className="flex items-center justify-between p-6 border-b border-[#2a2d33]">
-            <h2 className="text-2xl font-bold text-white">All Navigation</h2>
-            <button 
-              onClick={() => setIsModalOpen(false)}
-              className="p-2 rounded-xl hover:bg-[#1a1d23] transition-colors"
-            >
-              <X className="size-6 text-[#8a8f98]" />
-            </button>
-          </div>
-
-          <div className="p-4 sm:p-6 overflow-y-auto h-[calc(100vh-80px)]">
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-3">
-              {allLinks.map((link, index) => {
-                const Icon = link.icon
-                const isActive = pathname === link.href 
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-end bg-black/60 p-3" onClick={() => setIsOpen(false)}>
+          <section role="dialog" aria-modal="true" aria-label="All pages" className="max-h-[75vh] w-full overflow-hidden rounded-2xl border border-[#2a2d33] bg-[#111318] shadow-2xl" onClick={(event) => event.stopPropagation()}>
+            <div className="flex items-center justify-between border-b border-[#2a2d33] px-5 py-4">
+              <p className="text-base font-semibold text-white">All pages</p>
+              <button type="button" onClick={() => setIsOpen(false)} aria-label="Close pages" className="rounded-lg p-2 text-[#8a8f98] hover:bg-[#1a1d23] hover:text-white"><X className="size-5" /></button>
+            </div>
+            <nav className="grid max-h-[calc(75vh-4rem)] grid-cols-2 gap-2 overflow-y-auto p-3">
+              {links.map(({ href, label, icon: Icon }, index) => {
+                const active = pathname === href || pathname?.startsWith(`${href}/`)
                 return (
-                  <Link
-                    key={index}
-                    href={link.href}
-                    onClick={() => setIsModalOpen(false)}
-                    className={`group flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl transition-all duration-200 ${
-                      isActive 
-                        ? 'bg-[#1241a1] text-white shadow-lg shadow-[#1241a1]/20' 
-                        : 'bg-[#1a1d23] text-[#8a8f98] border border-[#2a2d33] hover:scale-105'
-                    }`}
-                  >
-                    <div className={`relative p-2.5 rounded-lg transition-all duration-200 ${
-                      isActive 
-                        ? 'bg-white/20' 
-                        : 'bg-[#0d0f13] group-hover:bg-[#2a2d33]'
-                    }`}>
-                      <Icon className={`size-5 transition-all duration-200 ${
-                        isActive 
-                          ? 'text-white' 
-                          : 'text-[#8a8f98] group-hover:text-[#1241a1]'
-                      }`} />
-                    </div>
-                    <span className={`text-[10px] sm:text-xs font-medium text-center mt-1.5 leading-tight transition-colors ${
-                      isActive 
-                        ? 'text-white' 
-                        : 'text-[#8a8f98] group-hover:text-white'
-                    }`}>
-                      {link.label}
-                    </span>
-                    {isActive && (
-                      <div className="mt-1 w-6 h-0.5 rounded-full bg-white/80" />
-                    )}
+                  <Link key={`${href}-${index}`} href={href} onClick={() => setIsOpen(false)} className={`flex min-w-0 items-center gap-3 rounded-xl px-3 py-3 text-sm ${active ? 'bg-[#1241a1]/20 text-white' : 'bg-[#1a1d23]/70 text-[#b5b7be] hover:bg-[#1a1d23] hover:text-white'}`}>
+                    {Icon && <Icon className={`size-[18px] shrink-0 ${active ? 'text-blue-300' : 'text-[#8a8f98]'}`} />}
+                    <span className="truncate">{label}</span>
                   </Link>
                 )
               })}
-            </div>
-
-            <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-[#2a2d33]">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-[10px] sm:text-xs font-semibold text-[#8a8f98] uppercase tracking-wider">
-                  Quick Actions
-                </h3>
-              </div>
-              
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
-                {[
-                  { icon: UserPlus, label: 'Add Resident', href: '/dashboard/admin/add-resident' },
-                  { icon: FileText, label: 'Generate Report', href: '/dashboard/admin/generate-report' },
-                  { icon: Megaphone, label: 'Send Notice', href: '/dashboard/admin/send-notice' },
-                  { icon: MessageCircle, label: 'Help Center', href: '/dashboard/admin/send-message' }
-                ].map((item, index) => {
-                  const Icon = item.icon
-                  const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
-                  
-                  return (
-                    <Link 
-                      key={index}
-                      href={item.href}
-                      onClick={() => setIsModalOpen(false)}
-                      className={`group flex flex-col items-center justify-center p-2.5 sm:p-3 rounded-xl transition-all duration-200 ${
-                        isActive 
-                          ? 'bg-[#1241a1] text-white shadow-lg shadow-[#1241a1]/20' 
-                          : 'bg-[#1a1d23] border border-[#2a2d33] hover:scale-105'
-                      }`}
-                    >
-                      <div className={`p-1.5 rounded-lg transition-all duration-200 ${
-                        isActive 
-                          ? 'bg-white/20' 
-                          : 'bg-[#0d0f13] group-hover:bg-[#2a2d33]'
-                      }`}>
-                        <Icon className={`size-4 transition-all duration-200 ${
-                          isActive 
-                            ? 'text-white' 
-                            : 'text-[#8a8f98] group-hover:text-[#1241a1]'
-                        }`} />
-                      </div>
-                      <span className={`text-[9px] sm:text-[10px] font-medium text-center mt-1 leading-tight transition-colors ${
-                        isActive 
-                          ? 'text-white' 
-                          : 'text-[#8a8f98] group-hover:text-white'
-                      }`}>
-                        {item.label}
-                      </span>
-                    </Link>
-                  )
-                })}
-              </div>
-            </div>
-          </div>
+            </nav>
+          </section>
         </div>
       )}
-    </div>
+    </>
   )
 }
-
-export default BottomNav

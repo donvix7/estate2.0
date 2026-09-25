@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link';
 import { getInvoices } from '@/lib/service';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 
 const getStatusConfig = (status) => {
@@ -243,15 +244,7 @@ export default function InvoiceList() {
                     );
                 })
             ) : (
-                <div className="p-12 text-center flex flex-col items-center justify-center">
-                    <div className="w-16 h-16 bg-[#1a1d23] rounded-full flex items-center justify-center mb-4">
-                        <Receipt className="w-8 h-8 text-white text-[#8a8f98]" />
-                    </div>
-                    <h3 className="text-lg font-bold text-white text-white mb-1">No invoices found</h3>
-                    <p className="text-[#8a8f98] text-[#8a8f98] text-sm max-w-xs mx-auto">
-                        No invoices match your current search or filter criteria.
-                    </p>
-                </div>
+                <EmptyState icon={Receipt} title="No invoices found" description="No invoices match your current search or filter criteria." />
             )}
         </div>
       </div>

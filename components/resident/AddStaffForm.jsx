@@ -73,7 +73,7 @@ export default function AddStaffForm({ onCancel, onSuccess, type = 'staff' }) {
             <currentConfig.icon className={`w-7 h-7 ${currentConfig.iconCls}`} />
           </div>
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white text-white font-heading">{currentConfig.title}</h2>
+            <p className="text-xl sm:text-2xl font-bold text-white text-white font-heading">{currentConfig.title}</p>
             <p className="text-sm text-[#8a8f98] text-[#8a8f98] mt-1 font-medium">{currentConfig.subtitle}</p>
           </div>
         </div>

@@ -96,7 +96,7 @@ export default function EstateRegistrationPage() {
 
   const nextStep = () => {
     if (validateStep()) {
-      setStep(prev => Math.min(prev + 1, 4))
+      setStep(prev => Math.min(prev + 1, 3))
     }
   }
 
@@ -137,24 +137,24 @@ export default function EstateRegistrationPage() {
   }
 
   const progressSteps = [
-    { number: 1, label: 'Personal Information', icon: <Building2 className="w-4 h-4" /> },
-    { number: 2, label: 'Contact Information', icon: <User className="w-4 h-4" /> },
-    { number: 3, label: 'Account Information', icon: <Shield className="w-4 h-4" /> }
+    { number: 1, label: 'Estate details', icon: <Building2 className="w-4 h-4" /> },
+    { number: 2, label: 'Admin contact', icon: <User className="w-4 h-4" /> },
+    { number: 3, label: 'Review & consent', icon: <Shield className="w-4 h-4" /> }
   ]
 
   return (
-    <div className="min-h-screen w-full flex bg-gray-50 overflow-hidden">
+    <div className="min-h-screen w-full bg-slate-50 lg:flex lg:items-stretch">
       
       {/* Right Side - Registration Form */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center p-8 md:p-12 lg:p-16 relative bg-white overflow-y-auto">
-        <div className="absolute top-8 left-8 lg:hidden">
+      <div className="relative flex min-h-screen w-full flex-col justify-center bg-white px-5 py-10 sm:px-8 md:px-12 lg:w-1/2 lg:px-12 xl:px-16">
+        <div className="absolute left-5 top-5 sm:left-8 lg:left-12">
             <Link href="/" className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors">
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back to Home</span>
             </Link> 
         </div>
 
-        <div className="max-w-xl w-full mx-auto mt-10 space-y-8">
+        <div className="mx-auto mt-12 w-full max-w-xl space-y-7 lg:mt-10">
             
             {/* Progress Bar (Compact for Right Side) */}
             <div className="mb-8">
@@ -171,7 +171,7 @@ export default function EstateRegistrationPage() {
                        <div className={`text-[10px] font-semibold tracking-wider uppercase hidden sm:block ${step >= item.number ? 'text-gray-900' : 'text-gray-400'}`}>
                            {item.label}
                        </div>
-                       {item.number < 4 && (
+                       {item.number < progressSteps.length && (
                            <div className={`absolute top-4 left-1/2 w-full h-[2px] z-0 ${step > item.number ? 'bg-gray-900' : 'bg-gray-100'}`} />
                        )}
                    </div>
@@ -179,21 +179,21 @@ export default function EstateRegistrationPage() {
               </div>
             </div>
 
-            <div className="text-center lg:text-left mb-8">
-                <span className="text-3xl lg:text-4xl font-bold text-gray-700 mb-3 tracking-tight">
+            <div className="mb-7 text-left">
+                <p className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
                     {step === 1 && 'Tell us about your estate'}
                     {step === 2 && 'Who will manage this account?'}
-                    {step === 3 && 'Configure your security'}
-                </span>
-                <p className="text-gray-500 mt-2 text-lg">
+                    {step === 3 && 'Review and confirm'}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-gray-500">
                     {step === 1 && 'We need some basic details to get you set up.'}
                     {step === 2 && 'Provide contact details for the primary administrator.'}
-                    {step === 3 && 'Help us tailor the experience to your needs.'}
+                    {step === 3 && 'Confirm your details and accept the terms to submit your request.'}
                 </p>
             </div>
 
             {submitError && (
-              <div className="mb-6 p-4 bg-red-50 border-red-200 text-red-700 flex items-start gap-3 rounded-sm">
+              <div className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
                 <AlertTriangle className="w-5 h-5 text-red-600 shrink-0" />
                 <span className="text-sm">{submitError}</span>
               </div>
@@ -201,7 +201,7 @@ export default function EstateRegistrationPage() {
 
             <form 
               onSubmit={handleSubmit} 
-              className="space-y-6 bg-gray-100 p-6 rounded-lg"
+              className="space-y-5"
             >
               
               {/* STEP 1: BASIC INFO */}
@@ -361,7 +361,7 @@ export default function EstateRegistrationPage() {
                   <ArrowLeft className="w-4 h-4" /> Back
                 </button>
 
-                {step < 4 ? (
+                {step < 3 ? (
                   <button
                     
                     
@@ -386,37 +386,19 @@ export default function EstateRegistrationPage() {
               </div>
             </form>
 
-            <p className="text-center text-sm text-gray-500 mt-8">
-                Already have an account? <Link href="/login" className="text-blue-600 font-bold hover:underline transition-all">Sign in here</Link>
+            <p className="mt-7 border-t border-gray-200 pt-5 text-center text-sm text-gray-500">
+                Already have an account? <Link href="/auth/login" className="ml-1 font-semibold text-blue-700 hover:underline">Sign in</Link>
             </p>
           </div>
       </div>
       {/* Left Side - Image & Branding (Matching Login) */}
       <AuthCarousel>
-        <h2 className="text-4xl font-bold mb-6 leading-tight">
-          Secure Living,<br />
-          Simplified Management.
-        </h2>
-        <p className="text-lg text-white/80 leading-relaxed mb-8 font-light">
-          Experience the next generation of community living. 
-          Advanced security, seamless payments, and instant communication 
-          all in one professional dashboard.
+        <p className="text-3xl font-semibold leading-tight xl:text-4xl">
+          Estate management,<br /> made simpler.
         </p>
-        
-        <div className="flex items-center gap-6 text-sm text-white/70">
-          <div className="flex items-center gap-2">
-            <div className="p-1 bg-emerald-500/20 rounded-full">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            </div>
-            <span>Enterprise Security</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="p-1 bg-emerald-500/20 rounded-full">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            </div>
-            <span>24/7 Monitoring</span>
-          </div>
-        </div>
+        <p className="text-base leading-7 text-white/75">
+          Set up your community workspace and bring residents, staff, and operations together.
+        </p>
       </AuthCarousel>
 
     </div>

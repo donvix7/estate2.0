@@ -72,6 +72,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { BackButton } from '@/components/ui/BackButton';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { AlertModal } from '@/components/ui/AlertModal';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 const TABS = [
  { id: 'schedule', label: 'Schedule', icon: <QrCode className="size-4" /> },
@@ -990,7 +991,7 @@ export default function VisitorPassGenerator() {
  <div className="size-20 bg-emerald-500/15 text-emerald-500 rounded-full flex items-center justify-center mb-5">
  <CheckIcon className="size-10 stroke-3" />
  </div>
- <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-center text-white">Visitor Access Code Generated</h2>
+ <p className="text-2xl sm:text-3xl font-bold mb-2 text-center text-white">Visitor Access Code Generated</p>
  <p className="text-[#8a8f98] text-center mb-8 text-sm font-medium">The access code is now active and ready for use. Please share it with your visitor for seamless entry.</p>
 
  {/* Pass Card */}
@@ -1376,10 +1377,7 @@ export default function VisitorPassGenerator() {
  </div>
  </div>
  {passHistory.length === 0 ? (
- <div className="p-12 text-center text-[#8a8f98]">
- <History className="size-10 mb-3 mx-auto opacity-50" />
- <p className="font-medium">No pass history yet</p>
- </div>
+ <EmptyState icon={History} title="No pass history yet" description="Issued visitor passes will appear here." compact />
  ) : (
  <div className="overflow-x-auto">
  <table className="w-full text-sm">
@@ -1455,10 +1453,7 @@ export default function VisitorPassGenerator() {
  </div>
  </div>
  {entryExitLogs.length === 0 ? (
- <div className="p-12 text-center text-[#8a8f98]">
- <Activity className="size-10 mb-3 mx-auto opacity-50" />
- <p className="font-medium">No activity logged yet</p>
- </div>
+ <EmptyState icon={Activity} title="No activity logged yet" description="Visitor check-ins and check-outs will appear here." compact />
  ) : (
  <div className="overflow-x-auto">
  <table className="w-full text-sm">

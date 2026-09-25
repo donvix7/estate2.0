@@ -286,7 +286,7 @@ export default function CommunityPage() {
         {/* Platform Overview */}
         <div className="max-w-6xl mx-auto mb-20">
           <div className=" border-gray-300 bg-white p-8 mb-12 min-h-screen">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Comprehensive Community Platform</h2>
+            <p className="text-3xl font-bold text-gray-900 mb-2">Comprehensive Community Platform</p>
             <p className="text-gray-600 mb-8 max-w-3xl">
               Four integrated modules working together to streamline community management and enhance resident engagement.
             </p>
@@ -336,7 +336,7 @@ export default function CommunityPage() {
 
           {/* Community Statistics */}
           <div className=" border-gray-300 bg-white p-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center">Platform Impact & Growth</h2>
+            <p className="text-3xl font-bold text-gray-900 mb-2 text-center">Platform Impact & Growth</p>
             <p className="text-gray-600 mb-8 text-center max-w-3xl mx-auto">
               Real results from communities using our platform to enhance engagement and streamline operations.
             </p>
@@ -358,7 +358,7 @@ export default function CommunityPage() {
 
         {/* Testimonials */}
         <div className="max-w-6xl mx-auto mb-20">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center">Community Success Stories</h2>
+          <p className="text-3xl font-bold text-gray-900 mb-2 text-center">Community Success Stories</p>
           <p className="text-gray-600 mb-12 text-center max-w-3xl mx-auto">
             Hear from communities that have transformed their neighborhood engagement using our platform.
           </p>
@@ -400,7 +400,7 @@ export default function CommunityPage() {
         {/* Integration Features */}
         <div className="max-w-6xl mx-auto mb-20">
           <div className=" border-gray-300 bg-linear-to-r from-green-50 to-teal-50 p-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center">Seamless Integrations</h2>
+            <p className="text-3xl font-bold text-gray-900 mb-2 text-center">Seamless Integrations</p>
             <p className="text-gray-600 mb-8 text-center max-w-3xl mx-auto">
               Extend your community platform&apos;s capabilities with powerful integrations.
             </p>
@@ -429,7 +429,7 @@ export default function CommunityPage() {
 
         {/* Pricing */}
         <div className="max-w-6xl mx-auto mb-20">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center">Simple, Transparent Pricing</h2>
+          <p className="text-3xl font-bold text-gray-900 mb-2 text-center">Simple, Transparent Pricing</p>
           <p className="text-gray-600 mb-12 text-center max-w-3xl mx-auto">
             Choose the plan that fits your community&apos;s size and needs. All plans include our core platform features.
           </p>
@@ -497,7 +497,7 @@ export default function CommunityPage() {
           <div className=" border-green-600 bg-linear-to-r from-green-600 to-teal-600 p-12">
             <div className="max-w-3xl mx-auto text-center">
               <Users className="w-16 h-16 text-white mx-auto mb-6" />
-              <h2 className="text-3xl font-bold text-white mb-4">Ready to Transform Your Community?</h2>
+              <p className="text-3xl font-bold text-white mb-4">Ready to Transform Your Community?</p>
               <p className="text-gray-100 mb-8 text-lg">
                 Join 3,200+ communities already using our platform to enhance engagement, streamline operations, and build stronger neighborhoods.
               </p>
